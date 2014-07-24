@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kohaplugin>
+	<latestversion>1.6.5</latestversion>
+	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.6.5.kpz</download>
+	<lastupdated>15/Jul/2014</lastupdated>
+	<releasenotes>
+		<release version="1.6.5">
+			<note id="1" author="amiranda@ebsco.com">Applied Hints and help to search mode</note>
+			<note id="2" author="amiranda@ebsco.com">Split published date into month dropdown and year textbox in advanced search</note>
+			<note id="3" author="amiranda@ebsco.com">Added code to switch between Koha and EDS advanced search</note>
+			<note id="4" author="amiranda@ebsco.com">Added help icon to images folder for advanced search</note>
+		</release>
+		<release version="1.6">
+			<note id="1" author="amiranda@ebsco.com">Added Advanced Search.</note>
+			<note id="2" author="amiranda@ebsco.com">Enabled IP Authentication. Guest=n when on IP.</note>
+			<note id="3" author="amiranda@ebsco.com">Fixed css for html,ebook,pdf icon on FF (use standard css).</note>
+			<note id="4" author="amiranda@ebsco.com">Resetting Authtoken and session token when updating info.</note>
+			<note id="5" author="amiranda@ebsco.com">Removed duplicate values due to if/else for store_data in EDS.pm.</note>
+		</release>
+		<release version="1.5">
+			<note id="1" author="amiranda@ebsco.com">Caching raw call for knownitems and config</note>
+			<note id="2" author="amiranda@ebsco.com">Merged EDSBbasket.js into EDSScript.js - Kept empty EDSBasket.js for copy over version in 1.4 and avoid errors</note>
+			<note id="3" author="amiranda@ebsco.com">Added json3 and jStorage into jQuery.cookie.min.js</note>
+			<note id="4" author="amiranda@ebsco.com">Updated eds-detail_customlinks.inc to display icons for html,ebook and pdf fulltext. Added css styles to pubtype-icons.css</note>
+			<note id="5" author="amiranda@ebsco.com">Added eds-advsearch.tt. Placeholder file for now. Updated eds-search.pl to point to adv search if there are no parameters</note>			
+			<note id="6" author="amiranda@ebsco.com">updated eds-results.tt to display ebook, pdf and html icons. Also added formats-sm-sprite.png to images folder </note>			
+			<note id="7" author="amiranda@ebsco.com">Fixed pub date issues and replaced regex with /^\d{4}-(0[1-9]|1[012])\/\d{4}-(0[1-9]|1[012])$/ instead of /\d{4}-\d[1-12]\/\d{4}-\d[1-12]/</note>			
+			<note id="8" author="amiranda@ebsco.com">Set cookig bib_list under /cgi-bin to match bib_list under /plugin to fix cart feature</note>		
+			<note id="9" author="amiranda@ebsco.com">remove discovery items from bib_list before submitting to send function in basketto prevent perl error. </note>		
+			<note id="10" author="amiranda@ebsco.com">added code to display discovery items in more details feature of the basket</note>		
+			<note id="11" author="amiranda@ebsco.com">updated the checkboxes in eds-results.tt to contain ids so cart feature can work</note>		
+			<note id="12" author="amiranda@ebsco.com">Added id's to add/remove cart items from detailed record</note>
+			<note id="13" author="robin@kallisti.net.nz">Check for authtoken and die gracefully if plugin setup is not complete </note>
+			<note id="14" author="amiranda@ebsco.com">Deleted opac-basket.tt. Updated admin/setuptool.tt by removing the part about copy paste opac-basket.tt into core.</note>
+		</release>
+		<release version="1.4">
+			<note id="1" author="amiranda@ebsco.com">Seperated detail page sidebar to remove save to list option.</note>
+			<note id="2" author="amiranda@ebsco.com">Added no warnings to all pl's. This is setting was added in configure.tt but not wired to the code yet.</note>
+			<note id="3" author="amiranda@ebsco.com">Removed code that disabled the dropdown menu when JS was loading EDS Info.</note>
+		</release>
+		<release version="1.003">
+			<note id="1" author="amiranda@ebsco.com">Fixed searching for linked authors/sources</note>
+			<note id="2" author="amiranda@ebsco.com">Restored ,:() by escaping them before submitting the search term</note>
+			<note id="3" author="amiranda@ebsco.com">Added JN:Journal Titles to Discovery field code search options</note>
+			<note id="4" author="amiranda@ebsco.com">Facets, limiters, expanders update results when checkbox is clicked</note>
+			<note id="5" author="amiranda@ebsco.com">Fixed save to list 404 error</note>
+			<note id="6" author="amiranda@ebsco.com">Updated widget home from dev to prod</note>
+			<note id="7" author="amiranda@ebsco.com">Cleared EDSScript.js of multiselect list that appeared on discovery to catalogue change</note>
+		</release>
+		<release version="1.002">
+			<note id="1" author="amiranda@ebsco.com">Fixed highlight issues for catalogue records</note>
+			<note id="2" author="amiranda@ebsco.com">Fixed issue when searching with ,:()</note>
+			<note id="3" author="amiranda@ebsco.com">Fixed issue with not logged in message when logged in</note>
+			<note id="4" author="amiranda@ebsco.com">Fixed issue where checkbox does not display if a limiter is set to on. </note>
+			<note id="5" author="amiranda@ebsco.com">Fixed: pdf not opening automatically when accessed from result page. </note>
+			<note id="6" author="amiranda@ebsco.com">Added EDSEnabled in Syspref, replace auth.pm, opac-basket.tt and doc-head-close.inc instead of patch. </note>
+			<note id="7" author="amiranda@ebsco.com">Disabled multi-select dropdown when switching </note>
+			<note id="8" author="amiranda@ebsco.com">Resolved uninitialized variable warnings in logs </note>
+		</release>
+		<release version="1.001">
+			<note id="1" author="amiranda@ebsco.com">Fixed detailed record next previous links. Clicking from a EDS detailed record to Koha record lead to a 404 response</note>
+			<note id="2" author="amiranda@ebsco.com">Added a default value to the getParams sub as it was throwing an error if no results were returned</note>
+			<note id="3" author="amiranda@ebsco.com">Auto Info update always failed as it was using an old authtoken. Getting a new token if info throws an error.</note>
+			<note id="4" author="amiranda@ebsco.com">added {OR RECORD.FullText.CustomLinks} in the custom links section of results.tt as it was not displaying a custom link</note>
+		</release>
+		<release version="1.0">
+			<note id="1" author="amiranda@ebsco.com">Updated plugin to be self containing. No need to copy files into the core directories any more. Used is_plugin parameter to manage template paths and .htaccess to run .pl files. Steps: Install plugin and run chmod 755 eds-* in the opac folder.</note>
+			<note id="2" author="amiranda@ebsco.com">Added expanders and date limiter</note>
+			<note id="3" author="amiranda@ebsco.com">Added results per page, view mode, search mode to form resort</note>
+		</release>
+		<release version="0.9">
+			<note id="1" author="amiranda@ebsco.com">Added Setup tool in Plugin Admin with basic instructions on how to deploy the plugin</note>
+			<note id="2" author="amiranda@ebsco.com">Made API guest access configurable. User logs into to EDS after they login to Koha automatically.</note>
+			<note id="3" author="amiranda@ebsco.com">Added update Info feature in Plugin configuration to get info manually</note>
+			<note id="4" author="amiranda@ebsco.com">Added feature to update EDS Info once a day.</note>
+		</release>
+		<release version="0.8">
+			<note id="1" author="amiranda@ebsco.com">Select options are configurable from the plugin panel </note>
+			<note id="2" author="amiranda@ebsco.com">Added Default (without EDS) option to config settings </note>
+			<note id="3" author="amiranda@ebsco.com">Relevency is based on info </note>
+		</release>
+	</releasenotes>
+</kohaplugin>

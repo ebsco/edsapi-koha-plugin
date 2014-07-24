@@ -1,0 +1,208 @@
+<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+[% INCLUDE 'doc-head-open.inc' %]
+ <title>Koha: EDS API Integration: Setup Tool</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body>
+[% INCLUDE 'header.inc' %]
+[% INCLUDE 'cat-search.inc' %]
+
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API Integration &rsaquo; Setup Tool</div>
+
+<div id="doc3">
+    <div align="right" style="float:right;width:170px"><a href="http://eadmin.ebscohost.com" target="_blank"><img src="http://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
+<p>Visit <a href="http://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
+
+    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="[% PLUGIN_PATH %]/images/eds_logo.jpg" width="82" /></a>
+    <h3>Koha: EDS API Integration: Setup Tool</h3>
+    <p>This setup tool documents instrutions on how to install files from the plugin directory to the main Koha folder structure.</p>
+
+<form method="post">
+        <input type="hidden" name="class" value="[% CLASS %]"/>
+        <input type="hidden" name="method" value="[% METHOD %]"/>
+    </form>
+<p><hr>
+</p>
+<table width="100%" border="0" cellpadding="5" cellspacing="5">
+      <tr>
+        <th colspan="2" align="center" valign="middle" nowrap scope="col">Version Information</th>
+        <th width="1%" align="center" valign="top" scope="col">&nbsp;</th>
+        <th align="center" valign="top" scope="col">Latest Release Notes</th>
+      </tr>
+      <tr>
+        <td width="5%" align="left" valign="middle" nowrap scope="col"><p><strong>Installed Version</strong></p></td>
+        <td width="5%" align="center" valign="middle" nowrap scope="col">[%  currentversion %]</th>
+        <th width="1%" rowspan="3" align="left" valign="top" scope="col">&nbsp;</td>
+        <td rowspan="3" align="left" valign="top" scope="col"><div id="releaseNotes" style="max-height:100px; overflow:auto;">Loading... </div></td>
+      </tr>
+      <tr>
+        <td width="5%" align="left" valign="middle" nowrap scope="col"><strong>Latest Version</strong></td>
+        <td width="5%" align="center" valign="middle" nowrap scope="col"><div id="latestversion">Loading...</div></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center" valign="middle" nowrap scope="col"><input type="button" value="Download Latest Version" onclick="window.open('http://widgets.ebscohost.com/prod/api/koha/index.php')"></td>
+  </tr>
+</table>
+<p><hr></p>	
+	
+<table width="100%" border="0" cellspacing="5" cellpadding="5">
+  <tr>
+    <th width="1%" align="left" valign="top" scope="col">File</th>
+    <th align="left" valign="top" scope="col">Notes</th>
+    <th width="1%" align="left" valign="top" nowrap scope="col">Action </th>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row"> Folder [opac]: Perl Files - <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.pl</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-methods.pl</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-raw.pl</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-search.pl</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folder [modules]:Template Files - <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(None) or 644</th>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.tt</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-raw.tt</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-results.tt</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folder [includes]: Includes - <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(None) or 644</th>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail_customlinks.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-facets.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-page-numbers.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">eds-detail_sidebar.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-resort_form.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">doc-head-close.inc</th>
+    <td align="left" valign="top" nowrap><p><strong>COPY </strong> this file and replace doc-dead-close.inc in \opac\htdocs\opac-tmpl\&lt;themelang&gt;\includes. This adds the below line to the end of the file.</p>
+      <p>
+        <textarea name="textarea" cols="45" rows="3" readonly id="textarea" style="width:99%">[ % IF ( EDSEnabled ) % ]<script type="text/javascript" language="javascript" src="/plugin/Koha/Plugin/EDS/js/EDSScript.js"></script>[ % END % ] </textarea>
+  </p></td>
+    <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folder [libC4]: Library </th>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">Auth.pmd</th>
+    <td align="left" valign="top" nowrap><p><strong>COPY </strong>this file and replace Auth.pm in  \lib\C4. This adds the below line at approx. line 387. Ensure to change extension from .pmd to .pm</p>
+    <p>
+      <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">EDSEnabled                   => C4::Context->preference("EDSEnabled"),</textarea>
+    </p></td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row"><p>Folder [admin]: Plugin Admin -  <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755<br>
+      Note: these files are used to setup and manage the plugin.</p></th>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">configure.tt</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">release_notes.xml</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">setuptool.pl</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">setuptool.tt</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+</table>
+		<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
+<script>
+
+		function DisplayResults(data){
+			var releaseNotesData="<ul>";
+			$("#latestversion").text($(data).find('latestversion').text());
+			data = TextToXML(data);
+			var resultRecords = data.getElementsByTagName("release");
+			for(recordNo=0; recordNo<resultRecords.length; recordNo++){
+				var versionNo = resultRecords[recordNo].attributes;
+				//alert(versionNo.getNamedItem("version").value);
+				releaseNotesData+="<li>Version: "+versionNo.getNamedItem("version").value+"<ul>";
+				var notesNum = resultRecords[recordNo].getElementsByTagName('note').length;
+				for(noteNo=0; noteNo<notesNum;noteNo++){		
+					releaseNotesData+="<li>"+resultRecords[recordNo].getElementsByTagName('note')[noteNo].firstChild.nodeValue+"</li>";
+					//alert(resultRecords[recordNo].getElementsByTagName('note')[noteNo].firstChild.nodeValue);
+				}
+				releaseNotesData+="</ul></li>";
+			}
+			releaseNotesData+="</ul>";
+			$('#releaseNotes').html(releaseNotesData);
+			//alert(releaseNotesData);
+		}
+
+	$(document).ready(function(){
+			jQuery.getScript('http://imageserver.ebscohost.com/branding/alvetm/tools/ajaxGet/ajaxGet.js', function(data, textStatus, jqxhr){AJAXGet('http://widgets.ebscohost.com/prod/api/koha/release_notes.php','');});
+	});
+	
+function TextToXML(text){
+	if (window.ActiveXObject){
+	  xmlData=new ActiveXObject('Microsoft.XMLDOM');
+	  xmlData.async='false';
+	  xmlData.loadXML(text);
+	} else {
+	  var xmlParser=new DOMParser();
+	  var xmlData=xmlParser.parseFromString(text,'text/xml');
+	}
+	return xmlData;
+}
+	
+</script>
+[% INCLUDE 'intranet-bottom.inc' %]

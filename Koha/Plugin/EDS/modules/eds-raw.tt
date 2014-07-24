@@ -1,0 +1,4 @@
+[% api_response %]
+[% IF api_response=="info stored" %]
+<script>setTimeout(function(){window.close();},1000);</script>
+[%END%]

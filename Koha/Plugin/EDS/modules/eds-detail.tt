@@ -1,0 +1,127 @@
+[% INCLUDE "$instancepath/includes/doc-head-open.inc" %]
+[% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %] catalog &rsaquo;
+[% IF ( searchdesc ) %]
+    Results of search [% IF ( query_desc ) %]for '[% query_desc | html%]'[% END %][% IF ( limit_desc ) %]&nbsp;with limit(s):&nbsp;'[% limit_desc | html %]'[% END %]
+[% ELSE %]
+    You did not specify any search criteria.
+[% END %]
+[% INCLUDE "$instancepath/includes/doc-head-close.inc" %]
+    <link rel="alternate" type="application/rss+xml" title="[% LibraryName |html %] Search RSS Feed" href="[% OPACBaseURL %]/cgi-bin/koha/eds-search.pl?[% query_cgi |html %][% limit_cgi |html %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" />
+<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+    <script type="text/javascript" src="[% themelang %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>
+    [% IF ( SocialNetworks ) %]<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+    //<![CDATA[
+      {lang: '[% lang %]'}
+    //]]>
+    </script>
+    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    [% END %]
+    <script type="text/javascript">
+  $(document).ready(function() {
+		//[% IF ( OpacBrowseResults && busc ) %]
+		/*	$("#a_listResults").click(function(e) {
+				var navigation = $(".pagination");
+				if (navigation.css("display") == 'none') {
+					navigation.show();
+				} else {
+					navigation.hide();
+				}
+			});
+			$("#close_pagination").click(function(e) {
+				var navigation = $(".pagination");
+				navigation.hide();
+			});*/
+			//EDSBrowseResults('[% busc %]');
+		//[% END %]
+  });
+  
+</script>
+    </head>
+    <body id="opac-detail">
+    <div id="doc3" class="yui-t7">
+    <div id="bd">
+    [% INCLUDE "$instancepath/includes/masthead.inc" %]
+    <div id="yui-main">
+      <div class="yui-b">
+        <div id="opac-detail-yui-ge" class="yui-ge">
+          <div class="yui-u first">
+            <div id="userdetail" class="container">
+              <div id="catalogue_detail_biblio"> 
+              [% IF DETAILED_RECORD.Items %]
+                  [% FOREACH ITEM IN DETAILED_RECORD.Items %]
+                      [% IF ITEM.Group.match('Ti') %]
+                        <h1 class="title">[% ITEM.Data %]</h1>
+                      [% ELSE %] <span class="results_summary"><span class="label">[% ITEM.Label %] : </span>[% ITEM.Data %]</span> [% END %]
+                  [% END %] 
+              [% ELSE %]
+	              <h1 class="title">Login to gain access to this result.</h1>
+              [% END %]
+              </div>
+            </div>
+          </div>
+          <div class="yui-u">
+            <div id="ulactioncontainer" class="container"> [% IF ( OpacBrowseResults && busc ) %]
+              
+              <div class="nav_results">
+                <div class="l_Results">[% IF ( listResults ) %]<a href="#" id="a_listResults" title="Browse results">Browse results</a>[% ELSE %]<span>Browse results</span>[% END %]</div>
+                <ul class="pg_menu clearfix">
+                  <li class="left_results">[% IF ( previous ) %]<a href="javascript:EDSGetRecord('[% previous %]','left_results')" title="See: [% IF ( previousTitle ) %][% previousTitle |html %][% ELSE %]previous biblio[% END %]">&laquo; Previous</a>[% ELSE %]<span>Previous</span>[% END %]</li>
+                  <li class="back_results"><a href="eds-search.pl?q=Search?[% busc %]" title="Back to the results search list">Back to results</a></li>
+                  <li class="right_results">[% IF ( next ) %]<a href="javascript:EDSGetRecord('[% next %]','right_results')" title="See: [% IF ( nextTitle ) %][% nextTitle |html %][% ELSE %]next biblio[% END %]">Next &raquo;</a>[% ELSE %]<span>Next</span>[% END %]</li>
+                </ul>
+                [% IF ( listResults ) %]
+                <div class="pagination">
+                  <div class="nav"> <span class="close_pagination"><a href="#" id="close_pagination">Close</a></span>
+                    <ul id="listResults">
+                    </ul>
+                  </div>
+                  <div class="pagination_list">
+                    <ul id="ul_pagination_list">
+                    </ul>
+                  </div>
+                </div>
+                [% END %] </div>
+              [% END %] [% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %][% INCLUDE "$plugin_dir/includes/eds-detail_sidebar.inc" %] [% IF ( NovelistSelectProfile ) %] [% IF ( NovelistSelectView == 'right') %]
+              <div id="NovelistSelect">
+                <h4>Novelist Select</h4>
+                <div data-novelist-novelistselect=[% normalized_isbn %]></div>
+              </div>
+              [% END %] [% END %] [% IF ( Babeltheque ) %]
+              <div class="babeltheque_adds">
+                <div id="BW_critiques_aj"></div>
+                <div id="BW_citations_aj"></div>
+              </div>
+              [% END %] [% IF ( SocialNetworks ) %]
+              <div class="social_networks"> <span>Share</span>
+                <div><a id="facebook" href="http://www.facebook.com/sharer.php?u=[% current_url |url %]&amp;t=[% title |url %]" title="Share on Facebook">Facebook</a></div>
+                <div><a id="twitter" href="http://twitter.com/share" title="Share on Twitter">Twitter</a></div>
+                <div><a id="linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=[% current_url |url %]&amp;title=[% title |url %]" title="Share on LinkedIn">LinkedIn</a></div>
+                <div><a id="delicious" href="http://www.delicious.com/save?url=[% current_url |url %]&amp;title=[% title |url %]" title="Share on Delicious">Delicious</a></div>
+                <div><a id="email" href="mailto:?subject=[% title |url %]&amp;body=[% title |url %] ([% current_url |url %])" title="Share by email">Email</a></div>
+                <div>
+                  <g:plusone size="small"></g:plusone>
+                </div>
+              </div>
+              [% END %] </div>
+          </div>
+        </div>
+      </div>
+    </div>
+	[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
+    [% INCLUDE "$instancepath/includes/opac-bottom.inc" %]
+<div class="FullTextLoader"></div>	 
+<style>
+	.FullTextLoader {
+		display:    none;
+		position:   fixed;
+		z-index:    1000;
+		top:        0;
+		left:       0;
+		height:     100%;
+		width:      100%;
+		background: rgba( 255, 255, 255, .8 ) 
+					url('/opac-tmpl/prog/images/loading.gif') 
+					50% 50% 
+					no-repeat;
+	}
+</style>
