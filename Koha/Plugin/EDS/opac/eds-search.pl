@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 28/06/2014
-#* LAST CHANGE DESCRIPTION: Added Advanced Search
+#* DATE MODIFIED: 08/July/2014
+#* LAST CHANGE DESCRIPTION: Upgraded to support 3.14
 #=============================================================================================
 #*/
 
@@ -35,7 +35,7 @@ use Modern::Perl;
 
 use C4::Context;
 use CGI;
-use C4::Auth qw(:DEFAULT get_session ParseSearchHistoryCookie);
+use C4::Auth qw(:DEFAULT get_session ParseSearchHistorySession SetSearchHistorySession);
 #use C4::Auth;
 use C4::Koha;
 use C4::Output;
@@ -65,6 +65,7 @@ require 'eds-methods.pl';
 
 my $PluginDir = dirname(abs_path($0));
 $PluginDir =~s /EDS\/opac/EDS/;
+$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 #leaving this in as alternate code.
 #my $PluginDir = C4::Context->config("pluginsdir");
 #$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
@@ -199,10 +200,9 @@ if($cgi->param("q")){
 			$template->param(
 	     searchdesc     => 1,
 	    total  => 0,);
-		
 	};
 }
-#use Data::Dumper; die Dumper $EDSResponse;
+#use Data::Dumper; die Dumper %pager;
 # Pager template params
 	$template->param(
 	     PAGE_NUMBERS     => \%pager,
@@ -226,8 +226,9 @@ if($cgi->param("q")){
 		cataloguedbid	=> $EDSConfig->{cataloguedbid},
 		catalogueanprefix=> $EDSConfig->{catalogueanprefix},
 		plugin_dir		=>$PluginDir,
+		theme			=>C4::Context->preference('opacthemes'), #314
 		instancepath	=>$EDSConfig->{instancepath},
-		themelang		=>$EDSConfig->{themelangforplugin},
+		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
 		expanders		=>$EDSInfo->{AvailableSearchCriteria}->{AvailableExpanders},
 	);
 
@@ -395,7 +396,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 			#if($Limiter->{DefaultOn} eq 'n')
 			{
 				#warn "no limiters";
-				$Limiter->{Label} = '<input type="checkbox" readonly onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};		
+				$Limiter->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};		
 				$Limiter->{AddAction} =~s/value/y/;
 				$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
 
@@ -406,7 +407,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 						if($EDSRemoveLimiter->{Id} eq $Limiter->{Id}){
 							$Limiter->{AddAction} =~s/y/n/;
 							$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveLimiter->{RemoveAction};
-							$Limiter->{Label} =~s/readonly/readonly checked/;
+							$Limiter->{Label} =~s/onchange/checked onchange/;
 						}
 					}
 				} catch {
@@ -438,7 +439,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 	foreach my $Expander (@EDSExpanders)
 	{
 		#warn "no limiters";
-		$Expander->{Label} = '<input type="checkbox" readonly onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};		
+		$Expander->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};		
 		#$Expander->{AddAction} =~s/value/y/;
 		$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Expander->{AddAction};
 
@@ -449,7 +450,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 					if($EDSRemoveExpander->{Id} eq $Expander->{Id}){
 						#$Expander->{AddAction} =~s/y/n/;
 						$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveExpander->{RemoveAction};
-						$Expander->{Label} =~s/readonly/readonly checked/;
+						$Expander->{Label} =~s/onchange/checked onchange/;
 					}
 				}
 			} catch {
@@ -468,7 +469,7 @@ sub EDSProcessPages
 			'ResultsPerPage' => 20,
 			'TotalResults' => 1,
 			'PageNumber' => 1,
-			'ResultsPerPage' => 1,
+			'PageCounter' => 1,
 		);
 	$pager{'URL'}=$EDSSearchQueryWithOutPage;
 	$pager{'TotalResults'} = $EDSResponse->{SearchResult}->{Statistics}->{TotalHits};
@@ -498,6 +499,7 @@ sub EDSProcessPages
 	$pager{'MaxPageNo'} = ($pager{'MaxPageNo'}>$pager{'NoOfPages'})?$pager{'NoOfPages'} : $pager{'MaxPageNo'}++;
 	$pager{'MinPageNo'}= $pager{'MaxPageNo'}-9;
 	$pager{'MinPageNo'}=($pager{'MinPageNo'}<1)?1:$pager{'MinPageNo'};
+	$pager{'PageCounter'} = $pager{'MinPageNo'};
 }
 
 }#end no warnings

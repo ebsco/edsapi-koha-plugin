@@ -56,17 +56,18 @@
 	padding:2px 2px 2px 23px;
 	background-repeat:no-repeat;
 }
-
-
-
-
-
+.edslink{
+	background-image:url('../images/formats-sm-sprite.png');
+	background-position:0px -1365px;
+	padding:2px 2px 2px 23px;
+	background-repeat:no-repeat;
+}
 
 .advInput {
 	width: 238px;
 }
 .advFieldCode {
-	width: 170px;
+	width: 200px;
 }
 }
 .advBool {
@@ -92,4 +93,21 @@
 .advItemLabel{
 	font-weight:bold;
 	padding:0 0 10px 0;
+}
+
+
+
+
+.FullTextLoader {
+	display:    none;
+	position:   fixed;
+	z-index:    1000;
+	top:        0;
+	left:       0;
+	height:     100%;
+	width:      100%;
+	background: rgba( 255, 255, 255, .8 ) 
+				url('../images/loading.gif') 
+				50% 50% 
+				no-repeat;
 }

@@ -1,0 +1,170 @@
+[% USE Koha %]
+[% INCLUDE 'doc-head-open.inc' %]
+[% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %]
+    catalog &rsaquo; Advanced search
+[% INCLUDE 'doc-head-close.inc' %]
+<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+[% BLOCK cssinclude %][% END %]
+</head>
+<body id="advsearch" class="scrollto">
+[% INCLUDE 'masthead.inc' %]
+<form id="advSearchForm" onSubmit="AdvSearchEDS();return false;">
+    <div class="main">
+        <ul class="breadcrumb">
+            <li><a href="/cgi-bin/koha/opac-main.pl">Home</a> <span class="divider">&rsaquo;</span></li>
+            <li><a href="#">Advanced search</a></li>
+        </ul>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- BOOLEAN SEARCH OPTIONS -->
+
+
+
+
+<div id="edsAdvSearch">
+		<ul id="searchBlock"> 
+			<li id="searchFields_1">
+				<input name="advInput" type="text" class="advInput advSB" style="width: 300px;">
+				<select name="advFieldCode" class="advFieldCode  advSB">
+				  <option value="">Select a Field (optional)</option>
+				[% FOREACH field IN search_fields %]
+						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
+				[% END %]	
+				</select>
+				<input class="btn btn-success" type="submit" value="Search" class="advSB">
+			</li>
+			<li id="searchFields_2">
+				<select name="advBool" class="advBool advSB">
+				  <option value="AND">AND</option>
+				  <option value="OR">OR</option>
+				  <option value="NOT">NOT</option>
+				</select>
+				<input  name="advInput" type="text"  class="advInput advSB">
+				<select name="advFieldCode" class="advFieldCode advSB">
+				  <option value="">Select a Field (optional)</option>
+				[% FOREACH field IN search_fields %]
+						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
+				[% END %]				  
+				</select>
+			</li>
+			<li id="searchFields_3">
+				<select name="advBook" class="advBool advSB">
+				  <option value="AND">AND</option>
+				  <option value="OR">OR</option>
+				  <option value="NOT">NOT</option>
+				</select>
+				<input  name="advInput" type="text"  class="advInput advSB">
+				<select name="advFieldCode" class="advFieldCode advSB">
+				  <option value="">Select a Field (optional)</option>
+				[% FOREACH field IN search_fields %]
+						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
+				[% END %]	
+				</select> <span class="addRemoveLinks"><a href="" title="Add" onClick="AddSearchBlock(3); return false;">[ + Add ]</a>  <a href="" title="Remove" style="display:none;" onClick="RemoveSearchBlock(3); return false;">[ - Remove ]</a></span>
+			</li>
+		</ul>
+		
+		
+		<div id="optionsBlock">
+		  <p>
+		  <fieldset>
+			<legend>Search Options</legend>
+			<p>
+			<div align="right"><input class="btn btn-success" type="reset" class="advSB" /></div>
+			<fieldset>
+			  <legend>Search Modes and Expanders</legend>
+			  
+			  <ul id="modeExpanders">
+			  	<li id="limiterItem">
+					<ul>
+						[% FOREACH mode IN search_modes %]
+						<li>	
+							[% IF mode.DefaultOn == 'y' %]
+								<input name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+							[% ELSE %]
+								<input name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+							[% END %]
+							<label for="[% mode.Mode %]" >[% mode.Label %]</label>
+						</li>
+						[% END %]	
+					</ul>
+				</li>
+				
+				[% FOREACH expander IN expanders %]
+				<li id="limiterItem">	
+					<label for="[% expander.Id %]" class="advItemLabel" >[% expander.Label %]</label>
+					<section>
+					[% IF expander.DefaultOn == 'y' %]
+						<input name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+					[% ELSE %]
+						<input name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+					[% END %]
+					</section>
+				</li>
+				[% END %]	
+				
+			  </ul>
+			  
+			</fieldset>
+			</p>
+			<p>
+			<fieldset>
+			  <legend>Limit your results</legend>
+			  
+			  	<ul>
+					[% FOREACH advlimiter IN advlimiters %]										
+					  <li  id="limiterItem">
+						<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+						<section>
+							[% IF advlimiter.Type =='select' %]
+								[% IF advlimiter.DefaultOn == 'y' %]
+									<input name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+								[% ELSE %]
+									<input name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+								[% END %]
+							[% END %]
+							[% IF advlimiter.Type =='ymrange' %]
+								<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" style="width:95%;text-align:center;" placeholder="YYYY-MM/YYYY-MM" data-action="[% advlimiter.AddAction %]" >
+							[% END %]
+							[% IF advlimiter.Type =='text' %]
+								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+							[% END %]
+							[% IF advlimiter.Type =='multiselectvalue' %]
+								<select id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
+									[% FOREACH limiterValue IN advlimiter.LimiterValues %]
+										<option value="[% limiterValue.AddAction %]">[% limiterValue.Value %]</option>
+									[% END %]	
+								</select>
+							[% END %]
+						</section>
+					  </li>
+					[% END %]
+				</ul>
+			  
+			  
+			</fieldset>
+			</p>
+			<div align="right"><input class="btn btn-success" type="submit" value="Search" class="advSB" /></div>
+		  </fieldset>
+		  </p>
+		</div>
+	</div>
+
+
+
+
+                     <!-- /BOOLEAN SEARCH OPTIONS -->
+                </div> <!-- / .span12 -->
+            </div> <!-- / .row-fluid -->
+        </div> <!-- / .container-fluid -->
+    </div> <!-- / .main -->
+
+         <!-- / .container-fluid -->
+</form>
+
+[% INCLUDE 'opac-bottom.inc' %]
+
+[% BLOCK jsinclude %]
+
+[% END %]

@@ -67,14 +67,6 @@
             <td align="left" valign="top">*Required. Server Path where the instance files reside. This is generally located at the default directory specified; change <enter library name> at the end of the line to the name of your library if unsure.</td>
           </tr>
           <tr>
-            <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Theme/Language Path</th>
-			[% IF themelangforplugin == '' %][% themelangforplugin = '/opac-tmpl/prog/en' %][% END %]
-            <td align="left" valign="top"><input name="themelangforplugin" type="text" class="textbox" id="themelangforplugin" value="[% themelangforplugin %]"></td>
-            <td align="left" valign="top">URL path that points to theme/language files. This is generally located at the default directory specified; change "en" at the end of the line to the name of your library if unsure.
-			<br>Koha sets this to "en" if not specified.
-			</td>
-          </tr>
-          <tr>
             <th colspan="3" align="left" valign="top" nowrap class="settingLabel" scope="row">&nbsp;</th>
           </tr>
           <tr>

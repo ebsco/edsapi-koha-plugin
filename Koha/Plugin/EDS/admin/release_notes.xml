@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>1.6.5</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.6.5.kpz</download>
-	<lastupdated>15/Jul/2014</lastupdated>
+	<latestversion>1.7</latestversion>
+	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.7.kpz</download>
+	<lastupdated>08/Jul/2014</lastupdated>
 	<releasenotes>
-		<release version="1.6.5">
-			<note id="1" author="amiranda@ebsco.com">Applied Hints and help to search mode</note>
-			<note id="2" author="amiranda@ebsco.com">Split published date into month dropdown and year textbox in advanced search</note>
-			<note id="3" author="amiranda@ebsco.com">Added code to switch between Koha and EDS advanced search</note>
-			<note id="4" author="amiranda@ebsco.com">Added help icon to images folder for advanced search</note>
+		<release version="1.7" date="08/Jul/2014">
+			<note id="1" author="amiranda@ebsco.com">Upgraded plugin to work with Koha v3.14</note>
+			<note id="2" author="amiranda@ebsco.com">Added support for multiple themes.bootstrap tested ok; prog has some bugs.</note>
+			<note id="3" author="amiranda@ebsco.com">Deleted EDSBasket.js.</note>
+			<note id="4" author="amiranda@ebsco.com">Deleted folder libC4 and contents. It was a replace file so refer plugin config for instructions.</note>
+			<note id="5" author="amiranda@ebsco.com">Removed themlang config; templates can access system variable</note>
 		</release>
 		<release version="1.6">
 			<note id="1" author="amiranda@ebsco.com">Added Advanced Search.</note>

@@ -52,7 +52,7 @@
     <th width="1%" align="left" valign="top" nowrap scope="col">Action </th>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row"> Folder [opac]: Perl Files - <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
+    <th colspan="3" align="left" valign="top" nowrap scope="row"> Folder [opac]: Perl Files - <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
   </tr>
   <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.pl</th>
@@ -75,7 +75,9 @@
     <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folder [modules]:Template Files - <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(None) or 644</th>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [bootstrap/modules] & [prog/modules] :
+		<br>
+		Template Files - <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(None), Execute(Owner) or 544</th>
   </tr>
   <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.tt</th>
@@ -93,7 +95,9 @@
     <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folder [includes]: Includes - <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(None) or 644</th>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [bootstrap/includes] & [prog/includes] :
+		<br> 
+		Includes - <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(None), Execute(Owner) or 544</th>
   </tr>
   <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail_customlinks.inc</th>
@@ -121,26 +125,27 @@
     <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">IMPORTANT: Koha files to patch - the plugin will integrate itself to the site through these changes.</th>
+  </tr>
+  <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">doc-head-close.inc</th>
-    <td align="left" valign="top" nowrap><p><strong>COPY </strong> this file and replace doc-dead-close.inc in \opac\htdocs\opac-tmpl\&lt;themelang&gt;\includes. This adds the below line to the end of the file.</p>
+    <td align="left" valign="top" nowrap><p><strong>OPEN</strong> doc-dead-close.inc in \opac\htdocs\opac-tmpl\&lt;themelang&gt;\includes and add the below line to the end of the file.
+	<br><strong>NOTE:</strong> there are spaces between ( [ and % ) and ( % and ] )in the below code. Please remove the space for the condition to work.</p>
       <p>
         <textarea name="textarea" cols="45" rows="3" readonly id="textarea" style="width:99%">[ % IF ( EDSEnabled ) % ]<script type="text/javascript" language="javascript" src="/plugin/Koha/Plugin/EDS/js/EDSScript.js"></script>[ % END % ] </textarea>
   </p></td>
     <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folder [libC4]: Library </th>
-  </tr>
-  <tr>
     <th align="left" valign="top" nowrap scope="row">Auth.pmd</th>
-    <td align="left" valign="top" nowrap><p><strong>COPY </strong>this file and replace Auth.pm in  \lib\C4. This adds the below line at approx. line 387. Ensure to change extension from .pmd to .pm</p>
+    <td align="left" valign="top" nowrap><p><strong>OPEN </strong>Auth.pm in  \lib\C4 and add the below line after CalendarFirstDayOfWeek    =&gt; at approx. line 397</p>
     <p>
       <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">EDSEnabled                   => C4::Context->preference("EDSEnabled"),</textarea>
     </p></td>
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row"><p>Folder [admin]: Plugin Admin -  <strong>Minimum file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755<br>
+    <th colspan="3" align="left" valign="top" nowrap scope="row"><p>Folder [admin]: Plugin Admin -  <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755<br>
       Note: these files are used to setup and manage the plugin.</p></th>
   </tr>
   <tr>
@@ -160,6 +165,55 @@
   </tr>
   <tr>
     <th align="left" valign="top" nowrap scope="row">setuptool.tt</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [images] - Minimum folder and file permissions: Read (Everyone), Write(None), Execute(Owner) or 544</th>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">eds_logo.jpg</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">formats-sm-sprite.png</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">loading.gif</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">PT_Sprite.png</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [css] - Minimum folder and file permissions: Read (Everyone), Write(No one), Execute(Owner) or 544</th>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">pubtype-icons.css</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [js] - Minimum folder and file permissions: Read (Everyone), Write(No one), Execute(Owner) or 544</th>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">EDSScript.js</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">jquery.cookie.min.js</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">&nbsp;</th>
     <td align="left" valign="top" nowrap>&nbsp;</td>
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>

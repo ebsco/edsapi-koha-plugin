@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 10/02/2014
-#* LAST CHANGE DESCRIPTION: FIXED: added no warnings
+#* DATE MODIFIED: 08/July/2014
+#* LAST CHANGE DESCRIPTION: FIXED: removed themelang; added theme to template variables.
 #=============================================================================================
 #*/
 #
@@ -53,6 +53,7 @@ my $EDSConfig = decode_json(EDSGetConfiguration());
 
 my $PluginDir = dirname(abs_path($0));
 $PluginDir =~s /EDS\/opac/EDS/;
+$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
 my $cgi = new CGI;
 
@@ -134,7 +135,7 @@ sub EDSProcessResults
 	    listResults            => 1,
 		plugin_dir		=>$PluginDir,
 		instancepath	=>$EDSConfig->{instancepath},
-		themelang		=>$EDSConfig->{themelangforplugin},
+		theme			=>C4::Context->preference('opacthemes'), #314
 	);
 	
 	# Social Networks

@@ -1,0 +1,727 @@
+[% USE Koha %]
+[% USE KohaDates %]
+[% USE AuthorisedValues %]
+[% SET TagsShowEnabled = ( ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsShowOnDetail ) %]
+[% SET TagsInputEnabled = ( ( Koha.Preference( 'opacuserlogin' ) == 1 ) && ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsInputOnDetail ) %]
+
+[% ShowCourseReservesHeader = 0 %]
+[% IF Koha.Preference( 'UseCourseReserves' ) == 1 %]
+    [% FOREACH ITEM_RESULT IN itemloop %]
+       [% IF ITEM_RESULT.course_reserves %]
+           [% FOREACH r IN ITEM_RESULT.course_reserves %]
+               [% IF r.course.enabled == 'yes' %]
+                   [% ShowCourseReservesHeader = 1 %]
+               [% END %]
+           [% END %]
+        [% END %]
+    [% END %]
+[% END %]
+
+[% INCLUDE 'doc-head-open.inc' %][% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %] catalog &rsaquo; Details for: [% title |html %][% FOREACH subtitl IN subtitle %], [% subtitl.subfield |html %][% END %]
+[% INCLUDE 'doc-head-close.inc' %]
+<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+[% IF ( bidi ) %]
+  [% BLOCK cssinclude %]<link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/right-to-left.css" />[% END %]
+[% END %]
+[% IF ( OpacStarRatings != 'disable' ) %]
+    [% BLOCK cssinclude %]<link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />[% END %]
+[% END %]
+</head>
+<body id="opac-detail" class="scrollto">
+[% INCLUDE 'masthead.inc' %]
+
+<div class="main">
+    <ul class="breadcrumb">
+        <li><a href="/cgi-bin/koha/opac-main.pl">Home</a> <span class="divider">&rsaquo;</span></li>
+        <li><a id="titleBread" href="#">Details for: [% title |html %][% FOREACH subtitl IN subtitle %], [% subtitl.subfield |html %][% END %]</a></li>
+    </ul>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span9">
+                <div id="catalogue_detail_biblio" class="maincontent">
+
+ 
+                    <div id="views">
+                        <span class="view"><span id="Normalview">Normal view</span></span>
+                        <span class="view"><a id="MARCview" href="/cgi-bin/koha/opac-MARCdetail.pl?biblionumber=[% biblionumber %]">MARC view</a></span>
+                        [% IF ( ISBD ) %]<span class="view"><a id="ISBDview" href="/cgi-bin/koha/opac-ISBDdetail.pl?biblionumber=[% biblionumber %]">ISBD view</a></span>[% END %]
+                    </div>
+                   
+
+
+
+                </div> <!-- / #catalogue_detail_biblio -->
+
+                <div id="bibliodescriptions" class="toptabs">
+
+				[% IF DETAILED_RECORD.Items %]
+					  [% FOREACH ITEM IN DETAILED_RECORD.Items %]
+						  [% IF ITEM.Group.match('Ti') %]
+							<h1 class="title">[% ITEM.Data %]</h1>
+						  [% ELSE %] <span class="results_summary"><span class="label">[% ITEM.Label %] : </span>[% ITEM.Data %]</span> [% END %]
+					  [% END %] 
+				  [% ELSE %]
+					  <h1 class="title">Login to gain access to this result.</h1>
+				  [% END %]
+
+
+						[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
+                </div> <!-- / #bibliodescriptions -->
+
+                [% IF ( NovelistSelectProfile && NovelistSelectView == 'below' ) %]
+                    <div id="NovelistSelect">
+                        <h3>Novelist Select</h3>
+                        <div data-novelist-novelistselect="[% normalized_isbn %]"></div>
+                    </div>
+                [% END %]
+
+                [% IF ( Babeltheque ) %]
+                    <div>
+                        <div id="BW_etiquettes"></div>
+                        <div id="BW_suggestions"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div>
+                        <div id="BW_podcasts"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div>
+                        <div id="BW_videos"></div>
+                    </div>
+                [% END # / IF Babeltheque %]
+        </div> <!-- /.span8 -->
+
+        <div class="span3">
+            <div id="ulactioncontainer">
+
+                [% IF ( OpacBrowseResults && busc ) %]
+                    <div class="nav_results">
+                        <div class="l_Results">
+                            [% IF ( listResults ) %]
+                                <a href="#" id="a_listResults" title="Browse results">Browse results</a>
+                            [% ELSE %]
+                                <span>Browse results</span>
+                            [% END %]
+                        </div>
+                        <ul class="pg_menu clearfix">
+                            <li class="left_results">
+                                [% IF ( previous ) %]
+                                    <a href="javascript:EDSGetRecord('[% previous %]','left_results')">&laquo; Previous</a>
+                                [% ELSE %]
+                                    <span>Previous</span>
+                                [% END %]
+                            </li>
+                            <li class="back_results"><a href="eds-search.pl?q=Search?[% busc %]" title="Back to the results search list">Back to results</a></li>
+                            <li class="right_results">
+                                [% IF ( next ) %]
+                                    <a href="javascript:EDSGetRecord('[% next %]','right_results')">Next &raquo;</a>
+                                [% ELSE %]
+                                    <span>Next</span>
+                                [% END %]
+                            </li>
+                        </ul>
+                        [% IF ( listResults ) %]
+                        <div class="results-pagination">
+                            <div class="nav_pages">
+                                <span class="close_pagination"><a href="#" id="close_pagination">Close</a></span>
+                                <ul id="listResults"></ul>
+                            </div>
+                            <div class="pagination_list">
+                                <ul id="ul_pagination_list"></ul>
+                            </div>
+                        </div>
+                        [% END %]
+                    </div>
+                [% END # / IF OpacBrowseResults && busc %]
+				[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
+                [% INCLUDE "$plugin_dir/includes/eds-detail_sidebar.inc" %]
+
+                [% IF ( NovelistSelectProfile && NovelistSelectView == 'right') %]
+                    <div id="NovelistSelect">
+                        <h4>Novelist Select</h4>
+                        <div data-novelist-novelistselect=[% normalized_isbn %]></div>
+                    </div>
+                [% END %]
+
+                [% IF ( Babeltheque ) %]
+                    <div class="babeltheque_adds">
+                        <div id="BW_critiques_aj"></div>
+                        <div id="BW_citations_aj"></div>
+                    </div>
+                [% END %]
+
+                [% IF ( SocialNetworks ) %]
+                    <div id="social_networks" class="clearfix">
+                        <span>Share</span>
+                        <div><a id="facebook" href="http://www.facebook.com/sharer.php?u=[% current_url |url %]&amp;t=[% title |url %]" title="Share on Facebook">Facebook</a></div>
+                        <div><a id="linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=[% current_url |url %]&amp;title=[% title |url %]" title="Share on LinkedIn">LinkedIn</a></div>
+                        <div><a id="delicious" href="http://www.delicious.com/save?url=[% current_url |url %]&amp;title=[% title |url %]" title="Share on Delicious">Delicious</a></div>
+                        <div><a id="email" href="mailto:?subject=[% title |url %]&amp;body=[% title |url %]%20([% current_url |url %])" title="Share by email">Email</a></div>
+                        <div><div class="g-plusone" data-size="small" data-count="false"></div></div>
+                        <div><a id="twitter" href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-text="[% title %]" data-lang="[% lang %]">Tweet</a></div>
+                    </div>
+                [% END %]
+            </div> <!-- / .ulactioncontainer -->
+        </div> <!-- / .span4 -->
+    </div> <!-- / .row-fluid -->
+    <div class="row-fluid">
+        [% IF ( LibraryThingForLibrariesID ) %]
+            [% IF ( using_https ) %]
+                <script src="https://ltfl.librarything.com/forlibraries/widget.js?systype=koha&amp;id=[% LibraryThingForLibrariesID %]" type="text/javascript"></script>
+                <noscript>This page contains enriched content visible when JavaScript is enabled or by clicking
+                <a href="https://www.librarything.com/forlibraries/noscript.php?id=[% LibraryThingForLibrariesID %]&amp;accessibility=1">here</a>.</noscript>
+            [% ELSE %]
+                <script src="http://ltfl.librarything.com/forlibraries/widget.js?systype=koha&amp;id=[% LibraryThingForLibrariesID %]" type="text/javascript"></script>
+                <noscript>This page contains enriched content visible when JavaScript is enabled or by clicking
+                <a href="http://www.librarything.com/forlibraries/noscript.php?id=
+                [% LibraryThingForLibrariesID %]&amp;accessibility=1">here</a>.</noscript>
+            [% END %]
+        [% END %]
+
+        [% IF ( NovelistSelectProfile ) %]
+            <script type="text/javascript" src="http://imageserver.ebscohost.com/novelistselect/ns2init.js"></script>
+        [% END %]
+
+        [% IF ( Babeltheque ) %]
+            <script type="text/javascript" src="[% Babeltheque_url_js %]"></script>
+        [% END %]
+    </div> <!-- / .row-fluid -->
+</div> <!-- / .container-fluid -->
+</div> <!-- / .main -->
+
+[% INCLUDE 'opac-bottom.inc' %]
+<div class="FullTextLoader"></div>	
+[%# End of template %]
+
+
+
+[% BLOCK jsinclude %]
+[% INCLUDE 'datatables.inc' %]
+[% IF ( SocialNetworks ) %]
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+    //<![CDATA[
+      {lang: '[% lang %]'}
+    //]]>
+    </script>
+    <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+[% END %]
+[% IF ( OpacStarRatings != 'disable' ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.rating.js"></script>[% END %]
+
+[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-3.js"></script>[% END %]
+
+<script type="text/javascript">
+//<![CDATA[
+
+    [% IF ( OpacBrowseResults && busc ) %]
+        var arrPagination = new Array();
+        var pag_index_ini = [% indexPag %];
+        [% IF ( listResults ) %]
+            [% FOREACH listResult IN listResults %]
+                arrPagination[[% listResult.index %]] = {
+                    url:"[% listResult.url %][% IF ( listResult.url && query_desc && OpacHighlightedWords ) %]&query_desc=[% query_desc |uri %][% END %]",
+                    title:"[% listResult.title|remove('\n')|html %]",
+                    author:"[% listResult.author|html %]",
+                    biblionumber:[% listResult.biblionumber %]
+                };
+           [% END %]
+        [% END %]
+    [% END %]
+
+    [% IF ( OpacHighlightedWords ) %]
+        var q_array = new Array();  // holds search terms if available
+
+        function highlightOff() {
+            $("#catalogue_detail_biblio").removeHighlight();
+            $(".highlight_toggle").toggle();
+        }
+        function highlightOn() {
+            var x;
+            for (x in q_array) {
+                q_array[x] = q_array[x].replace(/\w*:([\w])/, "$1");
+                $(".title").highlight(q_array[x]);
+                $(".author").highlight(q_array[x]);
+                $(".results_summary").highlight(q_array[x]);
+            }
+            $(".highlight_toggle").toggle();
+        }
+    [% END %]
+
+     $(document).ready(function() {
+        $('#bibliodescriptions').tabs();
+        $(".branch-info-tooltip-trigger").tooltip({
+            position: { my: "left+15 center", at: "right center" },
+            show: 50,
+            hide: 50,
+            content: function(){
+                var element = $(this).next("div");
+                return element.html();
+            }
+        });
+[% IF ( TagsInputEnabled && loggedinusername ) %]
+        $(".tag_add").click(function(){
+            var thisid = $(this).attr("id");
+            thisid = thisid.replace("tag_add","");
+            $(this).hide();
+            $("#tagform"+thisid).show();
+            $("#newtag"+thisid).focus();
+            $("#newtag"+thisid+"_status").empty().hide();
+            return false;
+        });
+        $(".cancel_tag_add").click(function(){
+            var thisid = $(this).attr("id");
+            thisid = thisid.replace("cancel","");
+            $("#tagform"+thisid).hide();
+            $("#tag_add"+thisid).show();
+            $("#newtag"+thisid).val("");
+            $("#newtag"+thisid+"_status").empty().hide();
+            return false;
+        });
+        $(".tagbutton").click(function(){
+            var thisid = $(this).attr("title");
+            var tag = $("#newtag"+thisid).val();
+            if (!tag || (tag == "")) {
+                alert(MSG_NO_TAG_SPECIFIED);
+                return false;
+            }
+            KOHA.Tags.add_tag_button(thisid, tag);
+            return false;
+        });
+[% END %]
+
+        $(".holdingst").dataTable($.extend(true, {}, dataTablesDefaults, {
+            "aoColumns": [
+                [% IF ( item_level_itypes ) %]null,[% END %]
+                null,
+                [% IF ( itemdata_ccode ) %]null,[% END %]
+                null,
+                [% IF ( itemdata_enumchron ) %]null,[% END %]
+                [% IF ( itemdata_uri ) %]null,[% END %]
+                [% IF ( itemdata_copynumber ) %]null,[% END %]
+                null,
+                [% IF ( itemdata_itemnotes ) %]null,[% END %]
+                { "sType": "title-string" },
+                [% IF ( OPACShowBarcode ) %]null,[% END %]
+                [% IF holds_count.defined %]
+                    null,
+                [% ELSIF show_priority %]
+                    null,
+                [% END %]
+                [% IF ( ShowCourseReservesHeader ) %]null,[% END %]
+            ]
+        }));
+
+        [% IF ( query_desc ) %][% IF ( OpacHighlightedWords ) %]var query_desc = "[% query_desc |replace("'", "\'") |replace('\n', '\\n') |replace('\r', '\\r') |html %]";
+            q_array = query_desc.split(" ");
+            highlightOn();
+            $("#highlight_toggle_on" ).hide().click(function() {highlightOn() ; return false;});
+            $("#highlight_toggle_off").show().click(function() {highlightOff(); return false;});[% END %][% END %]
+    [% IF ( GoogleJackets ) %]
+        KOHA.Google.GetCoverFromIsbn([% covernewwindow %]);
+    [% END %]
+    [% IF OpenLibraryCovers %]
+        KOHA.OpenLibrary.GetCoverFromIsbn();
+    [% END %]
+    [% IF OPACLocalCoverImages %]
+        KOHA.LocalCover.GetCoverFromBibnumber(true);
+    [% END %]
+    [% IF ( NovelistSelectProfile ) %]
+        novSelect.loadContentForISBN('[% normalized_isbn %]','[% NovelistSelectProfile %]', '[% NovelistSelectPassword %]', function(d){});
+    [% END %]
+
+    [% IF ( OpacBrowseResults && busc ) %]
+        if (arrPagination.length > 0) {
+            renderPagIndexList(pag_index_ini, $("#listResults"));
+        }
+        $("#a_listResults").click(function(e) {
+            if (arrPagination.length > 0) {
+                e.preventDefault();
+                var navigation = $(".results-pagination");
+                if (navigation.css("display") == 'none') {
+                    navigation.show();
+                    var newtitle = $(this).attr('title').replace('Show', 'Hide')
+                    $(this).attr('title',newtitle);
+                    renderPagination(pag_index_ini, arrPagination.length - 1, $("#ul_pagination_list"), false);
+                } else {
+                    navigation.hide();
+                    var newtitle = $(this).attr('title').replace('Hide', 'Show')
+                    $(this).attr('title',newtitle);
+                }
+            }
+        });
+        $("#close_pagination").click(function(e) {
+            e.preventDefault();
+            var navigation = $(".results-pagination");
+            navigation.hide();
+        });
+    [% END %]
+[% IF ( OPACShelfBrowser ) %]
+
+    (function prepareShelfBrowser(){
+
+        $(".main").on("click",".close_shelf",function(e){
+            e.preventDefault();
+            $("#shelfbrowser").toggle();
+        });
+        $(".main").on("click", "#browser_previous a", function(e){
+            e.preventDefault();
+            $.ajax({
+                url: "/cgi-bin/koha/svc/shelfbrowser.pl",
+                type: "POST",
+                data: {
+                    "shelfbrowse_itemnumber": $("#browser_previous a").data( "prev-itemnumber" )
+                },
+                success: function(data){
+                    $("#shelfbrowser").replaceWith(data);
+                    [% IF ( GoogleJackets ) %]
+                      KOHA.Google.GetCoverFromIsbn([% covernewwindow %]);
+                    [% END %]
+                    [% IF OpenLibraryCovers %]
+                      KOHA.OpenLibrary.GetCoverFromIsbn();
+                    [% END %]
+                    [% IF OPACLocalCoverImages %]
+                      KOHA.LocalCover.GetCoverFromBibnumber(true);
+                    [% END %]
+                }
+            });
+        });
+
+
+        $(".main").on("click", "#browser_next a", function(e){
+            e.preventDefault();
+            $.ajax({
+                  url: "/cgi-bin/koha/svc/shelfbrowser.pl",
+                  type: "POST",
+                  data: {
+                    "shelfbrowse_itemnumber": $("#browser_next a").data( "next-itemnumber" )
+                },
+                success: function(data){
+                    $("#shelfbrowser").replaceWith(data);
+                    [% IF ( GoogleJackets ) %]
+                      KOHA.Google.GetCoverFromIsbn([% covernewwindow %]);
+                    [% END %]
+                    [% IF OpenLibraryCovers %]
+                      KOHA.OpenLibrary.GetCoverFromIsbn();
+                    [% END %]
+                    [% IF OPACLocalCoverImages %]
+                      KOHA.LocalCover.GetCoverFromBibnumber(true);
+                    [% END %]
+                }
+            });
+        });
+    }());
+[% END %]
+[% IF ( OpacStarRatings != 'disable' ) %]
+    // -----------------------------------------------------
+    // star-ratings code
+    // -----------------------------------------------------
+    // hide 'rate' button if javascript enabled
+
+    $('input[name="rate_button"]').remove();
+
+    $(function () {
+      $(".auto-submit-star").rating({
+        callback: function (value, link) {
+
+          // if the new value equals the old value, dont execute callback...
+          // just do nothing!
+          if ($("#rating_value").attr("value") != value) {
+
+            $(function () {
+
+              $.post("/cgi-bin/koha/opac-ratings-ajax.pl", {
+                rating_old_value: $("#rating_value").attr("value"),
+                borrowernumber: "[% borrowernumber %]",
+                biblionumber: "[% biblionumber %]",
+                rating_value: value,
+                auth_error: value
+              }, function (data) {
+
+                if (data.auth_status != 'ok') {
+                  window.alert(_("Your CGI session cookie is not current. Please refresh the page and try again."));
+                } else {
+                  $("#rating_value").val(data.rating_value);
+
+                  if (data.rating_value) {
+                    $("#rating_value_text").text(_("your rating: ") + data.rating_value + ", ");
+                  } else {
+                    $("#rating_value_text").text('');
+                  }
+
+                  $("#rating_text").text(_("average rating: ") + data.rating_avg_int + " (" + data.rating_total + ' ' + _("votes") + ")");
+
+                }
+              }, "json");
+            });
+          };
+        }
+      });
+    });
+    // -----------------------------------------------------
+[% END # / IF ( OpacStarRatings != 'disable' )%]
+
+[% IF ( IDreamBooksReviews || IDreamBooksReadometer ) %]
+    var isbn = $(".isbn:last").text().split(" ")[1];
+    if (isbn) {
+        isbn = isbn.replace(/\W*$/, '');
+        isbn = isbn.replace(/-/, '');
+
+        if ($.browser.msie && parseInt($.browser.version, 10) >= 8 && window.XDomainRequest) {
+        // Use Microsoft XDR for IE version 8 or above
+            var xdr = new XDomainRequest();
+            xdr.open("get", "http://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e");
+            xdr.onload = function() {
+                json = 'json = '+xdr.responseText; // the string now looks like..  json = { ... };
+                eval(json); // json is now a regular JSON object
+                parseIDBJSON(json); // parse using same function as for jQuery's success event
+            }
+            xdr.send();
+        } else {
+            $.getJSON("http://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e", function(json){
+                parseIDBJSON(json);
+            });
+        }
+    }
+[% END # / IDreamBooksReviews || IDreamBooksReadometer%]
+
+});
+    [% IF ( IDreamBooksReviews || IDreamBooksReadometer ) %]
+        function parseIDBJSON( json ) {
+            if(json.total_results > 0 && json.book.rating > 0){
+                var isbn = $(".isbn:last").text().split(" ")[1];
+                isbn = isbn.replace(/-/, '');
+
+                [% IF ( IDreamBooksReadometer ) %]
+                    $(".title").append('<a href="'+json.book.detail_link+'" id="idreambooksreadometer"><img src="http://idreambooks.com/remotereadometer/'+isbn+'.jpg" alt="'+json.book.title+' by '+json.book.author+'" title="Rating based on reviews of '+json.book.title+'"></a>');
+                [% END %]
+
+                [% IF ( IDreamBooksReviews ) %]
+                    //build new tab for critic reviews
+                    $("#tab_idb_critic_reviews a").text($("#tab_idb_critic_reviews a").text().replace('XXX', json.book.review_count));
+
+                    //append happy-sad cloud review
+
+                    $("#catalogue_detail_biblio").append("<span class='idreambookssummary results_summary'><a href='"+json.book.detail_link+"'><img src='"+json.book.to_read_or_not_small+"' alt='"+json.book.title+" by "+json.book.author+"' title='Rating based on reviews of "+json.book.title+"'>"+json.book.rating+"%</a> <a href='http://www.idreambooks.com/'>rating based on reviews at iDreamBooks.com</a></span>");
+
+                    //insert data into Book reviews tab
+                    $.each(json.book.critic_reviews, function(){
+                            $("#idb_review_snippets").append("<div class='review'><div><a href='"+this.review_link+"'>"+this.source+"</a></div><div>\"..."+this.snippet+"...\"</div><div>Review date: "+this.review_date+"</div><div><a class='reviewlink' href='"+json.book.detail_link+"'>Review result: "+this.pos_or_neg+" <img src='"+this.smiley_or_sad_small+"' alt='iDreamBooks.com rating' title='"+this.pos_or_neg+"' /></a></div></div>");
+                            });
+                    $("#seemoreidb").attr('href', json.book.detail_link);
+                    $("#tab_idb_critic_reviews").show();
+                [% END %]
+            }
+        }
+    [% END # / IF IDreamBooksReviews || IDreamBooksReadometer %]
+
+    [% IF ( OpacBrowseResults && busc ) %]
+        var timeoutRFW;
+        var totalPagItemList = 10;
+
+        function rewindList()
+        {
+            var ul = $("#listResults");
+            var li_ini = ul.children(':first').next();
+            var index_ini = pag_index_ini;
+            if (li_ini) {
+                index_ini = parseInt(li_ini.attr("class").substring(7), 10);
+            }
+            var li_end = ul.children(':last').prev();
+            var index_end = arrPagination.length - 1;
+            if (li_end) {
+                index_end = parseInt(li_end.attr("class").substring(7), 10);
+            }
+            if (index_ini > pag_index_ini) {
+                renderPagIndexList(index_ini - 1, ul, false);
+                renderPagination(index_ini - 1, arrPagination.length - 1, $("#ul_pagination_list"), true);
+            }
+        }//rewindList
+
+        function forwardList()
+        {
+            var ul = $("#listResults");
+            var li_ini = ul.children(':first').next();
+            var index_ini = pag_index_ini;
+            if (li_ini) {
+                index_ini = parseInt(li_ini.attr("class").substring(7), 10);
+            }
+            var li_end = ul.children(':last').prev();
+            var index_end = arrPagination.length - 1;
+            if (li_end) {
+                index_end = parseInt(li_end.attr("class").substring(7), 10);
+            }
+            if (index_end < arrPagination.length - 1) {
+                renderPagIndexList(index_ini + 1, ul, false);
+                renderPagination(index_ini + 1, arrPagination.length - 1, $("#ul_pagination_list"), true);
+            }
+        }//forwardList
+
+        function renderPagIndexList(index, ul)
+        {
+            var $kids = ul.children("li");
+            if ($kids.length > 0) {
+                $kids.each(function() {
+                    $(this).remove();
+                });
+            }
+            var li;
+            var html = "";
+            var ini = index - 1;
+            var end = ini + totalPagItemList - 1;
+            li = $("<li />");
+            html = (index > pag_index_ini)?"<a href='#' id='rew_list_index' onclick='rewindList()' title='" + _("Click to rewind the list to") + " " + ini + " - " + end + "'>&laquo;</a>":"&laquo;";
+            li.html(html);
+            ul.append(li);
+            var title = "";
+            for (var i=index; i < arrPagination.length && i < index + totalPagItemList; i++) {
+                if (arrPagination[i] == undefined) continue;
+                var li = $("<li />");
+                if (arrPagination[i].url != "") {
+                    title = _("See biblio") + " &quot;" + arrPagination[i].title + "&quot; ";
+                    if (arrPagination[i].author != "") title += " " + _("by") + "&quot;" + arrPagination[i].author + "&quot;";
+                    title += " " + _("with biblionumber") + " " + arrPagination[i].biblionumber;
+                    html = "<a href='" + arrPagination[i].url + "' title='" + title + "' class='a_pag' id='a_pag_" + i + "'";
+                    html += " onmouseover='renderPagination(" + i + ", " + (arrPagination.length - 1) + ", $(\"#ul_pagination_list\"), true)'";
+                    html += ">" + i + "</a>";
+                } else html = i;
+                li.html(html);
+                li.attr("class", "li_pag_" + i);
+                ul.append(li);
+            }
+            li = $("<li />");
+            ini = index + 1;
+            end = (arrPagination.length > index + totalPagItemList)?index + totalPagItemList:arrPagination.length - 1;
+            html = (end <= arrPagination.length - 1 && (end - index) >= totalPagItemList)?"<a href='#' id='fw_list_index' onclick='forwardList()' title='" + _("Click to forward the list to") + " " + ini + " - " + end + "'>&raquo;</a>":"&raquo;";
+            li.html(html);
+            ul.append(li);
+        }//renderPagIndexList
+
+
+        function renderPagination(index, total, ul, highlIndex)
+        {
+            for (var i = pag_index_ini; i <= total; i++) {
+                if (arrPagination[i] == undefined || arrPagination[i].url == "") continue;
+                $("#li_pag_" + i).remove();
+            }
+            var j = 0;
+            for (var i = index; i <= total && j < totalPagItemList; i++) {
+                if (arrPagination[i] == undefined || arrPagination[i].url == "") continue;
+                var li = $("<li id='li_pag_" + i + "' " + ((j % 2 == 0)?"class='highlight'":"")  + " title='" + _("Go to detail") + "' />");
+                var html = "<span class='li_pag_index'>" + i + "</span><a href='" + arrPagination[i].url + "'>" + arrPagination[i].title + "</a>";
+                if (arrPagination[i].author) html += "<br /> by " + arrPagination[i].author;
+                li.html(html);
+                if (highlIndex && i == index) li.css("backgroundColor", "#DDDDDD");
+                ul.append(li);
+                j++;
+            }
+            for (i = pag_index_ini; i < index && j < totalPagItemList; i++) {
+                if (arrPagination[i] == undefined || arrPagination[i].url == "") continue;
+                $("#li_pag_" + i).remove();
+                var li = $("<li id='li_pag_" + i + "' " + ((j % 2 == 0)?"class='highlight'":"")  + " title='" + _("Go to detail") + "' />");
+                var html = "<span class='li_pag_index'>" + i + "</span><a href='" + arrPagination[i].url + "'>" + arrPagination[i].title + "</a>";
+                if (arrPagination[i].author) html += "<br /> " + _("by") + " " + arrPagination[i].author;
+                li.html(html);
+                ul.append(li);
+                j++;
+            }
+        }//renderPagination
+    [% END # / IF ( OpacBrowseResults && busc ) %]
+//]]>
+</script>
+
+[% IF OPACPopupAuthorsSearch %]
+    <script type="text/javascript">
+    //<![CDATA[
+        function showAuthors(element){
+            var authornumber = $(element).attr("data-count");
+            // Hide subjects menu if displayed
+            hideMenu(".subjectSearch");
+
+            // Check checkbox related to the clicked link
+            $("#authorsList input[type='checkbox']").attr('checked', false);
+            $("#author_"+authornumber).attr('checked', true);
+
+            makeAuthorRequest();
+
+            // Display menu
+            var left = element.offsetLeft || 0;
+            var top = element.offsetTop || 0;
+            $('.authorSearch').css('display', 'block');
+            $('.authorSearch').css('left', left);
+            $('.authorSearch').css('top', top + 15);
+        }
+
+        function hideMenu(elem) {
+            $(elem).css('display', 'none');
+        }
+
+        function checkAll(checkbox, elem) {
+            var check = $(checkbox).attr('checked') ? true : false;
+            $(elem).find("input[type='checkbox']").attr('checked', check);
+            elem == "#authorsList" ? makeAuthorRequest() : makeSubjectRequest();
+        }
+
+        function makeAuthorRequest(){
+            var values = [];
+
+            $("#authorsList").find("input[type='checkbox']:checked").each(function () {
+                values.push($(this).val());
+            });
+
+            if (values.length > 0) {
+                var request = "/cgi-bin/koha/opac-search.pl?q=" + values.join(' and ');
+                $("#validAuthorSearch").attr("href", request);
+            } else {
+                $("#validAuthorSearch").removeAttr("href");
+            }
+
+        }
+
+        //Subjects
+        function showSubjects(element, subjectnumber, subfieldnumber){
+
+            // Check checkbox related to the clicked link
+            $("#subjectsList input[type='checkbox']").attr('checked', false);
+            $("#subject_"+subjectnumber+"_"+subfieldnumber).attr('checked', true);
+
+            makeSubjectRequest();
+
+        }
+
+        function makeSubjectRequest() {
+            var values = [];
+            $("#subjectsList > ul").each(function() {
+                var all_checked = true;
+                var local_values = [];
+                $(this).find('input[type="checkbox"]').each(function() {
+                    if($(this).attr('checked')) {
+                        local_values.push($(this).val());
+                    } else {
+                        all_checked = false;
+                    }
+                });
+                var authid = $(this).attr('data-authid');
+                if(all_checked && authid) {
+                    values.push('an:' + authid);
+                } else {
+                    values = values.concat(local_values);
+                }
+            });
+            if(values.length > 0) {
+                var request = "/cgi-bin/koha/opac-search.pl?q=" + values.join(' and ');
+                $("#validSubjectSearch").attr('href', request);
+            } else {
+                $("#validSubjectSearch").removeAttr("href");
+            }
+        }
+        $(document).ready(function() {
+            $("a.showauthors").click(function(){
+                e.preventDefault();
+                showAuthors(this);
+            });
+        });
+
+    //]]>
+    </script>
+[% END # / IF OPACPopupAuthorsSearch  %]
+[% END %]

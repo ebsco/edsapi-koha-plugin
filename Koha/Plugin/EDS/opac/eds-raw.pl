@@ -54,7 +54,7 @@ my $EDSConfig = decode_json(EDSGetConfiguration());
 
 my $PluginDir = dirname(abs_path($0));
 $PluginDir =~s /EDS\/opac/EDS/;
-
+$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
     {

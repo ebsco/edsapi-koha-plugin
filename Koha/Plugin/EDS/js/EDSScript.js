@@ -8,8 +8,8 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 15/07/2014
-* LAST CHANGE DESCRIPTION: Added advanced search and logic for year/month seperation.
+* DATE MODIFIED: 8/06/2014
+* LAST CHANGE DESCRIPTION: Cache config and known item queries.
 =============================================================================================
 */
 
@@ -35,69 +35,75 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
+var searchBlockCount=3;
 
+var trackCall = setInterval(function(){
+try{jQuery().jquery;clearInterval(trackCall);
+	StartEDS();}catch (err) {}}, 10);
 
-
-$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
-
-$(document).ready(function(){
+function StartEDS(){
 	
-	//$('body').prepend('<center><h1>This is Koha version 3.12</h1></center>');
+	if(jQuery('body').data('starteds')==1){return;}
+	else{jQuery('body').attr('data-starteds','1');}
 	
-	jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
+	$(document).ready(function(){
+		$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
 		
-		
-		if($.jStorage.get("edsConfig")!=null){
-			ConfigData((JSON.parse($.jStorage.get("edsConfig"))));
-		}else{
-			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q=config',function(data){ConfigData(data);});
-		}
-
-		//$("#masthead_search").attr("disabled","disabled");
-		if(typeof $('.back_results a').attr('href')!='undefined'){EDSSetDetailPageNavigator();}
-
-		// cart management START
-		if(document.URL.indexOf('opac-basket.pl')!=-1){// basket stuff.
-			$.jStorage.set("bib_list",QueryString('bib_list'),{TTL:edsConfig.cookieexpiry*60*1000});
-			PrepareItems();
+		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			
-			$('.empty').removeAttr('onclick');
-			$('.empty').click(function(){ // copy of delBasket in Koha's basket.js
-			    var nameCookie = "bib_list";
-				var rep = false;
-				rep = confirm(MSG_CONFIRM_DEL_BASKET);
-				if (rep) {
-					delCookie(nameCookie);
-					updateAllLinks(top.opener);
-					document.location = "about:blank";
-					updateBasket(0,top.opener);
-					$.jStorage.set("bib_list","",{TTL:edsConfig.cookieexpiry*60*1000}); // added this line
-					window.close();
-				}
+			
+			if($.jStorage.get("edsConfig")!=null){
+				ConfigData((JSON.parse($.jStorage.get("edsConfig"))));
+			}else{
+				$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q=config',function(data){ConfigData(data);});
+			}
+	
+			//$("#masthead_search").attr("disabled","disabled");
+			if(typeof $('.back_results a').attr('href')!='undefined'){EDSSetDetailPageNavigator();}
+	
+			// cart management START
+			if(document.URL.indexOf('opac-basket.pl')!=-1){// basket stuff.
+				$.jStorage.set("bib_list",QueryString('bib_list'),{TTL:edsConfig.cookieexpiry*60*1000});
+				PrepareItems();
+				
+				$('.empty').removeAttr('onclick');
+				$('.empty').click(function(){ // copy of delBasket in Koha's basket.js
+					var nameCookie = "bib_list";
+					var rep = false;
+					rep = confirm(MSG_CONFIRM_DEL_BASKET);
+					if (rep) {
+						delCookie(nameCookie);
+						updateAllLinks(top.opener);
+						document.location = "about:blank";
+						updateBasket(0,top.opener);
+						$.jStorage.set("bib_list","",{TTL:edsConfig.cookieexpiry*60*1000}); // added this line
+						window.close();
+					}
+				});
+				
+			}	
+				
+			if($.jStorage.get("bib_list")!=null){
+				try{
+					var jbib_list = $.jStorage.get("bib_list");
+					document.cookie= 'bib_list='+jbib_list;
+					if(basketcount=="")basketcount=0;
+					if(basketcount!=jbib_list.split('/').length-1)
+						updateBasket(jbib_list.length-1);
+				}catch(err){}
+			}
+				
+			$('.addtocart').click(function(){
+				$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
+			});
+			$('.cartRemove').click(function(){
+				$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
 			});
 			
-		}	
-			
-		if($.jStorage.get("bib_list")!=null){
-			try{
-				var jbib_list = $.jStorage.get("bib_list");
-				document.cookie= 'bib_list='+jbib_list;
-				if(basketcount=="")basketcount=0;
-				if(basketcount!=jbib_list.split('/').length-1)
-					updateBasket(jbib_list.length-1);
-			}catch(err){}
-		}
-			
-		$('.addtocart').click(function(){
-			$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
+			// cart management END		
 		});
-		$('.cartRemove').click(function(){
-			$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
-		});
-		
-		// cart management END		
 	});
-});
+}
 
 function ConfigData(data){
 	
@@ -189,16 +195,10 @@ function SetEDS(showInfo){
 			$.cookie('defaultSearch','eds');
 			defaultSearch="eds";
 			$('#transl1').val($.cookie('QueryTerm'));
+			$('.transl1').val($.cookie('QueryTerm')); //for 314
+			$('#searchBread').text("Results of search "+$.cookie('QueryTerm'));
 			$('#transl1').removeClass('placeholder');
-			//advSearch
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
-			}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}else{
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}
+			$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
 			
 }
 
@@ -212,15 +212,7 @@ function SetKoha(showInfo){
 			$.removeCookie('defaultSearch', { path: '/' });
 			$.cookie('defaultSearch','koha')
 			defaultSearch="koha";
-			//advSearch
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
-			}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}else{
-				$('a[href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl"]').attr('href','/cgi-bin/koha/opac-search.pl');
-			}			
+			$('a[href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl"]').attr('href','/cgi-bin/koha/opac-search.pl');
 }
 
 function ShowInfo(msg){
@@ -242,6 +234,7 @@ function ShowInfo(msg){
 
 function SearchEDS(){
   var searchTerm = $('#transl1').val();
+  if(searchTerm==undefined) searchTerm = $('.transl1').val(); // for bootstrap
   if(knownItem=='eds'){knownItem='';}
   window.location='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,'+knownItem+':{'+searchTerm+'}&default=1';
 }
@@ -298,11 +291,12 @@ function EDSAppendToBrowse(data){
 }
 
 function EDSSetDetailPageNavigator(){
+	$('#titleBread').text($('#titleBread').text()+$('.title').text());
 	if($('.back_results a').attr('href').indexOf('q=Search?')>-1){
 		$("#a_listResults").unbind('click');
 		$("#ul_pagination_list").append('<div align="center" id="browseLoader"><img title="Loading. Please wait..." src="/opac-tmpl/prog/images/loading.gif" width="14" ></div>');
 		$("#a_listResults").click(function(e) {
-			var navigation = $(".pagination");
+			var navigation = $(".results-pagination");
 			if (navigation.css("display") == 'none') {
 				navigation.show();
 			} else {
@@ -310,7 +304,7 @@ function EDSSetDetailPageNavigator(){
 			}
 		});
 		$("#close_pagination").click(function(e) {
-			var navigation = $(".pagination");
+			var navigation = $(".results-pagination");
 			navigation.hide();
 		});
 		EDSBrowseResults($.cookie('ReturnToResults'));
@@ -361,7 +355,7 @@ function PrepareItems(){
 	
 	$(document).ready(function(){
 		var recordList = document.URL;
-		recordList = recordList.substring(recordList.indexOf('?')+10);
+		recordList = QueryString("bib_list").toString();
 
 		var recordId=recordList.split("/");
 		
@@ -373,9 +367,10 @@ function PrepareItems(){
 		}
 		
 		if(EDSItems>0){
-			$('.print').attr('onclick','return false;');
-			$('.print').attr('href','javascript:window.print();location.reload();');
+			$('.print-large').attr('onclick',''); // .print for prog
+			$('.print-large').attr('href','javascript:window.print();location.reload();'); // .print for prog
 			$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/prog/images/loading.gif" width="15"> Loading Items. Please wait...</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
+			$(".dataTables_empty").css('display','none');
 		}
 		
 		for(i=0;i<recordId.length-1;i++){
@@ -402,8 +397,10 @@ function PrepareItems(){
 			}
 			
 			if(document.URL.indexOf('|')!=-1){
-				var sendParent = $('.send').parent();
-				$(sendParent).html('<a class="send" href="opac-basket.pl" onclick="EDSSendBasket(); return false;">Send</a>');
+				var sendParent = $('.send').parent().html();
+				sendParent = sendParent.replace('onclick="sendBasket()','onclick="EDSSendBasket()');
+				//$(sendParent).html('<a class="send" href="opac-basket.pl" onclick="EDSSendBasket(); return false;">Send</a>');
+				$('.send').parent().html(sendParent);
 			}
 	});
 }
@@ -435,7 +432,7 @@ function BuildMoreDetails(detailedRecord){
 			<input type="checkbox" class="cb" value="'+recordAN+'|'+recordDbId+'" name="bib'+recordAN+'|'+recordDbId+'" id="bib'+recordAN+'|'+recordDbId+'" onclick="selRecord(value,checked)">\
 			'+detailedRecord.Record.RecordInfo.BibRecord.BibEntity.Titles[0].TitleFull+'\
 		</h3>\
-		<table>\
+		<table class="table">\
 			<tbody>';
 	
 
@@ -443,11 +440,11 @@ function BuildMoreDetails(detailedRecord){
 			if(detailedRecord.Record.Items[itemCount].Label!="Title"){
 				moreDetailsData =	moreDetailsData+'\
 				<tr>\
-					<th>\
+					<th scope="row">\
 					'+detailedRecord.Record.Items[itemCount].Label+'\
 					</th>\
 					<td>\
-					'+$('<div/>').html(detailedRecord.Record.Items[itemCount].Data).text()+'\
+					<p>'+$('<div/>').html(detailedRecord.Record.Items[itemCount].Data).text()+'</p>\
 					</td>\
 				</tr>\
 				';
@@ -480,7 +477,7 @@ function EDSSendBasket() {
 
 
 //ADVANCED SEARCH START
-var searchBlockCount=3;
+
 function AddSearchBlock(blockNo){
 	var newBlock = $('#searchFields_'+blockNo).html();
 	newBlock = newBlock.replace("("+blockNo+")","("+(blockNo+1)+")");
@@ -495,7 +492,6 @@ function RemoveSearchBlock(blockNo){
 		searchBlockCount--;
 	$('#searchFields_'+searchBlockCount+' .addRemoveLinks').css('display','inline');
 }
-
 
 function AdvSearchEDS(){
 	var advQuery="";
@@ -516,7 +512,7 @@ function AdvSearchEDS(){
 				advQuery+="action="+jQuery(this).val()+"|";
 			}
 		}else if(jQuery(this).attr("type")=="text"){
-			if(jQuery(this).val().length>1){
+			if(jQuery(this).val().length>1 && jQuery(this).val()!="YYYY-MM/YYYY-MM"){
 				jQuery(this).attr("data-action",jQuery(this).attr("data-action").replace(":value",":"+jQuery(this).val()));
 				advQuery+="action="+jQuery(this).attr("data-action")+"|";
 			}
@@ -527,27 +523,7 @@ function AdvSearchEDS(){
 			advQuery+="action="+$(this).val()+"|";
 	});
 	
-	//dateRange
-	var fromMonth=($("#common_DT1").val()=="")?"01":$("#common_DT1").val();
-	var toMonth=($("#common_DT1_ToMonth").val()=="")?"12":$("#common_DT1_ToMonth").val();
-	var fromYear=$("#common_DT1_FromYear").val();
-	var toYear=$("#common_DT1_ToYear").val();
-	if (fromYear!="YYYY" && toYear!="YYYY"){
-		if(isNaN(fromYear) || isNaN(toYear)){
-			alert("Please enter a valid year in YYYY format");
-			$("#common_DT1_FromYear").focus();
-			return;
-		}else{
-			advQuery+="action="+jQuery("#common_DT1_FromYear").attr("data-action").replace(":value",":"+fromYear+"-"+fromMonth+"/"+toYear+"-"+toMonth);
-		}
-	}
-	
-	//alert(advQuery);	
 	window.location.href="eds-search.pl?q=Search?"+advQuery;
-
-	
 	
 }
-
-
 //ADVANCED SEARCH END 

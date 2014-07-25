@@ -10,10 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 30/06/2014
-#* LAST CHANGE DESCRIPTION: FIXED: Added IP authentication
-#*							reset authtoken and session token when clicking update info
-#*							set guest=n if IP
+#* DATE MODIFIED: 08/July/2014
+#* LAST CHANGE DESCRIPTION: FIXED: Removed themelang
 #=============================================================================================
 #*/
 # This file is part of Koha.
@@ -50,7 +48,7 @@ use Encode;
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $instancepath, $themelangforplugin, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
+my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
 
 my $PluginClass='Koha::Plugin::EDS';
 my $table='plugin_data';
@@ -78,7 +76,6 @@ given($r->{plugin_key}){
 		when('kohaselectinfo') {$kohaselectinfo=$r->{plugin_value};}
 		when('edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
 		when('instancepath') {$instancepath=$r->{plugin_value};}
-		when('themelangforplugin') {$themelangforplugin=$r->{plugin_value};}
 		when('lastedsinfoupdate') {$lastedsinfoupdate=$r->{plugin_value};
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
@@ -171,7 +168,7 @@ sub CreateSession
 	if($edsusername eq "-"){#Guest= no automatically if IP
 		$GuestTracker='n';
 	}
-
+	#use Data::Dumper; die Dumper $GuestTracker;
 	#ask for SessionToken from EDSAPI
 	$uri = 'http://eds-api.ebscohost.com/edsapi/rest/createsession'; 
 	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"'.$edscustomerid.'"}'; 
@@ -207,7 +204,7 @@ sub GetSession
 
 sub EDSGetConfiguration
 {
-	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","themelangforplugin":"'.$themelangforplugin.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'"}';
+	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'"}';
 	return $JSONConfig;
 }
 
