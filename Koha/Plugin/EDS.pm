@@ -11,7 +11,7 @@ package Koha::Plugin::EDS;
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
 #* DATE MODIFIED: 15/07/2014
-#* LAST CHANGE DESCRIPTION: Updated to 1.6.5
+#* LAST CHANGE DESCRIPTION: Updated to 1.65
 #* 							updated version
 #=============================================================================================
 #*/
@@ -24,12 +24,13 @@ use C4::Members;
 use C4::Auth;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
+use LWP::Simple qw(get);
 
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 1.6.5;
+our $VERSION = 1.65;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -180,13 +181,16 @@ sub SetupTool {
     my $cgi = $self->{'cgi'};
 	
 	require $PluginDir.'/admin/setuptool.pl';
+	
+	my $shaData= get('https://raw.githubusercontent.com/ebsco/edsapi-koha-plugin/Koha-v3.12x/sha.json');
+	#use Data::Dumper; die Dumper $shaData;
 
     my $template = $self->get_template({ file => 'admin/setuptool.tt' });
 	        $template->param(
 			edsusername 		=> $self->retrieve_data('edsusername'),
 			edspassword 		=> $self->retrieve_data('edspassword'),
 			currentversion		=> $VERSION,
-			
+			shadata				=>$shaData,
 			
         );
 

@@ -40,7 +40,7 @@
         <td width="5%" align="center" valign="middle" nowrap scope="col"><div id="latestversion">Loading...</div></td>
       </tr>
       <tr>
-        <td colspan="2" align="center" valign="middle" nowrap scope="col"><input type="button" value="Download Latest Version" onclick="window.open('http://widgets.ebscohost.com/prod/api/koha/index.php')"></td>
+        <td colspan="2" align="center" valign="middle" nowrap scope="col"><input type="button" value="Download Latest Version" id="downloadVersion"></td>
   </tr>
 </table>
 <p><hr></p>	
@@ -166,11 +166,21 @@
 </table>
 		<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
 <script>
-
+		var shaData = JSON.parse('[%  shadata %]');
+		var latestSHA = "";
+		for(var key in shaData){
+			latestSHA = shaData[key];
+			break;
+		}
+		
 		function DisplayResults(data){
 			var releaseNotesData="<ul>";
 			$("#latestversion").text($(data).find('latestversion').text());
 			data = TextToXML(data);
+
+			var latestDownload = data.getElementsByTagName("download")[0];
+			$('#downloadVersion').attr('onclick','window.open("'+latestDownload.childNodes[0].nodeValue+'")')
+
 			var resultRecords = data.getElementsByTagName("release");
 			for(recordNo=0; recordNo<resultRecords.length; recordNo++){
 				var versionNo = resultRecords[recordNo].attributes;
@@ -189,7 +199,7 @@
 		}
 
 	$(document).ready(function(){
-			jQuery.getScript('http://imageserver.ebscohost.com/branding/alvetm/tools/ajaxGet/ajaxGet.js', function(data, textStatus, jqxhr){AJAXGet('http://widgets.ebscohost.com/prod/api/koha/release_notes.php','');});
+			jQuery.getScript('http://imageserver.ebscohost.com/branding/alvetm/tools/ajaxGet/ajaxGet.js', function(data, textStatus, jqxhr){AJAXGet('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'+latestSHA+'/Koha/Plugin/EDS/admin/release_notes.xml','');});
 	});
 	
 function TextToXML(text){

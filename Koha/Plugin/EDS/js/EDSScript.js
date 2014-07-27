@@ -8,8 +8,10 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 15/07/2014
-* LAST CHANGE DESCRIPTION: Added advanced search and logic for year/month seperation.
+* DATE MODIFIED: 25/07/2014
+* LAST CHANGE DESCRIPTION: Added   var searchTerm = $('#transl1').val().replace(/\&/g,"%2526") to manage &.
+*							also added %26 replace to %2526 to manage & in EDSGetRecord()
+*							added StoreEDSOptions() to improve intial loading time.
 =============================================================================================
 */
 
@@ -50,7 +52,7 @@ $(document).ready(function(){
 		if($.jStorage.get("edsConfig")!=null){
 			ConfigData((JSON.parse($.jStorage.get("edsConfig"))));
 		}else{
-			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q=config',function(data){ConfigData(data);});
+			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=config',function(data){ConfigData(data);});
 		}
 
 		//$("#masthead_search").attr("disabled","disabled");
@@ -122,12 +124,12 @@ function ConfigData(data){
 }
 
 function GoDiscovery(){		
-	$(document).ready(function(){
+
 		try{edsSelectedKnownItem=edsKnownItem}catch(e){edsSelectedKnownItem='';}
 
 
 		if($.jStorage.get("edsKnownItems")==null){
-			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q=knownitems',function(data){SetEDSOptions(data);});
+			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=knownitems',function(data){StoreEDSOptions(data);});
 		}
 		
 		var optionSelect=1;
@@ -150,18 +152,23 @@ function GoDiscovery(){
 		if($.jStorage.get("edsKnownItems")!=null){
 			var knownItems = $.jStorage.get('edsKnownItems');
 			SetEDSOptions(JSON.parse(knownItems));
+		}else{
+			SetEDSOptions(JSON.parse('[{"FieldCode":"TX","Label":"All Text"},{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"},{"FieldCode":"SU","Label":"Subject Terms"},{"FieldCode":"SO","Label":"Source"},{"FieldCode":"AB","Label":"Abstract"},{"FieldCode":"IS","Label":"ISSN"},{"FieldCode":"IB","Label":"ISBN"},{"FieldCode":"JN","Label":"Journal Title"}]')); // Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
 		}
 		
 		
-	});
 	//$("#masthead_search").removeAttr("disabled");
 	//$("#transl1").removeAttr("disabled");
 
 }
 
-function SetEDSOptions(data){
+function StoreEDSOptions(data){
 	if($.jStorage.get("edsKnownItems")==null)
-		$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
+		$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});	
+}
+
+function SetEDSOptions(data){
+
 	
 	edsOptions+='<option value="">'+kohaSwitchText+'</option><option selected="selected" value="eds">'+edsSelectText+'</option>';
 	for(var i=0; i<data.length; i++){
@@ -241,12 +248,13 @@ function ShowInfo(msg){
 }
 
 function SearchEDS(){
-  var searchTerm = $('#transl1').val();
+  var searchTerm = $('#transl1').val().replace(/\&/g,"%2526");
   if(knownItem=='eds'){knownItem='';}
   window.location='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,'+knownItem+':{'+searchTerm+'}&default=1';
 }
 
 function EDSGetRecord(recordURL,callingObjParent){
+	recordURL = recordURL.replace(/\%26/g,"%2526");
 	$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q=Search?'+recordURL,function(data){EDSGoToRecord(data);});
 	$('.'+callingObjParent).html('<center><span><img src="/opac-tmpl/prog/images/loading.gif" width="14"></span></center>');
 }
@@ -359,7 +367,6 @@ function QueryString(key) {
 function PrepareItems(){
 	if(callPrepareItems==false){callPrepareItems=true;}else{return;} 
 	
-	$(document).ready(function(){
 		var recordList = document.URL;
 		recordList = recordList.substring(recordList.indexOf('?')+10);
 
@@ -405,7 +412,6 @@ function PrepareItems(){
 				var sendParent = $('.send').parent();
 				$(sendParent).html('<a class="send" href="opac-basket.pl" onclick="EDSSendBasket(); return false;">Send</a>');
 			}
-	});
 }
 
 function GetEDSItems(data){
@@ -502,7 +508,8 @@ function AdvSearchEDS(){
 	for(sbCount=1;sbCount<=searchBlockCount;sbCount++){
 		var advBool=$("#searchFields_"+sbCount+" .advBool").val(); if(advBool==undefined){advBool="AND";}
 		var advKi=$("#searchFields_"+sbCount+" .advFieldCode").val();
-		var advTerm=$("#searchFields_"+sbCount+" .advInput").val(); if(advTerm==undefined){advTerm="";}
+		var advTerm=$("#searchFields_"+sbCount+" .advInput").val(); 
+		if(advTerm==undefined){advTerm="";}else{advTerm=advTerm.replace(/\&/g,"%2526");}
 	
 		if(advTerm.length>1)
 			advQuery+="query-"+sbCount+"="+advBool+","+advKi+":{"+advTerm+"}|";
