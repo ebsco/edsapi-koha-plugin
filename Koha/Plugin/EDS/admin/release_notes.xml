@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
 	<latestversion>1.65</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.6.5.kpz</download>
-	<lastupdated>15/Jul/2014</lastupdated>
+	<download>https://github.com/ebsco/edsapi-koha-plugin/raw/Koha-v3.12x/EDS_Plugin_1.65.kpz</download>
+	<lastupdated>27/Jul/2014</lastupdated>
 	<releasenotes>
 		<release version="1.65">
 			<note id="1" author="amiranda@ebsco.com">Applied Hints and help to search mode</note>
 			<note id="2" author="amiranda@ebsco.com">Split published date into month dropdown and year textbox in advanced search</note>
 			<note id="3" author="amiranda@ebsco.com">Added code to switch between Koha and EDS advanced search</note>
 			<note id="4" author="amiranda@ebsco.com">Added help icon to images folder for advanced search</note>
+			<note id="5" author="amiranda@ebsco.com">Fixed issues with & in the url</note>
+			<note id="6" author="amiranda@ebsco.com">Hardcoded field codes to improve performance loading the discovery drop down the first time.</note>
 		</release>
 		<release version="1.6">
 			<note id="1" author="amiranda@ebsco.com">Added Advanced Search.</note>
@@ -29,13 +31,13 @@
 			<note id="9" author="amiranda@ebsco.com">remove discovery items from bib_list before submitting to send function in basketto prevent perl error. </note>		
 			<note id="10" author="amiranda@ebsco.com">added code to display discovery items in more details feature of the basket</note>		
 			<note id="11" author="amiranda@ebsco.com">updated the checkboxes in eds-results.tt to contain ids so cart feature can work</note>		
-			<note id="12" author="amiranda@ebsco.com">Added id's to add/remove cart items from detailed record</note>
+			<note id="12" author="amiranda@ebsco.com">Added ids to add/remove cart items from detailed record</note>
 			<note id="13" author="robin@kallisti.net.nz">Check for authtoken and die gracefully if plugin setup is not complete </note>
 			<note id="14" author="amiranda@ebsco.com">Deleted opac-basket.tt. Updated admin/setuptool.tt by removing the part about copy paste opac-basket.tt into core.</note>
 		</release>
 		<release version="1.4">
 			<note id="1" author="amiranda@ebsco.com">Seperated detail page sidebar to remove save to list option.</note>
-			<note id="2" author="amiranda@ebsco.com">Added no warnings to all pl's. This is setting was added in configure.tt but not wired to the code yet.</note>
+			<note id="2" author="amiranda@ebsco.com">Added no warnings to all pls. This is setting was added in configure.tt but not wired to the code yet.</note>
 			<note id="3" author="amiranda@ebsco.com">Removed code that disabled the dropdown menu when JS was loading EDS Info.</note>
 		</release>
 		<release version="1.003">
