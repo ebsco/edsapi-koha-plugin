@@ -11,9 +11,8 @@ package Koha::Plugin::EDS;
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
 #* DATE MODIFIED: 08/July/2014
-#* LAST CHANGE DESCRIPTION: Updated to 1.7
-#* 							updated min and max Koha support version - 3.14
-#*							removed themelang
+#* LAST CHANGE DESCRIPTION: Updated to 1.8
+#* 							added defaultparams
 #=============================================================================================
 #*/
 
@@ -30,7 +29,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 1.7;
+our $VERSION = 1.8;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -39,7 +38,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Configure(right) to configure the API Plugin first then Run tool (left) for setup instructions.</p><p>For assistance; email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2015-06-30',
+    date_updated    => '2014-11-04',
     minimum_version => '3.14',
     maximum_version => '',
     version         => $VERSION,
@@ -101,6 +100,7 @@ sub configure {
 			edsselecttext	=> $self->retrieve_data('edsselecttext'),
 			edsselectinfo	=> $self->retrieve_data('edsselectinfo'),
 			kohaselectinfo	=> $self->retrieve_data('kohaselectinfo'),
+			defaultparams	=> $self->retrieve_data('defaultparams'),
 			instancepath	=> $self->retrieve_data('instancepath'),
 			
 			
@@ -128,6 +128,7 @@ sub configure {
 					edsselecttext	=> ($cgi->param('edsselecttext')?$cgi->param('edsselecttext'):"-"),
 					edsselectinfo	=> ($cgi->param('edsselectinfo')?$cgi->param('edsselectinfo'):"-"),
 					kohaselectinfo	=> ($cgi->param('kohaselectinfo')?$cgi->param('kohaselectinfo'):"-"),
+					defaultparams	=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
 					instancepath	=> ($cgi->param('instancepath')?$cgi->param('instancepath'):"-"),
 				}
 			);

@@ -103,6 +103,7 @@
 			  <ul>
 				[% FOR FacetValues IN facets.AvailableFacetValues %]
 				  <li>
+                  	<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
 					<a href="[% FacetValues.AddAction %]">[% FacetValues.Value %]</a> ([% FacetValues.Count %])
 				  </li>
 				[% END %]

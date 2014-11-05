@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 08/July/2014
-#* LAST CHANGE DESCRIPTION: FIXED: Removed themelang
+#* DATE MODIFIED: 29/Oct/2014
+#* LAST CHANGE DESCRIPTION: Added defaultparams to edsconfiguration.
 #=============================================================================================
 #*/
 # This file is part of Koha.
@@ -48,7 +48,7 @@ use Encode;
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
+my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $defaultparams, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
 
 my $PluginClass='Koha::Plugin::EDS';
 my $table='plugin_data';
@@ -74,6 +74,7 @@ given($r->{plugin_key}){
 		when('edsselecttext') {$edsselecttext=$r->{plugin_value};}
 		when('edsselectinfo') {$edsselectinfo=$r->{plugin_value};}
 		when('kohaselectinfo') {$kohaselectinfo=$r->{plugin_value};}
+		when('defaultparams') {$defaultparams=$r->{plugin_value};}
 		when('edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
 		when('instancepath') {$instancepath=$r->{plugin_value};}
 		when('lastedsinfoupdate') {$lastedsinfoupdate=$r->{plugin_value};
@@ -204,7 +205,7 @@ sub GetSession
 
 sub EDSGetConfiguration
 {
-	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'"}';
+	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'","defaultparams":"'.$defaultparams.'"}';
 	return $JSONConfig;
 }
 

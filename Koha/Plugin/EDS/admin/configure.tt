@@ -144,6 +144,12 @@
             <td align="left" valign="top">Configurable text to display when a user selects Koha from the dropdown menu.</td>
           </tr>
           <tr>
+            <th align="left" valign="top" nowrap class="settingLabel" scope="row">Default Parameters: </th>
+            <td align="left" valign="top">[% IF defaultparams == '' %]<input name="defaultparams" type="text" class="textbox" id="defaultparams" value="">[% ELSE %]<input name="defaultparams" type="text" class="textbox" id="defaultparams" value="[% defaultparams %]">[% END %]</td>
+            <td align="left" valign="top">Enter default parameters and search conditions EDS should include by default e.g. to add the english language as default enter |facetfilter=1,Language:english. <br>
+<strong>NOTE:</strong> Ensure to enter the pipe character (|) before any parameters. Refer to the EDS API documentation on the EDSWiki for more parameters.</td>
+          </tr>
+          <tr>
             <th colspan="3" align="left" valign="top" nowrap class="settingLabel" scope="row">&nbsp;</th>
           </tr>
             <tr>

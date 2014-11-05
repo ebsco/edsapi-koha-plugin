@@ -74,8 +74,15 @@
 			<div align="right"><input class="btn btn-success" type="reset" class="advSB" /></div>
 			<fieldset>
 			  <legend>Search Modes and Expanders</legend>
-			  
-			  <ul id="modeExpanders">
+			 <dl>
+				<dt class="search-option-label"> 
+						<strong>Search modes</strong>
+					<a class="helplink" target="_blank" href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=">
+						<img valign="middle" src="../images/iconQuestionMarkGeneric.png" width="21" alt="Help (opens in new window)">
+					</a>
+				</dt> 
+				<dd>
+				  <ul id="modeExpanders">
 			  	<li id="limiterItem">
 					<ul>
 						[% FOREACH mode IN search_modes %]
@@ -85,7 +92,14 @@
 							[% ELSE %]
 								<input name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
 							[% END %]
-							<label for="[% mode.Mode %]" >[% mode.Label %]</label>
+                            [% IF mode.Mode == 'smart' %]
+                                <label for="[% mode.Mode %]" >[% mode.Label %]
+                                 <sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="Enter as much text for your search as you want - a phrase, a sentence, paragraph, or even whole pages. This mode searches EBSCO Databases only.">Hint</a></sub>
+                                 
+                                </label>
+                            [% ELSE %]
+                                <label for="[% mode.Mode %]" >[% mode.Label %]</label>
+                            [% END %]
 						</li>
 						[% END %]	
 					</ul>
@@ -105,7 +119,8 @@
 				[% END %]	
 				
 			  </ul>
-			  
+				</dd>
+			  </dl>
 			</fieldset>
 			</p>
 			<p>
@@ -125,7 +140,39 @@
 								[% END %]
 							[% END %]
 							[% IF advlimiter.Type =='ymrange' %]
-								<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" style="width:95%;text-align:center;" placeholder="YYYY-MM/YYYY-MM" data-action="[% advlimiter.AddAction %]" >
+																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
+									<option selected="selected" value="">Month</option>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_FromYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB">
+								-
+								<select name="common_DT1_ToMonth" id="common_DT1_ToMonth" title="Date Published"  class="advSB">
+									<option selected="selected" value="">Month</option>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
 								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >

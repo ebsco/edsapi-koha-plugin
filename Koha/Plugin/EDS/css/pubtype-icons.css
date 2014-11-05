@@ -111,3 +111,9 @@
 				50% 50% 
 				no-repeat;
 }
+
+.updateFacet{
+	position:fixed;
+	top:0px;
+	left:0px;
+}

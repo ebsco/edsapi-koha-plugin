@@ -10,8 +10,9 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 08/July/2014
-#* LAST CHANGE DESCRIPTION: Upgraded to support 3.14
+#* DATE MODIFIED: 29/Oct/2014
+#* LAST CHANGE DESCRIPTION: Added $facetValue->{AddAction} =~s/\&/\%2526/g; to manage & in facets
+#							Added $EDSSearchQueryWithOutPage=~s/\%26/\%2526/g; to manage & in querystring
 #=============================================================================================
 #*/
 
@@ -187,6 +188,7 @@ if($cgi->param("q")){
 		#process query
 		$EDSSearchQuery=$EDSResponse->{SearchRequestGet}->{QueryString};
 		$EDSSearchQuery =~s/\&/\|/g;
+		$EDSSearchQuery=~s/\%26/\%2526/g;
 		$EDSSearchQueryWithOutPage = $EDSSearchQuery;
 		$EDSSearchQueryWithOutPage=~s/pagenumber\=\d+\|//; #TODO consider removing resultsperpage too.
 		EDSProcessFacets();
@@ -345,6 +347,7 @@ sub EDSProcessFacets
 			my @facetValues = @{$facetValues};
 			foreach my $facetValue (@facetValues){
 				$facetValue->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetValue->{AddAction};
+				$facetValue->{AddAction} =~s/\&/\%2526/g;
 			}
 		}
 	}
@@ -361,6 +364,7 @@ sub EDSProcessFilters
 				my @facetFilterValues = @{$facetFilterValues};
 				foreach my $facetFilterValue (@facetFilterValues){
 					$facetFilterValue->{RemoveAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetFilterValue->{RemoveAction};
+					$facetFilterValue->{RemoveAction} =~s/\&/\%2526/g;
 				}
 			}
 		}
@@ -378,6 +382,7 @@ sub EDSProcessQueries
 		foreach my $EDSQuery (@EDSQueries){
 			foreach my $EDSQueryAction ($EDSQuery){
 				$EDSQueryAction->{RemoveAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSQueryAction->{RemoveAction};
+				$EDSQueryAction->{RemoveAction} =~s/\&/\%2526/g;
 			}
 		}
 	} catch {
@@ -399,6 +404,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 				$Limiter->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};		
 				$Limiter->{AddAction} =~s/value/y/;
 				$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
+				$Limiter->{AddAction} =~s/\&/\%2526/g;
 
 				try{
 					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};					
@@ -418,6 +424,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 		
 		if($Limiter->{Type} eq 'ymrange'){
 			$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
+			$Limiter->{AddAction} =~s/\&/\%2526/g;
 					try{
 					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};				
 						foreach my $EDSRemoveLimiter (@EDSRemoveLimiters)
@@ -442,6 +449,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 		$Expander->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};		
 		#$Expander->{AddAction} =~s/value/y/;
 		$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Expander->{AddAction};
+		$Expander->{AddAction} =~s/\&/\%2526/g;
 
 			try{
 			my @EDSRemoveExpanders = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{ExpandersWithAction}};					
