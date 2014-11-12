@@ -8,13 +8,11 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 29/10/2014
-* LAST CHANGE DESCRIPTION: Added   var searchTerm = $('#transl1').val().replace(/\&/g,"%2526") to manage &.
-*							also added %26 replace to %2526 to manage & in EDSGetRecord()
-*							added StoreEDSOptions() to improve intial loading time.
-*							Added advanced search updates to date and all 1.65 upgrades.
-*							MultiFacet
-*							calling custom.js. This is where custom script/content will go.
+* DATE MODIFIED: 13/11/2014
+* LAST CHANGE DESCRIPTION: Managing - in default parmas to be read as "" in ConfigData()
+*							Removed cookieExpiry = 30. replaced by edsconfig.cookieexpiry
+*							Added LoginRequired() for detailed record fulltext
+*							changed preventDefault to defaultPrevented().
 =============================================================================================
 */
 
@@ -25,7 +23,6 @@ var edsOptions="";
 var kohaOptions="";
 var edsSelectedKnownItem="";
 var defaultSearch="";
-var cookieExpiry="30"; //minutes -- delete; not used.
 var browseNextPage="";
 var catalogueId="";
 //-configurable in plugin config
@@ -54,7 +51,7 @@ function StartEDS(){
 	else{jQuery('body').attr('data-starteds','1');}
 	
 	$(document).ready(function(){
-		$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
+		$(window).error(function(e){e.defaultPrevented();}); // keep executing if there is an error.
 		
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			
@@ -119,13 +116,13 @@ function ConfigData(data){
 	if($.jStorage.get("edsConfig")==null)
 		$.jStorage.set("edsConfig",(JSON.stringify(data)),{TTL:edsConfig.cookieexpiry*60*1000}); // cache in browser storage
 	
-	edsSwitchText = data.edsswitchtext;
-	kohaSwitchText = data.kohaswitchtext;
-	edsSelectText = data.edsselecttext;
-	edsSelectInfo = data.edsselectinfo;
-	kohaSelectInfo = data.kohaselectinfo;
-	catalogueId = data.cataloguedbid;
-	defaultParams = data.defaultparams;
+	edsSwitchText = (data.edsswitchtext=="-")?"":data.edsswitchtext;
+	kohaSwitchText = (data.kohaswitchtext=="-")?"":data.kohaswitchtext;
+	edsSelectText = (data.edsselecttext=="-")?"":data.edsselecttext;
+	edsSelectInfo = (data.edsselectinfo=="-")?"":data.edsselectinfo;
+	kohaSelectInfo = (data.kohaselectinfo=="-")?"":data.kohaselectinfo;
+	catalogueId = (data.cataloguedbid=="-")?"":data.cataloguedbid;
+	defaultParams = (data.defaultparams=="-")?"":data.defaultparams;
 	
 	if(data.defaultsearch!="off"){
 		if(!$.cookie('defaultSearch')){defaultSearch=data.defaultsearch;$.cookie('defaultSearch',defaultSearch);
@@ -358,7 +355,8 @@ function EDSSetDetailPageNavigator(){
 			$('.right_results').html('<a href="javascript:EDSGetRecord(\''+simpleQuery+'|resultsperpage=1|pagenumber='+nextResult+'\',\'right_results\')" title="See next">Next &raquo;</a>');
 		}
 	}
-
+	$('.breadcrumb a:contains("Details for:")').text('Details for: '+$('.title').text());
+	
 	if(QueryString('fulltext')=='html'){
 		$('.html-customlink').each(function(){
 			if($(this).text().trim()=="HTML Full Text"){
@@ -376,6 +374,19 @@ function EDSSetDetailPageNavigator(){
 			//}
 			});
 	}
+}
+
+function MinFullTextLoader(){
+	
+	if($('.FullTextLoader').css('height')=="40px")
+		$('.FullTextLoader').css('height','100%');
+	else
+		$('.FullTextLoader').css('height','40px');
+}
+
+function LoginRequired(){
+	alert('Login to gain access to this result.');
+	$('.FullTextLoader').css('display','none');
 }
 
 function QueryString(key) {
@@ -603,7 +614,7 @@ function UpdateFacetButton(state){
 		jQuery('#updatefacets').remove();
 	}else if(activeFacets==1 && state == 1){
 		jQuery('body').append('<input type="button" id="updatefacets" value="Update" class="updateFacet" onclick="UpdateFacet()">');
-		jQuery('#updatefacets').css('top','100px');
+		jQuery('#updatefacets').css('top','102px');
 		jQuery('#updatefacets').animate({"top":"-=100px"},"fast");
 	}else{
 		jQuery('#updatefacets').animate({"top":"+=10px"},"fast");

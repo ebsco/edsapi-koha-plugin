@@ -6,6 +6,8 @@
     You did not specify any search criteria.
 [% END %]
 [% INCLUDE "$instancepath/includes/doc-head-close.inc" %]
+[% BLOCK cssinclude %] [% END %]
+[% BLOCK jsinclude %] [% END %]
     <link rel="alternate" type="application/rss+xml" title="[% LibraryName |html %] Search RSS Feed" href="[% OPACBaseURL %]/cgi-bin/koha/eds-search.pl?[% query_cgi |html %][% limit_cgi |html %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" />
 <link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
     <script type="text/javascript" src="[% themelang %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>
@@ -109,4 +111,4 @@
     </div>
 	[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
     [% INCLUDE "$instancepath/includes/opac-bottom.inc" %]
-<div class="FullTextLoader"></div>	 
+<div onDblClick="MinFullTextLoader();" class="FullTextLoader"></div>	 

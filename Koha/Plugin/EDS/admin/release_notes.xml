@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
 	<latestversion>1.7</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.7.kpz</download>
-	<lastupdated>08/Jul/2014</lastupdated>
+	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_3.16.1.kpz</download>
+	<lastupdated>06/Nov/2014</lastupdated>
 	<releasenotes>
+		<release version="3.16.1" date="06/Oct/2014">
+			<note id="1" author="amiranda@ebsco.com">Compatible with Koha v3.16</note>
+		</release>
 		<release version="1.8" date="31/Oct/2014">
 			<note id="1" author="amiranda@ebsco.com">Applied Hints and help to search mode</note>
 			<note id="2" author="amiranda@ebsco.com">Split published date into month dropdown and year textbox in advanced search</note>

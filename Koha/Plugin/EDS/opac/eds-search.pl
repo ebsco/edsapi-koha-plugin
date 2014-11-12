@@ -36,7 +36,7 @@ use Modern::Perl;
 
 use C4::Context;
 use CGI;
-use C4::Auth qw(:DEFAULT get_session ParseSearchHistorySession SetSearchHistorySession);
+use C4::Auth qw(:DEFAULT get_session);
 #use C4::Auth;
 use C4::Koha;
 use C4::Output;
@@ -90,7 +90,7 @@ my $EDSQuery = $cgi->param("q");
 $EDSQuery =~s/\|/\&/g;
 
 my ($template,$borrowernumber,$cookie);
-my $lang = C4::Templates::getlanguage($cgi, 'opac');
+my $lang = C4::Languages::getlanguage($cgi);
 # decide which template to use
 my $template_name;
 my $template_type = 'basic';
