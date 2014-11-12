@@ -3,7 +3,9 @@ edsapi-koha-plugin
 
 edsapi-koha-plugin
 
-use branch:master  for Koha 3.14+
+use branch:master  for Koha 3.16+
+
+use the branch:KohaV3.14x for Koha 3.14x
 
 use the branch:KohaV3.12x for Koha 3.12x
 
