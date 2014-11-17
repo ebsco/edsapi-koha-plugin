@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>1.7</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.7.kpz</download>
-	<lastupdated>08/Jul/2014</lastupdated>
+	<latestversion>1.8.1</latestversion>
+	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.8.1.kpz</download>
+	<lastupdated>18/Nov/2014</lastupdated>
 	<releasenotes>
+		<release version="1.8.1" date="18/Nov/2014">
+			<note id="1" author="amiranda@ebsco.com">Added placeholder code in advanced search</note>
+			<note id="2" author="amiranda@ebsco.com">setup remove facets when no results found</note>
+			<note id="3" author="amiranda@ebsco.com">fixed issue with login to access full text message</note>
+			<note id="4" author="amiranda@ebsco.com">fixed issue with login to access full text message</note>
+		</release>
 		<release version="1.8" date="31/Oct/2014">
 			<note id="1" author="amiranda@ebsco.com">Applied Hints and help to search mode</note>
 			<note id="2" author="amiranda@ebsco.com">Split published date into month dropdown and year textbox in advanced search</note>
@@ -12,8 +18,6 @@
 			<note id="5" author="amiranda@ebsco.com">Fixed issues with ampersand in the url</note>
 			<note id="6" author="amiranda@ebsco.com">Hardcoded field codes to improve performance loading the discovery drop down the first time.</note>
 			<note id="7" author="amiranda@ebsco.com">Pointed setup/run tool to github.</note>
-			<note id="8" author="amiranda@ebsco.com">MultiFacet Selector.</note>
-			<note id="9" author="amiranda@ebsco.com">Default settings in Plugin Admin</note>
 		</release>
 		<release version="1.7" date="08/Jul/2014">
 			<note id="1" author="amiranda@ebsco.com">Upgraded plugin to work with Koha v3.14</note>

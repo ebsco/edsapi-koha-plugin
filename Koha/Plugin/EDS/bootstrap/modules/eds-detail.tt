@@ -191,7 +191,7 @@
 </div> <!-- / .main -->
 
 [% INCLUDE 'opac-bottom.inc' %]
-<div class="FullTextLoader"></div>	
+<div onDblClick="MinFullTextLoader();" class="FullTextLoader"></div>	
 [%# End of template %]
 
 
