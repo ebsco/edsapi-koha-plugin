@@ -13,6 +13,8 @@
 *							Removed cookieExpiry = 30. replaced by edsconfig.cookieexpiry
 *							Added LoginRequired() for detailed record fulltext
 *							changed preventDefault to defaultPrevented().
+*							added SearchAgain and SetNoResults to manage multiple facets
+*							Search dropdown offers discovery search if data is not cached.
 =============================================================================================
 */
 
@@ -40,6 +42,8 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
+var versionEDSKoha = '3.16.1';
+
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
 try{jQuery().jquery;clearInterval(trackCall);
@@ -138,10 +142,6 @@ function GoDiscovery(){
 
 		try{edsSelectedKnownItem=edsKnownItem}catch(e){edsSelectedKnownItem='';}
 
-
-		if($.jStorage.get("edsKnownItems")==null){
-			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=knownitems',function(data){StoreEDSOptions(data);});
-		}
 		
 		var optionSelect=1;
 		$('#masthead_search option').each(function(){
@@ -164,9 +164,13 @@ function GoDiscovery(){
 			var knownItems = $.jStorage.get('edsKnownItems');
 			SetEDSOptions(JSON.parse(knownItems));
 		}else{
-			SetEDSOptions(JSON.parse('[{"FieldCode":"TX","Label":"All Text"},{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"},{"FieldCode":"SU","Label":"Subject Terms"},{"FieldCode":"SO","Label":"Source"},{"FieldCode":"AB","Label":"Abstract"},{"FieldCode":"IS","Label":"ISSN"},{"FieldCode":"IB","Label":"ISBN"},{"FieldCode":"JN","Label":"Journal Title"}]')); // Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
+			SetEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));// Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
+			//SetEDSOptions(JSON.parse('[{"FieldCode":"TX","Label":"All Text"},{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"},{"FieldCode":"SU","Label":"Subject Terms"},{"FieldCode":"SO","Label":"Source"},{"FieldCode":"AB","Label":"Abstract"},{"FieldCode":"IS","Label":"ISSN"},{"FieldCode":"IB","Label":"ISBN"},{"FieldCode":"JN","Label":"Journal Title"}]')); 
+			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=knownitems',function(data){StoreEDSOptions(data);});
 		}
 		
+		// check no results
+		SetNoResults();
 		
 	//$("#masthead_search").removeAttr("disabled");
 	//$("#transl1").removeAttr("disabled");
@@ -174,14 +178,16 @@ function GoDiscovery(){
 }
 
 function StoreEDSOptions(data){
-	if($.jStorage.get("edsKnownItems")==null)
+	if($.jStorage.get("edsKnownItems")==null){
 		$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});	
+		SetEDSOptions(data);
+	}
 }
 
 function SetEDSOptions(data){
-	if($.jStorage.get("edsKnownItems")==null)
-		$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
-	
+	//if($.jStorage.get("edsKnownItems")==null)
+		//$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
+	edsOptions="";
 	edsOptions+='<option value="">'+kohaSwitchText+'</option><option selected="selected" value="eds">'+edsSelectText+'</option>';
 	for(var i=0; i<data.length; i++){
 		var selectedItem ="";
@@ -628,4 +634,47 @@ function UpdateFacet(){
 	window.location.href=newEDSURL;
 }
 
+function SetNoResults(){
+	if(jQuery('strong:contains("No results found!")').length==0){
+		return;
+	}
+	
+	var resultsSelector = (jQuery('#noresultsfound').length)?'#noresultsfound':'#top-pages'; // top-pages for bootstrap
+	
+	var searchQuery = QueryString('q');
+	var queryActions = searchQuery[0].split('|');
+	
+	if(searchQuery[0].indexOf('action=add')==-1){
+		return;
+	}
+	
+		jQuery(resultsSelector).html(jQuery(resultsSelector).html()+"<h4>Remove any of the following limiters and search again.</h4>");
+	jQuery(queryActions).each(function(){
+		var checkBoxString='<input type="checkbox" checked="checked" value="" name="filter[]" id="" />';
+		var actionItem = this;
+		checkBoxString = checkBoxString.replace('value=""','value="'+actionItem+'"');  		
+		if(actionItem.indexOf('action=add')>-1){
+			actionItem = actionItem.replace('action=addfacetfilter(','');
+			actionItem = actionItem.replace(')','');
+			checkBoxString = checkBoxString.replace('id=""','id="'+actionItem+'"');
+			jQuery(resultsSelector).html(jQuery(resultsSelector).html()+"<span style='display: inline-block;padding:5px;margin:5px;'> "+checkBoxString+'<label for="'+actionItem+'">'+decodeURIComponent(decodeURIComponent(actionItem))+"</label></span>");
+		}
+	});
+	jQuery(resultsSelector).html(jQuery(resultsSelector).html()+"<p><input type='button' onclick='SearchAgain()' value='Search again' ></p>");
+}
+
+function SearchAgain(){
+	var resultsSelector = (jQuery('#noresultsfound').length)?'#noresultsfound':'#top-pages'; // top-pages for bootstrap
+	var searchQueryString = document.URL;
+	jQuery(resultsSelector+' input[type="checkbox"]').each(function(){
+		var checkItem = this;
+		if(!jQuery(checkItem).is(':checked')){
+			searchQueryString = searchQueryString.replace('|'+jQuery(checkItem).val(),'');
+		}
+	});
+	window.location.href=searchQueryString;
+}
+
 // Multile Facets END
+
+//

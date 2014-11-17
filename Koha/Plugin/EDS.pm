@@ -180,12 +180,15 @@ sub SetupTool {
     my $cgi = $self->{'cgi'};
 	
 	require $PluginDir.'/admin/setuptool.pl';
+	
+	my $shaData= get('https://raw.githubusercontent.com/ebsco/edsapi-koha-plugin/Koha-v3.12x/sha.json');
 
     my $template = $self->get_template({ file => 'admin/setuptool.tt' });
 	        $template->param(
 			edsusername 		=> $self->retrieve_data('edsusername'),
 			edspassword 		=> $self->retrieve_data('edspassword'),
 			currentversion		=> $VERSION,
+			shadata				=>$shaData,
 			
 			
         );

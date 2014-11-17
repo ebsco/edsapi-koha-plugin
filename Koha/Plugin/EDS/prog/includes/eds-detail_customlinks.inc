@@ -37,7 +37,7 @@
 	[% END %]
 [% END %]
 [% IF DETAILED_RECORD.PLink %]		  
-	<li><a target="_blank" class="customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">View in EDS</a></li>
+	<li><a target="_blank" class="edslink customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">View in EDS</a></li>
 [% END %]
 
 </ul>

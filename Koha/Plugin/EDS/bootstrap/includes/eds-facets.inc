@@ -20,9 +20,11 @@
 				<ul>
 				<li>Limiters</li>
 				[% FOR facetFilter IN filters %]
+				[% FOR facetFilterItem IN facetFilter.FacetValuesWithAction %]
 				  <li>
-					<a href="[% facetFilter.FacetValuesWithAction.0.RemoveAction %]"><input type="checkbox" checked onchange="window.location.href=($(this).parent().attr('href'));$(this).attr('disabled','disabled');" > [% facetFilter.FacetValuesWithAction.0.FacetValue.Id %] : [% facetFilter.FacetValuesWithAction.0.FacetValue.Value %]</a>
+					<a href="[% facetFilterItem.RemoveAction %]"><input type="checkbox" checked onchange="window.location.href=($(this).parent().attr('href'));$(this).attr('disabled','disabled');" > [% facetFilterItem.FacetValue.Id %] : [% facetFilterItem.FacetValue.Value %]</a>
 				  </li>
+				[% END %]
 				[% END %]
 				</ul>
 			[% END %]

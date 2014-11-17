@@ -77,7 +77,7 @@
   <tr>
     <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [bootstrap/modules] & [prog/modules] :
 		<br>
-		Template Files - <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(None), Execute(Owner) or 544</th>
+		Template Files - <strong>Minimum folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
   </tr>
   <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.tt</th>
@@ -95,9 +95,14 @@
     <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
+    <th align="left" valign="top" nowrap scope="row">eds-advsearch.tt</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
     <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [bootstrap/includes] & [prog/includes] :
 		<br> 
-		Includes - <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(None), Execute(Owner) or 544</th>
+		Includes - <strong>Minimum folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
   </tr>
   <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail_customlinks.inc</th>
@@ -137,7 +142,7 @@
     <td width="1%" align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th align="left" valign="top" nowrap scope="row">Auth.pmd</th>
+    <th align="left" valign="top" nowrap scope="row">Auth.pm</th>
     <td align="left" valign="top" nowrap><p><strong>OPEN </strong>Auth.pm in  \lib\C4 and add the below line after CalendarFirstDayOfWeek    =&gt; at approx. line 397</p>
     <p>
       <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">EDSEnabled                   => C4::Context->preference("EDSEnabled"),</textarea>
@@ -145,7 +150,7 @@
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row"><p>Folder [admin]: Plugin Admin -  <strong>Minimum folder and file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755<br>
+    <th colspan="3" align="left" valign="top" nowrap scope="row"><p>Folder [admin]: Plugin Admin -  <strong>Minimum folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755<br>
       Note: these files are used to setup and manage the plugin.</p></th>
   </tr>
   <tr>
@@ -169,7 +174,7 @@
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [images] - Minimum folder and file permissions: Read (Everyone), Write(None), Execute(Owner) or 544</th>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [images] - Minimum folder and file permissions: Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
   </tr>
   <tr>
     <th align="left" valign="top" nowrap scope="row">eds_logo.jpg</th>
@@ -192,7 +197,12 @@
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [css] - Minimum folder and file permissions: Read (Everyone), Write(No one), Execute(Owner) or 544</th>
+    <th align="left" valign="top" nowrap scope="row">iconQuestionMarkGeneric.png</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [css] - Minimum folder and file permissions: Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
   </tr>
   <tr>
     <th align="left" valign="top" nowrap scope="row">pubtype-icons.css</th>
@@ -200,7 +210,7 @@
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [js] - Minimum folder and file permissions: Read (Everyone), Write(No one), Execute(Owner) or 544</th>
+    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [js] - Minimum folder and file permissions: Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
   </tr>
   <tr>
     <th align="left" valign="top" nowrap scope="row">EDSScript.js</th>
@@ -209,6 +219,11 @@
   </tr>
   <tr>
     <th align="left" valign="top" nowrap scope="row">jquery.cookie.min.js</th>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top" nowrap scope="row">custom.js</th>
     <td align="left" valign="top" nowrap>&nbsp;</td>
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>

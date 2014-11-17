@@ -1,6 +1,11 @@
-[% INCLUDE "$instancepath/includes/doc-head-open.inc" %] [% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %] catalogue &rsaquo; Advanced search [% INCLUDE "$instancepath/includes/doc-head-close.inc" %] <script type="text/javascript" language="javascript">//<![CDATA[
+[% USE Koha %]
+[% INCLUDE 'doc-head-open.inc' %]
+[% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %]
+    catalog &rsaquo; Advanced search
+[% INCLUDE 'doc-head-close.inc' %]
+<script type="text/javascript" language="javascript">//<![CDATA[
             $(document).ready(function() {
-            $('#advsearches > ul').tabs();
+            $('#advsearches').tabs();
 });
     //]]>
 </script>
@@ -8,10 +13,10 @@
 </head>
 <body id="advsearch"><div id="doc3" class="yui-t7">
 <div id="bd">
-[% INCLUDE "$instancepath/includes/masthead.inc" %] <div id="yui-main">
+[% INCLUDE 'masthead.inc' %]
+<div id="yui-main">
 
-
-	<div id="edsAdvSearch">
+<div id="edsAdvSearch">
 		<form id="advSearchForm" onSubmit="AdvSearchEDS();return false;">
 		<ul id="searchBlock"> 
 			<li id="searchFields_1">
@@ -114,7 +119,39 @@
 								[% END %]
 							[% END %]
 							[% IF advlimiter.Type =='ymrange' %]
-								<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" style="width:95%;text-align:center;" placeholder="YYYY-MM/YYYY-MM" data-action="[% advlimiter.AddAction %]" >
+																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
+									<option selected="selected" value="">Month</option>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_FromYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB">
+								-
+								<select name="common_DT1_ToMonth" id="common_DT1_ToMonth" title="Date Published"  class="advSB">
+									<option selected="selected" value="">Month</option>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
 								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
@@ -140,7 +177,27 @@
 		</div>
 		</form>
 	</div>
-</div>
+
+
 
 </div>
-[% INCLUDE "$instancepath/includes/opac-bottom.inc" %] 
+
+
+</div>
+<script>
+	$('[placeholder]').focus(function() {
+	  var input = $(this);
+	  if (input.val() == input.attr('placeholder')) {
+		input.val('');
+		input.removeClass('placeholder');
+	  }
+	}).blur(function() {
+	  var input = $(this);
+	  if (input.val() == '' || input.val() == input.attr('placeholder')) {
+		input.addClass('placeholder');
+		input.val(input.attr('placeholder'));
+	  }
+	}).blur();
+// 	required for EDS date funciton to work
+</script>
+[% INCLUDE 'opac-bottom.inc' %]

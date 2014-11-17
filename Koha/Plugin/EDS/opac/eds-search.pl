@@ -10,9 +10,9 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 29/Oct/2014
-#* LAST CHANGE DESCRIPTION: Added $facetValue->{AddAction} =~s/\&/\%2526/g; to manage & in facets
-#							Added $EDSSearchQueryWithOutPage=~s/\%26/\%2526/g; to manage & in querystring
+#* DATE MODIFIED: 13/Nov/2014
+#* LAST CHANGE DESCRIPTION: Added $facetValue->{AddAction} =~s/\:/\%3a/g; to manage : in facets
+#*							updated eds-facets.inc to display more than 1 facet
 #=============================================================================================
 #*/
 
@@ -205,6 +205,8 @@ if($cgi->param("q")){
 	};
 }
 #use Data::Dumper; die Dumper %pager;
+#use Data::Dumper; die Dumper @EDSFacetFilters;
+
 # Pager template params
 	$template->param(
 	     PAGE_NUMBERS     => \%pager,
@@ -348,6 +350,7 @@ sub EDSProcessFacets
 			foreach my $facetValue (@facetValues){
 				$facetValue->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetValue->{AddAction};
 				$facetValue->{AddAction} =~s/\&/\%2526/g;
+				$facetValue->{AddAction} =~s/\:/\%3a/g;
 			}
 		}
 	}
@@ -476,7 +479,6 @@ sub EDSProcessPages
 			'PageNumber' => 1,
 			'ResultsPerPage' => 20,
 			'TotalResults' => 1,
-			'PageNumber' => 1,
 			'PageCounter' => 1,
 		);
 	$pager{'URL'}=$EDSSearchQueryWithOutPage;
