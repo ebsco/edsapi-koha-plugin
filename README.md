@@ -11,7 +11,9 @@ use the branch:KohaV3.12x for Koha 3.12x
 
 minimum Koha version supported is Koha 3.12 with plugins enabled
 
+use Patches folder to patch core Koha files and get greater integration. Refer to release comments associated with each patch version.
 
+Min file/folder permission for the plugin folder = 755
 
 
 

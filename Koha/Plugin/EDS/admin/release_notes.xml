@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>1.7</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_3.16.1.kpz</download>
-	<lastupdated>06/Nov/2014</lastupdated>
+	<latestversion>3.162</latestversion>
+	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
+	<lastupdated>01/Dec/2014</lastupdated>
 	<releasenotes>
-		<release version="3.16.1" date="16/Oct/2014">
+		<release version="3.162" date="1/Dec/2014">
+			<note id="1" author="amiranda@ebsco.com">Fixed setuptool to display release notes and current/latest version based on raw.git</note>
+			<note id="2" author="amiranda@ebsco.com">Added a switch in EDSScript.js to enable/disable sendCart patch.</note>
+		</release>
+		<release version="3.16.1" date="16/Now/2014">
 			<note id="1" author="amiranda@ebsco.com">Support for template prog</note>
 			<note id="2" author="amiranda@ebsco.com">Remove limiters if no results found feature.</note>
 			<note id="3" author="amiranda@ebsco.com">Updated folder permissions on run tool.</note>
 		</release>
-		<release version="3.16" date="06/Oct/2014">
+		<release version="3.16" date="06/Now/2014">
 			<note id="1" author="amiranda@ebsco.com">Compatible with Koha v3.16</note>
 		</release>
 		<release version="1.8" date="31/Oct/2014">

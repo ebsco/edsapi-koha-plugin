@@ -42,7 +42,8 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
-var versionEDSKoha = '3.16.1';
+var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
+var versionEDSKoha = '3.162';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -448,13 +449,14 @@ function PrepareItems(){
 			$('#EDSBasketLoader').css('display','none');
 		}
 		
-		if(document.URL.indexOf('|')!=-1){
-			var sendParent = $('.send').parent().html();
-			sendParent = sendParent.replace('onclick="sendBasket()','onclick="EDSSendBasket()');
-			//$(sendParent).html('<a class="send" href="opac-basket.pl" onclick="EDSSendBasket(); return false;">Send</a>');
-			$('.send').parent().html(sendParent);
+		if(!patchSendCart){
+			if(document.URL.indexOf('|')!=-1){
+				var sendParent = $('.send').parent().html();
+				sendParent = sendParent.replace('onclick="sendBasket()','onclick="EDSSendBasket()');
+				//$(sendParent).html('<a class="send" href="opac-basket.pl" onclick="EDSSendBasket(); return false;">Send</a>');
+				$('.send').parent().html(sendParent);
+			}
 		}
-
 }
 
 function GetEDSItems(data){
