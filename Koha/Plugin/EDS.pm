@@ -10,9 +10,9 @@ package Koha::Plugin::EDS;
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 08/July/2014
-#* LAST CHANGE DESCRIPTION: Updated to 3.16
-#* 							added defaultparams
+#* DATE MODIFIED: 4/Dec/2014
+#* LAST CHANGE DESCRIPTION: Updated to 3.1621
+#* 							added PageURL function in EDS.pm to refresh if run tool encounters an error.
 #=============================================================================================
 #*/
 
@@ -28,11 +28,12 @@ use LWP::Simple qw(get);
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 
+
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.162;
+our $VERSION = 3.1621;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -41,7 +42,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Configure(right) to configure the API Plugin first then Run tool (left) for setup instructions.</p><p>For assistance; email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2014-12-01',
+    date_updated    => '2014-12-04',
     minimum_version => '3.16',
     maximum_version => '',
     version         => $VERSION,
@@ -178,6 +179,23 @@ sub uninstall() {
 	return C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '0', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
 }
 
+sub PageURL{
+	# http://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
+	my $page_url = 'http';
+	if ($ENV{HTTPS} = "on") {
+		#$page_url .= "s";
+	}
+	$page_url .= "://";
+	if ($ENV{SERVER_PORT} != "80") {
+		$page_url .= $ENV{SERVER_NAME}.":".$ENV{SERVER_PORT}.$ENV{REQUEST_URI};
+	} else {
+		$page_url .= $ENV{SERVER_NAME}.$ENV{REQUEST_URI};
+	}	
+	
+	return $page_url;
+	
+}
+
 sub SetupTool {
     my ( $self, $args ) = @_;
     my $cgi = $self->{'cgi'};
@@ -189,8 +207,8 @@ sub SetupTool {
 		$shaData= get('https://widgets.ebscohost.com/prod/api/koha/sha/316.json');
 		$shaData=decode_json($shaData);
 	}catch{
-		$shaData= get('https://widgets.ebscohost.com/prod/api/koha/sha/316.json');
-		$shaData=decode_json($shaData);
+		my $redirectURL = PageURL();
+		print "Location $redirectURL\n\n";
 	};
 	my $xmlReleaseNotes = get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
 	#use Data::Dumper; die Dumper $xmlReleaseNotes;

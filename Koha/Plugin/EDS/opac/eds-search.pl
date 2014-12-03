@@ -10,9 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 13/Nov/2014
-#* LAST CHANGE DESCRIPTION: Added $facetValue->{AddAction} =~s/\:/\%3a/g; to manage : in facets
-#*							updated eds-facets.inc to display more than 1 facet
+#* DATE MODIFIED: 4/Dec/2014
+#* LAST CHANGE DESCRIPTION: applied $search_context code in GetCatalogueAvailability() to match search code at Catalyst instance. Plus put GetCatalogueAvailability call in a trycatch block
 #=============================================================================================
 #*/
 
@@ -46,6 +45,7 @@ use IO::File;
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use POSIX qw/ceil/;
+use C4::Members qw(GetMember); 
 
 #legacy from template... may not be required.
 use C4::Languages qw(getAllLanguages);
@@ -306,13 +306,15 @@ sub EDSProcessResults
 				my @Items = @{$Items};
 				foreach my $Item (@Items){
 					$Item = EDSProcessItem($Item);
-					if(($Result->{Header}->{DbId} eq $EDSConfig->{cataloguedbid}) && ($Item->{Name} eq 'Title')){ 
-						my $CatalogueRecordId=$Result->{Header}->{An};
-						$CatalogueRecordId=~s/\w+\.//;
-						$Item->{CatData} = GetCatalogueAvailability($CatalogueRecordId);
-						$Item->{CatData} =~s/pl\?biblionumber\=/pl\?resultid\=$Result->{ResultId}\&biblionumber\=/;
-						$Item->{CatData} =~s/(<a[^<]+?>)(.*?)(<\/a>)/$1$Item->{Data}$3/; # replace title for highlights
-					}
+					try{
+						if(($Result->{Header}->{DbId} eq $EDSConfig->{cataloguedbid}) && ($Item->{Name} eq 'Title')){ 
+							my $CatalogueRecordId=$Result->{Header}->{An};
+							$CatalogueRecordId=~s/\w+\.//;
+							$Item->{CatData} = GetCatalogueAvailability($CatalogueRecordId);
+							$Item->{CatData} =~s/pl\?biblionumber\=/pl\?resultid\=$Result->{ResultId}\&biblionumber\=/;
+							$Item->{CatData} =~s/(<a[^<]+?>)(.*?)(<\/a>)/$1$Item->{Data}$3/; # replace title for highlights
+						}
+					}catch{};
 				}
 			}
 			catch
@@ -334,7 +336,15 @@ sub GetCatalogueAvailability
 	my $itemtypes = GetItemTypes;
 	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
-	my @CatalogueResults = searchResults('opac', $query, $hits, '100', 0, $scan, $results_hashref->{$servers[0]}->{"RECORDS"});
+	
+	my $search_context = {};
+	$search_context->{'interface'} = 'opac';
+	if (C4::Context->preference('OpacHiddenItemsExceptions')){
+		my $borrower = GetMember( borrowernumber => $borrowernumber );
+		$search_context->{'category'} = $borrower->{'categorycode'};
+	}
+	
+	my @CatalogueResults = searchResults($search_context, $query, $hits, '100', 0, $scan, $results_hashref->{$servers[0]}->{"RECORDS"});
 	return $CatalogueResults[0]->{"XSLTResultsRecord"};
 }
 

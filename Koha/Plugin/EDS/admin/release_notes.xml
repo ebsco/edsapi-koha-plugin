@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.162</latestversion>
+	<latestversion>3.1621</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>01/Dec/2014</lastupdated>
+	<lastupdated>04/Dec/2014</lastupdated>
 	<releasenotes>
+		<release version="3.1621" date="4/Dec/2014">
+			<note id="1" author="amiranda@ebsco.com">applied $search_context code in GetCatalogueAvailability() to match search code at Catalyst instance. Plus put GetCatalogueAvailability call in a trycatch block</note>
+			<note id="1" author="amiranda@ebsco.com">added PageURL function in EDS.pm to refresh if run tool encounters an error.</note>
+		</release>
 		<release version="3.162" date="1/Dec/2014">
 			<note id="1" author="amiranda@ebsco.com">Fixed setuptool to display release notes and current/latest version based on raw.git</note>
 			<note id="2" author="amiranda@ebsco.com">Added a switch in EDSScript.js to enable/disable sendCart patch.</note>
