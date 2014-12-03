@@ -37,3 +37,9 @@ Click Configure on the plugin list and enter EDS settings and save.
 Contact support@ebsco.com for field values.
 
 Click Update Info. Wait for the page to refresh. You might have to click Update Info twice if it initiating connection takes time the first time.
+
+
+
+
+Quick Links.
+https://github.com/ebsco/edsapi-koha-plugin/wiki/Creating-KPZ-files
