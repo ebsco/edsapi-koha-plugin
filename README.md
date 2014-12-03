@@ -16,7 +16,7 @@ use Patches folder to patch core Koha files and get greater integration. Refer t
 Min file/folder permission for the plugin folder = 755
 
 
-
+Installation Guide: https://github.com/ebsco/edsapi-koha-plugin/wiki
 
 Quick Installation Steps
 ========================
