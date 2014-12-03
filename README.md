@@ -41,8 +41,8 @@ Click Update Info. Wait for the page to refresh. You might have to click Update 
 
 
 
-Quick Links.
-
+Quick Links
+========================
 https://github.com/ebsco/edsapi-koha-plugin/wiki/Patches
 
 https://github.com/ebsco/edsapi-koha-plugin/wiki/Creating-KPZ-files
