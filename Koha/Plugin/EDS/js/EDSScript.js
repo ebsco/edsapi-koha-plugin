@@ -42,6 +42,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
+var versionEDSKoha = '1.82';
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
 try{jQuery().jquery;clearInterval(trackCall);
@@ -53,7 +54,7 @@ function StartEDS(){
 	else{jQuery('body').attr('data-starteds','1');}
 	
 	$(document).ready(function(){
-		$(window).error(function(e){e.defaultPrevented();}); // keep executing if there is an error.
+		try{$(window).error(function(e){e.defaultPrevented();});}catch(err){} // keep executing if there is an error.
 		
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			

@@ -10,9 +10,8 @@ package Koha::Plugin::EDS;
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 18/Nov/2014
-#* LAST CHANGE DESCRIPTION: Updated to 1.8.1
-#* 							added defaultparams
+#* DATE MODIFIED: 06/Jan/2015
+#* LAST CHANGE DESCRIPTION: Updated to 1.82.
 #=============================================================================================
 #*/
 
@@ -24,12 +23,13 @@ use C4::Members;
 use C4::Auth;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
+use LWP::Simple qw(get);
 
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 1.8.1;
+our $VERSION = 1.82;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -38,7 +38,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Configure(right) to configure the API Plugin first then Run tool (left) for setup instructions.</p><p>For assistance; email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2014-11-18',
+    date_updated    => '2015-01-06',
     minimum_version => '3.14',
     maximum_version => '',
     version         => $VERSION,

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>1.8.1</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.8.1.kpz</download>
-	<lastupdated>18/Nov/2014</lastupdated>
+	<latestversion>1.82</latestversion>
+	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.82.kpz</download>
+	<lastupdated>06/Jan/2015</lastupdated>
 	<releasenotes>
+		<release version="1.82" date="06/Jan/2015">
+			<note id="1" author="amiranda@ebsco.com">Moved placeholder function in eds-advsearch.tt after [% BLOCK jsinclude %] to fix bug</note>
+			<note id="2" author="amiranda@ebsco.com">put error-defaultPrevented in EDSScript.js in try catch block</note>
+			<note id="3" author="amiranda@ebsco.com">removed file custom.js to prevent deleting custom code when upgrading plugin. JS still call the file</note>
+		</release>
 		<release version="1.8.1" date="18/Nov/2014">
 			<note id="1" author="amiranda@ebsco.com">Added placeholder code in advanced search</note>
 			<note id="2" author="amiranda@ebsco.com">setup remove facets when no results found</note>
