@@ -43,7 +43,7 @@ var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
 var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
-var versionEDSKoha = '3.162';
+var versionEDSKoha = '3.1622';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -56,7 +56,7 @@ function StartEDS(){
 	else{jQuery('body').attr('data-starteds','1');}
 	
 	$(document).ready(function(){
-		$(window).error(function(e){e.defaultPrevented();}); // keep executing if there is an error.
+		$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
 		
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			
@@ -420,8 +420,8 @@ function PrepareItems(){
 	}
 	
 	if(EDSItems>0){
-		$('.print-large').attr('onclick',''); // .print for prog
-		$('.print-large').attr('href','javascript:window.print();location.reload();'); // .print for prog
+		$('.print-large, .print').attr('onclick',''); // .print for prog
+		$('.print-large, .print').attr('href','javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/prog/images/loading.gif" width="15"> Loading Items. Please wait...</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 		$(".dataTables_empty").css('display','none');
 	}

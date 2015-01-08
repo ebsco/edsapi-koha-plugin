@@ -45,12 +45,31 @@ use File::Basename qw( dirname );
 
 
 
+use Modern::Perl;
+use base qw(Koha::Plugins::Base);
+use C4::Context;
+use C4::Branch;
+use C4::Members;
+use LWP::Simple qw(get);
+use Try::Tiny;
+use File::Find qw(finddepth);
+
+
+
 
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
 
-my $PluginDir = dirname(abs_path($0));
-$PluginDir =~s /EDS\/admin/EDS/;
+#my $PluginDir = C4::Context->config("pluginsdir");
+#$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+
+#my @files;
+# finddepth(sub {
+#      return if($_ eq '.' || $_ eq '..');
+#      push @files, $File::Find::name;
+# }, $PluginDir);
+ 
+#use Data::Dumper; die Dumper @files;
 
 1;

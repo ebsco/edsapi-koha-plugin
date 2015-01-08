@@ -29,17 +29,17 @@
         <th align="center" valign="top" scope="col">Latest Release Notes</th>
       </tr>
       <tr>
-        <td width="5%" align="left" valign="middle" nowrap scope="col"><p><strong>Installed Version</strong></p></td>
-        <td width="5%" align="center" valign="middle" nowrap scope="col">[%  currentversion %]</th>
+        <td width="5%" align="left" valign="middle" nowrap scope="col"><strong>Latest Version</strong></td>
+        <td width="5%" align="center" valign="middle" nowrap scope="col"><div id="latestversion">[%  latestversion %]</div></td>
         <th width="1%" rowspan="3" align="left" valign="top" scope="col">&nbsp;</td>
         <td rowspan="3" align="left" valign="top" scope="col"><div id="releaseNotes" style="max-height:100px; overflow:auto;">[%  releasenotes %]</div></td>
       </tr>
       <tr>
-        <td width="5%" align="left" valign="middle" nowrap scope="col"><strong>Latest Version</strong></td>
-        <td width="5%" align="center" valign="middle" nowrap scope="col"><div id="latestversion">[%  latestversion %]</div></td>
+        <td width="5%" align="left" valign="middle" nowrap scope="col"><strong>Installed Version</strong></td>
+        <td width="5%" align="center" valign="middle" nowrap scope="col">[%  currentversion %]</th>
       </tr>
       <tr>
-        <td colspan="2" align="center" valign="middle" nowrap scope="col"><input type="button" value="Download Latest Version" onclick="window.open('https://github.com/ebsco/edsapi-koha-plugin')"></td>
+        <td colspan="2" align="center" valign="middle" nowrap scope="col"><input id="update-button" type="button" value="Download Selected Version" onclick="UpdatePlugin();"></td>
   </tr>
 </table>
 <p><hr></p>	
@@ -223,7 +223,7 @@
   </tr>
   <tr>
     <th align="left" valign="top" nowrap scope="row">custom.js</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap>Place customisations in this file. This is not a part of the plugin but is called if it exists to apply front-end customisations.</td>
     <td align="left" valign="top" nowrap>&nbsp;</td>
   </tr>
   <tr>
@@ -274,6 +274,21 @@ function TextToXML(text){
 }
 
 DisplayResults(jQuery('#releaseNotes').html());
+
+$('#plugin-version').change(function(e){
+
+	if($('#plugin-version option[selected="selected"]').text() == $('#plugin-version option:eq('+$('#plugin-version')[0].selectedIndex+')').text()){
+		//$('#update-button').attr('disabled','disabled');
+	}else{
+		$('#update-button').removeAttr('disabled');
+	}
+		
+});
+
+function UpdatePlugin(){
+	//window.location.href = document.URL+"&updateto="+$('#plugin-version option:eq('+$('#plugin-version')[0].selectedIndex+')').val();
+	window.open("https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/"+$('#plugin-version option:eq('+$('#plugin-version')[0].selectedIndex+')').val()+"/eds_plugin_"+$('#plugin-version option:eq('+$('#plugin-version')[0].selectedIndex+')').text()+".kpz");
+}
 	
 </script>
 [% INCLUDE 'intranet-bottom.inc' %]

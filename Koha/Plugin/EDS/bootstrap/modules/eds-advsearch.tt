@@ -209,6 +209,11 @@
 
          <!-- / .container-fluid -->
 </form>
+
+[% INCLUDE 'opac-bottom.inc' %]
+
+[% BLOCK jsinclude %]
+
 <script>
 	$('[placeholder]').focus(function() {
 	  var input = $(this);
@@ -225,8 +230,5 @@
 	}).blur();
 // 	required for EDS date funciton to work
 </script>
-[% INCLUDE 'opac-bottom.inc' %]
-
-[% BLOCK jsinclude %]
 
 [% END %]

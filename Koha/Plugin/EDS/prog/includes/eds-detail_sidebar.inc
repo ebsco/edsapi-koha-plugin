@@ -6,7 +6,7 @@
   [% END %] [% END %] [% END %] [% END %] [% END %]
   <li><a class="print" href="#" onclick="window.print();">Print</a></li>
   [%# IF ( virtualshelves ) % ] [% IF ( opacuserlogin ) % ][% IF ( loggedinusername ) % ]
-  <li style="display:none;"><a class="addtoshelf" href="/cgi-bin/koha/opac-addbybiblionumber.pl?biblionumber=[% biblionumber % ]" onclick="Dopop('opac-addbybiblionumber.pl?biblionumber=[% biblionumber % ]'); return false;">Save to your lists </a></li>
+  <!-- <li style="display:none;"><a class="addtoshelf" href="/cgi-bin/koha/opac-addbybiblionumber.pl?biblionumber=[% biblionumber % ]" onclick="Dopop('opac-addbybiblionumber.pl?biblionumber=[% biblionumber % ]'); return false;">Save to your lists </a></li> -->
   [% END % ][% END % ] [% END %] 
   [% IF ( opacbookbag ) %] [% IF ( incart ) %]
   <li><a class="incart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">In your cart</a> <a class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">(remove)</a></li>

@@ -33,7 +33,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1621;
+our $VERSION = 3.1622;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -42,7 +42,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Configure(right) to configure the API Plugin first then Run tool (left) for setup instructions.</p><p>For assistance; email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2014-12-04',
+    date_updated    => '2015-01-08',
     minimum_version => '3.16',
     maximum_version => '',
     version         => $VERSION,
@@ -200,7 +200,6 @@ sub SetupTool {
     my ( $self, $args ) = @_;
     my $cgi = $self->{'cgi'};
 	
-	require $PluginDir.'/admin/setuptool.pl';
 	
 	my $shaData = '';
 	try{
@@ -212,15 +211,36 @@ sub SetupTool {
 	};
 	my $xmlReleaseNotes = get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
 	#use Data::Dumper; die Dumper $xmlReleaseNotes;
-	
+
+	my $currentVersion ="<select id='plugin-version'>";
+
+	my @pluginVersions = @{$shaData->{edsplugin}->{version}};
+
+	foreach my $pluginVersion (@pluginVersions){
+			my $selectedVersion="";
+			if($VERSION eq $pluginVersion->{number}){
+				$selectedVersion=" selected='selected'";
+			}
+			$currentVersion .="<option value='".$pluginVersion->{sha}."'".$selectedVersion.">";
+			$currentVersion .=$pluginVersion->{number};
+			$currentVersion .="</option>";
+	}
+
+
+	$currentVersion .="</select>";
+
+
+	require $PluginDir.'/admin/setuptool.pl';
+		
 
     my $template = $self->get_template({ file => 'admin/setuptool.tt' });
 	        $template->param(
 			edsusername 		=> $self->retrieve_data('edsusername'),
 			edspassword 		=> $self->retrieve_data('edspassword'),
-			currentversion		=> $VERSION,
+			currentversion		=> $currentVersion,
 			latestversion		=>$shaData->{edsplugin}->{version}[0]->{number},
-			releasenotes		=>$xmlReleaseNotes,	
+			releasenotes		=>$xmlReleaseNotes,
+				
         );
 
     print $cgi->header();

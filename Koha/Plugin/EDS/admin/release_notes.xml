@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1621</latestversion>
+	<latestversion>3.1622</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>04/Dec/2014</lastupdated>
+	<lastupdated>08/Jan/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1622" date="8/Jan/2015">
+			<note id="1" author="amiranda@ebsco.com">Removed file custom.js to prevent clearing customisations. Call to custom.js remains.</note>
+			<note id="2" author="amiranda@ebsco.com">Updated Run tool to display various version and download directly</note>
+			<note id="3" author="amiranda@ebsco.com">Fixed sidebar in detailed page to point to include in the plugin instead of core sidebar and also disabled save to lists for logged in users for discovery items</note>
+			<note id="4" author="amiranda@ebsco.com">Fixed print cart feature for prog.</note>
+			<note id="5" author="amiranda@ebsco.com">Added .htaccess in the opac directory with Options +ExecCGI.</note>
+			<note id="6" author="amiranda@ebsco.com">Moved placeholder function in eds-advsearch.tt after [% BLOCK jsinclude %] to fix bug</note>
+		</release>
 		<release version="3.1621" date="4/Dec/2014">
 			<note id="1" author="amiranda@ebsco.com">applied $search_context code in GetCatalogueAvailability() to match search code at Catalyst instance. Plus put GetCatalogueAvailability call in a trycatch block</note>
-			<note id="1" author="amiranda@ebsco.com">added PageURL function in EDS.pm to refresh if run tool encounters an error.</note>
+			<note id="2" author="amiranda@ebsco.com">added PageURL function in EDS.pm to refresh if run tool encounters an error.</note>
 		</release>
 		<release version="3.162" date="1/Dec/2014">
 			<note id="1" author="amiranda@ebsco.com">Fixed setuptool to display release notes and current/latest version based on raw.git</note>
 			<note id="2" author="amiranda@ebsco.com">Added a switch in EDSScript.js to enable/disable sendCart patch.</note>
 		</release>
-		<release version="3.16.1" date="16/Now/2014">
+		<release version="3.16.1" date="16/Nov/2014">
 			<note id="1" author="amiranda@ebsco.com">Support for template prog</note>
 			<note id="2" author="amiranda@ebsco.com">Remove limiters if no results found feature.</note>
 			<note id="3" author="amiranda@ebsco.com">Updated folder permissions on run tool.</note>

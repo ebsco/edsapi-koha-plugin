@@ -1454,7 +1454,7 @@ YAHOO.util.Event.onContentReady("furtherm", function () {
 [% END %]
 
 [% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
-[% INCLUDE 'opac-detail-sidebar.inc' %]
+[% INCLUDE "$plugin_dir/includes/eds-detail_sidebar.inc" %]
         [% IF ( NovelistSelectProfile ) %] [% IF ( NovelistSelectView == 'right') %]
          <div id="NovelistSelect">
             <h4>Novelist Select</h4>
