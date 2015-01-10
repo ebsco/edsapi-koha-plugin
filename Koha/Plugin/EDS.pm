@@ -11,8 +11,8 @@ package Koha::Plugin::EDS;
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
 #* DATE MODIFIED: 4/Dec/2014
-#* LAST CHANGE DESCRIPTION: Updated to 3.1621
-#* 							added PageURL function in EDS.pm to refresh if run tool encounters an error.
+#* LAST CHANGE DESCRIPTION: Updated to 3.1630
+#* 							completed SetupTool for Live Update
 #=============================================================================================
 #*/
 
@@ -33,7 +33,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1622;
+our $VERSION = 3.1630;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -42,7 +42,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Configure(right) to configure the API Plugin first then Run tool (left) for setup instructions.</p><p>For assistance; email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2015-01-08',
+    date_updated    => '2015-01-10',
     minimum_version => '3.16',
     maximum_version => '',
     version         => $VERSION,
@@ -166,8 +166,19 @@ sub install() {
 #		`edsvalue` TEXT NOT NULL, 
 #		PRIMARY KEY (`edsid`)) ENGINE = INNODB;
 #    " ); 
-	return C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '1', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
+
+	
+	
+	my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '1', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
+	
+	
+	my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='1' WHERE `variable`='EDSEnabled'");
+	
+	my $pluginSQL = C4::Context->dbh->do("INSERT INTO `plugin_data` (`plugin_class`, `plugin_key`, `plugin_value`) VALUES ('Koha::Plugin::EDS', 'installedversion', '".$VERSION."')");
+	#use Data::Dumper; die Dumper $pluginSQL;		
 }
+
+
 
 
 sub uninstall() {
@@ -176,7 +187,9 @@ sub uninstall() {
 #    my $table = $self->get_qualified_table_name('config');
 
 #    return C4::Context->dbh->do("DROP TABLE $table");
-	return C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '0', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
+	my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '0', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
+	
+	my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='0' WHERE `variable`='EDSEnabled'");
 }
 
 sub PageURL{
@@ -200,7 +213,44 @@ sub SetupTool {
     my ( $self, $args ) = @_;
     my $cgi = $self->{'cgi'};
 	
+	###BEGIN UpdatePlugin
 	
+	my $updateSHA = $cgi->param('updateto');
+	my $updateVersion = $cgi->param('v');
+	my $checkFile = $cgi->param('check');
+	my $updateLog = '';
+	my $readWriteStatus = '';
+	
+	if(defined $checkFile){
+		require $PluginDir.'/admin/setuptool.pl';
+		$readWriteStatus = CheckWriteStatus($checkFile);
+	}
+		
+	if(defined $updateSHA){
+		if($updateSHA ne 'done'){
+			require $PluginDir.'/admin/setuptool.pl';
+			$updateLog = UpdateEDSPlugin($updateSHA);
+			my $updateInstalledVersion = C4::Context->dbh->do("UPDATE `plugin_data` SET `plugin_value`='".$updateVersion."' WHERE `plugin_class`='Koha::Plugin::EDS' and `plugin_key`='installedversion'");
+
+		}
+	}
+	
+	###END UpdatePlugin
+	
+	### Setup installed version no. in plugin table if this was not set during installation.
+	my $installedVersionNo = $self->retrieve_data('installedversion');
+	if(not defined $installedVersionNo){
+		
+		$self->store_data(
+		{
+			installedversion 		=> $VERSION,
+		});
+		$self->go_home();
+	
+	} 
+	
+	
+	## Pull SHA data for version info.
 	my $shaData = '';
 	try{
 		$shaData= get('https://widgets.ebscohost.com/prod/api/koha/sha/316.json');
@@ -212,13 +262,13 @@ sub SetupTool {
 	my $xmlReleaseNotes = get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
 	#use Data::Dumper; die Dumper $xmlReleaseNotes;
 
-	my $currentVersion ="<select id='plugin-version'>";
+	my $currentVersion ="<select id='liveupdate-version'>";
 
 	my @pluginVersions = @{$shaData->{edsplugin}->{version}};
 
 	foreach my $pluginVersion (@pluginVersions){
 			my $selectedVersion="";
-			if($VERSION eq $pluginVersion->{number}){
+			if($self->retrieve_data('installedversion') eq $pluginVersion->{number}){
 				$selectedVersion=" selected='selected'";
 			}
 			$currentVersion .="<option value='".$pluginVersion->{sha}."'".$selectedVersion.">";
@@ -230,16 +280,16 @@ sub SetupTool {
 	$currentVersion .="</select>";
 
 
-	require $PluginDir.'/admin/setuptool.pl';
-		
-
     my $template = $self->get_template({ file => 'admin/setuptool.tt' });
 	        $template->param(
 			edsusername 		=> $self->retrieve_data('edsusername'),
 			edspassword 		=> $self->retrieve_data('edspassword'),
-			currentversion		=> $currentVersion,
+			pluginversion		=> $VERSION,
+			installedversion	=> $currentVersion,
 			latestversion		=>$shaData->{edsplugin}->{version}[0]->{number},
 			releasenotes		=>$xmlReleaseNotes,
+			updatelog			=>$updateLog,
+			readwritestatus		=>$readWriteStatus,
 				
         );
 

@@ -53,23 +53,90 @@ use C4::Members;
 use LWP::Simple qw(get);
 use Try::Tiny;
 use File::Find qw(finddepth);
+use POSIX qw(strftime);
 
 
 
 
-my $input = new CGI;
-my $dbh   = C4::Context->dbh;
 
 
-#my $PluginDir = C4::Context->config("pluginsdir");
-#$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+my $PluginDir = C4::Context->config("pluginsdir");
+$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+my $htaccessWrite = 0;
 
-#my @files;
-# finddepth(sub {
-#      return if($_ eq '.' || $_ eq '..');
-#      push @files, $File::Find::name;
-# }, $PluginDir);
+
+
+sub CheckWriteStatus{
+	my($FilePath) = @_;
+	my $checkStatus=0;
+	#use Data::Dumper; die Dumper $PluginDir.$FilePath;
+	#try{
+		open FILE, "<", $PluginDir.$FilePath or die $!;
+		if(-f FILE){
+			if(-w FILE){
+				$checkStatus=1;
+			}
+		}
+		close(FILE);
+	#}catch{}
+	
+	return $checkStatus;
+}
+
+
+sub UpdateEDSPlugin{
+
+my ($PluginSha) = @_;
+	my $updateLog="";
+	#use Data::Dumper; die Dumper "ok-".$PluginSha;
+
+	my @files;
+	 finddepth(sub {
+		  return if($_ eq '.' || $_ eq '..');
+		  push @files, $File::Find::name;
+	 }, $PluginDir);
+	 
+	 #use Data::Dumper; die Dumper @files;
+	 
+	 foreach my $file (@files){
+		if(-f $file ){
+			if(not $file =~m/\/admin/){
+				if(not $file =~m/custom\.js/){
+					my $gitFile = $file;
+					$gitFile=~s/$PluginDir//;
+					my $gitURL = 'https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$PluginSha.'/Koha/Plugin/EDS'.$gitFile;
+					my $sourceCode = get($gitURL);
+					try{
+						open FILE, "+>", $file or die $!;
+						print FILE $sourceCode;
+						close(FILE);
+						$updateLog .= "<p class='alert-success'> Updated at [".strftime('%Y-%m-%d %H:%M:%S',localtime)."]: ".$file."</p>";
+					}catch{
+						$updateLog .= " <p class='alert-danger'> Error at [".strftime('%Y-%m-%d %H:%M:%S',localtime)."]: ".$file." $_</p>";
+					}
+				}
+			}
+	 	}
+			# Applying .htaccess here in the foreach. TODO - move this out so the check doesnt need to happen
+				if($htaccessWrite==0){
+					$htaccessWrite = 1;
+					try{
+						open FILE, "+>", $PluginDir."/opac/.htaccess"  or die $!;
+						print FILE "Options +ExecCGI \nAddHandler cgi-script .cgi .pl";
+						close(FILE);
+						$updateLog .= " <p class='alert-info'> Applied at [".strftime('%Y-%m-%d %H:%M:%S',localtime)."]: +ExecCGI for opac directory </p>";
+					}catch{
+						$updateLog .= " <p class='alert-danger'> Error at [".strftime('%Y-%m-%d %H:%M:%S',localtime)."]: Failed to apply +ExecCGI for opac directory $_</p>";
+					}
+				}
+	 }
+	 
+	 # http://www.perlfect.com/articles/perlfile.shtml - PERL file operations 
+	#use Data::Dumper; die Dumper $PluginDir."/opac/.htaccess";
+
+	
+	return $updateLog;	
+	 
+}
  
-#use Data::Dumper; die Dumper @files;
-
 1;

@@ -43,7 +43,7 @@ var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
 var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
-var versionEDSKoha = '3.1622';
+var versionEDSKoha = '3.1630';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -419,12 +419,12 @@ function PrepareItems(){
 				EDSItems++;
 	}
 	
-	if(EDSItems>0){
+	//if(EDSItems>0){ 
 		$('.print-large, .print').attr('onclick',''); // .print for prog
 		$('.print-large, .print').attr('href','javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/prog/images/loading.gif" width="15"> Loading Items. Please wait...</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 		$(".dataTables_empty").css('display','none');
-	}
+	//}
 	
 	for(i=0;i<recordId.length-1;i++){
 		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records

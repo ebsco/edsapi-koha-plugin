@@ -14,7 +14,7 @@
 		[% IF DETAILED_RECORD.FullText.Links.0.Url %]
 			<a target="_blank" class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="[% DETAILED_RECORD.FullText.Links.0.Url %]">
 		[% ELSE %]
-			<a class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="javascript:alert('Login to gain access to this result.');$('.FullTextLoader').css('display','none');return false;">
+			<a class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="javascript:LoginRequired();">
 		[% END %]
 		[% IF DETAILED_RECORD.FullText.Links.0.Type=='pdflink' %]
 			PDF Full Text
