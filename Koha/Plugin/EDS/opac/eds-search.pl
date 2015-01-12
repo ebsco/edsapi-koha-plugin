@@ -172,6 +172,7 @@ $template->param(
 #EDS config begins here
 my $EDSResponse;
 my @EDSResults;
+my @ResearchStarters;
 my $EDSSearchQuery;
 my $EDSSearchQueryWithOutPage;
 my @EDSFacets;
@@ -183,8 +184,10 @@ my $sort_by;
 my %pager;
 if($cgi->param("q")){
 	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
+	#use Data::Dumper; die Dumper $EDSResponse;
 	try{# uncomment the try block when debugging
 		EDSProcessResults();
+		EDSProcessRelatedContent();
 		#process query
 		$EDSSearchQuery=$EDSResponse->{SearchRequestGet}->{QueryString};
 		$EDSSearchQuery =~s/\&/\|/g;
@@ -197,11 +200,11 @@ if($cgi->param("q")){
 		EDSProcessLimiters();
 		EDSProcessExpanders();
 		EDSProcessPages();
-		} catch {
-			#warn "no results";
-			$template->param(
-	     searchdesc     => 1,
-	    total  => 0,);
+	} catch {
+		#warn "no results";
+		$template->param(
+	 searchdesc     => 1,
+	total  => 0,);
 	};
 }
 #use Data::Dumper; die Dumper %pager;
@@ -212,7 +215,8 @@ if($cgi->param("q")){
 	     PAGE_NUMBERS     => \%pager,
 		total            => $EDSResponse->{SearchResult}->{Statistics}->{TotalHits},
 		SEARCH_RESULTS   => \@EDSResults,
-		 query            => \@EDSQueries,
+		researchstarters => \@ResearchStarters,
+		query            => \@EDSQueries,
 	    sort_by          => GetSearchParam('sort'),
 		current_mode	=> GetSearchParam('searchmode'),
 		current_view	=> GetSearchParam('view'),
@@ -322,6 +326,29 @@ sub EDSProcessResults
 
 		}
 	}	
+}
+
+sub EDSProcessRelatedContent
+{
+	#use Data::Dumper; die Dumper $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords};
+	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}){
+		return;
+	}
+	my @RelatedContents = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}}; 
+	foreach my $RelatedContent (@RelatedContents){
+		if($RelatedContent->{Type} eq 'rs'){
+			@ResearchStarters = @{$RelatedContent->{Records}};
+			foreach my $ResearchStarter (@ResearchStarters){
+				foreach my $Items ($ResearchStarter->{Items}){
+					my @Items = @{$Items};
+					foreach my $Item (@Items){
+						$Item = EDSProcessItem($Item);
+					}
+				}
+			}
+		}
+	}
+	#use Data::Dumper; die Dumper @ResearchStarters;	
 }
 
 sub GetCatalogueAvailability
@@ -479,8 +506,6 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 			};
 	}	
 }
-
-
 
 sub EDSProcessPages
 {

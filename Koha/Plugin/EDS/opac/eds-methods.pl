@@ -333,6 +333,16 @@ sub EDSDefaultQueryBuilder
 			}
 		}
 	}
+	if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
+		my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
+		foreach my $AvailableRelatedContent (@AvailableRelatedContents){
+			if($AvailableRelatedContent->{DefaultOn} eq 'y'){
+				if($AvailableRelatedContent->{Type} eq 'rs'){
+					$defaultEDSQuery = $defaultEDSQuery.'|relatedcontent=rs';
+				}
+			}
+		}
+	}
 		
 	$defaultEDSQuery = $defaultEDSQuery.'|resultsperpage='.$EDSInfoData->{ViewResultSettings}->{ResultsPerPage};	
 	$defaultEDSQuery = $defaultEDSQuery.'|view='.$EDSInfoData->{ViewResultSettings}->{ResultListView};

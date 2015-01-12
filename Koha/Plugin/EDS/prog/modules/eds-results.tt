@@ -483,7 +483,9 @@ $(document).ready(function(){
  [% END %] [% END %] [% END %][% END %][% END %] </div>
 
  </td></tr>
-	  
+ 
+       [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
+
 	  
 	  
 [% FOREACH RECORD IN SEARCH_RESULTS %]

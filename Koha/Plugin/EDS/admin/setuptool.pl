@@ -83,6 +83,27 @@ sub CheckWriteStatus{
 	return $checkStatus;
 }
 
+sub GetCustomJS{
+
+	my @customJSCode;
+	my $customjsFile = $PluginDir."/js/custom.js";
+
+		if(-e $customjsFile){
+			open FILE, "<", $customjsFile or die $!;
+			@customJSCode = <FILE>;
+			close FILE;
+		}
+	#use Data::Dumper; die Dumper @customJSCode;
+	return @customJSCode;
+}
+
+sub SetCustomJS{
+	my ($jsCode) = @_;	
+	
+	open FILE, "+>", $PluginDir."/js/custom.js" or die $!;
+	print FILE $jsCode;
+	close FILE;
+}
 
 sub UpdateEDSPlugin{
 
@@ -129,12 +150,10 @@ my ($PluginSha) = @_;
 						$updateLog .= " <p class='alert-danger'> Error at [".strftime('%Y-%m-%d %H:%M:%S',localtime)."]: Failed to apply +ExecCGI for opac directory $_</p>";
 					}
 				}
-	 }
-	 
-	 # http://www.perlfect.com/articles/perlfile.shtml - PERL file operations 
+	 }	 
+	# http://www.perlfect.com/articles/perlfile.shtml - PERL file operations 
 	#use Data::Dumper; die Dumper $PluginDir."/opac/.htaccess";
 
-	
 	return $updateLog;	
 	 
 }

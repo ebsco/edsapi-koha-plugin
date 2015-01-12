@@ -10,9 +10,9 @@ package Koha::Plugin::EDS;
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 4/Dec/2014
-#* LAST CHANGE DESCRIPTION: Updated to 3.1630
-#* 							completed SetupTool for Live Update
+#* DATE MODIFIED: 11/Jan/2015
+#* LAST CHANGE DESCRIPTION: Updated to 3.1631
+#* 							Added customjs editor
 #=============================================================================================
 #*/
 
@@ -33,14 +33,14 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1630;
+our $VERSION = 3.1631;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name   => 'Koha EDS API Integration',
     author => 'Alvet Miranda - amiranda@ebsco.com',
     description =>
-'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Configure(right) to configure the API Plugin first then Run tool (left) for setup instructions.</p><p>For assistance; email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
+'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
     date_updated    => '2015-01-10',
     minimum_version => '3.16',
@@ -218,12 +218,32 @@ sub SetupTool {
 	my $updateSHA = $cgi->param('updateto');
 	my $updateVersion = $cgi->param('v');
 	my $checkFile = $cgi->param('check');
+	my $customJS = $cgi->param('js');
+	my $jsCode = $cgi->param('code');
+
+	
 	my $updateLog = '';
 	my $readWriteStatus = '';
+	my @customJSContent;
 	
 	if(defined $checkFile){
 		require $PluginDir.'/admin/setuptool.pl';
 		$readWriteStatus = CheckWriteStatus($checkFile);
+	}
+	
+	if(defined $customJS){
+		require $PluginDir.'/admin/setuptool.pl';
+		
+		if($customJS eq "2"){
+			SetCustomJS($jsCode);	
+		}
+		
+		@customJSContent = GetCustomJS();
+		#use Data::Dumper; die Dumper scalar(@customJSContent);
+		if(scalar(@customJSContent) eq 0){
+			push(@customJSContent,'//Enter JavaScript here');
+		}
+		
 	}
 		
 	if(defined $updateSHA){
@@ -290,6 +310,9 @@ sub SetupTool {
 			releasenotes		=>$xmlReleaseNotes,
 			updatelog			=>$updateLog,
 			readwritestatus		=>$readWriteStatus,
+			customjs			=>\@customJSContent,
+			jsstate				=>$customJS,
+			plugin_dir			=>$PluginDir,
 				
         );
 

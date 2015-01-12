@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1630</latestversion>
+	<latestversion>3.1631</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>10/Jan/2015</lastupdated>
+	<lastupdated>12/Jan/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1631" date="12/Jan/2015">
+			<note id="1" author="amiranda@ebsco.com">Added customjs.inc in admin to manage javascript customisations</note>
+			<note id="2" author="amiranda@ebsco.com">Moved Modal code in setuptool.tt to modal.inc as live update and customjs use this</note>
+			<note id="3" author="amiranda@ebsco.com">Moved all javascript code from setuptool.tt to setuptooljs.inc</note>
+			<note id="4" author="amiranda@ebsco.com">Updated setuptool.tt to list the new files</note>
+			<note id="5" author="amiranda@ebsco.com">Implemented Research Starters in prog and bootstrap</note>
+		</release>
 		<release version="3.1630" date="10/Jan/2015">
-			<note id="1" author="amiranda@ebsco.com">Live Update feature (BETA) implemented in Run Tool. Chec</note>
+			<note id="1" author="amiranda@ebsco.com">Live Update feature (BETA) implemented in Run Tool. It checks to see if files are updatable first and then fetches code from github based on the selected version.</note>
 			<note id="2" author="amiranda@ebsco.com">Applied PDF download alert fix for guest users in prog too.</note>
 			<note id="3" author="amiranda@ebsco.com">Printing Cart - applied EDS print function for consistency even when EDS items are not in the list</note>
 		</release>

@@ -167,7 +167,7 @@
                                             [% END %]
                                         </span> <!-- / .links -->
                                 </div> <!-- / #selections-toolbar -->
-
+							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
 

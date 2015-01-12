@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 10/02/2014
-#* LAST CHANGE DESCRIPTION: FIXED: added no warnings
+#* DATE MODIFIED: 12/Jan/2015
+#* LAST CHANGE DESCRIPTION: FIXED: Return default html if param q is not defined.
 #=============================================================================================
 #*/
 # This file is part of Koha.
@@ -96,7 +96,11 @@ if($input->param("q") eq 'config'){
 			$api_response = encode_json($EDSInfo->{AvailableSearchCriteria}->{AvailableSearchFields});
 		};
 	}else{
-		$api_response = EDSSearch($input->param("q"));
+		if(defined $input->param("q")){
+			$api_response = EDSSearch($input->param("q"));
+		}else{
+			$api_response = '<html><head><link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" /><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script></head><body></body></html>';
+		}
 	}	
 }
 
