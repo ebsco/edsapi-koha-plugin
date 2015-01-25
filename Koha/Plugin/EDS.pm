@@ -10,9 +10,9 @@ package Koha::Plugin::EDS;
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 11/Jan/2015
-#* LAST CHANGE DESCRIPTION: Updated to 3.1631
-#* 							Added customjs editor
+#* DATE MODIFIED: 26/Jan/2015
+#* LAST CHANGE DESCRIPTION: Updated to 3.1632
+#* 							Fixed Recommender JS - get CDN scripts from https
 #=============================================================================================
 #*/
 
@@ -33,7 +33,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1631;
+our $VERSION = 3.1632;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {

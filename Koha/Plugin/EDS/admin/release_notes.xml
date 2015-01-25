@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1631</latestversion>
+	<latestversion>3.1632</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>12/Jan/2015</lastupdated>
+	<lastupdated>26/Jan/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1632" date="26/Jan/2015">
+			<note id="1" author="amiranda@ebsco.com">Added customjs.inc in admin to manage javascript customisations</note>
+		</release>
 		<release version="3.1631" date="12/Jan/2015">
 			<note id="1" author="amiranda@ebsco.com">Added customjs.inc in admin to manage javascript customisations</note>
 			<note id="2" author="amiranda@ebsco.com">Moved Modal code in setuptool.tt to modal.inc as live update and customjs use this</note>
