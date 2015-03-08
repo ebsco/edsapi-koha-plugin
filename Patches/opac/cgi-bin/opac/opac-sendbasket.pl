@@ -34,6 +34,7 @@ use C4::Output;
 use C4::Biblio;
 use C4::Members;
 use Try::Tiny; # SM: EDS
+use URI::Escape; # SM: EDS
 use JSON qw/decode_json encode_json/; # SM: EDS
 
 my $query = new CGI;
@@ -46,6 +47,7 @@ require $PluginDir.'/opac/eds-methods.pl';
 my $EDSConfig = decode_json(EDSGetConfiguration());
 
 #EDS patch END
+
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
@@ -60,8 +62,7 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
 my $bib_list     = $query->param('bib_list');
 my $email_add    = $query->param('email_add');
 my $email_sender = $query->param('email_sender');
-
-
+my $eds_data = ""; try{$eds_data = decode_json(uri_unescape($query->param('eds_data')));}catch{}; # EDS
 
 
 my $dbh          = C4::Context->dbh;
@@ -105,14 +106,14 @@ if ( $email_add ) {
 		
 		
 		
-		
 			#START EDS - based - code from downloadcart.pl
 			if(eval{C4::Context->preference('EDSEnabled')}){
 			
 				if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
-					my $EDSQuery = 'Retrieve?an='.$biblionumber;
-					$EDSQuery =~s/\|/\|dbid\=/g;
-					$record = decode_json(EDSSearch($EDSQuery,'n'));
+					
+					$record = $eds_data->{Records}->{$biblionumber};
+					$record = decode_json(uri_unescape($record));
+					
 					my $recordJSON = "{";
 					my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 
 								<record
@@ -154,6 +155,7 @@ if ( $email_add ) {
 								$recordJSON .= '"author":"'.$EDSRecordAuthor->{PersonEntity}->{Name}->{NameFull}.'",';
 							}
 					}catch{};
+					
 					
 					#URL
 					try{
@@ -231,13 +233,12 @@ if ( $email_add ) {
 					$recordJSON .= "}";
 					$recordXML .= '</record>';
 					$recordXML=~s/\&/and/g; # avoid error when converting to marc
-					$dat = decode_json($recordJSON);
+					$dat = from_json($recordJSON); # used instead of decode_json and encode('utf-8',$recordJSON) first.
 					
 					$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
 				}
 			
-			}#STOP EDS		
-		
+			}#STOP EDS	
 		
 		
 		
@@ -255,6 +256,7 @@ if ( $email_add ) {
         if($dat->{'author'} || @$marcauthorsarray) {
           $hasauthors = 1;
         }
+	
 
         $dat->{MARCNOTES}      = $marcnotesarray;
         $dat->{MARCSUBJCTS}    = $marcsubjctsarray;
@@ -265,12 +267,10 @@ if ( $email_add ) {
 
         $iso2709 .= $record->as_usmarc();
 
-
         push( @results, $dat );
     }
 
     my $resultsarray = \@results;
-	
     
     $template2->param(
         BIBLIO_RESULTS => $resultsarray,
@@ -283,7 +283,6 @@ if ( $email_add ) {
     # Getting template result
     my $template_res = $template2->output();
     my $body;
-	
 	
 	foreach my $biblionumber (@bibs) { # SM: EDS	
 		if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
@@ -321,8 +320,7 @@ if ( $email_add ) {
     if ( $template_res =~ /<MESSAGE>(.*)<END_MESSAGE>/s ) {
         $body = $1;
         $body =~ s|\n?(.*)\n?|$1|;
-        #$body = encode_qp($body);
-		$body = $body;
+        $body = encode_qp($body);
     }
 
     $mail{body} = $body;
@@ -348,7 +346,7 @@ Content-Disposition: attachment; filename="basket.iso2709"
 $isofile
 $boundary--
 END_OF_BODY
-#use Data::Dumper; die Dumper %mail;
+
     # Sending mail (if not empty basket)
     if ( defined($iso2709) && sendmail %mail ) {
     # do something if it works....

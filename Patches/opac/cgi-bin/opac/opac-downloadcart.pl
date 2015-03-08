@@ -33,6 +33,7 @@ use C4::Ris;
 use C4::Csv;
 use utf8;
 use Try::Tiny; # SM: EDS
+use URI::Escape; # SM: EDS
 
 my $query = new CGI;
 
@@ -42,7 +43,6 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 require $PluginDir.'/opac/eds-methods.pl';
 
 my $EDSConfig = decode_json(EDSGetConfiguration());
-#use Data::Dumper; die Dumper $EDSConfig->{cataloguedbid};
 
 #EDS patch END
 
@@ -58,6 +58,7 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
 
 my $bib_list = $query->param('bib_list');
 my $format  = $query->param('format');
+my $eds_data = ""; try{$eds_data = decode_json(uri_unescape($query->param('eds_data')));}catch{}; # EDS
 my $dbh     = C4::Context->dbh;
 
 if ($bib_list && $format) {
@@ -84,10 +85,10 @@ if ($bib_list && $format) {
 			if(eval{C4::Context->preference('EDSEnabled')}){
 			
 				if(!($biblio =~m/$EDSConfig->{cataloguedbid}/)){
-					my $EDSQuery = 'Retrieve?an='.$biblio;
-					$EDSQuery =~s/\|/\|dbid\=/g;
-					$record = decode_json(EDSSearch($EDSQuery,'n'));
-					#use Data::Dumper; die Dumper $record->{Record};
+					
+					$record = $eds_data->{Records}->{$biblio};
+					$record = decode_json(uri_unescape($record));
+					
 					my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 
 								<record
 									xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -175,14 +176,13 @@ if ($bib_list && $format) {
 					}catch{};
 					
 					#Dates
-					#try{
+					try{
 							my $EDSRecordDate = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Dates}[0];
-							#use Data::Dumper; die Dumper $EDSRecordDate;
 							$recordXML .= '<datafield tag="260" ind1=" " ind2=" ">
 												<subfield code="c">'.$EDSRecordDate->{Y}.'</subfield>
 											</datafield>
 											  ';	
-					#}catch{};				
+					}catch{};				
 					
 	
 					
@@ -200,13 +200,9 @@ if ($bib_list && $format) {
 					
 					$recordXML .= '</record>';
 					$recordXML=~s/\&/and/g; # avoid error when converting to marc
-					#use Data::Dumper; die Dumper $recordXML;
-					
-					#$record = $recordXML;
 					
 					$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
 				}
-				#use Data::Dumper; die Dumper $record;
 			
 			}#STOP EDS
 			
