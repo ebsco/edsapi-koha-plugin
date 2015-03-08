@@ -8,13 +8,8 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 13/11/2014
-* LAST CHANGE DESCRIPTION: Managing - in default parmas to be read as "" in ConfigData()
-*							Removed cookieExpiry = 30. replaced by edsconfig.cookieexpiry
-*							Added LoginRequired() for detailed record fulltext
-*							changed preventDefault to defaultPrevented().
-*							added SearchAgain and SetNoResults to manage multiple facets
-*							Search dropdown offers discovery search if data is not cached.
+* DATE MODIFIED: 26/01/2015
+* LAST CHANGE DESCRIPTION: Moved SendCart section to function PatchSendCart and calling this after loading customisations.
 =============================================================================================
 */
 
@@ -43,7 +38,7 @@ var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
 var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
-var versionEDSKoha = '3.1630';
+var versionEDSKoha = '3.1634';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -108,10 +103,13 @@ function StartEDS(){
 			$('.cartRemove').click(function(){
 				$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
 			});
-			
+			if((document.URL.indexOf('opac-downloadcart.pl')!=-1) || (document.URL.indexOf('opac-sendbasket.pl')!=-1)){
+				SetEDSCartField();
+			}
 			// cart management END		
 		});
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/custom.js'); // load customisations.
+		PatchSendCart();
 	});
 }
 
@@ -449,6 +447,10 @@ function PrepareItems(){
 			$('#EDSBasketLoader').css('display','none');
 		}
 		
+		
+}
+
+function PatchSendCard(){
 		if(!patchSendCart){
 			if(document.URL.indexOf('|')!=-1){
 				var sendParent = $('.send').parent().html();
@@ -527,6 +529,27 @@ function EDSSendBasket() {
     var optWin="dependant=yes,scrollbars=no,resizable=no,height=300,width=450,top=50,left=100";
     var win_form = open(loc,"win_form",optWin);
 }
+
+function SetEDSCartField(){
+	var recordList = document.URL;
+	recordList = QueryString("bib_list").toString();
+	var recordId=recordList.split("/");
+	
+	var fieldData='{"Records":{';
+	for(i=0;i<recordId.length-1;i++){
+		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records
+			fieldData += '"'+recordId[i]+'":"';
+			fieldData += encodeURIComponent($.jStorage.get(recordId[i]));
+			fieldData += '"';
+			if(i<recordId.length-2){
+				fieldData += ",";
+			}
+		}
+	}
+	fieldData +='}}';
+	$('.action').prepend('<input type="hidden" name="eds_data" value="'+encodeURIComponent(fieldData)+'">');
+}
+
 //BASKET END----
 
 

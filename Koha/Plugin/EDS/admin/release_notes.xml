@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1632</latestversion>
+	<latestversion>3.1634</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>26/Jan/2015</lastupdated>
+	<lastupdated>09/Mar/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1634" date="09/Mar/2015">
+			<note id="1" author="amiranda@ebsco.com">Changed all instances of .tmpl to .tt.</note>
+			<note id="2" author="amiranda@ebsco.com">Display all research starter images from https.</note>
+		</release>
+		<release version="3.1633" date="26/Jan/2015">
+			<note id="1" author="amiranda@ebsco.com">Moved SendCart section to function PatchSendCart and calling this after loading customisations.</note>
+		</release>
 		<release version="3.1632" date="26/Jan/2015">
 			<note id="1" author="amiranda@ebsco.com">Added customjs.inc in admin to manage javascript customisations</note>
 		</release>

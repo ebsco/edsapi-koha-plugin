@@ -99,7 +99,7 @@ if($cookieexpiry eq ' '){ # dont set expiry
 
 my ( $template, $user, $cookie ) = get_template_and_user(
     {
-        template_name   => "eds-raw.tmpl",
+        template_name   => "eds-raw.tt",
         type            => "opac",
         query           => $input,
 		is_plugin		=>1,

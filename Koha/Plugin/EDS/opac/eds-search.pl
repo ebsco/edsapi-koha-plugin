@@ -102,16 +102,16 @@ my $adv_search = 0;
 my $format = $cgi->param("format") || '';
 my $build_grouped_results = C4::Context->preference('OPACGroupResults');
 if ($format =~ /(rss|atom|opensearchdescription)/) {
-    $template_name = 'opac-opensearch.tmpl';
+    $template_name = 'opac-opensearch.tt';
 }
 elsif (@params && $build_grouped_results) {
-    $template_name = 'opac-results-grouped.tmpl';
+    $template_name = 'opac-results-grouped.tt';
 }
 elsif ((@params>=1) || ($cgi->param("q")) || ($cgi->param('multibranchlimit')) || ($cgi->param('limit-yr')) ) {
-    $template_name = $PluginDir.'/modules/eds-results.tmpl';
+    $template_name = $PluginDir.'/modules/eds-results.tt';
 }
 else {
-    $template_name = $PluginDir.'/modules/eds-advsearch.tmpl';
+    $template_name = $PluginDir.'/modules/eds-advsearch.tt';
     $template_type = 'advsearch';
 	$search_desc = 0;
 	$adv_search = 1;
@@ -125,7 +125,7 @@ else {
     authnotrequired => ( C4::Context->preference("OpacPublic") ? 1 : 0 ),
     }
 );
-if ($template_name eq 'opac-results.tmpl') {
+if ($template_name eq 'opac-results.tt') {
    $template->param('COinSinOPACResults' => C4::Context->preference('COinSinOPACResults'));
 }
 
@@ -339,6 +339,9 @@ sub EDSProcessRelatedContent
 		if($RelatedContent->{Type} eq 'rs'){
 			@ResearchStarters = @{$RelatedContent->{Records}};
 			foreach my $ResearchStarter (@ResearchStarters){
+				try{
+					$ResearchStarter->{ImageInfo}[0]->{Target} =~s/http\:/https\:/g; # to prevent ie warnings
+				}catch{};
 				foreach my $Items ($ResearchStarter->{Items}){
 					my @Items = @{$Items};
 					foreach my $Item (@Items){

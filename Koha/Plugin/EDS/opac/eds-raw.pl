@@ -58,7 +58,7 @@ $PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
     {
-        template_name   => $PluginDir."/modules/eds-raw.tmpl",
+        template_name   => $PluginDir."/modules/eds-raw.tt",
         type            => "opac",
         query           => $input,
 		is_plugin           => 1,
