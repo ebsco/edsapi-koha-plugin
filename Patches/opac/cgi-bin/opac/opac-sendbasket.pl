@@ -112,7 +112,6 @@ if ( $email_add ) {
 				if((!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)) and (($biblionumber =~m/\|/))){
 					
 					$record = $eds_data->{Records}[0]->{$biblionumber};
-					#$record = decode_json(uri_unescape($record));
 					
 					my $recordJSON = "{";
 					my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 

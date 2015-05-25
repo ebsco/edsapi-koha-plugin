@@ -51,7 +51,7 @@ function StartEDS(){
 	else{jQuery('body').attr('data-starteds','1');}
 	
 	$(document).ready(function(){
-		//$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
+		$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
 		
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			
