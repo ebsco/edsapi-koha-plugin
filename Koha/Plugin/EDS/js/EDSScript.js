@@ -8,8 +8,8 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 26/01/2015
-* LAST CHANGE DESCRIPTION: Moved SendCart section to function PatchSendCart and calling this after loading customisations.
+* DATE MODIFIED: 26/05/2015
+* LAST CHANGE DESCRIPTION: Send cart using json_encode.
 =============================================================================================
 */
 
@@ -51,7 +51,7 @@ function StartEDS(){
 	else{jQuery('body').attr('data-starteds','1');}
 	
 	$(document).ready(function(){
-		$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
+		//$(window).error(function(e){e.preventDefault();}); // keep executing if there is an error.
 		
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			
@@ -417,12 +417,12 @@ function PrepareItems(){
 				EDSItems++;
 	}
 	
-	//if(EDSItems>0){ 
+	if(EDSItems>0){ 
 		$('.print-large, .print').attr('onclick',''); // .print for prog
 		$('.print-large, .print').attr('href','javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/prog/images/loading.gif" width="15"> Loading Items. Please wait...</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 		$(".dataTables_empty").css('display','none');
-	//}
+	}
 	
 	for(i=0;i<recordId.length-1;i++){
 		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records
@@ -535,19 +535,28 @@ function SetEDSCartField(){
 	recordList = QueryString("bib_list").toString();
 	var recordId=recordList.split("/");
 	
-	var fieldData='{"Records":{';
+	var fieldDataObj = {Records:[]};
+	
+	//var fieldData='{"Records":{';
 	for(i=0;i<recordId.length-1;i++){
 		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records
-			fieldData += '"'+recordId[i]+'":"';
-			fieldData += encodeURIComponent($.jStorage.get(recordId[i]));
-			fieldData += '"';
-			if(i<recordId.length-2){
-				fieldData += ",";
-			}
+		//	fieldData += '"'+recordId[i]+'":"';
+		//	fieldData += encodeURIComponent($.jStorage.get(recordId[i]));
+		//	fieldData += '"';
+			var fieldRecordObj = {};
+			fieldRecordObj[recordId[i]]=JSON.parse($.jStorage.get(recordId[i]));
+			fieldDataObj.Records.push(fieldRecordObj);
+			//alert(JSON.stringify(fieldDataObj));
+			//fieldDataObj.Records.recordId[i].push(JSON.parse($.jStorage.get(recordId[i])))
+		//	if(i<recordId.length-2){
+		//		fieldData += ",";
+		//	}
 		}
 	}
-	fieldData +='}}';
-	$('.action').prepend('<input type="hidden" name="eds_data" value="'+encodeURIComponent(fieldData)+'">');
+	//fieldData +='}}';
+	//alert(JSON.stringify(fieldDataObj));
+	//console.log(JSON.stringify(fieldDataObj));
+	$('.action').prepend('<input type="hidden" name="eds_data" value="'+encodeURIComponent(JSON.stringify(fieldDataObj))+'">');
 }
 
 //BASKET END----

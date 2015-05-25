@@ -103,16 +103,16 @@ if ( $email_add ) {
 
         my $dat              = GetBiblioData($biblionumber);
         my $record           = GetMarcBiblio($biblionumber);
-		
+		 
 		
 		
 			#START EDS - based - code from downloadcart.pl
-			if(eval{C4::Context->preference('EDSEnabled')}){
+			if((eval{C4::Context->preference('EDSEnabled')})){
 			
-				if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
+				if((!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)) and (($biblionumber =~m/\|/))){
 					
-					$record = $eds_data->{Records}->{$biblionumber};
-					$record = decode_json(uri_unescape($record));
+					$record = $eds_data->{Records}[0]->{$biblionumber};
+					#$record = decode_json(uri_unescape($record));
 					
 					my $recordJSON = "{";
 					my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 
@@ -285,7 +285,7 @@ if ( $email_add ) {
     my $body;
 	
 	foreach my $biblionumber (@bibs) { # SM: EDS	
-		if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
+		if((!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)) and (($biblionumber =~m/\|/))){
 		
 			$biblionumber =~s/\|/\&dbid\=/;
 			$template_res =~s/\|/\&dbid\=/;
