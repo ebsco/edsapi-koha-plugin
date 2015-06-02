@@ -539,7 +539,7 @@ $(document).ready(function(){
 				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:70px;margin-right:5px;margin-bottom:5px;padding:2px;">		
 				[% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%] 
 					<div align="center">
-						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" />
+						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" style="width:70px;" /> 
 					</div> 
 				[% ELSE %]
 					<div align="center" class="pt-icon pt-[% RECORD.Header.PubTypeId %]"></div> 

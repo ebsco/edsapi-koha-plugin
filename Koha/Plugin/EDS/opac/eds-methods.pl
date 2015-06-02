@@ -123,13 +123,14 @@ sub CallREST
 	my ($method, $uri, $body, $auth, $sess) = @_;
 	my $req = HTTP::Request->new( $method, $uri );
 	$req->header( 'Content-Type' => 'application/json' );
+	$req->header( 'Accept-Encoding' => 'gzip, deflate' );
 	$req->header( 'x-authenticationToken' => $auth );
 	$req->header( 'x-sessionToken' => $sess );
 	#if($body != ''){$req->content( $body );}
 	$req->content( $body );
 	my $lwp = LWP::UserAgent->new;
 	my $response = $lwp->request( $req );
-	return $response->content;
+	return $response->decoded_content(charset => 'none');
 }
 
 sub CreateAuth
