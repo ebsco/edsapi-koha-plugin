@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1634</latestversion>
+	<latestversion>3.1635</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>09/Mar/2015</lastupdated>
+	<lastupdated>02/Jun/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1635" date="02/Jun/2015">
+			<note id="1" author="amiranda@ebsco.com">Updated EDSScript.js to accomodate changes to cart send feature.</note>
+			<note id="2" author="amiranda@ebsco.com">Updated eds-methods to decode content </note>
+			<note id="3" author="amiranda@ebsco.com">Applied fixed width of 70px to thumbnail images</note>
+		</release>
 		<release version="3.1634" date="09/Mar/2015">
 			<note id="1" author="amiranda@ebsco.com">Changed all instances of .tmpl to .tt.</note>
 			<note id="2" author="amiranda@ebsco.com">Display all research starter images from https.</note>
+			<note id="3" author="amiranda@ebsco.com">Send and download cart use data from the cache instead of the api again..</note>
 		</release>
 		<release version="3.1633" date="26/Jan/2015">
 			<note id="1" author="amiranda@ebsco.com">Moved SendCart section to function PatchSendCart and calling this after loading customisations.</note>
