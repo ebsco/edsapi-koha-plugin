@@ -593,7 +593,7 @@ $(document).ready(function(){
 			  [% END %]
 			[% #Actions %] 
             [% IF RECORD.Items %] [% #check if items exist (guest mode) %]
-                [% IF 1 #RECORD.Header.DbId.match(cataloguedbid) %]
+                [% IF ( 1 )  %] [% #RECORD.Header.DbId.match(cataloguedbid) %]
                     <span class="results_summary actions"><span class="label">
                         Actions:
                     </span>
@@ -623,7 +623,7 @@ $(document).ready(function(){
                             [% END %]
                         [% END %] 
                     [% END %] 
-                    [% IF ( opacbookbag ) %] 
+                    [% IF ( 1 ) %] [% #opacbookbag %]
                         [% IF ( SEARCH_RESULT.incart ) %] 
                             <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 In your cart

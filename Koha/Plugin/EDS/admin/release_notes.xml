@@ -4,6 +4,9 @@
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
 	<lastupdated>02/Jun/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1636" date="07/Jun/2015">
+			<note id="1" author="amiranda@ebsco.com">Fix Add to Cart link issue on prog</note>
+		</release>
 		<release version="3.1635" date="02/Jun/2015">
 			<note id="1" author="amiranda@ebsco.com">Updated EDSScript.js to accomodate changes to cart send feature.</note>
 			<note id="2" author="amiranda@ebsco.com">Updated eds-methods to decode content </note>

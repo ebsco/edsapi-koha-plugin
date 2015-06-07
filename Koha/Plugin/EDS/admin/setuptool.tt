@@ -217,7 +217,7 @@ Template Files - <strong> folder and file permissions:</strong>Read (Everyone), 
   </tr>
   <tr>
     <th width="1%" align="left" valign="top" nowrap scope="row">doc-head-close.inc</th>
-    <td align="left" valign="top" nowrap><p><strong>OPEN</strong> doc-dead-close.inc in \opac\htdocs\opac-tmpl\&lt;themelang&gt;\includes and add the below line to the end of the file.
+    <td align="left" valign="top" nowrap><p><strong>OPEN</strong> doc-head-close.inc in \opac\htdocs\opac-tmpl\&lt;themelang&gt;\includes and add the below line to the end of the file.
 	<br><strong>NOTE:</strong> there are spaces between ( [ and % ) and ( % and ] )in the below code. Please remove the space for the condition to work.</p>
       <p>
         <textarea name="textarea" cols="45" rows="3" readonly id="textarea" style="width:99%">[ % IF ( EDSEnabled ) % ]<script type="text/javascript" language="javascript" src="/plugin/Koha/Plugin/EDS/js/EDSScript.js"></script>[ % END % ] </textarea>
