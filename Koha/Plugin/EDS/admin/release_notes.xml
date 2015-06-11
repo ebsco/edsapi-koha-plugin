@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1635</latestversion>
+	<latestversion>3.1637</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>02/Jun/2015</lastupdated>
+	<lastupdated>11/Jun/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1637" date="11/Jun/2015">
+			<note id="1" author="amiranda@ebsco.com">Updated EDS.pm to use Mechanize instead of LWP to prevent run tool error</note>
+		</release>
 		<release version="3.1636" date="07/Jun/2015">
 			<note id="1" author="amiranda@ebsco.com">Fix Add to Cart link issue on prog</note>
 		</release>

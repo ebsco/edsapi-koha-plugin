@@ -623,16 +623,16 @@ $(document).ready(function(){
                             [% END %]
                         [% END %] 
                     [% END %] 
-                    [% IF ( 1 ) %] [% #opacbookbag %]
+                    [% IF ( opacbookbag ) %]
                         [% IF ( SEARCH_RESULT.incart ) %] 
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="addtocart cart[% ResultRecordId %]" href="#" style="display:inline!important;" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 In your cart
                             </a> 
                             <a class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 (remove)
                             </a>
                         [% ELSE %] 
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="addtocart cart[% ResultRecordId %]" href="#" style="display:inline!important;" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 Add to cart
                             </a> 
                             <a style="display:none;" class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">

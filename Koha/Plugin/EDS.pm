@@ -10,13 +10,13 @@ package Koha::Plugin::EDS;
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 07/Jun/2015
-#* LAST CHANGE DESCRIPTION: Updated to 3.1636
-#* 							--
+#* DATE MODIFIED: 11/Jun/2015
+#* LAST CHANGE DESCRIPTION: Updated to 3.1637
+#* 							--Updated to use Mechanize.
 #=============================================================================================
 #*/
 
-use Modern::Perl;
+use Modern::Perl; 
 use base qw(Koha::Plugins::Base);
 use C4::Context;
 use C4::Branch;
@@ -24,16 +24,21 @@ use C4::Members;
 use C4::Auth;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
-use LWP::Simple qw(get);
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
+use IO::Socket::SSL qw();
+use WWW::Mechanize qw(); # added to prevent Error GETing https: Can't connect to widgets.ebscohost.com:443 (certificate verify failed) at /var/lib/koha/koha-eds/plugins/Koha/Plugin/EDS.pm line 279.
+my $mech = WWW::Mechanize->new(ssl_opts => {
+    SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
+    verify_hostname => 0, # this key is likely going to be removed in future LWP >6.04
+});
 
 
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1636;
+our $VERSION = 3.1637;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -42,7 +47,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2015-06-07',
+    date_updated    => '2015-06-11',
     minimum_version => '3.16',
     maximum_version => '',
     version         => $VERSION,
@@ -273,13 +278,14 @@ sub SetupTool {
 	## Pull SHA data for version info.
 	my $shaData = '';
 	try{
-		$shaData= get('https://widgets.ebscohost.com/prod/api/koha/sha/316.json');
+		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/316.json');
+		$shaData= $mech->content();
 		$shaData=decode_json($shaData);
 	}catch{
-		my $redirectURL = PageURL();
-		print "Location $redirectURL\n\n";
+		$shaData=decode_json('{"edsplugin": {"version": [{"number": "3.1636","sha": "9a10c2acfca0a4c7e13d74dd9dca4ff117b28a0e"}]}}');
 	};
-	my $xmlReleaseNotes = get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
+	$mech->get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
+	my $xmlReleaseNotes = $mech->content();
 	#use Data::Dumper; die Dumper $xmlReleaseNotes;
 
 	my $currentVersion ="<select id='liveupdate-version'>";
