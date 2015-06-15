@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 4/Dec/2014
-#* LAST CHANGE DESCRIPTION: applied $search_context code in GetCatalogueAvailability() to match search code at Catalyst instance. Plus put GetCatalogueAvailability call in a trycatch block
+#* DATE MODIFIED: 15/Jun/2015
+#* LAST CHANGE DESCRIPTION: Exact Match Publication feature
 #=============================================================================================
 #*/
 
@@ -173,6 +173,7 @@ $template->param(
 my $EDSResponse;
 my @EDSResults;
 my @ResearchStarters;
+my @PublicationExactMatch;
 my $EDSSearchQuery;
 my $EDSSearchQueryWithOutPage;
 my @EDSFacets;
@@ -187,6 +188,7 @@ if($cgi->param("q")){
 	#use Data::Dumper; die Dumper $EDSResponse;
 	try{# uncomment the try block when debugging
 		EDSProcessResults();
+		EDSProcessRelatedPublications();
 		EDSProcessRelatedContent();
 		#process query
 		$EDSSearchQuery=$EDSResponse->{SearchRequestGet}->{QueryString};
@@ -215,6 +217,7 @@ if($cgi->param("q")){
 	     PAGE_NUMBERS     => \%pager,
 		total            => $EDSResponse->{SearchResult}->{Statistics}->{TotalHits},
 		SEARCH_RESULTS   => \@EDSResults,
+		publicationexactmatch => \@PublicationExactMatch,
 		researchstarters => \@ResearchStarters,
 		query            => \@EDSQueries,
 	    sort_by          => GetSearchParam('sort'),
@@ -328,21 +331,46 @@ sub EDSProcessResults
 	}	
 }
 
+
+
+sub EDSProcessRelatedPublications
+{
+	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}){
+		return;
+	}
+	@PublicationExactMatch = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}}; 
+	foreach my $PublicationExactMatch (@PublicationExactMatch){
+		if($PublicationExactMatch->{Type} eq 'emp'){
+			my @RelatedPublications = @{$PublicationExactMatch->{PublicationRecords}};
+			foreach my $RelatedPublications (@RelatedPublications){
+				foreach my $Items ($RelatedPublications->{Items}){
+					my @Items = @{$Items};
+					foreach my $Item (@Items){
+						$Item = EDSProcessItem($Item);
+					}
+				}
+			}
+		}
+	}
+	#use Data::Dumper; die Dumper @PublicationExactMatch;	
+}
+
+
+
 sub EDSProcessRelatedContent
 {
-	#use Data::Dumper; die Dumper $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords};
 	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}){
 		return;
 	}
-	my @RelatedContents = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}}; 
-	foreach my $RelatedContent (@RelatedContents){
-		if($RelatedContent->{Type} eq 'rs'){
-			@ResearchStarters = @{$RelatedContent->{Records}};
-			foreach my $ResearchStarter (@ResearchStarters){
+	@ResearchStarters = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}}; 
+	foreach my $ResearchStarters (@ResearchStarters){
+		if($ResearchStarters->{Type} eq 'rs'){
+			my @RelatedContents = @{$ResearchStarters->{Records}};
+			foreach my $RelatedContents (@RelatedContents){
 				try{
-					$ResearchStarter->{ImageInfo}[0]->{Target} =~s/http\:/https\:/g; # to prevent ie warnings
+					$RelatedContents->{ImageInfo}[0]->{Target} =~s/http\:/https\:/g; # to prevent ie warnings
 				}catch{};
-				foreach my $Items ($ResearchStarter->{Items}){
+				foreach my $Items ($RelatedContents->{Items}){
 					my @Items = @{$Items};
 					foreach my $Item (@Items){
 						$Item = EDSProcessItem($Item);

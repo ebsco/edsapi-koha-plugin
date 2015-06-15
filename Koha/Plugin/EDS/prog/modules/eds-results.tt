@@ -483,7 +483,8 @@ $(document).ready(function(){
  [% END %] [% END %] [% END %][% END %][% END %] </div>
 
  </td></tr>
- 
+ <tr  style="display:none;"><td colspan="5" id="placard-tabs"></td></tr>
+       [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]	   
        [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
 
 	  
@@ -557,7 +558,7 @@ $(document).ready(function(){
 			  
 			  [% #CustomLinks %]
 			  [% IF RECORD.CustomLinks OR RECORD.FullText.Links OR RECORD.FullText.CustomLinks OR RECORD.FullText.Text.Availability==1 %]
-				  <div class="results_summary actions">
+				  <div class="results_summary actions links">
 						<span class="label">Links: </span>
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Text.Availability %]
 							

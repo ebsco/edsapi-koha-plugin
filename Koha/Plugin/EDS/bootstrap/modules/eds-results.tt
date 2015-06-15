@@ -167,6 +167,8 @@
                                             [% END %]
                                         </span> <!-- / .links -->
                                 </div> <!-- / #selections-toolbar -->
+							 <div  style="display:none;"><div id="placard-tabs"></div></div>
+                               [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]	
 							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
@@ -256,7 +258,7 @@
 			  
 			  [% #CustomLinks %]
 			  [% IF RECORD.CustomLinks OR RECORD.FullText.Links OR RECORD.FullText.CustomLinks OR RECORD.FullText.Text.Availability==1 %]
-				  <div class="results_summary actions">
+				  <div class="results_summary actions links">
 						<span class="label">Links: </span>
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Text.Availability %]
 							

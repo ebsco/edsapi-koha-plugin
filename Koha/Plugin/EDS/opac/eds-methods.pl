@@ -338,8 +338,11 @@ sub EDSDefaultQueryBuilder
 		my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
 		foreach my $AvailableRelatedContent (@AvailableRelatedContents){
 			if($AvailableRelatedContent->{DefaultOn} eq 'y'){
+				if($AvailableRelatedContent->{Type} eq 'emp'){
+					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+				}
 				if($AvailableRelatedContent->{Type} eq 'rs'){
-					$defaultEDSQuery = $defaultEDSQuery.'|relatedcontent=rs';
+					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
 				}
 			}
 		}

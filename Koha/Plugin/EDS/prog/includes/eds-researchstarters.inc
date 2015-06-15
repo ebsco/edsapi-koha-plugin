@@ -13,7 +13,7 @@ researchStartersInc +='<div id="carousel-example-generic" class="carousel slide"
 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>\
 ';
 //	[% rsitemscount=1 %]
-//	[% WHILE rsitemscount <  researchstarters.size %]
+//	[% WHILE rsitemscount <  researchstarters.0.Records.size %]
 		researchStartersInc +='<li data-target="#carousel-example-generic" data-slide-to="[% rsitemscount %]"></li>';
 //		[% rsitemscount = rsitemscount+1 %]
 //	[% END %]
@@ -24,7 +24,7 @@ researchStartersInc+='  </ol>\
   ';
 //		  [% rsitemdata = '' %]
 //		  [% rsitemtitle = '' %]
-// [% FOR researchStarter IN researchstarters %]  
+// [% FOR researchStarter IN researchstarters.0.Records %]  
 
 //	[% rsactive = '' %]
 //	[% rsheading = 'Related' %]
@@ -107,9 +107,10 @@ researchStartersInc+='  </div>\
 
 function LoadResearchStarters(){
 	$('#research-starters').contents().find('body').html(researchStartersInc);
+	PlacardTabs('research-starters');
 }
 </script>
 
 
- <tr><td colspan="5" class=""><iframe id="research-starters" frameborder="0" height="200" width="100%" src="/plugin/Koha/Plugin/EDS/opac/eds-raw.pl" onload="LoadResearchStarters()"></iframe></td></tr>
+ <tr class="placardtab" style="display:none;"><td colspan="5" class=""><iframe id="research-starters" frameborder="0" height="200" data-heading="[% researchstarters.0.Label %]" width="100%" src="/plugin/Koha/Plugin/EDS/opac/eds-raw.pl" onload="LoadResearchStarters()"></iframe></td></tr>
 [% END %]

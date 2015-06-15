@@ -13,7 +13,7 @@ researchStartersInc +='<div id="carousel-example-generic" class="carousel slide"
 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>\
 ';
 //	[% rsitemscount=1 %]
-//	[% WHILE rsitemscount <  researchstarters.size %]
+//	[% WHILE rsitemscount <  researchstarters.0.Records.size %]
 		researchStartersInc +='<li data-target="#carousel-example-generic" data-slide-to="[% rsitemscount %]"></li>';
 //		[% rsitemscount = rsitemscount+1 %]
 //	[% END %]
@@ -24,7 +24,7 @@ researchStartersInc+='  </ol>\
   ';
 //		  [% rsitemdata = '' %]
 //		  [% rsitemtitle = '' %]
-// [% FOR researchStarter IN researchstarters %]  
+// [% FOR researchStarter IN researchstarters.0.Records %]  
 
 //	[% rsactive = '' %]
 //	[% rsheading = 'Related' %]
@@ -53,15 +53,15 @@ researchStartersInc+='  </ol>\
 //  [% IF rsitemtitle == '' %]
 	//	  [% rsitemtitle = 'Login to gain access to this result.' %]
 //	 [% END %]
-	researchStartersInc+=' <div class="slidecontainer">\
-		<div style="float:left;margin-right:10px;">\
-			<img style="height:130px;" src="[% rsImage %]">\
-		</div>\
-		<div>\
+	researchStartersInc+=' <div class="slidecontainer row">\
+		<div class="span1">\</div>\
+		<div  class="span10">\
+			<img style="height:130px;float:left;margin-right:10px;" src="[% rsImage %]">\
 			<h4><a href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% researchStarter.Header.An %]|dbid=[%researchStarter.Header.DbId%]&resultid=1&fulltext=html" target="_blank">[% rsheading %]: [% rsitemtitle %]</a></h4>\
 			<small> [% rsitemdata %]</small> <a href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% researchStarter.Header.An %]|dbid=[%researchStarter.Header.DbId%]&resultid=1&fulltext=html" target="_blank">More.</a>\
 			<sub>[% rsitemsrc %]</sub>\
 		</div>\
+		<div class="span1">\</div>\
 	</div>';
 	//researchStartersInc+=' <div class="carousel-caption"> </div>';
    	researchStartersInc+='</div>';
@@ -72,13 +72,9 @@ researchStartersInc+='  </ol>\
 researchStartersInc+='  </div>\
 	<!-- Controls -->\
   <a class="left carousel-control" role="button" href="javascript:void(0)" onClick="$(\'.carousel\').carousel(\'prev\')" data-slide="prev">\
-    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>\
-    <span class="sr-only">Previous</span>\
-  </a>\
+&lsaquo;</a>\
   <a class="right carousel-control" role="button" href="javascript:void(0)" onClick="$(\'.carousel\').carousel(\'next\')" data-slide="next">\
-    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ></span>\
-    <span class="sr-only">Next</span>\
-  </a>\
+&rsaquo;</a>\
 </div>\
 <style>\
 .carousel-control.left, .carousel-control.right{ \
@@ -87,10 +83,9 @@ researchStartersInc+='  </div>\
 	color:#444!important;\
 }\
 .slidecontainer{\
-	height:198px;\
-	width:100%;\
 	border: 1px solid #ccc;\
 	padding:15px;\
+	margin-left:0px;\
 }\
 .carousel-indicators li{\
 	border: 1px solid #999 !important;\
@@ -105,11 +100,16 @@ researchStartersInc+='  </div>\
 </style>\
 ';
 
-function LoadResearchStarters(){
-	$('#research-starters').contents().find('body').html(researchStartersInc);
-}
 </script>
 
 
- <tr><td colspan="5" class=""><iframe id="research-starters" frameborder="0" height="200" width="100%" src="/plugin/Koha/Plugin/EDS/opac/eds-raw.pl" onload="LoadResearchStarters()"></iframe></td></tr>
+ <div class="placardtab" style="display:none;"><div><div id="research-starters" width="100%" data-heading="[% researchstarters.0.Label %]"></div></div></div>
+ <script>
+ 
+ var rsTrackJQuery = setInterval(function(){try{jQuery().jquery;clearInterval(rsTrackJQuery);
+ 	jQuery('#research-starters').html(researchStartersInc);
+	PlacardTabs('research-starters');
+}catch (err) {}}, 10);
+ 
+ </script>
 [% END %]

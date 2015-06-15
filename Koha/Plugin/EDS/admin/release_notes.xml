@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1637</latestversion>
+	<latestversion>3.1638</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>11/Jun/2015</lastupdated>
+	<lastupdated>15/Jun/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1638" date="15/Jun/2015">
+			<note id="1" author="amiranda@ebsco.com">Exact Match Publication Placard</note>
+			<note id="2" author="amiranda@ebsco.com">Ask user to login when accessing lins </note>
+		</release>
 		<release version="3.1637" date="11/Jun/2015">
 			<note id="1" author="amiranda@ebsco.com">Updated EDS.pm to use Mechanize instead of LWP to prevent run tool error</note>
 		</release>

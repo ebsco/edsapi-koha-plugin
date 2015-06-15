@@ -55,6 +55,12 @@ function StartEDS(){
 		
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js?v2', function(data, textStatus, jqxhr){
 			
+			if($.cookie("guest")=='y'){
+				jQuery('.results_summary.actions.links a').each(function(){
+					jQuery(this).attr('href','javascript:LoginRequired()');
+				});
+			}
+			
 			
 			if($.jStorage.get("edsConfig")!=null){
 				ConfigData((JSON.parse($.jStorage.get("edsConfig"))));
@@ -110,6 +116,7 @@ function StartEDS(){
 		});
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/custom.js'); // load customisations.
 		PatchSendCart();
+		
 	});
 }
 
@@ -712,3 +719,22 @@ function SearchAgain(){
 // Multile Facets END
 
 //
+function PlacardTabs(placardTab){
+	jQuery('#placard-tabs').append('<div class="placard-tab-item"><a id="'+placardTab+'-tab" href="javascript:void(0)">'+jQuery('#'+placardTab).data('heading')+'</a></div>');
+	if(jQuery('#placard-tabs a').length==1){
+		jQuery('#'+placardTab+'-tab').addClass('placard-tab-item-active');
+		jQuery('#'+placardTab).parent().parent().css('display','');
+	}
+		
+	if(jQuery('#placard-tabs a').length>1){
+		jQuery('#placard-tabs').parent().css('display','');
+	}
+		
+		
+	jQuery('#'+placardTab+'-tab').click(function(){
+		jQuery('.placardtab').css('display','none');
+		jQuery('#placard-tabs a').removeClass('placard-tab-item-active');
+		jQuery('#'+placardTab).parent().parent().css('display','');
+		jQuery('#'+placardTab+'-tab').addClass('placard-tab-item-active');
+	});
+}
