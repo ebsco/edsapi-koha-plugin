@@ -177,6 +177,11 @@ Template Files - <strong> folder and file permissions:</strong>Read (Everyone), 
     <td align="left" valign="middle">&nbsp;</td>
     <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-researchstarters.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
   </tr>
+<tr>
+    <th align="left" valign="top" nowrap scope="row">eds-publicationexactmatch.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-publicationexactmatch.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
+  </tr>
   <tr>
     <th colspan="3" align="left" valign="top" nowrap scope="row">Folders  [prog/includes] :
 		<br> 
@@ -211,6 +216,11 @@ Template Files - <strong> folder and file permissions:</strong>Read (Everyone), 
     <th width="1%" align="left" valign="top" nowrap scope="row">eds-researchstarters.inc</th>
     <td align="left" valign="middle">&nbsp;</td>
     <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-researchstarters.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
+  </tr>
+  <tr>
+    <th width="1%" align="left" valign="top" nowrap scope="row">eds-publicationexactmatch.inc</th>
+    <td align="left" valign="middle">&nbsp;</td>
+    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-publicationexactmatch.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
   </tr>
   <tr>
     <th colspan="3" align="left" valign="top" nowrap scope="row">IMPORTANT: Koha files to patch - the plugin will integrate itself to the site through these changes.</th>

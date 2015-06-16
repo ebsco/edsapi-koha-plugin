@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1638</latestversion>
+	<latestversion>3.1639</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>15/Jun/2015</lastupdated>
+	<lastupdated>16/Jun/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1639" date="16/Jun/2015">
+			<note id="1" author="amiranda@ebsco.com">Update Setuptool.tt to include eds-publicationexactmatch.inc</note>
+		</release>
 		<release version="3.1638" date="15/Jun/2015">
 			<note id="1" author="amiranda@ebsco.com">Exact Match Publication Placard</note>
 			<note id="2" author="amiranda@ebsco.com">Ask user to login when accessing lins </note>
