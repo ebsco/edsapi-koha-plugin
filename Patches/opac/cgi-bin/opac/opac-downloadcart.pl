@@ -32,19 +32,10 @@ use C4::Record;
 use C4::Ris;
 use C4::Csv;
 use utf8;
-use Try::Tiny; # SM: EDS
-use URI::Escape; # SM: EDS
 
 my $query = new CGI;
 
-#EDS patch START
-my $PluginDir = C4::Context->config("pluginsdir");
-$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
-require $PluginDir.'/opac/eds-methods.pl';
-
-my $EDSConfig = decode_json(EDSGetConfiguration());
-
-#EDS patch END
+my $eds_data ="";if((eval{C4::Context->preference('EDSEnabled')})){my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data');} #EDS Patch
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
@@ -58,7 +49,6 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
 
 my $bib_list = $query->param('bib_list');
 my $format  = $query->param('format');
-my $eds_data = ""; try{$eds_data = decode_json(uri_unescape($query->param('eds_data')));}catch{}; # EDS
 my $dbh     = C4::Context->dbh;
 
 if ($bib_list && $format) {
@@ -79,138 +69,7 @@ if ($bib_list && $format) {
 
             my $record = GetMarcBiblio($biblio, 1);
 			
-			
-			
-			#START EDS
-			if(eval{C4::Context->preference('EDSEnabled')}){
-			
-				if(!($biblio =~m/$EDSConfig->{cataloguedbid}/)){
-					
-					$record = $eds_data->{Records}->{$biblio};
-					$record = decode_json(uri_unescape($record));
-					
-					my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 
-								<record
-									xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-									xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
-									xmlns="http://www.loc.gov/MARC21/slim">
-									 <leader>000000000000000000000000</leader>
-									';
-									
-					#Title
-					try{
-							my $EDSRecordTitle = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Titles}[0]->{TitleFull};
-							$recordXML .= '  <datafield tag="245" ind1="0" ind2="0">
-												<subfield code="a" label="Titles">'.$EDSRecordTitle.'</subfield>
-											  </datafield>
-											  ';	
-					}catch{};
-					
-					#Subject
-					try{
-							my $EDSRecordSubjects = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Subjects};
-							foreach my $EDSRecordSubject (@{$EDSRecordSubjects}){	
-								$recordXML .= '  <datafield tag="611" ind1="0" ind2="0">
-												<subfield code="a" label="Subject">'.$EDSRecordSubject->{SubjectFull}.'</subfield>
-											  </datafield>
-											  ';
-							}
-					}catch{};
-					
-					#Author
-					try{
-							my $EDSRecordAuthors = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{HasContributorRelationships};
-							foreach my $EDSRecordAuthor (@{$EDSRecordAuthors}){	
-								$recordXML .= '  <datafield tag="100" ind1="0" ind2="0">
-												<subfield code="a" label="Subject">'.$EDSRecordAuthor->{PersonEntity}->{Name}->{NameFull}.'</subfield>
-											  </datafield>
-											  ';
-							}
-					}catch{};
-					
-					#URL
-					try{
-							my $EDSRecordURL = $record->{Record}->{PLink};
-							$recordXML .= '  <datafield tag="856" ind1="0" ind2="0">
-												<subfield code="u" label="Accession Number">'.$EDSRecordURL.'</subfield>
-												<subfield code="y" label="Accession Number">'.$EDSRecordURL.'</subfield>
-												<subfield code="z" label="Accession Number">'.$EDSRecordURL.'</subfield>
-											  </datafield>
-											  ';
-					}catch{};
-					
-					#Document Type - TODO needs work.
-					try{
-							my $EDSRecordType = $record->{Record}->{Header}->{PubType};
-							$recordXML .= '  <datafield tag="006" ind1="0" ind2="0">
-												<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
-											  </datafield>
-											  ';
-							$recordXML .= '  <datafield tag="007" ind1="0" ind2="0">
-												<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
-											  </datafield>
-											  ';
-							$recordXML .= '  <datafield tag="008" ind1="0" ind2="0">
-												<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
-											  </datafield>
-											  ';
-					}catch{};
-					
-					#Identifiers: ISSN/ISBN
-					try{
-							my $EDSRecordIdentifiers = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Identifiers};
-	
-							foreach my $EDSRecordIdentifier (@{$EDSRecordIdentifiers}){	
-								if($EDSRecordIdentifier->{Type} =~m/issn/){
-									$recordXML .= '  <datafield tag="022" ind1="0" ind2="0">
-													<subfield code="a" label="ISSN">'.$EDSRecordIdentifier->{Value}.'</subfield>
-												  </datafield>
-												  ';	
-								}elsif($EDSRecordIdentifier->{Type} =~m/isbn/){
-									$recordXML .= '  <datafield tag="020" ind1="0" ind2="0">
-													<subfield code="a" label="ISSN">'.$EDSRecordIdentifier->{Value}.'</subfield>
-												  </datafield>
-												  ';	
-								}
-							}
-					}catch{};
-					
-					#Dates
-					try{
-							my $EDSRecordDate = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Dates}[0];
-							$recordXML .= '<datafield tag="260" ind1=" " ind2=" ">
-												<subfield code="c">'.$EDSRecordDate->{Y}.'</subfield>
-											</datafield>
-											  ';	
-					}catch{};				
-					
-	
-					
-					#Accession Number
-					try{
-							my $EDSRecordAN = $record->{Record}->{Header}->{DbId}.'.'.$record->{Record}->{Header}->{An};
-							$recordXML .= '  <datafield tag="999" ind1="0" ind2="0">
-												<subfield code="c" label="Accession Number">'.$EDSRecordAN.'</subfield>
-												<subfield code="d" label="Accession Number">'.$EDSRecordAN.'</subfield>
-											  </datafield>
-											  ';
-					}catch{};
-													
-					
-					
-					$recordXML .= '</record>';
-					$recordXML=~s/\&/and/g; # avoid error when converting to marc
-					
-					$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
-				}
-			
-			}#STOP EDS
-			
-			
-			
-			
-			
-
+			if((eval{C4::Context->preference('EDSEnabled')})){my $dat = "";if($biblio =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);}}#EDS Patch
             next unless $record;
 
             if ($format eq 'iso2709') {
