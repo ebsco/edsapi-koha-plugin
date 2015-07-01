@@ -8,8 +8,8 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 26/05/2015
-* LAST CHANGE DESCRIPTION: Send cart using json_encode.
+* DATE MODIFIED: 29/06/2015
+* LAST CHANGE DESCRIPTION: Removed patch SendCart - it is now part of the plugin.
 =============================================================================================
 */
 
@@ -37,8 +37,8 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
-var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
-var versionEDSKoha = '3.1634';
+//var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
+var versionEDSKoha = '3.1640';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -115,7 +115,7 @@ function StartEDS(){
 			// cart management END		
 		});
 		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/custom.js'); // load customisations.
-		PatchSendCart();
+		//PatchSendCart();
 		
 	});
 }
@@ -457,7 +457,7 @@ function PrepareItems(){
 		
 }
 
-function PatchSendCard(){
+/*function PatchSendCard(){
 		if(!patchSendCart){
 			if(document.URL.indexOf('|')!=-1){
 				var sendParent = $('.send').parent().html();
@@ -467,7 +467,7 @@ function PatchSendCard(){
 			}
 		}
 }
-
+*/
 function GetEDSItems(data){
 	try{
 	$('#itemst').append('<tr><td><input type="checkbox" class="cb" value="'+data.Record.Header.An+'|'+data.Record.Header.DbId+'" name="'+data.Record.Header.An+'|'+data.Record.Header.DbId+'" id="'+data.Record.Header.An+'|'+data.Record.Header.DbId+'" onclick="selRecord(value,checked);"></td><td><a href="#" onclick="opener.document.location=\'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an='+data.Record.Header.An+'|dbid='+data.Record.Header.DbId+'\'">'+$("<div/>").html(data.Record.Items[0].Data).text()+'</a></td><td>'+$("<div/>").html(data.Record.Items[1].Data).text()+'</td><td>'+data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y+'</td><td>Discovery</td></tr>');
@@ -544,25 +544,13 @@ function SetEDSCartField(){
 	
 	var fieldDataObj = {Records:[]};
 	
-	//var fieldData='{"Records":{';
 	for(i=0;i<recordId.length-1;i++){
 		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records
-		//	fieldData += '"'+recordId[i]+'":"';
-		//	fieldData += encodeURIComponent($.jStorage.get(recordId[i]));
-		//	fieldData += '"';
 			var fieldRecordObj = {};
 			fieldRecordObj[recordId[i]]=JSON.parse($.jStorage.get(recordId[i]));
 			fieldDataObj.Records.push(fieldRecordObj);
-			//alert(JSON.stringify(fieldDataObj));
-			//fieldDataObj.Records.recordId[i].push(JSON.parse($.jStorage.get(recordId[i])))
-		//	if(i<recordId.length-2){
-		//		fieldData += ",";
-		//	}
 		}
 	}
-	//fieldData +='}}';
-	//alert(JSON.stringify(fieldDataObj));
-	//console.log(JSON.stringify(fieldDataObj));
 	$('.action').prepend('<input type="hidden" name="eds_data" value="'+encodeURIComponent(JSON.stringify(fieldDataObj))+'">');
 }
 

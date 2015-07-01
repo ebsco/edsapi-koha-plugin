@@ -42,6 +42,7 @@ use URI::Escape;
 use HTML::Entities;
 use feature qw(switch);
 use Encode;
+use Try::Tiny;
 
 
 
@@ -354,4 +355,168 @@ sub EDSDefaultQueryBuilder
 	return $defaultEDSQuery;			
 		
 }
+
+sub CartSendLinks
+{
+	my ($template_res,@bibs) = @_;
+	my $EDSConfig = decode_json(EDSGetConfiguration());
+	foreach my $biblionumber (@bibs) { # SM: EDS	
+		if($biblionumber =~m/\|/){
+			if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
+				$biblionumber =~s/\|/\&dbid\=/g;
+				$template_res =~s/\|/\&dbid\=/g;
+				$template_res =~s/\/cgi\-bin\/koha\/opac-detail\.pl\?biblionumber\=$biblionumber/\/plugin\/Koha\/Plugin\/EDS\/opac\/eds-detail.pl\?q\=Retrieve\?an\=$biblionumber/; 
+			}
+		}else{
+			$template_res =~s/\|$EDSConfig->{cataloguedbid}//;
+		}		
+	}
+	$template_res =~s/\&dbid/\|dbid/g;
+	return $template_res;
+}
+
+sub ProcessEDSCartItems
+{
+	my ($biblionumber, $eds_data, $record, $dat) = @_;
+	
+	my $EDSConfig = decode_json(EDSGetConfiguration());
+	
+	if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
+		$eds_data = decode_json(uri_unescape($eds_data));
+		
+		my @eds_dataItems =@{$eds_data->{Records}};
+		foreach my $edsDataItem (@eds_dataItems){
+			if(exists $edsDataItem->{$biblionumber}){
+				$record = $edsDataItem->{$biblionumber};
+				last;
+			}
+		}
+		
+		my $recordJSON = "{";
+		my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 
+					<record
+						xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+						xmlns="http://www.loc.gov/MARC21/slim">
+						 <leader>000000000000000000000000</leader>
+						';
+						
+		#Title
+		try{
+				my $EDSRecordTitle = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Titles}[0]->{TitleFull};
+				$recordXML .= '  <datafield tag="245" ind1="0" ind2="0">
+									<subfield code="a" label="Titles">'.$EDSRecordTitle.'</subfield>
+								  </datafield>
+								  ';	
+				$recordJSON .= '"title":"'.$EDSRecordTitle.'",';
+		}catch{};
+		
+		#Subject
+		try{
+				my $EDSRecordSubjects = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Subjects};
+				foreach my $EDSRecordSubject (@{$EDSRecordSubjects}){	
+					$recordXML .= '  <datafield tag="611" ind1="0" ind2="0">
+									<subfield code="a" label="Subject">'.$EDSRecordSubject->{SubjectFull}.'</subfield>
+								  </datafield>
+								  ';
+				}
+		}catch{};
+		
+		#Author
+		try{
+				my $EDSRecordAuthors = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{HasContributorRelationships};
+				foreach my $EDSRecordAuthor (@{$EDSRecordAuthors}){	
+					$recordXML .= '  <datafield tag="100" ind1="0" ind2="0">
+									<subfield code="a" label="Subject">'.$EDSRecordAuthor->{PersonEntity}->{Name}->{NameFull}.'</subfield>
+								  </datafield>
+								  ';
+					$recordJSON .= '"author":"'.$EDSRecordAuthor->{PersonEntity}->{Name}->{NameFull}.'",';
+				}
+		}catch{};
+		
+		
+		#URL
+		try{
+				my $EDSRecordURL = $record->{Record}->{PLink};
+				$recordXML .= '  <datafield tag="856" ind1="0" ind2="0">
+									<subfield code="u" label="Accession Number">'.$EDSRecordURL.'</subfield>
+									<subfield code="y" label="Accession Number">'.$EDSRecordURL.'</subfield>
+									<subfield code="z" label="Accession Number">'.$EDSRecordURL.'</subfield>
+								  </datafield>
+								  ';
+		}catch{};
+		
+		#Document Type - TODO needs work.
+		try{
+				my $EDSRecordType = $record->{Record}->{Header}->{PubType};
+				$recordXML .= '  <datafield tag="006" ind1="0" ind2="0">
+									<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
+								  </datafield>
+								  ';
+				$recordXML .= '  <datafield tag="007" ind1="0" ind2="0">
+									<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
+								  </datafield>
+								  ';
+				$recordXML .= '  <datafield tag="008" ind1="0" ind2="0">
+									<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
+								  </datafield>
+								  ';
+		}catch{};
+		
+		#Identifiers: ISSN/ISBN
+		try{
+				my $EDSRecordIdentifiers = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Identifiers};
+
+				foreach my $EDSRecordIdentifier (@{$EDSRecordIdentifiers}){	
+					if($EDSRecordIdentifier->{Type} =~m/issn/){
+						$recordJSON .= '"issn":"'.$EDSRecordIdentifier->{Value}.'",';
+						$recordXML .= '  <datafield tag="022" ind1="0" ind2="0">
+										<subfield code="a" label="ISSN">'.$EDSRecordIdentifier->{Value}.'</subfield>
+									  </datafield>
+									  ';	
+					}elsif($EDSRecordIdentifier->{Type} =~m/isbn/){
+						$recordJSON .= '"isbn":"'.$EDSRecordIdentifier->{Value}.'",';
+						$recordXML .= '  <datafield tag="020" ind1="0" ind2="0">
+										<subfield code="a" label="ISSN">'.$EDSRecordIdentifier->{Value}.'</subfield>
+									  </datafield>
+									  ';	
+					}
+				}
+		}catch{};
+		
+		#Dates
+		try{
+				my $EDSRecordDate = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Dates}[0];
+				$recordJSON .= '"copyrightdate":"'.$EDSRecordDate->{Y}.'",';
+				$recordXML .= '<datafield tag="260" ind1=" " ind2=" ">
+									<subfield code="c">'.$EDSRecordDate->{Y}.'</subfield>
+								</datafield>
+								  ';	
+		}catch{};				
+		
+
+		
+		#Accession Number
+		try{
+				my $EDSRecordAN = $record->{Record}->{Header}->{DbId}.'.'.$record->{Record}->{Header}->{An};
+				$recordJSON .= '"biblioitemnumber":"'.$EDSRecordAN.'"';
+				$recordXML .= '  <datafield tag="999" ind1="0" ind2="0">
+									<subfield code="c" label="Accession Number">'.$EDSRecordAN.'</subfield>
+									<subfield code="d" label="Accession Number">'.$EDSRecordAN.'</subfield>
+								  </datafield>
+								  ';
+		}catch{};
+										
+		
+		$recordJSON .= "}";
+		$recordXML .= '</record>';
+		$recordXML=~s/\&/and/g; # avoid error when converting to marc
+		$dat = from_json($recordJSON); # used instead of decode_json and encode('utf-8',$recordJSON) first.
+		
+		$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
+		return ($record,$dat);
+	}else{return ($record,$dat);}
+}
+
+
 }#end no warnings
