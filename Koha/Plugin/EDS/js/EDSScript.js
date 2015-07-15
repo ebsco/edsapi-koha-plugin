@@ -8,8 +8,8 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 29/06/2015
-* LAST CHANGE DESCRIPTION: Removed patch SendCart - it is now part of the plugin.
+* DATE MODIFIED: 15/07/2015
+* LAST CHANGE DESCRIPTION: Applied target=_self for customlinks if user is not logged in.
 =============================================================================================
 */
 
@@ -38,7 +38,7 @@ var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
 //var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
-var versionEDSKoha = '3.1640';
+var versionEDSKoha = '3.1641';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -58,6 +58,7 @@ function StartEDS(){
 			if($.cookie("guest")=='y'){
 				jQuery('.results_summary.actions.links a').each(function(){
 					jQuery(this).attr('href','javascript:LoginRequired()');
+					jQuery(this).attr('target','_self');
 				});
 			}
 			

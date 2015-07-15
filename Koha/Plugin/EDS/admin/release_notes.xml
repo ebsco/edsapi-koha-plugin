@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1640</latestversion>
+	<latestversion>3.1641</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>29/Jun/2015</lastupdated>
+	<lastupdated>15/Jul/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1641" date="15/Jul/2015">
+			<note id="1" author="amiranda@ebsco.com">Fixed Custom link opening new window when user is not logged in</note>
+		</release>
 		<release version="3.1640" date="29/Jun/2015">
 			<note id="0" author="amiranda@ebsco.com">IMPORTANT: PLEASE SEE RUN TOOL TO PATCH 2 NEW FILES. DO NOT USE LIVE UPDATE TO UPGRADE TO THIS VERSION. UPGRADE THE PLUGIN FROM KOHA ADMIN</note>
 			<note id="1" author="amiranda@ebsco.com">Added ProcessEDSCartItems to eds-methods.pl. It integrates eds items to download and send cart.</note>
