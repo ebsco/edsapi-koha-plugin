@@ -36,8 +36,13 @@ use C4::Members;
 
 my $query = new CGI;
 
-my $eds_data ="";if((eval{C4::Context->preference('EDSEnabled')})){my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data');} #EDS Patch
-
+my $eds_data = "";
+if ( ( eval { C4::Context->preference('EDSEnabled') } ) ) {
+    my $PluginDir = C4::Context->config("pluginsdir");
+    $PluginDir = $PluginDir . '/Koha/Plugin/EDS';
+    require $PluginDir . '/opac/eds-methods.pl';
+    $eds_data = $query->param('eds_data');
+}    #EDS Patch
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
