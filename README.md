@@ -44,7 +44,7 @@ Click Update Info. Wait for the page to refresh. You might have to click Update 
 Quick Links
 ========================
 
-WIKI: https://github.com/ebsco/edsapi-koha-plugin/wiki/001.-Home
+Wiki: https://github.com/ebsco/edsapi-koha-plugin/wiki/001.-Home
 
 https://github.com/ebsco/edsapi-koha-plugin/wiki/Patches
 
