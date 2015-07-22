@@ -3,11 +3,11 @@ edsapi-koha-plugin
 
 edsapi-koha-plugin
 
-use branch:master  for Koha 3.16+
+use branch:master  for Koha 3.16+ (includes latest features and updates)
 
-use the branch:KohaV3.14x for Koha 3.14x
+use the branch:KohaV3.14x for Koha 3.14x (depricated)
 
-use the branch:KohaV3.12x for Koha 3.12x
+use the branch:KohaV3.12x for Koha 3.12x (depricated)
 
 minimum Koha version supported is Koha 3.12 with plugins enabled
 
