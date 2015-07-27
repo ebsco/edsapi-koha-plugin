@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1641</latestversion>
+	<latestversion>3.1642</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>15/Jul/2015</lastupdated>
+	<lastupdated>27/Jul/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1642" date="27/Jul/2015">
+			<note id="1" author="dpodboy@EBSCO.COM">Fixed label position on Advanced Search.</note>
+			<note id="2" author="dpodboy@EBSCO.COM">Made the date field on results page fluid.</note>
+		</release>
 		<release version="3.1641" date="15/Jul/2015">
 			<note id="1" author="amiranda@ebsco.com">Fixed Custom link opening new window when user is not logged in</note>
 		</release>
