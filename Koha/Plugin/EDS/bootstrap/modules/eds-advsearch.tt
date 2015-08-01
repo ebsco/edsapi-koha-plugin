@@ -86,19 +86,19 @@
 			  	<li id="limiterItem">
 					<ul>
 						[% FOREACH mode IN search_modes %]
-						<li>	
+						<li>
+						<label for="[% mode.Mode %]" >
 							[% IF mode.DefaultOn == 'y' %]
 								<input name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
 							[% ELSE %]
 								<input name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
 							[% END %]
                             [% IF mode.Mode == 'smart' %]
-                                <label for="[% mode.Mode %]" >[% mode.Label %]
+                                [% mode.Label %]
                                  <sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="Enter as much text for your search as you want - a phrase, a sentence, paragraph, or even whole pages. This mode searches EBSCO Databases only.">Hint</a></sub>
-                                 
                                 </label>
                             [% ELSE %]
-                                <label for="[% mode.Mode %]" >[% mode.Label %]</label>
+                                [% mode.Label %]</label>
                             [% END %]
 						</li>
 						[% END %]	
@@ -107,12 +107,11 @@
 				
 				[% FOREACH expander IN expanders %]
 				<li id="limiterItem">	
-					<label for="[% expander.Id %]" class="advItemLabel" >[% expander.Label %]</label>
-					<section>
+					<label for="[% expander.Id %]" class="advItemLabel" >
 					[% IF expander.DefaultOn == 'y' %]
-						<input name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+						<input name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]"> [% expander.Label %]</label>
 					[% ELSE %]
-						<input name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+						<input name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]"> [% expander.Label %]</label>
 					[% END %]
 					</section>
 				</li>
@@ -130,16 +129,17 @@
 			  	<ul>
 					[% FOREACH advlimiter IN advlimiters %]										
 					  <li  id="limiterItem">
-						<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+						<label for="[% advlimiter.Id %]" class="advItemLabel" >
 						<section>
 							[% IF advlimiter.Type =='select' %]
 								[% IF advlimiter.DefaultOn == 'y' %]
-									<input name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<input name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]"> [% advlimiter.Label %]</label>
 								[% ELSE %]
-									<input name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<input name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]"> [% advlimiter.Label %]</label>
 								[% END %]
 							[% END %]
 							[% IF advlimiter.Type =='ymrange' %]
+								[% advlimiter.Label %]</label> <br />
 																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
 									<option selected="selected" value="">Month</option>
 									<option value="01">January</option>
@@ -172,16 +172,17 @@
 									<option value="11">November</option>
 									<option value="12">December</option>
 								</select>
-								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
+								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" >
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
-								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" > [% advlimiter.Label %]</label>
 							[% END %]
 							[% IF advlimiter.Type =='multiselectvalue' %]
+								[% advlimiter.Label %]</label>
 								<select id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
 									[% FOREACH limiterValue IN advlimiter.LimiterValues %]
 										<option value="[% limiterValue.AddAction %]">[% limiterValue.Value %]</option>
-									[% END %]	
+									[% END %]
 								</select>
 							[% END %]
 						</section>
