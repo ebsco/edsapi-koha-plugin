@@ -56,9 +56,9 @@
 				<ul>
 					<li>[% EDSLimit.Label %] 
 						[% IF EDSLimit.DateValue %]
-							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center; width:90%;" placeholder="YYYY-MM/YYYY-MM" value="[% EDSLimit.DateValue %]" >
+							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;width:90%;" placeholder="YYYY-MM/YYYY-MM" value="[% EDSLimit.DateValue %]" >
 						[% ELSE %]
-							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center; width:90%;" placeholder="YYYY-MM/YYYY-MM" >
+							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;width:90%;" placeholder="YYYY-MM/YYYY-MM" >
 						[% END %]
 						[% #action=removelimiter(DT1) %]
 						<script>

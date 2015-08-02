@@ -130,15 +130,9 @@ if ($template_name eq 'opac-results.tt') {
 }
 
 #manage guest mode.
-my $GuestTracker=$cgi->cookie('guest');
-if($GuestTracker eq ''){
-	$GuestTracker='y';
-}else{
-	if($borrowernumber){
-		if($GuestTracker ne 'set'){$GuestTracker='n';}
-	}else{
-		if($GuestTracker eq 'set'){$GuestTracker='y';}
-	}
+my $GuestTracker='y';
+if($borrowernumber ne undef){
+	$GuestTracker='n';
 }
 
 

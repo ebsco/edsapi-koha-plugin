@@ -72,15 +72,9 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
 );
 
 #manage guest mode.
-my $GuestTracker=$cgi->cookie('guest');
-if($GuestTracker eq ''){
-	$GuestTracker='y';
-}else{
-	if($borrowernumber){
-		if($GuestTracker ne 'set'){$GuestTracker='n';}
-	}else{
-		if($GuestTracker eq 'set'){$GuestTracker='y';}
-	}
+my $GuestTracker='y';
+if($borrowernumber ne undef){
+	$GuestTracker='n';
 }
 
 my $format = $cgi->param("format") || 'html';
@@ -162,6 +156,7 @@ my $GuestMode = $cgi->cookie(
                             -expires => $CookieExpiry
                 );
 $cookie = [$cookie, $SessionToken, $GuestMode];
+#use Data::Dumper; die Dumper $cookie;
 
 my $content_type = ( $format eq 'rss' or $format eq 'atom' ) ? $format : 'html';
 output_with_http_headers $cgi, $cookie, $template->output, $content_type;

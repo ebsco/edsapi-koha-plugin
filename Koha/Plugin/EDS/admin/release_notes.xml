@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1642</latestversion>
+	<latestversion>3.1643</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>27/Jul/2015</lastupdated>
+	<lastupdated>02/Aug/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1643" date="02/Aug/2015">
+			<note id="0" author="amiranda@ebsco.com">IMPORTANT: NEW CONFIG FIELD (IP Addresses) ADDED. DO NOT USE LIVE UPDATE TO UPGRADE TO THIS VERSION. UPGRADE THE PLUGIN FROM KOHA ADMIN</note>
+			<note id="1" author="amiranda@ebsco.com">Added internal IP Range authentication support</note>
+			<note id="2" author="amiranda@ebsco.com">Updated guest tracking in the plugin</note>
+			<note id="3" author="amiranda@ebsco.com">Fixed Advanced Search not returning results in Bootstrap</note>
+		</release>
 		<release version="3.1642" date="27/Jul/2015">
-			<note id="1" author="dpodboy@EBSCO.COM">Fixed label position on Advanced Search.</note>
-			<note id="2" author="dpodboy@EBSCO.COM">Made the date field on results page fluid.</note>
+			<note id="1" author="dpodboy@ebsco.com">Fixed label position on Advanced Search.</note>
+			<note id="2" author="dpodboy@ebsco.com">Made the date field on results page fluid.</note>
 		</release>
 		<release version="3.1641" date="15/Jul/2015">
 			<note id="1" author="amiranda@ebsco.com">Fixed Custom link opening new window when user is not logged in</note>

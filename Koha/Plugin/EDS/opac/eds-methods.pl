@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 29/Oct/2014
-#* LAST CHANGE DESCRIPTION: Added defaultparams to edsconfiguration.
+#* DATE MODIFIED: 1/Aug/2015
+#* LAST CHANGE DESCRIPTION: Added support for local IP addresses.
 #=============================================================================================
 #*/
 # This file is part of Koha.
@@ -43,13 +43,13 @@ use HTML::Entities;
 use feature qw(switch);
 use Encode;
 use Try::Tiny;
-
+use Net::IP;
 
 
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $defaultparams, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
+my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $defaultparams, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
 
 my $PluginClass='Koha::Plugin::EDS';
 my $table='plugin_data';
@@ -69,6 +69,7 @@ given($r->{plugin_key}){
 		when('cataloguedbid') {$cataloguedbid=$r->{plugin_value};}
 		when('catalogueanprefix') {$catalogueanprefix=$r->{plugin_value};}
 		when('logerrors') {$logerrors=$r->{plugin_value};}
+		when('iprange') {$iprange=$r->{plugin_value};}
 		when('authtoken') {$authtoken=$r->{plugin_value};}
 		when('edsswitchtext') {$edsswitchtext=$r->{plugin_value};}
 		when('kohaswitchtext') {$kohaswitchtext=$r->{plugin_value};}
@@ -113,7 +114,7 @@ $SessionToken = $input->cookie('sessionToken');
 $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
 	$GuestTracker='y';
-	$SessionToken=CreateSession($GuestTracker);
+	$SessionToken=CreateSession();
 }
 1;
 
@@ -168,10 +169,8 @@ sub CreateSession
 	}
 	my $response =  CallREST('POST',$uri,$json, $authtoken, '');
 	
-	if($edsusername eq "-"){#Guest= no automatically if IP
-		$GuestTracker='n';
-	}
-	#use Data::Dumper; die Dumper $GuestTracker;
+	#$GuestTracker = CheckIPAuthentication();
+	
 	#ask for SessionToken from EDSAPI
 	$uri = 'http://eds-api.ebscohost.com/edsapi/rest/createsession'; 
 	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"'.$edscustomerid.'"}'; 
@@ -186,28 +185,45 @@ sub CreateSession
 		$SessionToken = decode_json( $response )
 	}
 		$SessionToken = $SessionToken->{SessionToken};
-		if($GuestTracker eq 'n'){
-		$GuestTracker='set';}
+		#if($GuestTracker eq 'n'){
+		#$GuestTracker='set';}
 
 	return $SessionToken;
 }
 
 sub GetSession
 {
-	if($GuestTracker eq 'n'){
-		return CreateSession();
-	}else{
-		if($GuestTracker eq 'y' and ($input->cookie('guest') eq 'set') ){
+	#use Data::Dumper; die Dumper 'gtracker='.$GuestTracker.' cookie='.$input->cookie('guest');
+	if($input->cookie('guest') eq ''){
+		return $SessionToken;
+	}elsif($GuestTracker ne $input->cookie('guest')){
+		if(CheckIPAuthentication() ne 'n'){ 
 			return CreateSession();
 		}else{
-			return $SessionToken;
+			return $SessionToken;			
 		}
+	}else{
+		return $SessionToken;
 	}
+	
+	
+	
+	
+#	if($GuestTracker eq 'n'){
+#		return CreateSession();
+#	}else{
+#		if($GuestTracker eq 'y' and ($input->cookie('guest') eq 'set') ){
+#			return CreateSession();
+#		}else{
+#			return $SessionToken;
+#		}
+#	}
+
 }
 
 sub EDSGetConfiguration
 {
-	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'","defaultparams":"'.$defaultparams.'"}';
+	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'","defaultparams":"'.$defaultparams.'"}';
 	return $JSONConfig;
 }
 
@@ -218,7 +234,11 @@ sub EDSSearch
 		$EDSQuery=$EDSQuery.EDSDefaultQueryBuilder();
 
 	}
-	$GuestTracker = $GuestStatus;
+
+	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
+		$GuestTracker = $GuestStatus;
+	}
+	
 	if($EDSQuery =~m/\{.*?\}/){
 		my $encodedTerm=$&;
 
@@ -242,6 +262,7 @@ sub EDSSearch
 		$response =  CallREST('GET',$uri,'', GetAuth(), GetSession());
 	}
 	if(index($response,'ErrorNumber')!=-1){ # TODO: check for 104 or 109 error and request accordingly
+		#use Data::Dumper; die Dumper $response;
 		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
 	}	
 
@@ -354,6 +375,33 @@ sub EDSDefaultQueryBuilder
 		
 	return $defaultEDSQuery;			
 		
+}
+
+sub CheckIPAuthentication
+{
+	my $GuestForIP = 'y';
+	if($edsusername eq "-"){#Guest= no automatically if IP// Keep to support IP restricted sites.
+		$GuestTracker='n';
+		$GuestForIP = 'n';
+	}
+	if($GuestTracker eq "y"){ # User has not logged in or authtoken is not IP. Do a local IP check.
+		if(length($iprange) > 4){ # Check local IP range if specified.
+			my @allowedIPs = split /,/, $iprange;
+			my $localIP      = Net::IP->new($ENV{'REMOTE_ADDR'});
+			foreach my $allowedIP (@allowedIPs){
+				my $currentRange = Net::IP->new($allowedIP);
+				my $ipMatch = $currentRange->overlaps($localIP) ? 1 : 0;
+				#use Data::Dumper; die Dumper 'IPMatch='.$ipMatch.'/rangeip='.$allowedIP.'/localip='.$localIP;
+				if($ipMatch==1){
+					$GuestTracker='n';
+					$GuestForIP = 'n';
+					last; # exit foreach
+				}
+			}
+		}
+	}
+	#use Data::Dumper; die Dumper 'GuestForIP='.$GuestForIP;
+	return $GuestForIP;
 }
 
 sub CartSendLinks

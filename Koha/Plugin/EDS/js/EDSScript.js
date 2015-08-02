@@ -8,8 +8,8 @@
 * URL: N/A
 * AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 * DATE ADDED: 31/10/2013
-* DATE MODIFIED: 15/07/2015
-* LAST CHANGE DESCRIPTION: Applied target=_self for customlinks if user is not logged in.
+* DATE MODIFIED: 02/08/2015
+* LAST CHANGE DESCRIPTION: Fixed Advanced Search for bootstrap.
 =============================================================================================
 */
 
@@ -37,8 +37,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
-//var patchSendCart = 0; // change to 1 if cart opac-sendbasket.pl is patched.
-var versionEDSKoha = '3.1641';
+var versionEDSKoha = '3.1643';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -172,16 +171,12 @@ function GoDiscovery(){
 			SetEDSOptions(JSON.parse(knownItems));
 		}else{
 			SetEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));// Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
-			//SetEDSOptions(JSON.parse('[{"FieldCode":"TX","Label":"All Text"},{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"},{"FieldCode":"SU","Label":"Subject Terms"},{"FieldCode":"SO","Label":"Source"},{"FieldCode":"AB","Label":"Abstract"},{"FieldCode":"IS","Label":"ISSN"},{"FieldCode":"IB","Label":"ISBN"},{"FieldCode":"JN","Label":"Journal Title"}]')); 
 			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=knownitems',function(data){StoreEDSOptions(data);});
 		}
 		
 		// check no results
 		SetNoResults();
 		
-	//$("#masthead_search").removeAttr("disabled");
-	//$("#transl1").removeAttr("disabled");
-
 }
 
 function StoreEDSOptions(data){
@@ -192,8 +187,7 @@ function StoreEDSOptions(data){
 }
 
 function SetEDSOptions(data){
-	//if($.jStorage.get("edsKnownItems")==null)
-		//$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
+
 	edsOptions="";
 	edsOptions+='<option value="">'+kohaSwitchText+'</option><option selected="selected" value="eds">'+edsSelectText+'</option>';
 	for(var i=0; i<data.length; i++){
@@ -587,7 +581,7 @@ function AdvSearchEDS(){
 			advQuery+="query-"+sbCount+"="+advBool+","+advKi+":{"+advTerm+"}|";
 	}
 	
-	$("input:not(.advSB)").each(function(index,value){
+	$("input.advSBOps").each(function(index,value){
 
 		if(jQuery(this).attr("type")=="checkbox" || jQuery(this).attr("type")=="radio"){
 			if(jQuery(this).is(":checked")){
@@ -602,7 +596,7 @@ function AdvSearchEDS(){
 		}
 	});
 	
-	$("select:not(.advSB) option:selected").each(function(index,value){
+	$("select.advSBOps option:selected").each(function(index,value){
 			advQuery+="action="+$(this).val()+"|";
 	});
 	

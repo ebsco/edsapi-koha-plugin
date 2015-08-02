@@ -38,7 +38,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1642;
+our $VERSION = 3.1643;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -47,7 +47,7 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2015-07-27',
+    date_updated    => '2015-08-02',
     minimum_version => '3.16',
     maximum_version => '',
     version         => $VERSION,
@@ -100,6 +100,7 @@ sub configure {
 			defaultsearch 		=> $self->retrieve_data('defaultsearch'),
 			cookieexpiry 		=> $self->retrieve_data('cookieexpiry'),
 			logerrors			=> $self->retrieve_data('logerrors'),
+			iprange				=> $self->retrieve_data('iprange'),
 			edsinfo				=> $self->retrieve_data('edsinfo'),
 			lastedsinfoupdate	=> $self->retrieve_data('lastedsinfoupdate'),
 			authtoken			=> $self->retrieve_data('authtoken'),
@@ -130,6 +131,7 @@ sub configure {
 					catalogueanprefix 	=> ($cgi->param('catalogueanprefix')?$cgi->param('catalogueanprefix'):"-"), 
 					defaultsearch 		=> ($cgi->param('defaultsearch')?$cgi->param('defaultsearch'):"-"),
 					logerrors			=> ($cgi->param('logerrors')?$cgi->param('logerrors'):"-"),
+					iprange				=> ($cgi->param('iprange')?$cgi->param('iprange'):"-"),
 					cookieexpiry 		=> ($cgi->param('cookieexpiry')?$cgi->param('cookieexpiry'):"-"),
 					last_configured_by => C4::Context->userenv->{'number'},
 					edsswitchtext	=> ($cgi->param('edsswitchtext')?$cgi->param('edsswitchtext'):"-"),

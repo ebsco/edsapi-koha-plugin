@@ -75,9 +75,9 @@
 						[% FOREACH mode IN search_modes %]
 						<li>	
 							[% IF mode.DefaultOn == 'y' %]
-								<input name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+								<input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
 							[% ELSE %]
-								<input name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+								<input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
 							[% END %]
 							<label for="[% mode.Mode %]" >[% mode.Label %]</label>
 						</li>
@@ -90,9 +90,9 @@
 					<label for="[% expander.Id %]" class="advItemLabel" >[% expander.Label %]</label>
 					<section>
 					[% IF expander.DefaultOn == 'y' %]
-						<input name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+						<input class="advSBOps" name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
 					[% ELSE %]
-						<input name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+						<input class="advSBOps" name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
 					[% END %]
 					</section>
 				</li>
@@ -113,9 +113,9 @@
 						<section>
 							[% IF advlimiter.Type =='select' %]
 								[% IF advlimiter.DefaultOn == 'y' %]
-									<input name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<input class="advSBOps" name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
 								[% ELSE %]
-									<input name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<input class="advSBOps" name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
 								[% END %]
 							[% END %]
 							[% IF advlimiter.Type =='ymrange' %]
@@ -154,10 +154,10 @@
 								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
-								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+								<input class="advSBOps" title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
 							[% END %]
 							[% IF advlimiter.Type =='multiselectvalue' %]
-								<select id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
+								<select class="advSBOps" id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
 									[% FOREACH limiterValue IN advlimiter.LimiterValues %]
 										<option value="[% limiterValue.AddAction %]">[% limiterValue.Value %]</option>
 									[% END %]	
