@@ -14,7 +14,7 @@
 		[% IF DETAILED_RECORD.FullText.Links.0.Url %]
 			<a target="_blank" class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="[% DETAILED_RECORD.FullText.Links.0.Url %]">
 		[% ELSE %]
-			<a class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="javascript:alert('Login to gain access to this result.');$('.FullTextLoader').css('display','none');return false;">
+			<a class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="javascript:LoginRequired();">
 		[% END %]
 		[% IF DETAILED_RECORD.FullText.Links.0.Type=='pdflink' %]
 			PDF Full Text
@@ -37,7 +37,7 @@
 	[% END %]
 [% END %]
 [% IF DETAILED_RECORD.PLink %]		  
-	<li><a target="_blank" class="customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">View in EDS</a></li>
+	<li><a target="_blank" class="edslink customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">View in EDS</a></li>
 [% END %]
 
 </ul>

@@ -20,9 +20,11 @@
 				<ul>
 				<li>Limiters</li>
 				[% FOR facetFilter IN filters %]
+				[% FOR facetFilterItem IN facetFilter.FacetValuesWithAction %]
 				  <li>
-					<a href="[% facetFilter.FacetValuesWithAction.0.RemoveAction %]"><input type="checkbox" checked onchange="window.location.href=($(this).parent().attr('href'));$(this).attr('disabled','disabled');" > [% facetFilter.FacetValuesWithAction.0.FacetValue.Id %] : [% facetFilter.FacetValuesWithAction.0.FacetValue.Value %]</a>
+					<a href="[% facetFilterItem.RemoveAction %]"><input type="checkbox" checked onchange="window.location.href=($(this).parent().attr('href'));$(this).attr('disabled','disabled');" > [% facetFilterItem.FacetValue.Id %] : [% facetFilterItem.FacetValue.Value %]</a>
 				  </li>
+				[% END %]
 				[% END %]
 				</ul>
 			[% END %]
@@ -54,9 +56,9 @@
 				<ul>
 					<li>[% EDSLimit.Label %] 
 						[% IF EDSLimit.DateValue %]
-							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;" placeholder="YYYY-MM/YYYY-MM" value="[% EDSLimit.DateValue %]" >
+							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;width:90%;" placeholder="YYYY-MM/YYYY-MM" value="[% EDSLimit.DateValue %]" >
 						[% ELSE %]
-							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;" placeholder="YYYY-MM/YYYY-MM" >
+							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;width:90%;" placeholder="YYYY-MM/YYYY-MM" >
 						[% END %]
 						[% #action=removelimiter(DT1) %]
 						<script>

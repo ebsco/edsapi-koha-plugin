@@ -10,9 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 29/Oct/2014
-#* LAST CHANGE DESCRIPTION: Added $facetValue->{AddAction} =~s/\&/\%2526/g; to manage & in facets
-#							Added $EDSSearchQueryWithOutPage=~s/\%26/\%2526/g; to manage & in querystring
+#* DATE MODIFIED: 15/Jun/2015
+#* LAST CHANGE DESCRIPTION: Exact Match Publication feature
 #=============================================================================================
 #*/
 
@@ -36,7 +35,7 @@ use Modern::Perl;
 
 use C4::Context;
 use CGI;
-use C4::Auth qw(:DEFAULT get_session ParseSearchHistorySession SetSearchHistorySession);
+use C4::Auth qw(:DEFAULT get_session);
 #use C4::Auth;
 use C4::Koha;
 use C4::Output;
@@ -46,6 +45,7 @@ use IO::File;
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use POSIX qw/ceil/;
+use C4::Members qw(GetMember); 
 
 #legacy from template... may not be required.
 use C4::Languages qw(getAllLanguages);
@@ -102,16 +102,16 @@ my $adv_search = 0;
 my $format = $cgi->param("format") || '';
 my $build_grouped_results = C4::Context->preference('OPACGroupResults');
 if ($format =~ /(rss|atom|opensearchdescription)/) {
-    $template_name = 'opac-opensearch.tmpl';
+    $template_name = 'opac-opensearch.tt';
 }
 elsif (@params && $build_grouped_results) {
-    $template_name = 'opac-results-grouped.tmpl';
+    $template_name = 'opac-results-grouped.tt';
 }
 elsif ((@params>=1) || ($cgi->param("q")) || ($cgi->param('multibranchlimit')) || ($cgi->param('limit-yr')) ) {
-    $template_name = $PluginDir.'/modules/eds-results.tmpl';
+    $template_name = $PluginDir.'/modules/eds-results.tt';
 }
 else {
-    $template_name = $PluginDir.'/modules/eds-advsearch.tmpl';
+    $template_name = $PluginDir.'/modules/eds-advsearch.tt';
     $template_type = 'advsearch';
 	$search_desc = 0;
 	$adv_search = 1;
@@ -125,20 +125,14 @@ else {
     authnotrequired => ( C4::Context->preference("OpacPublic") ? 1 : 0 ),
     }
 );
-if ($template_name eq 'opac-results.tmpl') {
+if ($template_name eq 'opac-results.tt') {
    $template->param('COinSinOPACResults' => C4::Context->preference('COinSinOPACResults'));
 }
 
 #manage guest mode.
-my $GuestTracker=$cgi->cookie('guest');
-if($GuestTracker eq ''){
-	$GuestTracker='y';
-}else{
-	if($borrowernumber){
-		if($GuestTracker ne 'set'){$GuestTracker='n';}
-	}else{
-		if($GuestTracker eq 'set'){$GuestTracker='y';}
-	}
+my $GuestTracker='y';
+if($borrowernumber ne undef){
+	$GuestTracker='n';
 }
 
 
@@ -172,6 +166,8 @@ $template->param(
 #EDS config begins here
 my $EDSResponse;
 my @EDSResults;
+my @ResearchStarters;
+my @PublicationExactMatch;
 my $EDSSearchQuery;
 my $EDSSearchQueryWithOutPage;
 my @EDSFacets;
@@ -183,8 +179,11 @@ my $sort_by;
 my %pager;
 if($cgi->param("q")){
 	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
+	#use Data::Dumper; die Dumper $EDSResponse;
 	try{# uncomment the try block when debugging
 		EDSProcessResults();
+		EDSProcessRelatedPublications();
+		EDSProcessRelatedContent();
 		#process query
 		$EDSSearchQuery=$EDSResponse->{SearchRequestGet}->{QueryString};
 		$EDSSearchQuery =~s/\&/\|/g;
@@ -197,20 +196,24 @@ if($cgi->param("q")){
 		EDSProcessLimiters();
 		EDSProcessExpanders();
 		EDSProcessPages();
-		} catch {
-			#warn "no results";
-			$template->param(
-	     searchdesc     => 1,
-	    total  => 0,);
+	} catch {
+		#warn "no results";
+		$template->param(
+	 searchdesc     => 1,
+	total  => 0,);
 	};
 }
 #use Data::Dumper; die Dumper %pager;
+#use Data::Dumper; die Dumper @EDSFacetFilters;
+
 # Pager template params
 	$template->param(
 	     PAGE_NUMBERS     => \%pager,
 		total            => $EDSResponse->{SearchResult}->{Statistics}->{TotalHits},
 		SEARCH_RESULTS   => \@EDSResults,
-		 query            => \@EDSQueries,
+		publicationexactmatch => \@PublicationExactMatch,
+		researchstarters => \@ResearchStarters,
+		query            => \@EDSQueries,
 	    sort_by          => GetSearchParam('sort'),
 		current_mode	=> GetSearchParam('searchmode'),
 		current_view	=> GetSearchParam('view'),
@@ -304,13 +307,15 @@ sub EDSProcessResults
 				my @Items = @{$Items};
 				foreach my $Item (@Items){
 					$Item = EDSProcessItem($Item);
-					if(($Result->{Header}->{DbId} eq $EDSConfig->{cataloguedbid}) && ($Item->{Name} eq 'Title')){ 
-						my $CatalogueRecordId=$Result->{Header}->{An};
-						$CatalogueRecordId=~s/\w+\.//;
-						$Item->{CatData} = GetCatalogueAvailability($CatalogueRecordId);
-						$Item->{CatData} =~s/pl\?biblionumber\=/pl\?resultid\=$Result->{ResultId}\&biblionumber\=/;
-						$Item->{CatData} =~s/(<a[^<]+?>)(.*?)(<\/a>)/$1$Item->{Data}$3/; # replace title for highlights
-					}
+					try{
+						if(($Result->{Header}->{DbId} eq $EDSConfig->{cataloguedbid}) && ($Item->{Name} eq 'Title')){ 
+							my $CatalogueRecordId=$Result->{Header}->{An};
+							$CatalogueRecordId=~s/\w+\.//;
+							$Item->{CatData} = GetCatalogueAvailability($CatalogueRecordId);
+							$Item->{CatData} =~s/pl\?biblionumber\=/pl\?resultid\=$Result->{ResultId}\&biblionumber\=/;
+							$Item->{CatData} =~s/(<a[^<]+?>)(.*?)(<\/a>)/$1$Item->{Data}$3/; # replace title for highlights
+						}
+					}catch{};
 				}
 			}
 			catch
@@ -318,6 +323,57 @@ sub EDSProcessResults
 
 		}
 	}	
+}
+
+
+
+sub EDSProcessRelatedPublications
+{
+	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}){
+		return;
+	}
+	@PublicationExactMatch = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}}; 
+	foreach my $PublicationExactMatch (@PublicationExactMatch){
+		if($PublicationExactMatch->{Type} eq 'emp'){
+			my @RelatedPublications = @{$PublicationExactMatch->{PublicationRecords}};
+			foreach my $RelatedPublications (@RelatedPublications){
+				foreach my $Items ($RelatedPublications->{Items}){
+					my @Items = @{$Items};
+					foreach my $Item (@Items){
+						$Item = EDSProcessItem($Item);
+					}
+				}
+			}
+		}
+	}
+	#use Data::Dumper; die Dumper @PublicationExactMatch;	
+}
+
+
+
+sub EDSProcessRelatedContent
+{
+	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}){
+		return;
+	}
+	@ResearchStarters = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}}; 
+	foreach my $ResearchStarters (@ResearchStarters){
+		if($ResearchStarters->{Type} eq 'rs'){
+			my @RelatedContents = @{$ResearchStarters->{Records}};
+			foreach my $RelatedContents (@RelatedContents){
+				try{
+					$RelatedContents->{ImageInfo}[0]->{Target} =~s/http\:/https\:/g; # to prevent ie warnings
+				}catch{};
+				foreach my $Items ($RelatedContents->{Items}){
+					my @Items = @{$Items};
+					foreach my $Item (@Items){
+						$Item = EDSProcessItem($Item);
+					}
+				}
+			}
+		}
+	}
+	#use Data::Dumper; die Dumper @ResearchStarters;	
 }
 
 sub GetCatalogueAvailability
@@ -332,7 +388,15 @@ sub GetCatalogueAvailability
 	my $itemtypes = GetItemTypes;
 	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
-	my @CatalogueResults = searchResults('opac', $query, $hits, '100', 0, $scan, $results_hashref->{$servers[0]}->{"RECORDS"});
+	
+	my $search_context = {};
+	$search_context->{'interface'} = 'opac';
+	if (C4::Context->preference('OpacHiddenItemsExceptions')){
+		my $borrower = GetMember( borrowernumber => $borrowernumber );
+		$search_context->{'category'} = $borrower->{'categorycode'};
+	}
+	
+	my @CatalogueResults = searchResults($search_context, $query, $hits, '100', 0, $scan, $results_hashref->{$servers[0]}->{"RECORDS"});
 	return $CatalogueResults[0]->{"XSLTResultsRecord"};
 }
 
@@ -348,6 +412,7 @@ sub EDSProcessFacets
 			foreach my $facetValue (@facetValues){
 				$facetValue->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetValue->{AddAction};
 				$facetValue->{AddAction} =~s/\&/\%2526/g;
+				$facetValue->{AddAction} =~s/\:/\%3a/g;
 			}
 		}
 	}
@@ -467,8 +532,6 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 	}	
 }
 
-
-
 sub EDSProcessPages
 {
 	%pager = (
@@ -476,7 +539,6 @@ sub EDSProcessPages
 			'PageNumber' => 1,
 			'ResultsPerPage' => 20,
 			'TotalResults' => 1,
-			'PageNumber' => 1,
 			'PageCounter' => 1,
 		);
 	$pager{'URL'}=$EDSSearchQueryWithOutPage;

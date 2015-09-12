@@ -10,8 +10,8 @@
 #* URL: N/A
 #* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
 #* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 29/Oct/2014
-#* LAST CHANGE DESCRIPTION: Added defaultparams to edsconfiguration.
+#* DATE MODIFIED: 1/Aug/2015
+#* LAST CHANGE DESCRIPTION: Added support for local IP addresses.
 #=============================================================================================
 #*/
 # This file is part of Koha.
@@ -42,13 +42,14 @@ use URI::Escape;
 use HTML::Entities;
 use feature qw(switch);
 use Encode;
-
+use Try::Tiny;
+#use Net::IP;
 
 
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $defaultparams, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
+my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $defaultparams, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
 
 my $PluginClass='Koha::Plugin::EDS';
 my $table='plugin_data';
@@ -68,6 +69,7 @@ given($r->{plugin_key}){
 		when('cataloguedbid') {$cataloguedbid=$r->{plugin_value};}
 		when('catalogueanprefix') {$catalogueanprefix=$r->{plugin_value};}
 		when('logerrors') {$logerrors=$r->{plugin_value};}
+		when('iprange') {$iprange=$r->{plugin_value};}
 		when('authtoken') {$authtoken=$r->{plugin_value};}
 		when('edsswitchtext') {$edsswitchtext=$r->{plugin_value};}
 		when('kohaswitchtext') {$kohaswitchtext=$r->{plugin_value};}
@@ -99,7 +101,7 @@ if($cookieexpiry eq ' '){ # dont set expiry
 
 my ( $template, $user, $cookie ) = get_template_and_user(
     {
-        template_name   => "eds-raw.tmpl",
+        template_name   => "eds-raw.tt",
         type            => "opac",
         query           => $input,
 		is_plugin		=>1,
@@ -112,7 +114,7 @@ $SessionToken = $input->cookie('sessionToken');
 $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
 	$GuestTracker='y';
-	$SessionToken=CreateSession($GuestTracker);
+	$SessionToken=CreateSession();
 }
 1;
 
@@ -123,13 +125,14 @@ sub CallREST
 	my ($method, $uri, $body, $auth, $sess) = @_;
 	my $req = HTTP::Request->new( $method, $uri );
 	$req->header( 'Content-Type' => 'application/json' );
+	$req->header( 'Accept-Encoding' => 'gzip, deflate' );
 	$req->header( 'x-authenticationToken' => $auth );
 	$req->header( 'x-sessionToken' => $sess );
 	#if($body != ''){$req->content( $body );}
 	$req->content( $body );
 	my $lwp = LWP::UserAgent->new;
 	my $response = $lwp->request( $req );
-	return $response->content;
+	return $response->decoded_content(charset => 'none');
 }
 
 sub CreateAuth
@@ -166,10 +169,8 @@ sub CreateSession
 	}
 	my $response =  CallREST('POST',$uri,$json, $authtoken, '');
 	
-	if($edsusername eq "-"){#Guest= no automatically if IP
-		$GuestTracker='n';
-	}
-	#use Data::Dumper; die Dumper $GuestTracker;
+	#$GuestTracker = CheckIPAuthentication();
+	
 	#ask for SessionToken from EDSAPI
 	$uri = 'http://eds-api.ebscohost.com/edsapi/rest/createsession'; 
 	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"'.$edscustomerid.'"}'; 
@@ -184,28 +185,45 @@ sub CreateSession
 		$SessionToken = decode_json( $response )
 	}
 		$SessionToken = $SessionToken->{SessionToken};
-		if($GuestTracker eq 'n'){
-		$GuestTracker='set';}
+		#if($GuestTracker eq 'n'){
+		#$GuestTracker='set';}
 
 	return $SessionToken;
 }
 
 sub GetSession
 {
-	if($GuestTracker eq 'n'){
-		return CreateSession();
-	}else{
-		if($GuestTracker eq 'y' and ($input->cookie('guest') eq 'set') ){
+	#use Data::Dumper; die Dumper 'gtracker='.$GuestTracker.' cookie='.$input->cookie('guest');
+	if($input->cookie('guest') eq ''){
+		return $SessionToken;
+	}elsif($GuestTracker ne $input->cookie('guest')){
+		if(CheckIPAuthentication() ne 'n'){ 
 			return CreateSession();
 		}else{
-			return $SessionToken;
+			return $SessionToken;			
 		}
+	}else{
+		return $SessionToken;
 	}
+	
+	
+	
+	
+#	if($GuestTracker eq 'n'){
+#		return CreateSession();
+#	}else{
+#		if($GuestTracker eq 'y' and ($input->cookie('guest') eq 'set') ){
+#			return CreateSession();
+#		}else{
+#			return $SessionToken;
+#		}
+#	}
+
 }
 
 sub EDSGetConfiguration
 {
-	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'","defaultparams":"'.$defaultparams.'"}';
+	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'","defaultparams":"'.$defaultparams.'"}';
 	return $JSONConfig;
 }
 
@@ -216,7 +234,11 @@ sub EDSSearch
 		$EDSQuery=$EDSQuery.EDSDefaultQueryBuilder();
 
 	}
-	$GuestTracker = $GuestStatus;
+
+	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
+		$GuestTracker = $GuestStatus;
+	}
+	
 	if($EDSQuery =~m/\{.*?\}/){
 		my $encodedTerm=$&;
 
@@ -240,6 +262,7 @@ sub EDSSearch
 		$response =  CallREST('GET',$uri,'', GetAuth(), GetSession());
 	}
 	if(index($response,'ErrorNumber')!=-1){ # TODO: check for 104 or 109 error and request accordingly
+		#use Data::Dumper; die Dumper $response;
 		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
 	}	
 
@@ -267,10 +290,14 @@ sub EDSProcessItem
 		$Item->{Data} =~s/<br \/>/, /g;
 		$Item->{Data} =~s/<\/highlight/<\/span/g;
 		if($Item->{Group} eq 'URL'){
-			$Item->{Data} =~s/<link/<a/g;
-			$Item->{Data} =~s/linkWindow/target/g;
-			$Item->{Data} =~s/linkTerm/href/g;				
-			$Item->{Data} =~s/<\/link/<\/a/g;		
+			if($Item->{Data} =~m/<link/){
+				$Item->{Data} =~s/<link/<a/g;
+				$Item->{Data} =~s/linkWindow/target/g;
+				$Item->{Data} =~s/linkTerm/href/g;				
+				$Item->{Data} =~s/<\/link/<\/a/g;		
+			}else{
+				$Item->{Data} = '<a target="_blank" href="'.$Item->{Data}.'">'.$Item->{Data}.'</a>'
+			}
 		}
 		if(($Item->{Data}=~m/searchLink/) && $MakeLinks ){
 			$Item->{Data}=~s/searchLink fieldCode/a href/g;
@@ -333,6 +360,19 @@ sub EDSDefaultQueryBuilder
 			}
 		}
 	}
+	if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
+		my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
+		foreach my $AvailableRelatedContent (@AvailableRelatedContents){
+			if($AvailableRelatedContent->{DefaultOn} eq 'y'){
+				if($AvailableRelatedContent->{Type} eq 'emp'){
+					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+				}
+				if($AvailableRelatedContent->{Type} eq 'rs'){
+					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+				}
+			}
+		}
+	}
 		
 	$defaultEDSQuery = $defaultEDSQuery.'|resultsperpage='.$EDSInfoData->{ViewResultSettings}->{ResultsPerPage};	
 	$defaultEDSQuery = $defaultEDSQuery.'|view='.$EDSInfoData->{ViewResultSettings}->{ResultListView};
@@ -340,4 +380,195 @@ sub EDSDefaultQueryBuilder
 	return $defaultEDSQuery;			
 		
 }
+
+sub CheckIPAuthentication
+{
+	my $GuestForIP = 'y';
+	if($edsusername eq "-"){#Guest= no automatically if IP// Keep to support IP restricted sites.
+		$GuestTracker='n';
+		$GuestForIP = 'n';
+	}
+	if($GuestTracker eq "y"){ # User has not logged in or authtoken is not IP. Do a local IP check.
+		if(length($iprange) > 4){ # Check local IP range if specified.
+			my @allowedIPs = split /,/, $iprange;
+			my $localIP      = Net::IP->new($ENV{'REMOTE_ADDR'});
+			foreach my $allowedIP (@allowedIPs){
+				my $currentRange = Net::IP->new($allowedIP);
+				my $ipMatch = $currentRange->overlaps($localIP) ? 1 : 0;
+				#use Data::Dumper; die Dumper 'IPMatch='.$ipMatch.'/rangeip='.$allowedIP.'/localip='.$localIP;
+				if($ipMatch==1){
+					$GuestTracker='n';
+					$GuestForIP = 'n';
+					last; # exit foreach
+				}
+			}
+		}
+	}
+	#use Data::Dumper; die Dumper 'GuestForIP='.$GuestForIP;
+	return $GuestForIP;
+}
+
+sub CartSendLinks
+{
+	my ($template_res,@bibs) = @_;
+	my $EDSConfig = decode_json(EDSGetConfiguration());
+	foreach my $biblionumber (@bibs) { # SM: EDS	
+		if($biblionumber =~m/\|/){
+			if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
+				$biblionumber =~s/\|/\&dbid\=/g;
+				$template_res =~s/\|/\&dbid\=/g;
+				$template_res =~s/\/cgi\-bin\/koha\/opac-detail\.pl\?biblionumber\=$biblionumber/\/plugin\/Koha\/Plugin\/EDS\/opac\/eds-detail.pl\?q\=Retrieve\?an\=$biblionumber/; 
+			}
+		}else{
+			$template_res =~s/\|$EDSConfig->{cataloguedbid}//;
+		}		
+	}
+	$template_res =~s/\&dbid/\|dbid/g;
+	return $template_res;
+}
+
+sub ProcessEDSCartItems
+{
+	my ($biblionumber, $eds_data, $record, $dat) = @_;
+	
+	my $EDSConfig = decode_json(EDSGetConfiguration());
+	
+	if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
+		$eds_data = decode_json(uri_unescape($eds_data));
+		
+		my @eds_dataItems =@{$eds_data->{Records}};
+		foreach my $edsDataItem (@eds_dataItems){
+			if(exists $edsDataItem->{$biblionumber}){
+				$record = $edsDataItem->{$biblionumber};
+				last;
+			}
+		}
+		
+		my $recordJSON = "{";
+		my $recordXML = '<?xml version="1.0" encoding="UTF-8"?> 
+					<record
+						xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+						xmlns="http://www.loc.gov/MARC21/slim">
+						 <leader>000000000000000000000000</leader>
+						';
+						
+		#Title
+		try{
+				my $EDSRecordTitle = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Titles}[0]->{TitleFull};
+				$recordXML .= '  <datafield tag="245" ind1="0" ind2="0">
+									<subfield code="a" label="Titles">'.$EDSRecordTitle.'</subfield>
+								  </datafield>
+								  ';	
+				$recordJSON .= '"title":"'.$EDSRecordTitle.'",';
+		}catch{};
+		
+		#Subject
+		try{
+				my $EDSRecordSubjects = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Subjects};
+				foreach my $EDSRecordSubject (@{$EDSRecordSubjects}){	
+					$recordXML .= '  <datafield tag="611" ind1="0" ind2="0">
+									<subfield code="a" label="Subject">'.$EDSRecordSubject->{SubjectFull}.'</subfield>
+								  </datafield>
+								  ';
+				}
+		}catch{};
+		
+		#Author
+		try{
+				my $EDSRecordAuthors = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{HasContributorRelationships};
+				foreach my $EDSRecordAuthor (@{$EDSRecordAuthors}){	
+					$recordXML .= '  <datafield tag="100" ind1="0" ind2="0">
+									<subfield code="a" label="Subject">'.$EDSRecordAuthor->{PersonEntity}->{Name}->{NameFull}.'</subfield>
+								  </datafield>
+								  ';
+					$recordJSON .= '"author":"'.$EDSRecordAuthor->{PersonEntity}->{Name}->{NameFull}.'",';
+				}
+		}catch{};
+		
+		
+		#URL
+		try{
+				my $EDSRecordURL = $record->{Record}->{PLink};
+				$recordXML .= '  <datafield tag="856" ind1="0" ind2="0">
+									<subfield code="u" label="Accession Number">'.$EDSRecordURL.'</subfield>
+									<subfield code="y" label="Accession Number">'.$EDSRecordURL.'</subfield>
+									<subfield code="z" label="Accession Number">'.$EDSRecordURL.'</subfield>
+								  </datafield>
+								  ';
+		}catch{};
+		
+		#Document Type - TODO needs work.
+		try{
+				my $EDSRecordType = $record->{Record}->{Header}->{PubType};
+				$recordXML .= '  <datafield tag="006" ind1="0" ind2="0">
+									<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
+								  </datafield>
+								  ';
+				$recordXML .= '  <datafield tag="007" ind1="0" ind2="0">
+									<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
+								  </datafield>
+								  ';
+				$recordXML .= '  <datafield tag="008" ind1="0" ind2="0">
+									<subfield code="a" label="Accession Number">'.$EDSRecordType.'</subfield>
+								  </datafield>
+								  ';
+		}catch{};
+		
+		#Identifiers: ISSN/ISBN
+		try{
+				my $EDSRecordIdentifiers = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Identifiers};
+
+				foreach my $EDSRecordIdentifier (@{$EDSRecordIdentifiers}){	
+					if($EDSRecordIdentifier->{Type} =~m/issn/){
+						$recordJSON .= '"issn":"'.$EDSRecordIdentifier->{Value}.'",';
+						$recordXML .= '  <datafield tag="022" ind1="0" ind2="0">
+										<subfield code="a" label="ISSN">'.$EDSRecordIdentifier->{Value}.'</subfield>
+									  </datafield>
+									  ';	
+					}elsif($EDSRecordIdentifier->{Type} =~m/isbn/){
+						$recordJSON .= '"isbn":"'.$EDSRecordIdentifier->{Value}.'",';
+						$recordXML .= '  <datafield tag="020" ind1="0" ind2="0">
+										<subfield code="a" label="ISSN">'.$EDSRecordIdentifier->{Value}.'</subfield>
+									  </datafield>
+									  ';	
+					}
+				}
+		}catch{};
+		
+		#Dates
+		try{
+				my $EDSRecordDate = $record->{Record}->{RecordInfo}->{BibRecord}->{BibRelationships}->{IsPartOfRelationships}[0]->{BibEntity}->{Dates}[0];
+				$recordJSON .= '"copyrightdate":"'.$EDSRecordDate->{Y}.'",';
+				$recordXML .= '<datafield tag="260" ind1=" " ind2=" ">
+									<subfield code="c">'.$EDSRecordDate->{Y}.'</subfield>
+								</datafield>
+								  ';	
+		}catch{};				
+		
+
+		
+		#Accession Number
+		try{
+				my $EDSRecordAN = $record->{Record}->{Header}->{DbId}.'.'.$record->{Record}->{Header}->{An};
+				$recordJSON .= '"biblioitemnumber":"'.$EDSRecordAN.'"';
+				$recordXML .= '  <datafield tag="999" ind1="0" ind2="0">
+									<subfield code="c" label="Accession Number">'.$EDSRecordAN.'</subfield>
+									<subfield code="d" label="Accession Number">'.$EDSRecordAN.'</subfield>
+								  </datafield>
+								  ';
+		}catch{};
+										
+		
+		$recordJSON .= "}";
+		$recordXML .= '</record>';
+		$recordXML=~s/\&/and/g; # avoid error when converting to marc
+		$dat = from_json($recordJSON); # used instead of decode_json and encode('utf-8',$recordJSON) first.
+		
+		$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
+		return ($record,$dat);
+	}else{return ($record,$dat);}
+}
+
+
 }#end no warnings

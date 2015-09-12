@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>1.82</latestversion>
-	<download>http://widgets.ebscohost.com/prod/api/koha/EDS_Plugin_1.82.kpz</download>
-	<lastupdated>06/Jan/2015</lastupdated>
+	<latestversion>3.1401</latestversion>
+	<download>https://github.com/ebsco/edsapi-koha-plugin/blob/Koha-v3.14x/eds_plugin_3.1401.kpz?raw=true</download>
+	<lastupdated>12/Sep/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1401" date="12/Sep/2015">
+			<note id="1" author="amiranda@ebsco.com">Upgraded to match version 3.1643.</note>
+		</release>
 		<release version="1.82" date="06/Jan/2015">
 			<note id="1" author="amiranda@ebsco.com">Moved placeholder function in eds-advsearch.tt after [% BLOCK jsinclude %] to fix bug</note>
 			<note id="2" author="amiranda@ebsco.com">put error-defaultPrevented in EDSScript.js in try catch block</note>

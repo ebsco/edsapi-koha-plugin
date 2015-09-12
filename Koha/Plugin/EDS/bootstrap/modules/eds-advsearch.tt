@@ -33,7 +33,7 @@
 						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
 				[% END %]	
 				</select>
-				<input class="btn btn-success" type="submit" value="Search" class="advSB">
+				<input class="btn btn-success advSB" type="submit" value="Search">
 			</li>
 			<li id="searchFields_2">
 				<select name="advBool" class="advBool advSB">
@@ -71,7 +71,7 @@
 		  <fieldset>
 			<legend>Search Options</legend>
 			<p>
-			<div align="right"><input class="btn btn-success" type="reset" class="advSB" /></div>
+			<div align="right"><input class="btn btn-success advSB" type="reset" /></div>
 			<fieldset>
 			  <legend>Search Modes and Expanders</legend>
 			 <dl>
@@ -87,18 +87,24 @@
 					<ul>
 						[% FOREACH mode IN search_modes %]
 						<li>	
-							[% IF mode.DefaultOn == 'y' %]
-								<input name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-							[% ELSE %]
-								<input name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-							[% END %]
                             [% IF mode.Mode == 'smart' %]
-                                <label for="[% mode.Mode %]" >[% mode.Label %]
-                                 <sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="Enter as much text for your search as you want - a phrase, a sentence, paragraph, or even whole pages. This mode searches EBSCO Databases only.">Hint</a></sub>
-                                 
+                                <label for="[% mode.Mode %]" >                                 
+                                    [% IF mode.DefaultOn == 'y' %]
+                                        <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% ELSE %]
+                                        <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% END %]
+                                    [% mode.Label %]<sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="Enter as much text for your search as you want - a phrase, a sentence, paragraph, or even whole pages. This mode searches EBSCO Databases only.">Hint</a></sub>
                                 </label>
                             [% ELSE %]
-                                <label for="[% mode.Mode %]" >[% mode.Label %]</label>
+                                <label for="[% mode.Mode %]" >
+                                    [% IF mode.DefaultOn == 'y' %]
+                                        <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% ELSE %]
+                                        <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% END %]
+                                    [% mode.Label %]
+                                </label>
                             [% END %]
 						</li>
 						[% END %]	
@@ -107,14 +113,14 @@
 				
 				[% FOREACH expander IN expanders %]
 				<li id="limiterItem">	
-					<label for="[% expander.Id %]" class="advItemLabel" >[% expander.Label %]</label>
-					<section>
-					[% IF expander.DefaultOn == 'y' %]
-						<input name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
-					[% ELSE %]
-						<input name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
-					[% END %]
-					</section>
+					<label for="[% expander.Id %]" class="advItemLabel" >
+                        [% IF expander.DefaultOn == 'y' %]
+                            <input class="advSBOps" name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+                        [% ELSE %]
+                            <input class="advSBOps" name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+                        [% END %]
+                        [% expander.Label %]
+                    </label>
 				</li>
 				[% END %]	
 				
@@ -130,16 +136,20 @@
 			  	<ul>
 					[% FOREACH advlimiter IN advlimiters %]										
 					  <li  id="limiterItem">
-						<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
-						<section>
 							[% IF advlimiter.Type =='select' %]
 								[% IF advlimiter.DefaultOn == 'y' %]
-									<input name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<label for="[% advlimiter.Id %]" class="advItemLabel" >
+                                    <input class="advSBOps" name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+                                    [% advlimiter.Label %]</label>
 								[% ELSE %]
-									<input name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<label for="[% advlimiter.Id %]" class="advItemLabel" >
+										<input class="advSBOps" name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+                                    	[% advlimiter.Label %]
+                                    </label>
 								[% END %]
 							[% END %]
 							[% IF advlimiter.Type =='ymrange' %]
+	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
 																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
 									<option selected="selected" value="">Month</option>
 									<option value="01">January</option>
@@ -175,16 +185,17 @@
 								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
-								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+								<input class="advSBOps" title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
 							[% END %]
 							[% IF advlimiter.Type =='multiselectvalue' %]
-								<select id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
+								<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+								<select class="advSBOps" id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
 									[% FOREACH limiterValue IN advlimiter.LimiterValues %]
 										<option value="[% limiterValue.AddAction %]">[% limiterValue.Value %]</option>
 									[% END %]	
 								</select>
 							[% END %]
-						</section>
 					  </li>
 					[% END %]
 				</ul>
@@ -192,7 +203,7 @@
 			  
 			</fieldset>
 			</p>
-			<div align="right"><input class="btn btn-success" type="submit" value="Search" class="advSB" /></div>
+			<div align="right"><input class="btn btn-success advSB" type="submit" value="Search" /></div>
 		  </fieldset>
 		  </p>
 		</div>
@@ -210,7 +221,6 @@
          <!-- / .container-fluid -->
 </form>
 
- 
 [% INCLUDE 'opac-bottom.inc' %]
 
 [% BLOCK jsinclude %]

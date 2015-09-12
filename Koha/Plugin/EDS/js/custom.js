@@ -1,2 +1,3 @@
-// Enter custom EDS plugin code here.
-//console.log('hello world');
+// JavaScript Document content here.
+// here is another line
+// and another line.
