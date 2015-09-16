@@ -275,6 +275,7 @@ function SearchEDS(){
 	  if(searchTerm==undefined) searchTerm = $('.transl1').val().replace(/\&/g,"%2526");} // for bootstrap
 	  
   if(knownItem=='eds'){knownItem='';}
+  if(defaultParams === undefined){defaultParams = '';}
   window.location='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,'+knownItem+':{'+searchTerm+'}'+defaultParams+'&default=1';
 }
 
