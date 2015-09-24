@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1401</latestversion>
-	<download>https://github.com/ebsco/edsapi-koha-plugin/blob/Koha-v3.14x/eds_plugin_3.1401.kpz?raw=true</download>
-	<lastupdated>12/Sep/2015</lastupdated>
+	<latestversion>3.1443</latestversion>
+	<download>https://github.com/ebsco/edsapi-koha-plugin/blob/Koha-v3.14x/eds_plugin_3.1443.kpz?raw=true</download>
+	<lastupdated>24/Sep/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1443" date="12/Sep/2015">
+			<note id="1" author="amiranda@ebsco.com">Fixed guest access issue for ip users</note>
+		</release>
 		<release version="3.1401" date="12/Sep/2015">
 			<note id="1" author="amiranda@ebsco.com">Upgraded to match version 3.1643.</note>
 		</release>

@@ -43,7 +43,7 @@ use HTML::Entities;
 use feature qw(switch);
 use Encode;
 use Try::Tiny;
-#use Net::IP;
+use Net::IP;
 
 
 my $input = new CGI;
@@ -113,7 +113,7 @@ my ( $template, $user, $cookie ) = get_template_and_user(
 $SessionToken = $input->cookie('sessionToken');
 $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
-	$GuestTracker='y';
+	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();
 }
 1;
