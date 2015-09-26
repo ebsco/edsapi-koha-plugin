@@ -1,21 +1,5 @@
 package Koha::Plugin::EDS;
 
-#/*
-#=============================================================================================
-#* WIDGET NAME: Koha EDS Integration Plugin
-#* DESCRIPTION: Integrates EDS with Koha
-#* KEYWORDS: Koha, ILS, Integration, API, EDS
-#* CUSTOMER PARAMETERS: None
-#* EBSCO PARAMETERS: None
-#* URL: N/A
-#* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
-#* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 27/Jul/2015
-#* LAST CHANGE DESCRIPTION: Updated to 3.1642
-#* 							--
-#=============================================================================================
-#*/
-
 use Modern::Perl; 
 use base qw(Koha::Plugins::Base);
 use C4::Context;
@@ -38,7 +22,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1643;
+our $VERSION = 3.1644;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {

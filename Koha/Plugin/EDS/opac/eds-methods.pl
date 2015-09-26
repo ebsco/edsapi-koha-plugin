@@ -113,7 +113,7 @@ my ( $template, $user, $cookie ) = get_template_and_user(
 $SessionToken = $input->cookie('sessionToken');
 $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
-	$GuestTracker='y';
+	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();
 }
 1;
@@ -384,7 +384,7 @@ sub CheckIPAuthentication
 		$GuestTracker='n';
 		$GuestForIP = 'n';
 	}
-	if($GuestTracker eq "y"){ # User has not logged in or authtoken is not IP. Do a local IP check.
+	if($GuestTracker ne "n"){ # User has not logged in or authtoken is not IP. Do a local IP check.
 		if(length($iprange) > 4){ # Check local IP range if specified.
 			my @allowedIPs = split /,/, $iprange;
 			my $localIP      = Net::IP->new($ENV{'REMOTE_ADDR'});

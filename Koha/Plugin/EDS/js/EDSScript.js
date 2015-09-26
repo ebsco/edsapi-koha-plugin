@@ -1,19 +1,3 @@
-/*
-=============================================================================================
-* WIDGET NAME: Koha EDS Integration Plugin
-* DESCRIPTION: Integrates EDS with Koha
-* KEYWORDS: Koha, ILS, Integration, API, EDS
-* CUSTOMER PARAMETERS: None
-* EBSCO PARAMETERS: None
-* URL: N/A
-* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
-* DATE ADDED: 31/10/2013
-* DATE MODIFIED: 02/08/2015
-* LAST CHANGE DESCRIPTION: Fixed Advanced Search for bootstrap.
-=============================================================================================
-*/
-
-
 var knownItem='';
 var activeState=0;
 var edsOptions="";
@@ -37,7 +21,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
-var versionEDSKoha = '3.1643';
+var versionEDSKoha = '3.1644';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -71,51 +55,10 @@ function StartEDS(){
 			//$("#masthead_search").attr("disabled","disabled");
 			if(typeof $('.back_results a').attr('href')!='undefined'){EDSSetDetailPageNavigator();}
 	
-			// cart management START
-			if(document.URL.indexOf('opac-basket.pl')!=-1){// basket stuff.
-				$.jStorage.set("bib_list",QueryString('bib_list'),{TTL:edsConfig.cookieexpiry*60*1000});
-				PrepareItems();
-				
-				$('.empty').removeAttr('onclick');
-				$('.empty').click(function(){ // copy of delBasket in Koha's basket.js
-					var nameCookie = "bib_list";
-					var rep = false;
-					rep = confirm(MSG_CONFIRM_DEL_BASKET);
-					if (rep) {
-						delCookie(nameCookie);
-						updateAllLinks(top.opener);
-						document.location = "about:blank";
-						updateBasket(0,top.opener);
-						$.jStorage.set("bib_list","",{TTL:edsConfig.cookieexpiry*60*1000}); // added this line
-						window.close();
-					}
-				});
-				
-			}	
-				
-			if($.jStorage.get("bib_list")!=null){
-				try{
-					var jbib_list = $.jStorage.get("bib_list");
-					document.cookie= 'bib_list='+jbib_list;
-					if(basketcount=="")basketcount=0;
-					if(basketcount!=jbib_list.split('/').length-1)
-						updateBasket(jbib_list.length-1);
-				}catch(err){}
-			}
-				
-			$('.addtocart').click(function(){
-				$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
-			});
-			$('.cartRemove').click(function(){
-				$.jStorage.set("bib_list",$.cookie("bib_list"),{TTL:edsConfig.cookieexpiry*60*1000});
-			});
-			if((document.URL.indexOf('opac-downloadcart.pl')!=-1) || (document.URL.indexOf('opac-sendbasket.pl')!=-1)){
-				SetEDSCartField();
-			}
-			// cart management END		
+			InitCartWithEDS(); // cart management
+
 		});
-		jQuery.getScript('/plugin/Koha/Plugin/EDS/js/custom.js'); // load customisations.
-		//PatchSendCart();
+	    try { jQuery.getScript('/plugin/Koha/Plugin/EDS/js/custom.js'); } catch (err) {/*if custom.js doesn't exist*/} // load customisations.
 		
 	});
 }
@@ -405,6 +348,52 @@ function QueryString(key) {
 }
 
 //BASKET START---------
+function InitCartWithEDS() {
+
+    if ($.jStorage.get("bib_list") != null) {
+        try {
+            var jbib_list = $.jStorage.get("bib_list");
+            document.cookie = 'bib_list=' + jbib_list;
+            if (basketcount == "") basketcount = 0;
+            //if (basketcount != jbib_list.split('/').length - 1)
+               //updateBasket(jbib_list.length -1);
+        } catch (err) { }
+    }
+
+
+    if (document.URL.indexOf('opac-basket.pl') != -1) {// basket stuff.
+        $.jStorage.set("bib_list", QueryString('bib_list'), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+        document.cookie = 'bib_list=' + QueryString('bib_list');
+        PrepareItems();
+
+        $('.empty').removeAttr('onclick');
+        $('.empty').click(function () { // copy of delBasket in Koha's basket.js
+            var nameCookie = "bib_list";
+            var rep = false;
+            rep = confirm(MSG_CONFIRM_DEL_BASKET);
+            if (rep) {
+                delCookie(nameCookie);
+                updateAllLinks(top.opener);
+                document.location = "about:blank";
+                updateBasket(0, top.opener);
+                $.jStorage.set("bib_list", "", { TTL: edsConfig.cookieexpiry * 60 * 1000 }); // added this line
+                window.close();
+            }
+        });
+        $('.addtocart').click(function () {
+            $.jStorage.set("bib_list", $.cookie("bib_list"), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+        });
+        $('.cartRemove').click(function () {
+            $.jStorage.set("bib_list", $.cookie("bib_list"), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+        });
+    }
+
+
+    if ((document.URL.indexOf('opac-downloadcart.pl') != -1) || (document.URL.indexOf('opac-sendbasket.pl') != -1)) {
+        SetEDSCartField();
+    }
+}
+
 function PrepareItems(){
 	if(callPrepareItems==false){callPrepareItems=true;}else{return;} 
 
@@ -413,7 +402,6 @@ function PrepareItems(){
 
 	var recordId=recordList.split("/");
 	
-
 	for(var edsItemCount=0;edsItemCount<recordId.length-1;edsItemCount++){
 		if(recordId[edsItemCount].indexOf(edsConfig.cataloguedbid)==-1)
 			if(recordId[edsItemCount].indexOf("|")!=-1)
@@ -453,17 +441,6 @@ function PrepareItems(){
 		
 }
 
-/*function PatchSendCard(){
-		if(!patchSendCart){
-			if(document.URL.indexOf('|')!=-1){
-				var sendParent = $('.send').parent().html();
-				sendParent = sendParent.replace('onclick="sendBasket()','onclick="EDSSendBasket()');
-				//$(sendParent).html('<a class="send" href="opac-basket.pl" onclick="EDSSendBasket(); return false;">Send</a>');
-				$('.send').parent().html(sendParent);
-			}
-		}
-}
-*/
 function GetEDSItems(data){
 	try{
 	$('#itemst').append('<tr><td><input type="checkbox" class="cb" value="'+data.Record.Header.An+'|'+data.Record.Header.DbId+'" name="'+data.Record.Header.An+'|'+data.Record.Header.DbId+'" id="'+data.Record.Header.An+'|'+data.Record.Header.DbId+'" onclick="selRecord(value,checked);"></td><td><a href="#" onclick="opener.document.location=\'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an='+data.Record.Header.An+'|dbid='+data.Record.Header.DbId+'\'">'+$("<div/>").html(data.Record.Items[0].Data).text()+'</a></td><td>'+$("<div/>").html(data.Record.Items[1].Data).text()+'</td><td>'+data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y+'</td><td>Discovery</td></tr>');
@@ -476,51 +453,7 @@ function GetEDSItems(data){
 		EDSItems--;
 		if(EDSItems==0){$('#EDSBasketLoader').css('display','none');}
 	}
-		//if($.jStorage.get(data.Record.Header.An+'|'+data.Record.Header.DbId)==null){
-
-		//}
 }
-
-function BuildMoreDetails(detailedRecord){
-	try{
-		var recordDbId = detailedRecord.Record.Header.DbId;
-		var recordAN = detailedRecord.Record.Header.An;
-		
-		var moreDetailsData = '\
-		<h3>\
-			<input type="checkbox" class="cb" value="'+recordAN+'|'+recordDbId+'" name="bib'+recordAN+'|'+recordDbId+'" id="bib'+recordAN+'|'+recordDbId+'" onclick="selRecord(value,checked)">\
-			'+detailedRecord.Record.RecordInfo.BibRecord.BibEntity.Titles[0].TitleFull+'\
-		</h3>\
-		<table class="table">\
-			<tbody>';
-	
-
-		for(itemCount=0;itemCount<detailedRecord.Record.Items.length;itemCount++){
-			if(detailedRecord.Record.Items[itemCount].Label!="Title"){
-				moreDetailsData =	moreDetailsData+'\
-				<tr>\
-					<th scope="row">\
-					'+detailedRecord.Record.Items[itemCount].Label+'\
-					</th>\
-					<td>\
-					<p>'+$('<div/>').html(detailedRecord.Record.Items[itemCount].Data).text()+'</p>\
-					</td>\
-				</tr>\
-				';
-			}
-		}
-
-			
-		moreDetailsData =	moreDetailsData+'\
-			</tbody>\
-		</table>\
-		';
-		
-		$('#bookbag_form').append(moreDetailsData);
-
-	}catch(err){}	
-}
-
 
 function EDSSendBasket() {
 	if(bibListLocal==""){
@@ -551,6 +484,45 @@ function SetEDSCartField(){
 }
 
 //BASKET END----
+
+function BuildMoreDetails(detailedRecord) {
+    try {
+        var recordDbId = detailedRecord.Record.Header.DbId;
+        var recordAN = detailedRecord.Record.Header.An;
+
+        var moreDetailsData = '\
+		<h3>\
+			<input type="checkbox" class="cb" value="'+ recordAN + '|' + recordDbId + '" name="bib' + recordAN + '|' + recordDbId + '" id="bib' + recordAN + '|' + recordDbId + '" onclick="selRecord(value,checked)">\
+			'+ detailedRecord.Record.RecordInfo.BibRecord.BibEntity.Titles[0].TitleFull + '\
+		</h3>\
+		<table class="table">\
+			<tbody>';
+
+        for (itemCount = 0; itemCount < detailedRecord.Record.Items.length; itemCount++) {
+            if (detailedRecord.Record.Items[itemCount].Label != "Title") {
+                moreDetailsData = moreDetailsData + '\
+				<tr>\
+					<th scope="row">\
+					'+ detailedRecord.Record.Items[itemCount].Label + '\
+					</th>\
+					<td>\
+					<p>'+ $('<div/>').html(detailedRecord.Record.Items[itemCount].Data).text() + '</p>\
+					</td>\
+				</tr>\
+				';
+            }
+        }
+
+
+        moreDetailsData = moreDetailsData + '\
+			</tbody>\
+		</table>\
+		';
+
+        $('#bookbag_form').append(moreDetailsData);
+
+    } catch (err) { }
+}
 
 
 //ADVANCED SEARCH START
