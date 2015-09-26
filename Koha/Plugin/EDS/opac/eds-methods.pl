@@ -1,19 +1,5 @@
 #!/usr/bin/perl -w
 
-#/*
-#=============================================================================================
-#* WIDGET NAME: Koha EDS Integration Plugin
-#* DESCRIPTION: Integrates EDS with Koha
-#* KEYWORDS: Koha, ILS, Integration, API, EDS
-#* CUSTOMER PARAMETERS: None
-#* EBSCO PARAMETERS: None
-#* URL: N/A
-#* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
-#* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 1/Aug/2015
-#* LAST CHANGE DESCRIPTION: Added support for local IP addresses.
-#=============================================================================================
-#*/
 # This file is part of Koha.
 #
 # Koha is free software; you can redistribute it and/or modify it under the

@@ -1,19 +1,5 @@
 #!/usr/bin/perl -w
 
-#/*
-#=============================================================================================
-#* WIDGET NAME: Koha EDS Integration Plugin
-#* DESCRIPTION: Integrates EDS with Koha
-#* KEYWORDS: Koha, ILS, Integration, API, EDS
-#* CUSTOMER PARAMETERS: None
-#* EBSCO PARAMETERS: None
-#* URL: N/A
-#* AUTHOR & EMAIL: Alvet Miranda - amiranda@ebsco.com
-#* DATE ADDED: 31/10/2013
-#* DATE MODIFIED: 12/Jan/2015
-#* LAST CHANGE DESCRIPTION: FIXED: Return default html if param q is not defined.
-#=============================================================================================
-#*/
 # This file is part of Koha.
 #
 # Koha is free software; you can redistribute it and/or modify it under the
