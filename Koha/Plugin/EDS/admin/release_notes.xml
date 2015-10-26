@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1644</latestversion>
+	<latestversion>3.1645</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>26/Sep/2015</lastupdated>
+	<lastupdated>26/Oct/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1645" date="26/Oct/2015">
+			<note id="1" author="amiranda@ebsco.com">Added method GetLocalIP. Run this from configure in admin</note>
+		</release>
 		<release version="3.1644" date="26/Sep/2015">
 			<note id="1" author="amiranda@ebsco.com">Fixed Cart count issue</note>
 			<note id="2" author="amiranda@ebsco.com">Fixed IP authentication issue.</note>
