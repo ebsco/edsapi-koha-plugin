@@ -63,6 +63,8 @@ my $api_response;
 
 if($input->param("q") eq 'config'){
 	$api_response = EDSGetConfiguration();
+}elsif($input->param("q") eq 'getip'){
+	$api_response = GetLocalIP();
 }else{
 	# Send Known Items
 	if($input->param("q") eq 'knownitems'){

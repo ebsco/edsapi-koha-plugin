@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1443</latestversion>
+	<latestversion>3.1446</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin/blob/Koha-v3.14x/</download>
-	<lastupdated>26/Sep/2015</lastupdated>
+	<lastupdated>11/Nov/2015</lastupdated>
 	<releasenotes>
+		<release version="3.1446" date="11/Nov/2015">
+			<note id="1" author="amiranda@ebsco.com">Create AuthToken if session token request is incomplete</note>
+			<note id="2" author="amiranda@ebsco.com">Added method GetLocalIP. Run this from configure in admin</note>
+		</release>
 		<release version="3.1444" date="26/Sep/2015">
 			<note id="1" author="amiranda@ebsco.com">Fixed cart count issue</note>
 		</release>
