@@ -21,7 +21,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = "";
-var versionEDSKoha = '3.1645';
+var versionEDSKoha = '3.1646';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.

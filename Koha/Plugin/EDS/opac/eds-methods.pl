@@ -161,10 +161,16 @@ sub CreateSession
 	$uri = 'http://eds-api.ebscohost.com/edsapi/rest/createsession'; 
 	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"'.$edscustomerid.'"}'; 
 
-	
 	$response =  CallREST('POST',$uri,$json, $authtoken, '');
 	
-	$SessionToken = decode_json( $response );
+	try{
+		$SessionToken = decode_json( $response );	
+	}catch{
+		$authtoken = CreateAuth();		
+		$response =  CallREST('POST',$uri,$json, $authtoken, '');
+		$SessionToken = decode_json( $response );
+	};
+	
 	if($SessionToken->{ErrorNumber}==104){
 		$authtoken = CreateAuth();
 		$response =  CallREST('POST',$uri,$json, $authtoken, '');
