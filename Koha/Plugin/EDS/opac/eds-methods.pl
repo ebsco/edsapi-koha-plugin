@@ -116,10 +116,14 @@ sub CreateAuth
 	
 	
 	my $response =  CallREST('POST',$uri,$json, '', '');
-	$authtoken = decode_json( $response );
-	$authtoken = $authtoken->{AuthToken};
-	$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $authtoken, $PluginClass, 'authtoken'); 
-	return $authtoken;
+	try{$authtoken = decode_json( $response );
+		#$authtoken = decode_json( $response );
+		$authtoken = $authtoken->{AuthToken};
+		$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $authtoken, $PluginClass, 'authtoken'); 
+		return $authtoken;
+	}catch{
+		 return $uri.' - sent response: '.$response ;
+	 };
 }
 
 sub GetAuth
