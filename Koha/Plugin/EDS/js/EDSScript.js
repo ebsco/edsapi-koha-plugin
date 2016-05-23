@@ -482,7 +482,7 @@ function GetEDSItems(data){
 	jQuery('.cb').click(function () {
 	    enableCheckboxActions();
 	    var selectedValues = document.myform.records.value;
-	    var containsEDSItems = (selectedValues.indexOf('|') > -1) ? true : false;
+	    var containsEDSItems = (selectedValues.replace('|' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('|') > -1) ? true : false;
 
 
 	    if (containsEDSItems) {

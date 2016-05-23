@@ -22,7 +22,8 @@
 [% ELSE %]
     [% SET protocol = "http://" %]
 [% END %]
-[% INCLUDE 'doc-head-open.inc' %][% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %] catalog &rsaquo; Details for: [% title |html %][% FOREACH subtitl IN subtitle %], [% subtitl.subfield |html %][% END %]
+[% INCLUDE 'doc-head-open.inc' %]
+[% FOREACH subtitl IN subtitle %], [% subtitl.subfield |html %][% END %]
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
 [% IF ( bidi ) %]

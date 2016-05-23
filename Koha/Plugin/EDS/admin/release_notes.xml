@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.2201</latestversion>
+	<latestversion>3.2202</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
 	<lastupdated>23/May/2016</lastupdated>
 	<releasenotes>
+		<release version="3.2202" date="23/May/2016">
+			<note id="1" author="amiranda@ebsco.com">Cart: Fixed addition of catalogue items for hold and list from EDS</note>
+			<note id="2" author="amiranda@ebsco.com">Results: Removed breadcrumb from to page</note>
+			<note id="3" author="amiranda@ebsco.com">Details: Removed breadcrumb from to page</note>
+			<note id="4" author="amiranda@ebsco.com">Advanced: Removed breadcrumb from to page</note>
+		</release>
 		<release version="3.2201" date="23/May/2016">
 			<note id="1" author="amiranda@ebsco.com">Admin: Removed Prog from setup tool</note>
 			<note id="2" author="amiranda@ebsco.com">Admin: Pointed release notes to sha/3.22.json</note>

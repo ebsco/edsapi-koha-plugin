@@ -22,7 +22,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.2201;
+our $VERSION = 3.2202;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
