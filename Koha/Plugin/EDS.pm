@@ -22,7 +22,7 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.1646;
+our $VERSION = 3.2201;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -31,8 +31,8 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2015-11-11',
-    minimum_version => '3.16',
+    date_updated    => '2016-05-23',
+    minimum_version => '3.22',
     maximum_version => '',
     version         => $VERSION,
 };
@@ -264,11 +264,11 @@ sub SetupTool {
 	## Pull SHA data for version info.
 	my $shaData = '';
 	try{
-		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/316.json');
+		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/322.json');
 		$shaData= $mech->content();
 		$shaData=decode_json($shaData);
 	}catch{
-		$shaData=decode_json('{"edsplugin": {"version": [{"number": "3.1636","sha": "9a10c2acfca0a4c7e13d74dd9dca4ff117b28a0e"}]}}');
+		$shaData=decode_json('{"edsplugin": {"version": [{"number": "3.2201","sha": "9a10c2acfca0a4c7e13d74dd9dca4ff117b28a0e"}]}}');
 	};
 	$mech->get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
 	my $xmlReleaseNotes = $mech->content();

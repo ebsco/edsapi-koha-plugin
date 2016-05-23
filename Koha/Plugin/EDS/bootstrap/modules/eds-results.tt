@@ -13,6 +13,7 @@
     You did not specify any search criteria.
 [% END %]
 [% INCLUDE 'doc-head-close.inc' %]
+[% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
     [% BLOCK cssinclude %]

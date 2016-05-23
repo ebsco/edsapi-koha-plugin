@@ -1,189 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.1646</latestversion>
+	<latestversion>3.2201</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>11/Nov/2015</lastupdated>
+	<lastupdated>23/May/2016</lastupdated>
 	<releasenotes>
+		<release version="3.2201" date="23/May/2016">
+			<note id="1" author="amiranda@ebsco.com">Admin: Removed Prog from setup tool</note>
+			<note id="2" author="amiranda@ebsco.com">Admin: Pointed release notes to sha/3.22.json</note>
+			<note id="3" author="amiranda@ebsco.com">Admin: Updated setup.tt with new opac-sendbasket.pl patch info</note>
+			<note id="4" author="amiranda@ebsco.com">Admin: Updated setup.tt with new doc-head-close.inc patch info</note>
+			<note id="5" author="amiranda@ebsco.com">Admin: Applied prettify to patch code section in run tool section</note>
+			<note id="6" author="amiranda@ebsco.com">Prog: Removed prog folder and all its contents as this template was removed</note>
+			<note id="7" author="amiranda@ebsco.com">Cart: Override Place Hold to prompt users to remove titles from discovery</note>
+			<note id="8" author="amiranda@ebsco.com">Cart: Override Add to List to prompt users to remove titles from discovery</note>
+			<note id="9" author="amiranda@ebsco.com">Cart: Call enableCheckboxActions(); on .cb click for Discovery items too</note>
+			<note id="10" author="amiranda@ebsco.com">Cart: Removed function EDSSendBasket() - legacy to control EDS items in cart when add to cart was an optional patch</note>
+			<note id="11" author="amiranda@ebsco.com">Cart: Removed bibListLocal - used for legacy cart patch </note>
+			<note id="12" author="amiranda@ebsco.com">Cart: Removed bibListLocal - used for legacy cart patch </note>
+			<note id="13" author="amiranda@ebsco.com">Js: Removed $(document).ready(); made redundant by trackCall </note>
+			<note id="14" author="amiranda@ebsco.com">Js: Preload EDS Select Text and Default Search from the script tag to remove delays loading EDS options to the dropdown. </note>
+			<note id="15" author="amiranda@ebsco.com">Js: Fix position of search switch message to appear just below the dropdown. </note>
+			<note id="16" author="amiranda@ebsco.com">Results: Select field code by default if set in bootstrap theme. </note>
+		</release>
 		<release version="3.1646" date="11/Nov/2015">
 			<note id="1" author="amiranda@ebsco.com">Create AuthToken if session token request is incomplete</note>
-		</release>
-		<release version="3.1645" date="26/Oct/2015">
-			<note id="1" author="amiranda@ebsco.com">Added method GetLocalIP. Run this from configure in admin</note>
-		</release>
-		<release version="3.1644" date="26/Sep/2015">
-			<note id="1" author="amiranda@ebsco.com">Fixed Cart count issue</note>
-			<note id="2" author="amiranda@ebsco.com">Fixed IP authentication issue.</note>
-		</release>
-		<release version="3.1643" date="02/Aug/2015">
-			<note id="0" author="amiranda@ebsco.com">IMPORTANT: NEW CONFIG FIELD (IP Addresses) ADDED. DO NOT USE LIVE UPDATE TO UPGRADE TO THIS VERSION. UPGRADE THE PLUGIN FROM KOHA ADMIN</note>
-			<note id="1" author="amiranda@ebsco.com">Added internal IP Range authentication support</note>
-			<note id="2" author="amiranda@ebsco.com">Updated guest tracking in the plugin</note>
-			<note id="3" author="amiranda@ebsco.com">Fixed Advanced Search not returning results in Bootstrap</note>
-		</release>
-		<release version="3.1642" date="27/Jul/2015">
-			<note id="1" author="dpodboy@ebsco.com">Fixed label position on Advanced Search.</note>
-			<note id="2" author="dpodboy@ebsco.com">Made the date field on results page fluid.</note>
-		</release>
-		<release version="3.1641" date="15/Jul/2015">
-			<note id="1" author="amiranda@ebsco.com">Fixed Custom link opening new window when user is not logged in</note>
-		</release>
-		<release version="3.1640" date="29/Jun/2015">
-			<note id="0" author="amiranda@ebsco.com">IMPORTANT: PLEASE SEE RUN TOOL TO PATCH 2 NEW FILES. DO NOT USE LIVE UPDATE TO UPGRADE TO THIS VERSION. UPGRADE THE PLUGIN FROM KOHA ADMIN</note>
-			<note id="1" author="amiranda@ebsco.com">Added ProcessEDSCartItems to eds-methods.pl. It integrates eds items to download and send cart.</note>
-			<note id="2" author="amiranda@ebsco.com">Removed patchSendCart variable and function from EDSScript.js. This is no longer treated as an optional patch.</note>
-			<note id="3" author="amiranda@ebsco.com">Moved patch info to the top on setuptool.tt and added opac-downloadcart.pl and opac-sendbasket.pl details</note>
-		</release>
-		<release version="3.1639" date="16/Jun/2015">
-			<note id="1" author="amiranda@ebsco.com">Update Setuptool.tt to include eds-publicationexactmatch.inc</note>
-		</release>
-		<release version="3.1638" date="15/Jun/2015">
-			<note id="1" author="amiranda@ebsco.com">Exact Match Publication Placard</note>
-			<note id="2" author="amiranda@ebsco.com">Ask user to login when accessing lins </note>
-		</release>
-		<release version="3.1637" date="11/Jun/2015">
-			<note id="1" author="amiranda@ebsco.com">Updated EDS.pm to use Mechanize instead of LWP to prevent run tool error</note>
-		</release>
-		<release version="3.1636" date="07/Jun/2015">
-			<note id="1" author="amiranda@ebsco.com">Fix Add to Cart link issue on prog</note>
-		</release>
-		<release version="3.1635" date="02/Jun/2015">
-			<note id="1" author="amiranda@ebsco.com">Updated EDSScript.js to accomodate changes to cart send feature.</note>
-			<note id="2" author="amiranda@ebsco.com">Updated eds-methods to decode content </note>
-			<note id="3" author="amiranda@ebsco.com">Applied fixed width of 70px to thumbnail images</note>
-		</release>
-		<release version="3.1634" date="09/Mar/2015">
-			<note id="1" author="amiranda@ebsco.com">Changed all instances of .tmpl to .tt.</note>
-			<note id="2" author="amiranda@ebsco.com">Display all research starter images from https.</note>
-			<note id="3" author="amiranda@ebsco.com">Send and download cart use data from the cache instead of the api again..</note>
-		</release>
-		<release version="3.1633" date="26/Jan/2015">
-			<note id="1" author="amiranda@ebsco.com">Moved SendCart section to function PatchSendCart and calling this after loading customisations.</note>
-		</release>
-		<release version="3.1632" date="26/Jan/2015">
-			<note id="1" author="amiranda@ebsco.com">Added customjs.inc in admin to manage javascript customisations</note>
-		</release>
-		<release version="3.1631" date="12/Jan/2015">
-			<note id="1" author="amiranda@ebsco.com">Added customjs.inc in admin to manage javascript customisations</note>
-			<note id="2" author="amiranda@ebsco.com">Moved Modal code in setuptool.tt to modal.inc as live update and customjs use this</note>
-			<note id="3" author="amiranda@ebsco.com">Moved all javascript code from setuptool.tt to setuptooljs.inc</note>
-			<note id="4" author="amiranda@ebsco.com">Updated setuptool.tt to list the new files</note>
-			<note id="5" author="amiranda@ebsco.com">Implemented Research Starters in prog and bootstrap</note>
-		</release>
-		<release version="3.1630" date="10/Jan/2015">
-			<note id="1" author="amiranda@ebsco.com">Live Update feature (BETA) implemented in Run Tool. It checks to see if files are updatable first and then fetches code from github based on the selected version.</note>
-			<note id="2" author="amiranda@ebsco.com">Applied PDF download alert fix for guest users in prog too.</note>
-			<note id="3" author="amiranda@ebsco.com">Printing Cart - applied EDS print function for consistency even when EDS items are not in the list</note>
-		</release>
-		<release version="3.1622" date="8/Jan/2015">
-			<note id="1" author="amiranda@ebsco.com">Removed file custom.js to prevent clearing customisations. Call to custom.js remains.</note>
-			<note id="2" author="amiranda@ebsco.com">Updated Run tool to display various version and download directly</note>
-			<note id="3" author="amiranda@ebsco.com">Fixed sidebar in detailed page to point to include in the plugin instead of core sidebar and also disabled save to lists for logged in users for discovery items</note>
-			<note id="4" author="amiranda@ebsco.com">Fixed print cart feature for prog.</note>
-			<note id="5" author="amiranda@ebsco.com">Added .htaccess in the opac directory with Options +ExecCGI.</note>
-			<note id="6" author="amiranda@ebsco.com">Moved placeholder function in eds-advsearch.tt after [% BLOCK jsinclude %] to fix bug</note>
-		</release>
-		<release version="3.1621" date="4/Dec/2014">
-			<note id="1" author="amiranda@ebsco.com">applied $search_context code in GetCatalogueAvailability() to match search code at Catalyst instance. Plus put GetCatalogueAvailability call in a trycatch block</note>
-			<note id="2" author="amiranda@ebsco.com">added PageURL function in EDS.pm to refresh if run tool encounters an error.</note>
-		</release>
-		<release version="3.162" date="1/Dec/2014">
-			<note id="1" author="amiranda@ebsco.com">Fixed setuptool to display release notes and current/latest version based on raw.git</note>
-			<note id="2" author="amiranda@ebsco.com">Added a switch in EDSScript.js to enable/disable sendCart patch.</note>
-		</release>
-		<release version="3.16.1" date="16/Nov/2014">
-			<note id="1" author="amiranda@ebsco.com">Support for template prog</note>
-			<note id="2" author="amiranda@ebsco.com">Remove limiters if no results found feature.</note>
-			<note id="3" author="amiranda@ebsco.com">Updated folder permissions on run tool.</note>
-		</release>
-		<release version="3.16" date="06/Now/2014">
-			<note id="1" author="amiranda@ebsco.com">Compatible with Koha v3.16</note>
-		</release>
-		<release version="1.8" date="31/Oct/2014">
-			<note id="1" author="amiranda@ebsco.com">Applied Hints and help to search mode</note>
-			<note id="2" author="amiranda@ebsco.com">Split published date into month dropdown and year textbox in advanced search</note>
-			<note id="3" author="amiranda@ebsco.com">Added code to switch between Koha and EDS advanced search</note>
-			<note id="4" author="amiranda@ebsco.com">Added help icon to images folder for advanced search</note>
-			<note id="5" author="amiranda@ebsco.com">Fixed issues with ampersand in the url</note>
-			<note id="6" author="amiranda@ebsco.com">Hardcoded field codes to improve performance loading the discovery drop down the first time.</note>
-			<note id="7" author="amiranda@ebsco.com">Pointed setup/run tool to github.</note>
-			<note id="8" author="amiranda@ebsco.com">MultiFacet Selector.</note>
-			<note id="9" author="amiranda@ebsco.com">Default settings in Plugin Admin</note>
-		</release>
-		<release version="1.7" date="08/Jul/2014">
-			<note id="1" author="amiranda@ebsco.com">Upgraded plugin to work with Koha v3.14</note>
-			<note id="2" author="amiranda@ebsco.com">Added support for multiple themes.bootstrap tested ok; prog has some bugs.</note>
-			<note id="3" author="amiranda@ebsco.com">Deleted EDSBasket.js.</note>
-			<note id="4" author="amiranda@ebsco.com">Deleted folder libC4 and contents. It was a replace file so refer plugin config for instructions.</note>
-			<note id="5" author="amiranda@ebsco.com">Removed themlang config; templates can access system variable</note>
-		</release>
-		<release version="1.6">
-			<note id="1" author="amiranda@ebsco.com">Added Advanced Search.</note>
-			<note id="2" author="amiranda@ebsco.com">Enabled IP Authentication. Guest=n when on IP.</note>
-			<note id="3" author="amiranda@ebsco.com">Fixed css for html,ebook,pdf icon on FF (use standard css).</note>
-			<note id="4" author="amiranda@ebsco.com">Resetting Authtoken and session token when updating info.</note>
-			<note id="5" author="amiranda@ebsco.com">Removed duplicate values due to if/else for store_data in EDS.pm.</note>
-		</release>
-		<release version="1.5">
-			<note id="1" author="amiranda@ebsco.com">Caching raw call for knownitems and config</note>
-			<note id="2" author="amiranda@ebsco.com">Merged EDSBbasket.js into EDSScript.js - Kept empty EDSBasket.js for copy over version in 1.4 and avoid errors</note>
-			<note id="3" author="amiranda@ebsco.com">Added json3 and jStorage into jQuery.cookie.min.js</note>
-			<note id="4" author="amiranda@ebsco.com">Updated eds-detail_customlinks.inc to display icons for html,ebook and pdf fulltext. Added css styles to pubtype-icons.css</note>
-			<note id="5" author="amiranda@ebsco.com">Added eds-advsearch.tt. Placeholder file for now. Updated eds-search.pl to point to adv search if there are no parameters</note>			
-			<note id="6" author="amiranda@ebsco.com">updated eds-results.tt to display ebook, pdf and html icons. Also added formats-sm-sprite.png to images folder </note>			
-			<note id="7" author="amiranda@ebsco.com">Fixed pub date issues and replaced regex with /^\d{4}-(0[1-9]|1[012])\/\d{4}-(0[1-9]|1[012])$/ instead of /\d{4}-\d[1-12]\/\d{4}-\d[1-12]/</note>			
-			<note id="8" author="amiranda@ebsco.com">Set cookig bib_list under /cgi-bin to match bib_list under /plugin to fix cart feature</note>		
-			<note id="9" author="amiranda@ebsco.com">remove discovery items from bib_list before submitting to send function in basketto prevent perl error. </note>		
-			<note id="10" author="amiranda@ebsco.com">added code to display discovery items in more details feature of the basket</note>		
-			<note id="11" author="amiranda@ebsco.com">updated the checkboxes in eds-results.tt to contain ids so cart feature can work</note>		
-			<note id="12" author="amiranda@ebsco.com">Added id's to add/remove cart items from detailed record</note>
-			<note id="13" author="robin@kallisti.net.nz">Check for authtoken and die gracefully if plugin setup is not complete </note>
-			<note id="14" author="amiranda@ebsco.com">Deleted opac-basket.tt. Updated admin/setuptool.tt by removing the part about copy paste opac-basket.tt into core.</note>
-		</release>
-		<release version="1.4">
-			<note id="1" author="amiranda@ebsco.com">Seperated detail page sidebar to remove save to list option.</note>
-			<note id="2" author="amiranda@ebsco.com">Added no warnings to all pl's. This is setting was added in configure.tt but not wired to the code yet.</note>
-			<note id="3" author="amiranda@ebsco.com">Removed code that disabled the dropdown menu when JS was loading EDS Info.</note>
-		</release>
-		<release version="1.003">
-			<note id="1" author="amiranda@ebsco.com">Fixed searching for linked authors/sources</note>
-			<note id="2" author="amiranda@ebsco.com">Restored ,:() by escaping them before submitting the search term</note>
-			<note id="3" author="amiranda@ebsco.com">Added JN:Journal Titles to Discovery field code search options</note>
-			<note id="4" author="amiranda@ebsco.com">Facets, limiters, expanders update results when checkbox is clicked</note>
-			<note id="5" author="amiranda@ebsco.com">Fixed save to list 404 error</note>
-			<note id="6" author="amiranda@ebsco.com">Updated widget home from dev to prod</note>
-			<note id="7" author="amiranda@ebsco.com">Cleared EDSScript.js of multiselect list that appeared on discovery to catalogue change</note>
-		</release>
-		<release version="1.002">
-			<note id="1" author="amiranda@ebsco.com">Fixed highlight issues for catalogue records</note>
-			<note id="2" author="amiranda@ebsco.com">Fixed issue when searching with ,:()</note>
-			<note id="3" author="amiranda@ebsco.com">Fixed issue with not logged in message when logged in</note>
-			<note id="4" author="amiranda@ebsco.com">Fixed issue where checkbox does not display if a limiter is set to on. </note>
-			<note id="5" author="amiranda@ebsco.com">Fixed: pdf not opening automatically when accessed from result page. </note>
-			<note id="6" author="amiranda@ebsco.com">Added EDSEnabled in Syspref, replace auth.pm, opac-basket.tt and doc-head-close.inc instead of patch. </note>
-			<note id="7" author="amiranda@ebsco.com">Disabled multi-select dropdown when switching </note>
-			<note id="8" author="amiranda@ebsco.com">Resolved uninitialized variable warnings in logs </note>
-		</release>
-		<release version="1.001">
-			<note id="1" author="amiranda@ebsco.com">Fixed detailed record next previous links. Clicking from a EDS detailed record to Koha record lead to a 404 response</note>
-			<note id="2" author="amiranda@ebsco.com">Added a default value to the getParams sub as it was throwing an error if no results were returned</note>
-			<note id="3" author="amiranda@ebsco.com">Auto Info update always failed as it was using an old authtoken. Getting a new token if info throws an error.</note>
-			<note id="4" author="amiranda@ebsco.com">added {OR RECORD.FullText.CustomLinks} in the custom links section of results.tt as it was not displaying a custom link</note>
-		</release>
-		<release version="1.0">
-			<note id="1" author="amiranda@ebsco.com">Updated plugin to be self containing. No need to copy files into the core directories any more. Used is_plugin parameter to manage template paths and .htaccess to run .pl files. Steps: Install plugin and run chmod 755 eds-* in the opac folder.</note>
-			<note id="2" author="amiranda@ebsco.com">Added expanders and date limiter</note>
-			<note id="3" author="amiranda@ebsco.com">Added results per page, view mode, search mode to form resort</note>
-		</release>
-		<release version="0.9">
-			<note id="1" author="amiranda@ebsco.com">Added Setup tool in Plugin Admin with basic instructions on how to deploy the plugin</note>
-			<note id="2" author="amiranda@ebsco.com">Made API guest access configurable. User logs into to EDS after they login to Koha automatically.</note>
-			<note id="3" author="amiranda@ebsco.com">Added update Info feature in Plugin configuration to get info manually</note>
-			<note id="4" author="amiranda@ebsco.com">Added feature to update EDS Info once a day.</note>
-		</release>
-		<release version="0.8">
-			<note id="1" author="amiranda@ebsco.com">Select options are configurable from the plugin panel </note>
-			<note id="2" author="amiranda@ebsco.com">Added Default (without EDS) option to config settings </note>
-			<note id="3" author="amiranda@ebsco.com">Relevency is based on info </note>
 		</release>
 	</releasenotes>
 </kohaplugin>
