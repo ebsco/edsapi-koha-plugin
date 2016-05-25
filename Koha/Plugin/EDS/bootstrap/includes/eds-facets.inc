@@ -47,7 +47,6 @@
 			[% FOR EDSLimit IN limiters %][% IF EDSLimit.Type =='ymrange' %]
 				<ul>
 					<li><strong>[% EDSLimit.Label %]</strong> <br>
-					<small>From:YYYY-MM / To: YYYY-MM</small>
 
 							<div id="eds-dateholder" align="center">
                                 <div class="input-append">

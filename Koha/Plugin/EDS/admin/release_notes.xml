@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.2203</latestversion>
+	<latestversion>3.2204</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
 	<lastupdated>25/May/2016</lastupdated>
 	<releasenotes>
+		<release version="3.2204" date="25/May/2016">
+			<note id="1" author="amiranda@ebsco.com">Results: Check only selected items when checking add to list</note>
+		</release>
 		<release version="3.2203" date="25/May/2016">
 			<note id="1" author="amiranda@ebsco.com">Result: Applied span2/span3 switch for refine results when window width is less/greater than 1200</note>
 			<note id="2" author="amiranda@ebsco.com">Result: Added Auto Suggest feature.</note>

@@ -22,7 +22,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
-var versionEDSKoha = '3.2203';
+var versionEDSKoha = '3.2204';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -535,7 +535,7 @@ function GetEDSItems(data){
 
 function CheckEDSRecordsforAddToList() {
     var containsEDS = false;
-    jQuery('tr input[type="checkbox"]').each(function () {
+    jQuery('tr input[type="checkbox"]:checked').each(function () {
         var currentCheckBox = this;
         checkBoxVal = jQuery(currentCheckBox).val();
         var containsEDSItems = (checkBoxVal.replace('|' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('|') > -1) ? true : false;
@@ -814,6 +814,7 @@ function PublisherDateSlider() {
         var pubMaxDate = jQuery("#range-published-date").data("maxdate");
         var pubMinDate = jQuery("#range-published-date").data("mindate");
         var pubDateLimiter = jQuery("#published-date").val();
+        pubDateLimiter = (pubDateLimiter == "YYYY-MM/YYYY-MM") ? '' : pubDateLimiter;
         var pubFromDate = '';
         var pubToDate = '';
 
