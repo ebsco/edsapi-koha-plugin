@@ -13,6 +13,7 @@
 [% END %]
 [% INCLUDE 'doc-head-close.inc' %]
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
+<script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>
 <link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
     [% BLOCK cssinclude %]
@@ -45,7 +46,7 @@
                         <strong>No results found!</strong>
                         <p>
                             [% IF ( searchdesc ) %]
-                                No results found for that in [% LibraryName %] catalog. <a href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi | html | url %][% limit_cgi | html | url %]&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" border="0" class="rsssearchicon"/></a>
+                                No results found for that in [% LibraryName %] catalog. <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi | html | url %][% limit_cgi | html | url %]&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" border="0" class="rsssearchicon"/></a>
                             [% ELSE %]
                                 You did not specify any search criteria.
                             [% END %]
@@ -63,7 +64,7 @@
         <div id="maincontent" class="container-fluid">
             <div class="row-fluid">
                 [% IF ( facets_loop && total ) %]
-                    <div class="span2">
+                    <div class="span2 eds-refine">
                         <div id="facetcontainer">
                             <!-- FACETS START -->
                             [% INCLUDE "$plugin_dir/includes/eds-facets.inc" %]
@@ -84,7 +85,7 @@
                                 [% END %]
                             ).
                         [% END %]
-                        <a href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" class="rsssearchicon"/></a>
+                        <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" class="rsssearchicon"/></a>
                     [% END # / IF total %]
                     </p>
                 [% END # / IF searchdesc %]
@@ -94,17 +95,11 @@
                         <div id="didyoumean">Not what you expected? Check for <a href="/cgi-bin/koha/svc/suggestion?render=standalone&amp;q=[% querystring |uri %]">suggestions</a></div>
                     [% END %]
 
-                    <div id="top-pages">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
 
-                    [% IF ( koha_spsuggest ) %]
-                        Did you mean:
-                        <ul style="list-style: none;">
-                            [% FOREACH SPELL_SUGGES IN SPELL_SUGGEST %]
-                            <li>
-                                <a href="/cgi-bin/koha/opac-search.pl?q=[% SPELL_SUGGES.spsuggestion %]">[% SPELL_SUGGES.spsuggestion %]</a>
-                            </li>
-                            [% END %]
-                        </ul>
+
+                    [% IF ( edsautosuggest ) %]
+                        Did you mean: <a href="javascript:{}" id="eds-autosuggest">[% edsautosuggest %]</a>
+
                     [% END # / IF koha_spsuggest%]
 
                     [% IF ( query_error ) %]
@@ -113,6 +108,8 @@
                             [% query_error %]
                         </div>
                     [% END %]
+                    
+                    <div id="top-pages">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
 
                     <!-- Search Results Table -->
                     [% IF ( total ) %]

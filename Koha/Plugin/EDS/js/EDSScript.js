@@ -22,7 +22,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
-var versionEDSKoha = '3.2201';
+var versionEDSKoha = '3.2203';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -32,7 +32,13 @@ try{jQuery().jquery;clearInterval(trackCall);
 function StartEDS(){
 	
 	if(jQuery('body').data('starteds')==1){return;}
-	else{jQuery('body').attr('data-starteds','1');}
+	else { jQuery('body').attr('data-starteds', '1'); }
+
+	jQuery(window).resize(function () { try { ApplyPlaceAdjustments(); } catch (err) { ApplyPlaceAdjustments(); } });
+	ApplyPlaceAdjustments();
+
+
+	PublisherDateSlider();
 	
 	var paramDefaultSearch = jQuery('#eds-app').data("defaultsearch");
 	var paramEdsSelectText = jQuery('#eds-app').data("edsselecttext");
@@ -63,6 +69,16 @@ function StartEDS(){
 			if(typeof $('.back_results a').attr('href')!='undefined'){EDSSetDetailPageNavigator();}
 	
 			InitCartWithEDS(); // cart management
+
+
+
+			jQuery('#eds-autosuggest').click(function () {
+			    var autoSuggest = this;
+			    var autoSuggestText = jQuery(autoSuggest).text();
+			    jQuery('#translControl1').val(autoSuggestText);
+			    jQuery('#searchsubmit').trigger('click');
+			});
+
 
 		});
 	    try { jQuery.getScript('/plugin/Koha/Plugin/EDS/js/custom.js'); } catch (err) {/*if custom.js doesn't exist*/} // load customisations.
@@ -377,6 +393,12 @@ function QueryString(key) {
 //BASKET START---------
 function InitCartWithEDS() {
 
+    jQuery('#addto').change(function () { CheckEDSRecordsforAddToList(); });
+    jQuery('.addto input:submit').click(function () { CheckEDSRecordsforAddToList(); });
+
+
+
+
     if ($.jStorage.get("bib_list") != null) {
         try {
             var jbib_list = $.jStorage.get("bib_list");
@@ -509,6 +531,32 @@ function GetEDSItems(data){
 	        }
 	    });
 	});
+}
+
+function CheckEDSRecordsforAddToList() {
+    var containsEDS = false;
+    jQuery('tr input[type="checkbox"]').each(function () {
+        var currentCheckBox = this;
+        checkBoxVal = jQuery(currentCheckBox).val();
+        var containsEDSItems = (checkBoxVal.replace('|' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('|') > -1) ? true : false;
+
+        if (containsEDSItems) {
+            containsEDS = true;
+            return false;
+        }
+
+    });
+
+    if (containsEDS == true) {
+        jQuery(newin).on('load', function () {
+            //alert(newin.location.pathname);
+            var newWinPath = newin.location.pathname;
+            if (newWinPath.indexOf('addbybiblionumber') > -1) {
+                alert('Deselect titles from Discovery to Add to list.');
+                newin.close();
+            }
+        })
+    }
 }
 
 
@@ -732,11 +780,140 @@ function PlacardTabs(placardTab){
 		jQuery('#placard-tabs').parent().css('display','');
 	}
 		
-		
 	jQuery('#'+placardTab+'-tab').click(function(){
 		jQuery('.placardtab').css('display','none');
 		jQuery('#placard-tabs a').removeClass('placard-tab-item-active');
 		jQuery('#'+placardTab).parent().parent().css('display','');
 		jQuery('#'+placardTab+'-tab').addClass('placard-tab-item-active');
 	});
+}
+
+function ApplyPlaceAdjustments() {
+    if (jQuery('.eds-refine').length!=0){
+        if (jQuery(window).width() > 1300) {
+            jQuery('.eds-refine').removeClass('span4').removeClass('span3').addClass('span2');
+            jQuery('.maincontent').removeClass('span8').removeClass('span9').addClass('span10');
+        } else if (jQuery(window).width() < 1299 && jQuery(window).width() > 900) {
+            jQuery('.eds-refine').removeClass('span4').removeClass('span2').addClass('span3');
+            jQuery('.maincontent').removeClass('span8').removeClass('span10').addClass('span9');
+        } else {
+            jQuery('.eds-refine').removeClass('span2').removeClass('span3').addClass('span4');
+            jQuery('.maincontent').removeClass('span10').removeClass('span9').addClass('span8');
+        }
+    }
+
+    jQuery('#published-date').width(jQuery('#eds-dateholder').width() - 70);
+}
+
+
+var rangeSlider = '';
+function PublisherDateSlider() {
+    //Load ionRangeSlider
+    jQuery.ajax({ url: 'https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.1.3/js/ion.rangeSlider.min.js', dataType: 'script', cache: true }).done(function (data) {
+
+        var pubMaxDate = jQuery("#range-published-date").data("maxdate");
+        var pubMinDate = jQuery("#range-published-date").data("mindate");
+        var pubDateLimiter = jQuery("#published-date").val();
+        var pubFromDate = '';
+        var pubToDate = '';
+
+
+        if (pubDateLimiter != '') {
+            var dateValue = pubDateLimiter;
+            dateValue = dateValue.split('/');
+            pubFromDate = dateValue[0].substring(0, 4);
+            pubToDate = dateValue[1].substring(0, 4);
+            pubMinDate = pubMinDate.split('-')[0];
+            pubMaxDate = pubMaxDate.split('-')[0];
+            //pubMinDate = jQuery.edsDB.get('pubMinDate');
+            //pubMaxDate = jQuery.edsDB.get('pubMaxDate');
+        } else {
+            pubFromDate = pubMinDate = pubMinDate.split('-')[0];
+            pubMaxDate = pubMaxDate.split('-')[0];
+
+            var maxRealDate = parseInt(EDSGetDateForLastUpdate().substring(0, 4)) + 1;
+            pubMaxDate = (parseInt(pubMaxDate) > maxRealDate) ? maxRealDate : pubMaxDate;
+            pubToDate = pubMaxDate;
+            //jQuery.edsDB.set('pubMinDate', pubMinDate.toString(), { TTL: edsSessionTimeout });
+            //jQuery.edsDB.set('pubMaxDate', pubMaxDate.toString(), { TTL: edsSessionTimeout });
+        }
+
+
+
+
+        jQuery("#range-published-date").ionRangeSlider({
+            type: "double",
+            min: pubMinDate,
+            max: pubMaxDate,
+            from: pubFromDate,
+            to: pubToDate,
+            drag_interval: true
+        });
+
+        rangeSlider = jQuery("#range-published-date").data("ionRangeSlider");
+
+        jQuery("#range-published-date").on('change', function () {
+            //console.log(jQuery(this).val());
+            var currentValue = jQuery(this).val();
+            currentValue = currentValue.split(';');
+            jQuery("#published-date").val(currentValue[0] + '-01' + '/' + currentValue[1] + '-12');
+        });
+
+       /* jQuery('#pub-date-zoom').click(function () {
+            if (jQuery(this).text().trim() == 'Zoom In') {
+                rangeSlider.update({
+                    max: jQuery('#pub-date-to').val(),
+                    min: jQuery('#pub-date-from').val()
+                });
+                jQuery(this).text('Zoom Out');
+            } else if (jQuery(this).text().trim() == 'Zoom Out') {
+                rangeSlider.update({
+                    max: jQuery('#pub-date-to').data('maxdate'),
+                    min: jQuery('#pub-date-from').data('mindate')
+                });
+                jQuery(this).text('Zoom In ');
+            }
+        });*/
+
+    });
+
+    jQuery('#eds-clear-date').click(function () {
+        var e = jQuery.Event("keypress"); e.which = 13; e.keyCode = 13;
+        jQuery('#published-date').val('');
+        jQuery('#published-date').trigger(e);
+    });
+
+    jQuery('#eds-apply-date').click(function () {
+        var e = jQuery.Event("keypress"); e.which = 13; e.keyCode = 13;
+        jQuery('#published-date').trigger(e);
+    });
+
+}
+
+function EDSGetDateForLastUpdate() {
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1;
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+
+    return (year.toString() + month.toString() + day.toString());
+}
+
+function DateHandleKeyPress(e, searchBox) {
+    var key = e.keyCode || e.which;
+    if (key == 13) {
+        // dateAction is in the template
+        if (searchBox.value == "") {
+            dateAction = dateAction.replace('action=addlimiter(DT1:value)', 'action=removelimiter(DT1)');
+            window.location.href = dateAction;
+        } else {
+            var regex = /^\d{4}-(0[1-9]|1[012])\/\d{4}-(0[1-9]|1[012])$/;
+            // '/\d{4}-\d[1-12]\/\d{4}-\d[1-12]/; - old'
+            if (regex.test(searchBox.value)) {
+                dateAction = dateAction.replace('DT1:value', 'DT1:' + searchBox.value);
+                window.location.href = dateAction;
+            } else { alert('Invalid date. Please enter a date value in YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remove all characters and hit enter to remove the date limiter.'); }
+
+        }
+    }
 }

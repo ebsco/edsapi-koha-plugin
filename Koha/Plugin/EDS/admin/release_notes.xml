@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.2202</latestversion>
+	<latestversion>3.2203</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>23/May/2016</lastupdated>
+	<lastupdated>25/May/2016</lastupdated>
 	<releasenotes>
+		<release version="3.2203" date="25/May/2016">
+			<note id="1" author="amiranda@ebsco.com">Result: Applied span2/span3 switch for refine results when window width is less/greater than 1200</note>
+			<note id="2" author="amiranda@ebsco.com">Result: Added Auto Suggest feature.</note>
+			<note id="3" author="amiranda@ebsco.com">Result: Added Date Slider.</note>
+			<note id="4" author="amiranda@ebsco.com">Result: Added buttons to apply and clear date limiter.</note>
+			<note id="5" author="amiranda@ebsco.com">Result: Removed RSS settings which were for koha instead of EDS.</note>
+			<note id="6" author="amiranda@ebsco.com">Result: Better placement of exact match placard.</note>
+			<note id="7" author="amiranda@ebsco.com">Result: Moved Research starter CSS to stylesheet.</note>
+			<note id="8" author="amiranda@ebsco.com">Result: Break long URLs to ensure layout responsiveness.</note>
+			<note id="9" author="amiranda@ebsco.com">Result: Refine section clean up and cosmetics.</note>
+			<note id="10" author="amiranda@ebsco.com">Result: Alert user to deselect titles from discovery to add to list.</note>
+			<note id="11" author="amiranda@ebsco.com">Details: Removed Marc view.</note>
+		</release>
 		<release version="3.2202" date="23/May/2016">
 			<note id="1" author="amiranda@ebsco.com">Cart: Fixed addition of catalogue items for hold and list from EDS</note>
 			<note id="2" author="amiranda@ebsco.com">Results: Removed breadcrumb from to page</note>
@@ -22,7 +35,7 @@
 			<note id="9" author="amiranda@ebsco.com">Cart: Call enableCheckboxActions(); on .cb click for Discovery items too</note>
 			<note id="10" author="amiranda@ebsco.com">Cart: Removed function EDSSendBasket() - legacy to control EDS items in cart when add to cart was an optional patch</note>
 			<note id="11" author="amiranda@ebsco.com">Cart: Removed bibListLocal - used for legacy cart patch </note>
-			<note id="12" author="amiranda@ebsco.com">Cart: Removed bibListLocal - used for legacy cart patch </note>
+			<note id="12" author="amiranda@ebsco.com">Cart: Removed edsListLocal - used for legacy cart patch </note>
 			<note id="13" author="amiranda@ebsco.com">Js: Removed $(document).ready(); made redundant by trackCall </note>
 			<note id="14" author="amiranda@ebsco.com">Js: Preload EDS Select Text and Default Search from the script tag to remove delays loading EDS options to the dropdown. </note>
 			<note id="15" author="amiranda@ebsco.com">Js: Fix position of search switch message to appear just below the dropdown. </note>

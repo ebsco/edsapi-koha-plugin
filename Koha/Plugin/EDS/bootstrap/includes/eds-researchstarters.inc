@@ -75,30 +75,7 @@ researchStartersInc+='  </div>\
 &lsaquo;</a>\
   <a class="right carousel-control" role="button" href="javascript:void(0)" onClick="$(\'.carousel\').carousel(\'next\')" data-slide="next">\
 &rsaquo;</a>\
-</div>\
-<style>\
-.carousel-control.left, .carousel-control.right{ \
-	background-image: none !important; \
-	filter: progid:none !important; \
-	color:#444!important;\
-}\
-.slidecontainer{\
-	border: 1px solid #ccc;\
-	padding:15px;\
-	margin-left:0px;\
-}\
-.carousel-indicators li{\
-	border: 1px solid #999 !important;\
-}\
-.carousel-indicators .active{\
-	background-color: #ccc !important;\
-}\
-.carousel-indicators{\
-	bottom:inherit!important;\
-	margin-top:5px;\
-}\
-</style>\
-';
+</div>';
 
 </script>
 

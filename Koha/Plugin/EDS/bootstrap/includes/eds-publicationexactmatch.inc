@@ -37,16 +37,9 @@ publicationExactMatchInc+='<form onsubmit="window.parent.SearchPublication(jQuer
 	</form>';
 
 
-publicationExactMatchInc+='<small>'+pubData+'</small>';
+publicationExactMatchInc+='<p><small>'+pubData+'</small></p>';
 
-publicationExactMatchInc+='</div>\
-<style>\
-		.empcontainer{\
-			width:98%;\
-			border: 1px solid #ccc;\
-			padding:15px;\
-		}\
-	</style>';
+publicationExactMatchInc+='</div>';
 
 function SearchPublication(searchinTerm){
 	window.location.href='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,:{'+searchinTerm+'}|action=addfacetfilter('+encodeURIComponent('[% publicationexactmatch.0.PublicationRecords.0.Header.ResourceType %]:'+'[% publicationexactmatch.0.PublicationRecords.0.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull %]'.toLowerCase())+')&default=1';

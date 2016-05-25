@@ -46,6 +46,7 @@ use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use POSIX qw/ceil/;
 use C4::Members qw(GetMember); 
+use URI::Escape;
 
 #legacy from template... may not be required.
 use C4::Languages qw(getAllLanguages);
@@ -231,8 +232,11 @@ if($cgi->param("q")){
 		cataloguedbid	=> $EDSConfig->{cataloguedbid},
 		catalogueanprefix=> $EDSConfig->{catalogueanprefix},
 		plugin_dir		=>$PluginDir,
+		edsRaw			=>uri_escape(encode_json($EDSResponse)),
 		theme			=>C4::Context->preference('opacthemes'), #314
 		instancepath	=>$EDSConfig->{instancepath},
+		edsautosuggest	=> EDSProcessAutoSuggestedTerms(),
+		daterange		=> $EDSResponse->{SearchResult}->{AvailableCriteria}->{DateRange},
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
 		expanders		=>$EDSInfo->{AvailableSearchCriteria}->{AvailableExpanders},
 	);
@@ -400,7 +404,15 @@ sub GetCatalogueAvailability
 	return $CatalogueResults[0]->{"XSLTResultsRecord"};
 }
 
-
+sub EDSProcessAutoSuggestedTerms
+{
+	try{
+		my @EDSAutoSuggestedTerms = @{$EDSResponse->{SearchResult}->{AutoSuggestedTerms}};
+		foreach my $EDSAutoSuggestedTerm (@EDSAutoSuggestedTerms){
+			return $EDSAutoSuggestedTerm;
+		}
+	} catch { return ''; };
+}
 
 
 sub EDSProcessFacets

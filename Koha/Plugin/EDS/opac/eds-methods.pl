@@ -327,7 +327,13 @@ sub EDSDefaultQueryBuilder
 	$defaultEDSQuery = "";
 	my $EDSInfoData = decode_json($edsinfo);
 
-	
+	my @AutoSuggests = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}};
+	foreach my $AutoSuggest (@AutoSuggests){
+		#if($AutoSuggest->{DefaultOn} eq 'y'){
+			$defaultEDSQuery = $defaultEDSQuery.'|autosuggest='.$AutoSuggest->{DefaultOn};
+		#}
+	}	
+
 	my @ExpanderDefaults = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableExpanders}};
 	foreach my $ExpanderDefault (@ExpanderDefaults){
 		if($ExpanderDefault->{DefaultOn} eq 'y'){
