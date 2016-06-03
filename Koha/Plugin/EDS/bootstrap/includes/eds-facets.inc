@@ -79,8 +79,8 @@
 		[% END %]
 		
       [% FOR facets IN facets_loop %]
-        <li>
-          [% facets.Label %]
+        <li class="eds-facets">
+          <span class="eds-facet-label">[% facets.Label %]</span>
           <div style="max-height:200px;overflow:auto;margin:3px;">
 			  <ul>
 				[% FOR FacetValues IN facets.AvailableFacetValues %]

@@ -302,7 +302,7 @@ sub GetSearchParam
 }
 
 sub EDSProcessResults
-{	#process Search Results
+{ try{	#process Search Results
 	@EDSResults = @{$EDSResponse->{SearchResult}->{Data}->{Records}}; 
 	foreach my $Result (@EDSResults){
 		foreach my $Items ($Result->{Items}){
@@ -327,7 +327,7 @@ sub EDSProcessResults
 
 		}
 	}	
-}
+}catch{};}
 
 
 
@@ -416,7 +416,7 @@ sub EDSProcessAutoSuggestedTerms
 
 
 sub EDSProcessFacets
-{	#process Facets
+{try{	#process Facets
 	@EDSFacets = @{$EDSResponse->{SearchResult}->{AvailableFacets}};
 	foreach my $facet (@EDSFacets){
 		foreach my $facetValues ($facet->{AvailableFacetValues}){
@@ -428,7 +428,7 @@ sub EDSProcessFacets
 			}
 		}
 	}
-}
+}catch{};}
 
 sub EDSProcessFilters
 {

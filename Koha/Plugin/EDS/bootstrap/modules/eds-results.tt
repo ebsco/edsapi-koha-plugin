@@ -101,6 +101,14 @@
                         Did you mean: <a href="javascript:{}" id="eds-autosuggest">[% edsautosuggest %]</a>
 
                     [% END # / IF koha_spsuggest%]
+                    
+                    [% UNLESS ( total ) #Display refine even if there are not results. %]
+                            <div class="row">
+	                            <p>&nbsp;</p>
+                                <div class="span11">[% INCLUDE "$plugin_dir/includes/eds-facets.inc" %]</div>
+	                            <p>&nbsp;</p>
+                            </div>
+                    [% END %]
 
                     [% IF ( query_error ) %]
                         <div class="dialog alert">

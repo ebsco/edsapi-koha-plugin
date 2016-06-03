@@ -22,7 +22,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
-var versionEDSKoha = '3.2204';
+var versionEDSKoha = '3.2205';
 
 
 var trackCall = setInterval(function(){ // ensure jQuery works before running.
@@ -161,7 +161,7 @@ function GoDiscovery(firstTime) {
 		}
 		
 		// check no results
-		SetNoResults();
+		//SetNoResults();
 		
 }
 
@@ -548,14 +548,13 @@ function CheckEDSRecordsforAddToList() {
     });
 
     if (containsEDS == true) {
-        jQuery(newin).on('load', function () {
+        //jQuery(newin).on('load', function () {
             //alert(newin.location.pathname);
-            var newWinPath = newin.location.pathname;
-            if (newWinPath.indexOf('addbybiblionumber') > -1) {
+            if (newin.location.pathname!==undefined) {
                 alert('Deselect titles from Discovery to Add to list.');
                 newin.close();
             }
-        })
+        //});
     }
 }
 

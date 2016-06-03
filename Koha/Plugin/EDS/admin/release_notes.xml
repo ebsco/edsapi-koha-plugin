@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.2204</latestversion>
+	<latestversion>3.2205</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>25/May/2016</lastupdated>
+	<lastupdated>03/Jun/2016</lastupdated>
 	<releasenotes>
+		<release version="3.2205" date="03/Jun/2016">
+			<note id="1" author="amiranda@ebsco.com">Results: Ignore catalogue items only so deselect message does not appear.</note>
+			<note id="2" author="amiranda@ebsco.com">Admin: Upgrade ACE editor to 1.2.3.</note>
+			<note id="3" author="amiranda@ebsco.com">Admin: ACE Editor; encode HTML to preserve HTML in script.</note>
+			<note id="4" author="amiranda@ebsco.com">Results: Remove publication date format from label; can be set in eAdmin.</note>
+			<note id="5" author="amiranda@ebsco.com">Results: Added eds-facet-label as hook for facets.</note>
+			<note id="6" author="amiranda@ebsco.com">Results: Display page number only if there are results.</note>
+			<note id="7" author="amiranda@ebsco.com">Results: Display refine section when there are no results.</note>
+			<note id="8" author="amiranda@ebsco.com">Js: Remove SetNoResults() as refine appears if no results.</note>
+			<note id="9" author="amiranda@ebsco.com">Results: Remove SetNoResults() as refine appears if no results.</note>
+			<note id="10" author="amiranda@ebsco.com">Results: Execute deselect add to list alert immediatly instead of waiting for page load to complete.</note>
+		</release>
 		<release version="3.2204" date="25/May/2016">
 			<note id="1" author="amiranda@ebsco.com">Results: Check only selected items when checking add to list</note>
 		</release>
