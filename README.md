@@ -1,3 +1,5 @@
+Note: Please use eds_plugin_16.1101.kpz to install on Koha v 16.11+ This is a patch release of the plugin for compatability. A new 16.11 branch will be created soon.
+
 edsapi-koha-plugin
 ==================
 
