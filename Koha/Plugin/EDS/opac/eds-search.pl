@@ -47,15 +47,16 @@ use Try::Tiny;
 use POSIX qw/ceil/;
 use C4::Members qw(GetMember); 
 use URI::Escape;
+use Koha::Libraries;
 
 #legacy from template... may not be required.
 use C4::Languages qw(getAllLanguages);
 use C4::Search;
 use C4::Biblio;  # GetBiblioData
 use C4::Tags qw(get_tags);
-use C4::Branch; # GetBranches
+#use C4::Branch; # GetBranches
 use C4::SocialData;
-use C4::Ratings;
+#use C4::Ratings;
 #use POSIX qw(ceil floor strftime);
 use URI::Escape;
 use Business::ISBN;
@@ -388,7 +389,7 @@ sub GetCatalogueAvailability
 	my $query = 'biblionumber='.$DBId;
 	my @sort_by='relevance_asc';
 	my @servers='biblioserver';
-	my $branches = GetBranches();
+	my $branches = GetBranches();#  { map { $->branchcode => $->unblessed } Koha::Libraries->search };
 	my $itemtypes = GetItemTypes;
 	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
