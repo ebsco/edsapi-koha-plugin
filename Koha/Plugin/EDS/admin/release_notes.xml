@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>3.2205</latestversion>
+	<latestversion>16.1102</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>03/Jun/2016</lastupdated>
+	<lastupdated>14/Jun/2017</lastupdated>
 	<releasenotes>
+		<release version="16.1102" date="13/Jun/2017">
+			<note id="1" author="amiranda@ebsco.com">No more patching</note>
+			<note id="2" author="amiranda@ebsco.com">Multi-language Support</note>
+			<note id="3" author="amiranda@ebsco.com">Removed Live Update</note>
+			<note id="4" author="amiranda@ebsco.com">Embeded Apps Manager</note>
+			<note id="5" author="amiranda@ebsco.com">Fixes to support Kohav.16.11</note>
+			<note id="6" author="amiranda@ebsco.com">Removed text settings from configure and improved layout.</note>
+			<note id="7" author="amiranda@ebsco.com">Fixed Update Info button - OpacBaseURL.</note>
+		</release>
 		<release version="3.2205" date="03/Jun/2016">
 			<note id="1" author="amiranda@ebsco.com">Results: Ignore catalogue items only so deselect message does not appear.</note>
 			<note id="2" author="amiranda@ebsco.com">Admin: Upgrade ACE editor to 1.2.3.</note>

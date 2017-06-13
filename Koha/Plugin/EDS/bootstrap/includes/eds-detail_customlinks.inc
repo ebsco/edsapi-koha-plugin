@@ -4,7 +4,7 @@
 	[% IF DETAILED_RECORD.FullText.Text.Availability==1 %]			  
 		<li>
 			<a target="_blank" class="html-customlink customLink" href="[% DETAILED_RECORD.PLink %]">
-			HTML Full Text
+			[% EDSLANG.eds_detail_customlinks_INC_html_fulltext %]
 		</a></li>
 	[% END %]
 	
@@ -17,9 +17,9 @@
 			<a class="[% DETAILED_RECORD.FullText.Links.0.Type %] customLink" href="javascript:LoginRequired();">
 		[% END %]
 		[% IF DETAILED_RECORD.FullText.Links.0.Type=='pdflink' %]
-			PDF Full Text
+			[% EDSLANG.eds_detail_customlinks_INC_pdf_fulltext %]
 		[% ELSIF DETAILED_RECORD.FullText.Links.0.Type=='ebook-pdf' %]	
-			eBook Full Text
+			[% EDSLANG.eds_detail_customlinks_INC_ebook_fulltext %]
 		[% ELSE %]	
 			[% DETAILED_RECORD.FullText.Links.0.Type %]
 		[% END %]
@@ -37,7 +37,7 @@
 	[% END %]
 [% END %]
 [% IF DETAILED_RECORD.PLink %]		  
-	<li><a target="_blank" class="edslink customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">View in EDS</a></li>
+	<li><a target="_blank" class="edslink customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">[% EDSLANG.eds_detail_customlinks_INC_view_in_eds %]</a></li>
 [% END %]
 
 </ul>

@@ -1,73 +1,34 @@
 [% IF researchstarters.size %]
 <script>
 var researchStartersInc='';
-//  <!-- Indicators -->\
-//  <ol class="carousel-indicators">\
-//    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>\
-//    <li data-target="#carousel-example-generic" data-slide-to="1"></li>\
-//    <li data-target="#carousel-example-generic" data-slide-to="2"></li>\
-//  </ol>\
 
 researchStartersInc +='<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">\
 <ol class="carousel-indicators">\
 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>\
 ';
-//	[% rsitemscount=1 %]
-//	[% WHILE rsitemscount <  researchstarters.0.Records.size %]
+
 		researchStartersInc +='<li data-target="#carousel-example-generic" data-slide-to="[% rsitemscount %]"></li>';
-//		[% rsitemscount = rsitemscount+1 %]
-//	[% END %]
+
 
 researchStartersInc+='  </ol>\
 <!-- Wrapper for slides -->\
-<div class="carousel-inner" role="listbox">\
-  ';
-//		  [% rsitemdata = '' %]
-//		  [% rsitemtitle = '' %]
-// [% FOR researchStarter IN researchstarters.0.Records %]  
+<div class="carousel-inner" role="listbox">';
 
-//	[% rsactive = '' %]
-//	[% rsheading = 'Related' %]
-//	[% IF researchStarter.ResultId==1 %]
-//	[% rsactive = 'active' %]
-//	[% rsheading = 'Research Starter' %]
-//	[% END %]
-
-//	[% rsImage = researchStarter.ImageInfo.0.Target %]
 
 	researchStartersInc+='<div class="item [% rsactive %]">';
-//	[% FOR rsItem IN researchStarter.Items %]
 
-	//  [% IF rsItem.Group == 'Ab' %]
-	//		  [% rsitemdata = rsItem.Data %]
-	//  [% END %]
-	
-	//   	[% IF rsItem.Label == 'Title' %]
-	//		  [% rsitemtitle = rsItem.Data %]
-	//   [% END %]
-	
-	//   	[% IF rsItem.Group == 'Src' %]
-	//		  [% rsitemsrc = rsItem.Data %]
-	//   [% END %]
-//	 [% END %]
-//  [% IF rsitemtitle == '' %]
-	//	  [% rsitemtitle = 'Login to gain access to this result.' %]
-//	 [% END %]
 	researchStartersInc+=' <div class="slidecontainer row">\
 		<div class="span1">\</div>\
 		<div  class="span10">\
 			<img style="height:130px;float:left;margin-right:10px;" src="[% rsImage %]">\
 			<h4><a href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% researchStarter.Header.An %]|dbid=[%researchStarter.Header.DbId%]&resultid=1&fulltext=html" target="_blank">[% rsheading %]: [% rsitemtitle %]</a></h4>\
-			<small> [% rsitemdata %]</small> <a href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% researchStarter.Header.An %]|dbid=[%researchStarter.Header.DbId%]&resultid=1&fulltext=html" target="_blank">More.</a>\
+			<small> [% rsitemdata %]</small> <a href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% researchStarter.Header.An %]|dbid=[%researchStarter.Header.DbId%]&resultid=1&fulltext=html" target="_blank">[% EDSLANG.eds_researchstarters_INC_more %]</a>\
 			<sub>[% rsitemsrc %]</sub>\
 		</div>\
 		<div class="span1">\</div>\
 	</div>';
-	//researchStartersInc+=' <div class="carousel-caption"> </div>';
    	researchStartersInc+='</div>';
-// [% END %]
-
-  
+ 
 
 researchStartersInc+='  </div>\
 	<!-- Controls -->\

@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Customisation Manager</title>
+<title>Apps Manager</title>
 <style type="text/css" media="screen">
     #editor { 
         position: absolute;
@@ -49,7 +49,7 @@ function htmlDecode(value){
     }
     
 </script>
-<div style="float:left;"><strong>Customisation Manager</strong></div>
+<div style="float:left;"><strong>Apps Manager</strong></div>
 <div style="float:right;">
     <form method="post" action="/cgi-bin/koha/plugins/run.pl" id="customjsform">
         <input name="class" id="class" type="hidden" value="Koha::Plugin::EDS">

@@ -3,7 +3,6 @@ package Koha::Plugin::EDS;
 use Modern::Perl; 
 use base qw(Koha::Plugins::Base);
 use C4::Context;
-use C4::Branch;
 use C4::Members;
 use C4::Auth;
 use Cwd            qw( abs_path );
@@ -22,17 +21,17 @@ my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ## Here we set our plugin version
-our $VERSION = 3.2205;
+our $VERSION = 16.1102;
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
-    name   => 'Koha EDS API Integration',
+    name   => 'Koha EDS API',
     author => 'Alvet Miranda - amiranda@ebsco.com',
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2016-06-03',
-    minimum_version => '3.22',
+    date_updated    => '2017-06-13',
+    minimum_version => '16.11',
     maximum_version => '',
     version         => $VERSION,
 };
@@ -69,6 +68,9 @@ sub tool {
 sub configure {
     my ( $self, $args ) = @_;
     my $cgi = $self->{'cgi'};
+	
+	#Get OpacUserJS Data
+		my $OpacUserJS = C4::Context->preference("OpacUserJS");
 
     unless ( $cgi->param('save') ) {
         my $template = $self->get_template({ file => 'admin/configure.tt' });
@@ -89,13 +91,7 @@ sub configure {
 			lastedsinfoupdate	=> $self->retrieve_data('lastedsinfoupdate'),
 			authtoken			=> $self->retrieve_data('authtoken'),
 			OPACBaseURL			=> C4::Context->preference('OPACBaseURL'),		
-			edsswitchtext	=> $self->retrieve_data('edsswitchtext'),
-			kohaswitchtext	=> $self->retrieve_data('kohaswitchtext'),
-			edsselecttext	=> $self->retrieve_data('edsselecttext'),
-			edsselectinfo	=> $self->retrieve_data('edsselectinfo'),
-			kohaselectinfo	=> $self->retrieve_data('kohaselectinfo'),
 			defaultparams	=> $self->retrieve_data('defaultparams'),
-			instancepath	=> $self->retrieve_data('instancepath'),
 			
 			
         );
@@ -118,13 +114,7 @@ sub configure {
 					iprange				=> ($cgi->param('iprange')?$cgi->param('iprange'):"-"),
 					cookieexpiry 		=> ($cgi->param('cookieexpiry')?$cgi->param('cookieexpiry'):"-"),
 					last_configured_by => C4::Context->userenv->{'number'},
-					edsswitchtext	=> ($cgi->param('edsswitchtext')?$cgi->param('edsswitchtext'):"-"),
-					kohaswitchtext	=> ($cgi->param('kohaswitchtext')?$cgi->param('kohaswitchtext'):"-"),
-					edsselecttext	=> ($cgi->param('edsselecttext')?$cgi->param('edsselecttext'):"-"),
-					edsselectinfo	=> ($cgi->param('edsselectinfo')?$cgi->param('edsselectinfo'):"-"),
-					kohaselectinfo	=> ($cgi->param('kohaselectinfo')?$cgi->param('kohaselectinfo'):"-"),
 					defaultparams	=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
-					instancepath	=> ($cgi->param('instancepath')?$cgi->param('instancepath'):"-"),
 				}
 			);
 		
@@ -140,6 +130,25 @@ sub configure {
 				);	
 
 			}
+			
+			my $edsJS = '';
+			
+			$OpacUserJS=~s/\/\*eds{\*\/.*\/\*\}eds\*\///g;
+			
+			if($cgi->param('defaultsearch') eq 'eds'){ 
+				$edsJS = '/*eds{*/var defaultSearch="eds";$(document).ready(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/EDSScript.js", dataType: "script", cache: true }); });/*}eds*/';
+				$OpacUserJS = $OpacUserJS.$edsJS;
+
+			}
+			if($cgi->param('defaultsearch') eq 'koha'){ 
+				$edsJS = '/*eds{*/var defaultSearch="koha";$(document).ready(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/EDSScript.js", dataType: "script", cache: true }); });/*}eds*/';
+				$OpacUserJS = $OpacUserJS.$edsJS;
+
+			}
+			
+			my $enableEDSQuery = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='".$OpacUserJS."' WHERE `variable`='OpacUserJS'");
+			
+			
         $self->go_home();
     }
 }
@@ -160,10 +169,10 @@ sub install() {
 
 	
 	
-	my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '1', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
+	#my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '1', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
 	
 	
-	my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='1' WHERE `variable`='EDSEnabled'");
+	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='1' WHERE `variable`='EDSEnabled'");
 	
 	my $pluginSQL = C4::Context->dbh->do("INSERT INTO `plugin_data` (`plugin_class`, `plugin_key`, `plugin_value`) VALUES ('Koha::Plugin::EDS', 'installedversion', '".$VERSION."')");
 	#use Data::Dumper; die Dumper $pluginSQL;		
@@ -178,15 +187,15 @@ sub uninstall() {
 #    my $table = $self->get_qualified_table_name('config');
 
 #    return C4::Context->dbh->do("DROP TABLE $table");
-	my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '0', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
+	#my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '0', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
 	
-	my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='0' WHERE `variable`='EDSEnabled'");
+	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='0' WHERE `variable`='EDSEnabled'");
 }
 
 sub PageURL{
 	# http://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
 	my $page_url = 'http';
-	if ($ENV{HTTPS} = "on") {
+	if ($ENV{HTTPS} == "on") {
 		#$page_url .= "s";
 	}
 	$page_url .= "://";
@@ -264,7 +273,7 @@ sub SetupTool {
 	## Pull SHA data for version info.
 	my $shaData = '';
 	try{
-		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/322.json');
+		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/1611.json');
 		$shaData= $mech->content();
 		$shaData=decode_json($shaData);
 	}catch{

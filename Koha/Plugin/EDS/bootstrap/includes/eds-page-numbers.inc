@@ -4,7 +4,7 @@
         <div class="pagination pagination-small">
             <ul>
             [% IF ( PAGE_NUMBERS.PagePrevious ) %]
-                <li><a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PagePrevious%]">&lt;&lt; Previous</a></li>
+                <li><a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PagePrevious%]">&lt;&lt; [% EDSLANG.eds_page_numbers_INC_previous %]</a></li>
             [% END %]
             [% WHILE PAGE_NUMBERS.PageCounter <=  PAGE_NUMBERS.MaxPageNo %]
                 [% IF ( PAGE_NUMBERS.PageCounter == PAGE_NUMBERS.PageNumber ) %]
@@ -15,7 +15,7 @@
                 [% PAGE_NUMBERS.PageCounter = PAGE_NUMBERS.PageCounter+1  %]
             [% END %]
             [% IF ( PAGE_NUMBERS.PageNext ) %]
-                <li> <a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PageNext%]">Next &gt;&gt;</a></li>
+                <li> <a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PageNext%]">[% EDSLANG.eds_page_numbers_INC_next %] &gt;&gt;</a></li>
             [% END %]
             </ul>
         </div>

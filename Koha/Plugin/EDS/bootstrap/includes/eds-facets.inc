@@ -1,12 +1,12 @@
 <div id="search-facets">
-    <h4><a href="#" class="menu-collapse-toggle">Refine your search</a></h4>
+    <h4><a href="#" class="menu-collapse-toggle">[% EDSLANG.eds_facets_INC_refine_search %]</a></h4>
     <ul class="menu-collapse">
         <li id="availability_facet">
-			Current Search
+			[% EDSLANG.eds_facets_INC_current_search %]
 			
 			[% IF query %]
 				<ul>
-				<li>Search Term(s)</li>
+				<li>[% EDSLANG.eds_facets_INC_search_term %]</li>
 				[% FOR searchQuery IN query %]
 				  <li>
 					<a href="[% searchQuery.RemoveAction %]"><input type="checkbox" checked onchange="window.location.href=($(this).parent().attr('href'));$(this).attr('disabled','disabled');" > [% searchQuery.Query.BooleanOperator %][% IF searchQuery.Query.FieldCode %], [% searchQuery.Query.FieldCode %][% END %] : <span id="searchTerm">[% searchQuery.Query.Term %]</span></a>
@@ -18,7 +18,7 @@
 			
 			[% IF filters %]
 				<ul>
-				<li><strong>Active Facets</strong></li>
+				<li><strong>[% EDSLANG.eds_facets_INC_active_facets %]</strong></li>
 				[% FOR facetFilter IN filters %]
 				[% FOR facetFilterItem IN facetFilter.FacetValuesWithAction %]
 				  <li>
@@ -35,7 +35,7 @@
 		<li>
 
 			<ul>
-				<li><strong>Limit To:</strong></li>
+				<li><strong>[% EDSLANG.eds_facets_INC_limit_to %]</strong></li>
 				[% FOR EDSLimit IN limiters %]
 					[% IF EDSLimit.Type =='select' %]
 						  <li>
@@ -66,7 +66,7 @@
 			[% END %][% END %]
 			[% IF expanders %]
 				<ul>
-					<li><strong>Expand To:</strong></li>
+					<li><strong>[% EDSLANG.eds_facets_INC_expand_to %]</strong></li>
 					[% FOR expander IN expanders %]
 					  <li>
 						<a href="[% expander.AddAction %]">[% expander.Label %] </a>

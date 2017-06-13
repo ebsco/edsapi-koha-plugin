@@ -28,10 +28,10 @@ publicationExactMatchInc+='<h3><a target="_blank" href="[% publicationexactmatch
 publicationExactMatchInc+='<form onsubmit="window.parent.SearchPublication(jQuery(\'#search-within-publication\').val());return false;" class="form-search">\
 		<div class="input-prepend input-append">\
 			<div class="btn-group">\
-				<button class="btn dropdown-toggle" data-toggle="dropdown">Full Text Access <span class="caret"></span></button>\
+				<button class="btn dropdown-toggle" data-toggle="dropdown">[% EDSLANG.eds_publicationexactmatch_INC_full_text_access %] <span class="caret"></span></button>\
 				'+ftLinks+'\
 			  </div>\
-		  <input type="text" class="input-xlarge" id="search-within-publication" placeholder="Search within Publication">\
+		  <input type="text" class="input-xlarge" id="search-within-publication" placeholder="[% EDSLANG.eds_publicationexactmatch_INC_search_within %]">\
 		  <span class="add-on" style="cursor:pointer" onclick="window.parent.SearchPublication(jQuery(\'#search-within-publication\').val());"><i class="icon-search"></i></span>\
 		</div>\
 	</form>';

@@ -48,7 +48,6 @@ use File::Basename qw( dirname );
 use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
-use C4::Branch;
 use C4::Members;
 use LWP::Simple qw(get);
 use Try::Tiny;
