@@ -11,6 +11,6 @@ function PFIAtoZBar() {
     jQuery('#pfi-selections-toolbar').html(barHolder);
     jQuery('.pfialpha').click(function () {
         var currentAlpha = this;
-        window.location.href = "pfi-search.pl?q=Search?query-1=JN+" + jQuery(currentAlpha).text()+"*";
+        window.location.href = "pfi-search.pl?q=Search?query-1=AND,JN:{" + jQuery(currentAlpha).text()+"*}";
     });
 }
