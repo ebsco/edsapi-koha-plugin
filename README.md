@@ -31,6 +31,16 @@ Contact support@ebsco.com for field values.
 
 Click Load settings from EBSCOAdmin. Wait for the page to refresh. You might have to click Update Info twice if it initiating connection takes time the first time.
 
+Video Presentations
+========================
+
+KohaCon17 | Video | Presentation
+
+KohaCon16 | Video | Presentation
+
+KohaCon14 | Video | Presentation
+
+
 Quick Links
 ========================
 
