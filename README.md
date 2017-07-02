@@ -56,3 +56,5 @@ Wiki: https://github.com/ebsco/edsapi-koha-plugin/wiki/001.-Home
 https://github.com/ebsco/edsapi-koha-plugin/wiki/Patches
 
 https://github.com/ebsco/edsapi-koha-plugin/wiki/Creating-KPZ-files
+
+OpenAthens plugin: https://github.com/ebsco/openathens-koha-plugin
