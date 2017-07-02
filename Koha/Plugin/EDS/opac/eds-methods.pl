@@ -31,7 +31,7 @@ use Encode;
 use Try::Tiny;
 use Net::IP;
 
-
+our $apiType = 'rest';
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
@@ -128,6 +128,8 @@ sub CreateAuth
 	
 	
 	my $response =  CallREST('POST',$uri,$json, '', '');
+	#use Data::Dumper; die Dumper 'gtracker='.$GuestTracker.' cookie='.$input->cookie('guest');
+
 	$authtoken = decode_json( $response );
 	$authtoken = $authtoken->{AuthToken};
 	$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $authtoken, $PluginClass, 'authtoken'); 
@@ -218,8 +220,8 @@ sub EDSSearch
 	my ($EDSQuery, $GuestStatus) = @_;
 	if($input->param("default") eq 1){
 		$EDSQuery=$EDSQuery.EDSDefaultQueryBuilder();
-
 	}
+	
 
 	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
 		$GuestTracker = $GuestStatus;
@@ -238,7 +240,7 @@ sub EDSSearch
 		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
 	}
 	$EDSQuery =~s/ /\+/g;
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/rest/'.$EDSQuery; 
+	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery; 
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
 	my $response;
@@ -334,29 +336,36 @@ sub EDSDefaultQueryBuilder
 			$defaultEDSQuery = $defaultEDSQuery.'|expander='.$ExpanderDefault->{Id};
 		}
 	}
-	my @AvailableSearchModes = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableSearchModes}}; 	
-	foreach my $AvailableSearchMode (@AvailableSearchModes){
-		if($AvailableSearchMode->{DefaultOn} eq 'y'){
-			$defaultEDSQuery = $defaultEDSQuery.'|searchmode='.$AvailableSearchMode->{Mode};
-		}
-	}
-	my @AvailableLimiters = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableLimiters}}; 	
-	foreach my $AvailableLimiter (@AvailableLimiters){
-		if($AvailableLimiter->{DefaultOn} eq 'y'){
-			if($AvailableLimiter->{Type} eq 'select'){
-				$defaultEDSQuery = $defaultEDSQuery.'|limiter='.$AvailableLimiter->{Id}.':'.'y';
+	
+	if($apiType eq "rest"){
+		my @AvailableSearchModes = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableSearchModes}}; 	
+		foreach my $AvailableSearchMode (@AvailableSearchModes){
+			if($AvailableSearchMode->{DefaultOn} eq 'y'){
+				$defaultEDSQuery = $defaultEDSQuery.'|searchmode='.$AvailableSearchMode->{Mode};
 			}
 		}
 	}
-	if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
-		my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
-		foreach my $AvailableRelatedContent (@AvailableRelatedContents){
-			if($AvailableRelatedContent->{DefaultOn} eq 'y'){
-				if($AvailableRelatedContent->{Type} eq 'emp'){
-					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+	if($apiType eq "rest"){
+		my @AvailableLimiters = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableLimiters}}; 	
+		foreach my $AvailableLimiter (@AvailableLimiters){
+			if($AvailableLimiter->{DefaultOn} eq 'y'){
+				if($AvailableLimiter->{Type} eq 'select'){
+					$defaultEDSQuery = $defaultEDSQuery.'|limiter='.$AvailableLimiter->{Id}.':'.'y';
 				}
-				if($AvailableRelatedContent->{Type} eq 'rs'){
-					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+			}
+		}
+	}
+	if($apiType eq "rest"){
+		if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
+			my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
+			foreach my $AvailableRelatedContent (@AvailableRelatedContents){
+				if($AvailableRelatedContent->{DefaultOn} eq 'y'){
+					if($AvailableRelatedContent->{Type} eq 'emp'){
+						$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+					}
+					if($AvailableRelatedContent->{Type} eq 'rs'){
+						$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+					}
 				}
 			}
 		}
@@ -364,7 +373,7 @@ sub EDSDefaultQueryBuilder
 		
 	$defaultEDSQuery = $defaultEDSQuery.'|resultsperpage='.$EDSInfoData->{ViewResultSettings}->{ResultsPerPage};	
 	$defaultEDSQuery = $defaultEDSQuery.'|view='.$EDSInfoData->{ViewResultSettings}->{ResultListView};
-		
+
 	return $defaultEDSQuery;			
 		
 }

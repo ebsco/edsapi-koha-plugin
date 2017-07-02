@@ -72,7 +72,7 @@
   <tr>
     <th width="1%" align="left" valign="top" scope="col"> </th>
     <th align="left" valign="top" scope="col">
-    	Code is stored in pluginDir/js/custom.js. <a target="_blank" href="https://github.com/ebsco/edsapi-koha-plugin/wiki/Customisation-Manager">Click here</a> to learn more...<br>
+    	Code is stored in pluginDir/js/custom/custom.js. Set file Chmod to 755 <a target="_blank" href="https://github.com/ebsco/edsapi-koha-plugin/wiki/Customisation-Manager">Click here</a> to learn more...<br>
     	 
 	</th>
     <th width="1%" align="left" valign="top" nowrap scope="col"></th>

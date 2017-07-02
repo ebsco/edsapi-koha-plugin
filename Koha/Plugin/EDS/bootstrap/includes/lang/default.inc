@@ -99,6 +99,7 @@ var EDSLANG = {
 	eds_select_info										: '<h3>Search EDS</h3>Select a known item and enter a search term',
 	koha_select_info									: '<h3>Search Koha</h3>Select a known item and enter a search term',
 	search_breadcrumb									: 'Results of search',
+	pfi_atoz_bar										: 'Browse by Journal Title:',
 	login_to_access										: 'Login to gain access to this result.',
 	go_to_detail										: 'Go to detail',
 	more_details										: 'More Results',

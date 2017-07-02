@@ -103,6 +103,13 @@ my @EDSFacetFilters;
 my @EDSQueries;
 my @EDSLimiters;
 if($cgi->param("q")){
+
+	
+	
+	if($cgi->param("q") =~m/dbid\=edspub/){
+		our $apiType = 'publication';	
+	}
+	
 	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
 	EDSProcessResults();
 }

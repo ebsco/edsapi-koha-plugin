@@ -1,4 +1,3 @@
-<ul id="action">
 [%# FOREACH CUSTOMLINK IN DETAILED_RECORD.FullText %]
 
 	[% IF DETAILED_RECORD.FullText.Text.Availability==1 %]			  
@@ -36,8 +35,11 @@
 		<li><a target="_blank" class="customLink" title="[% CUSTOMLINK.MouseOverText %]" href="[% CUSTOMLINK.Url %]">[% CUSTOMLINK.Text %]</a></li>
 	[% END %]
 [% END %]
+[% FOREACH CUSTOMLINK IN DETAILED_RECORD.FullTextHoldings %]
+	[% IF CUSTOMLINK.Name %]		  
+		<li><a target="_blank" class="customLink" title="[% CUSTOMLINK.Name %]" href="[% CUSTOMLINK.URL %]">[% CUSTOMLINK.Name %]</a> <small>[% CUSTOMLINK.CoverageStatement %]</small></li>
+	[% END %]
+[% END %]
 [% IF DETAILED_RECORD.PLink %]		  
 	<li><a target="_blank" class="edslink customLink" title="View in EDS" href="[% DETAILED_RECORD.PLink %]">[% EDSLANG.eds_detail_customlinks_INC_view_in_eds %]</a></li>
 [% END %]
-
-</ul>

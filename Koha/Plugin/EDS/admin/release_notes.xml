@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <kohaplugin>
-	<latestversion>16.1102</latestversion>
+	<latestversion>16.1103</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>14/Jun/2017</lastupdated>
+	<lastupdated>02/Jul/2017</lastupdated>
 	<releasenotes>
+		<release version="16.1103" date="02/Jul/2017">
+			<note id="1" author="amiranda@ebsco.com">Publication Finder integration</note>
+			<note id="2" author="amiranda@ebsco.com">Fixed Research Starter not displaying correctly</note>
+			<note id="3" author="amiranda@ebsco.com">Moved path of custom.js file to custom directlry</note>
+			<note id="4" author="amiranda@ebsco.com">Fixed custom link display at the bottom in detailed records of EDS</note>
+		</release>
 		<release version="16.1102" date="13/Jun/2017">
 			<note id="1" author="amiranda@ebsco.com">No more patching</note>
 			<note id="2" author="amiranda@ebsco.com">Multi-language Support</note>

@@ -85,7 +85,7 @@ sub CheckWriteStatus{
 sub GetCustomJS{
 
 	my @customJSCode;
-	my $customjsFile = $PluginDir."/js/custom.js";
+	my $customjsFile = $PluginDir."/js/custom/custom.js";
 
 		if(-e $customjsFile){
 			open FILE, "<", $customjsFile or die $!;
@@ -99,7 +99,7 @@ sub GetCustomJS{
 sub SetCustomJS{
 	my ($jsCode) = @_;	
 	
-	open FILE, "+>", $PluginDir."/js/custom.js" or die $!;
+	open FILE, "+>", $PluginDir."/js/custom/custom.js" or die $!;
 	print FILE $jsCode;
 	close FILE;
 }

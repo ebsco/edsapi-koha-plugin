@@ -64,7 +64,9 @@ use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
 
+
 require 'eds-methods.pl';
+our $apiType = 'publication';
 
 my $PluginDir = dirname(abs_path($0));
 $PluginDir =~s /EDS\/opac/EDS/;
@@ -110,7 +112,7 @@ elsif (@params && $build_grouped_results) {
     $template_name = 'opac-results-grouped.tt';
 }
 elsif ((@params>=1) || ($cgi->param("q")) || ($cgi->param('multibranchlimit')) || ($cgi->param('limit-yr')) ) {
-    $template_name = $PluginDir.'/modules/eds-results.tt';
+    $template_name = $PluginDir.'/modules/pfi-results.tt';
 }
 else {
     $template_name = $PluginDir.'/modules/eds-advsearch.tt';
@@ -182,7 +184,7 @@ my %pager;
 if($cgi->param("q")){
 	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
 	#use Data::Dumper; die Dumper $EDSResponse;
-	try{# uncomment the try block when debugging or uncomment dumper in catch
+	try{# uncomment the try block when debugging
 		EDSProcessResults();
 		EDSProcessRelatedPublications();
 		EDSProcessRelatedContent();
@@ -200,7 +202,6 @@ if($cgi->param("q")){
 		EDSProcessPages();
 	} catch {
 		#warn "no results";
-		#use Data::Dumper; die Dumper $_; #uncomment for debugging.
 		$template->param(
 	 searchdesc     => 1,
 	total  => 0,);
@@ -221,7 +222,6 @@ if($cgi->param("q")){
 		current_mode	=> GetSearchParam('searchmode'),
 		current_view	=> GetSearchParam('view'),
 	    sortable_indexes => $EDSInfo->{AvailableSearchCriteria}->{AvailableSorts},
-		search_modes	=> $EDSInfo->{AvailableSearchCriteria}->{AvailableSearchModes},
 		search_fields	=> $EDSInfo->{AvailableSearchCriteria}->{AvailableSearchFields},
 		facets_loop      => \@EDSFacets,
 	    filters          => \@EDSFacetFilters,
@@ -238,9 +238,7 @@ if($cgi->param("q")){
 		theme			=>C4::Context->preference('opacthemes'), #314
 		instancepath	=>$EDSConfig->{instancepath},
 		edsautosuggest	=> EDSProcessAutoSuggestedTerms(),
-		daterange		=> $EDSResponse->{SearchResult}->{AvailableCriteria}->{DateRange},
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
-		expanders		=>$EDSInfo->{AvailableSearchCriteria}->{AvailableExpanders},
 	);
 
 my $casAuthentication = C4::Context->preference('casAuthentication');
@@ -421,10 +419,11 @@ sub EDSProcessFacets
 {try{	#process Facets
 	@EDSFacets = @{$EDSResponse->{SearchResult}->{AvailableFacets}};
 	foreach my $facet (@EDSFacets){
+		$facet->{Label} = $facet->{Id}; # since Label is empty
 		foreach my $facetValues ($facet->{AvailableFacetValues}){
 			my @facetValues = @{$facetValues};
 			foreach my $facetValue (@facetValues){
-				$facetValue->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetValue->{AddAction};
+				$facetValue->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetValue->{AddAction};
 				$facetValue->{AddAction} =~s/\&/\%2526/g;
 				$facetValue->{AddAction} =~s/\:/\%3a/g;
 			}
@@ -442,7 +441,7 @@ sub EDSProcessFilters
 			foreach my $facetFilterValues ($facetFilter->{FacetValuesWithAction}){
 				my @facetFilterValues = @{$facetFilterValues};
 				foreach my $facetFilterValue (@facetFilterValues){
-					$facetFilterValue->{RemoveAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetFilterValue->{RemoveAction};
+					$facetFilterValue->{RemoveAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$facetFilterValue->{RemoveAction};
 					$facetFilterValue->{RemoveAction} =~s/\&/\%2526/g;
 				}
 			}
@@ -460,7 +459,7 @@ sub EDSProcessQueries
 	
 		foreach my $EDSQuery (@EDSQueries){
 			foreach my $EDSQueryAction ($EDSQuery){
-				$EDSQueryAction->{RemoveAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSQueryAction->{RemoveAction};
+				$EDSQueryAction->{RemoveAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSQueryAction->{RemoveAction};
 				$EDSQueryAction->{RemoveAction} =~s/\&/\%2526/g;
 			}
 		}
@@ -477,12 +476,12 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 	{
 		if($Limiter->{Type} eq 'select')
 		{
-			#if($Limiter->{DefaultOn} eq 'n')
+			if($Limiter->{Id} eq 'RV')
 			{
 				#warn "no limiters";
 				$Limiter->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};		
 				$Limiter->{AddAction} =~s/value/y/;
-				$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
+				$Limiter->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
 				$Limiter->{AddAction} =~s/\&/\%2526/g;
 
 				try{
@@ -491,18 +490,20 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 					{
 						if($EDSRemoveLimiter->{Id} eq $Limiter->{Id}){
 							$Limiter->{AddAction} =~s/y/n/;
-							$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveLimiter->{RemoveAction};
+							$Limiter->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveLimiter->{RemoveAction};
 							$Limiter->{Label} =~s/onchange/checked onchange/;
 						}
 					}
 				} catch {
 					#warn 'no limiters';
 				};
+			}else{
+				$Limiter = undef;
 			}
 		}
 		
 		if($Limiter->{Type} eq 'ymrange'){
-			$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
+			$Limiter->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
 			$Limiter->{AddAction} =~s/\&/\%2526/g;
 					try{
 					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};				
@@ -527,7 +528,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 		#warn "no limiters";
 		$Expander->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};		
 		#$Expander->{AddAction} =~s/value/y/;
-		$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Expander->{AddAction};
+		$Expander->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Expander->{AddAction};
 		$Expander->{AddAction} =~s/\&/\%2526/g;
 
 			try{
@@ -536,7 +537,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 				{
 					if($EDSRemoveExpander->{Id} eq $Expander->{Id}){
 						#$Expander->{AddAction} =~s/y/n/;
-						$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveExpander->{RemoveAction};
+						$Expander->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveExpander->{RemoveAction};
 						$Expander->{Label} =~s/onchange/checked onchange/;
 					}
 				}

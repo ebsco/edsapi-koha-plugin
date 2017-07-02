@@ -24,7 +24,7 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
-var versionEDSKoha = '16.1101';
+var versionEDSKoha = '16.1103';
 var edsLangStore = '';
 
 $(window).error(function (e) { e.preventDefault(); }); // keep executing if there is an error.
@@ -90,7 +90,35 @@ function StartEDS(edsLang) {
 
 }
 
-jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom.js", dataType: "script", cache: true }); // load customisations.
+jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true }); // load customisations.
+
+PFIAtoZBar();
+function PFIAtoZBar() {
+    var barHolder = '<div class="pagination-small"><ul><li><stong>' + EDSLANG.pfi_atoz_bar + '</strong> </li>';
+    var firstChar = "A", lastChar = "Z";
+    for (var i = firstChar.charCodeAt(0) ; i <= lastChar.charCodeAt(0) ; i++) {
+        var alphaChar = eval("String.fromCharCode(" + i + ")");
+        alphaChar = '<li><a href="javascript:{}" class="pfialpha">' + alphaChar + '</a></li>';
+        barHolder += alphaChar;
+    }
+    barHolder += '</ul></div>';
+    jQuery('#pfi-selections-toolbar').html(barHolder);
+    jQuery('.pfialpha').click(function () {
+        var currentAlpha = this;
+        window.location.href = "pfi-search.pl?q=Search?query-1=AND,:{JN+" + jQuery(currentAlpha).text() + "*}|sort=title";
+    });
+}
+
+jQuery('.search-in-pub-button').click(function () {
+    currentPubButton = this;
+    searchTerm = jQuery(currentPubButton).parent().find('.search-in-pub-field').val();
+    pubAction = jQuery(currentPubButton).parent().find('.search-in-pub-field').data('action');
+    SearchPublication(searchTerm, pubAction);
+});
+
+function SearchPublication(searchinTerm, pubAction) {
+    window.location.href = '/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,:{' + searchinTerm + '}|action=addfacetfilter(' + encodeURIComponent(pubAction) + ')&default=1';
+}
 
 
 function ConfigDefaultData() {
@@ -214,6 +242,12 @@ function SetEDS(showInfo){
 			}else{
 				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
 			}
+	
+			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/pfi-search.pl")!=-1){
+				$('#masthead_search option[value="JN"]').prop('selected',true);
+				knownItem="JN";
+			}
+	
 			
 }
 
@@ -263,8 +297,10 @@ function SearchEDS(){
 	  if(searchTerm==undefined) searchTerm = $('.transl1').val().replace(/\&/g,"%2526");} // for bootstrap
 	  
   if(knownItem=='eds'){knownItem='';}
-  if(defaultParams === undefined){defaultParams = '';}
-  window.location='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,'+knownItem+':{'+searchTerm+'}'+defaultParams+'&default=1';
+  if (defaultParams === undefined) { defaultParams = ''; }
+  var apiSearchType = "eds";
+  if (knownItem == 'JN') { apiSearchType = "pfi"; }
+  window.location = '/plugin/Koha/Plugin/EDS/opac/' + apiSearchType + '-search.pl?q=Search?query-1=AND,' + knownItem + ':{' + searchTerm + '}' + defaultParams + '&default=1';
 }
 
 function EDSGetRecord(recordURL,callingObjParent){
@@ -782,6 +818,7 @@ function PlacardTabs(placardTab){
 		jQuery('#'+placardTab).parent().parent().css('display','');
 		jQuery('#'+placardTab+'-tab').addClass('placard-tab-item-active');
 	});
+	
 }
 
 function ApplyPlaceAdjustments() {

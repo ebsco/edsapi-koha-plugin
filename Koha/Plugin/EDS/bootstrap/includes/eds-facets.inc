@@ -45,6 +45,7 @@
 				[% END %]
 			</ul>
 			[% FOR EDSLimit IN limiters %][% IF EDSLimit.Type =='ymrange' %]
+				[% IF daterange %]
 				<ul>
 					<li><strong>[% EDSLimit.Label %]</strong> <br>
 
@@ -63,6 +64,7 @@
 						<script>var dateAction = "[% EDSLimit.AddAction %]";</script>
 					</li>
 				</ul>
+				[% END %]
 			[% END %][% END %]
 			[% IF expanders %]
 				<ul>

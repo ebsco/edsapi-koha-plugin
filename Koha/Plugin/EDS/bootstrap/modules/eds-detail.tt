@@ -53,50 +53,7 @@
             <div class="span9">
                 <div id="catalogue_detail_biblio" class="maincontent">
 
-                    <div id="bookcover">
-                    [% IF ( OPACLocalCoverImages ) %]
-                        <div title="[% biblionumber |url %]" class="[% biblionumber %]" id="local-thumbnail-preview"></div>
-                    [% END %]
-                    [% IF ( OPACAmazonCoverImages ) %]
-                        [% IF ( OPACurlOpenInNewWindow ) %]
-                            <a href="http://www.amazon[% AmazonTld %]/gp/reader/[% normalized_isbn %]/ref=sib_dp_pt/002-7879865-0184864#reader-link" target="_blank">
-                        [% ELSE %]
-                            <a href="http://www.amazon[% AmazonTld %]/dp/[% normalized_isbn %]">
-                        [% END %]
-                        [% IF ( using_https ) %]
-                            <img border="0" src="https://images-na.ssl-images-amazon.com/images/P/[% normalized_isbn %].01.MZZZZZZZ.jpg" alt="Cover image" /></a>
-                        [% ELSE %]
-                            <img border="0" src="http://images.amazon.com/images/P/[% normalized_isbn %].01.MZZZZZZZ.jpg" alt="Cover image" /></a>
-                        [% END %]
-                    [% END %]
 
-                    [% IF ( SyndeticsEnabled && SyndeticsCoverImages ) %]
-                        [% IF ( content_identifier_exists ) %]
-                            [% IF ( using_https ) %]
-                                <img src="https://secure.syndetics.com/index.aspx?isbn=[% normalized_isbn %]/[% SyndeticsCoverImageSize %].GIF&amp;client=[% SyndeticsClientCode %]&amp;type=xw10&amp;upc=[% normalized_upc %]&amp;oclc=[% normalized_oclc %]" alt="" class="thumbnail" />
-                            [% ELSE %]
-                                <img src="http://www.syndetics.com/index.aspx?isbn=[% normalized_isbn %]/[% SyndeticsCoverImageSize %].GIF&amp;client=[% SyndeticsClientCode %]&amp;type=xw10&amp;upc=[% normalized_upc %]&amp;oclc=[% normalized_oclc %]" alt="" class="thumbnail" />
-                            [% END %]
-
-                        [% ELSE %]
-                            <span class="no-image">No cover image available</span>
-                        [% END %]
-                    [% END %]
-
-                    [% IF ( GoogleJackets ) %]
-                        <div title="[% biblionumber |url %]" class="[% normalized_isbn %]" id="gbs-thumbnail-preview"></div>
-                    [% END %]
-                    [% IF OpenLibraryCovers %]
-                        <div title="[% biblionumber |url %]" class="[% normalized_isbn %]" id="openlibrary-thumbnail-preview"></div>
-                    [% END %]
-                    [% IF ( BakerTaylorEnabled && normalized_isbn ) %]
-                        [% IF ( OPACurlOpenInNewWindow ) %]
-                            <a href="https://[% BakerTaylorBookstoreURL |html %][% normalized_isbn %]" target="_blank"><img alt="See Baker &amp; Taylor" src="[% BakerTaylorImageURL |html %][% normalized_isbn %]" /></a>
-                        [% ELSE %]
-                            <a href="https://[% BakerTaylorBookstoreURL |html %][% normalized_isbn %]"><img alt="See Baker &amp; Taylor" src="[% BakerTaylorImageURL |html %][% normalized_isbn %]" /></a>
-                        [% END %]
-                    [% END %]
-                    </div><!-- / #bookcover -->
 
                     <abbr class="unapi-id" title="koha:biblionumber:[% biblionumber %]"><!-- unAPI --></abbr>
                     [% IF ( ocoins ) # COinS / Openurl %]
@@ -534,14 +491,25 @@
 					  [% FOREACH ITEM IN DETAILED_RECORD.Items %]
 						  [% IF ITEM.Group.match('Ti') %]
 							<h1 class="title">[% ITEM.Data %]</h1>
+							  [% IF DETAILED_RECORD.Header.IsSearchable =="y" %]
+								<div style="clear:both;"></div> 
+								<div class="input-prepend input-append">			
+									<input type="text" class="input-xlarge search-in-pub-field" placeholder="Search within Publication" data-action="[% DETAILED_RECORD.Header.ResourceType %]:[% DETAILED_RECORD.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull FILTER lower %]">		  
+									<span class="add-on search-in-pub-button" style="cursor:pointer" >
+										<i class="icon-search"></i>
+									</span>		
+								</div>
+							  [% END %]
 						  [% ELSE %] <span class="results_summary"><span class="label">[% ITEM.Label %] : </span>[% ITEM.Data %]</span> [% END %]
 					  [% END %] 
 				  [% ELSE %]
 					  <h1 class="title">[% EDSLANG.eds_detail_TT_login_msg %]</h1>
 				  [% END %]
+				  
 
 
-						[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
+
+						<p>[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]</p>
 
                     <ul style="display:none;">
                         [% IF ( defaulttab == 'holdings' ) %]
@@ -1085,7 +1053,7 @@
                     </div>
                 [% END # / IF OpacBrowseResults && busc %]
 
-				[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]
+				<ul id="action">[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]</ul>
                 [% INCLUDE "$plugin_dir/includes/eds-detail_sidebar.inc" %]
 
                 [% IF ( NovelistSelectProfile && NovelistSelectView == 'right') %]
