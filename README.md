@@ -34,11 +34,11 @@ Click Load settings from EBSCOAdmin. Wait for the page to refresh. You might hav
 Video Presentations
 ========================
 
-KohaCon17 | Video | Presentation
+KohaCon17 | Video | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KonaCon17.pdf)
 
-KohaCon16 | Video | Presentation
+KohaCon16 | Video | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon16.pdf)
 
-KohaCon14 | Video | Presentation
+KohaCon14 | Video | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon14.pdf)
 
 
 Quick Links
