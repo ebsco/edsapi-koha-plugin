@@ -199,6 +199,7 @@
 function EDSUpdateInfo(){
 	$('#updateInfoBtn').val('Loading - this page will refresh in 10 seconds. Please wait...');
 	$('#updateInfoBtn').attr('disabled','disabled');
+
 	var updateURL = '[% OPACBaseURL %]/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=info';
 	console.log(updateURL);
 	var infoUpdateWindow=window.open(updateURL,'infoUpdateWindow',"width=100, height=10, top=0, left=0");
