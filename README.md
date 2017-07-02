@@ -42,9 +42,9 @@ KohaCon17 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/mast
 KohaCon16 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon16.pdf) | [Video Recording](https://www.youtube.com/watch?v=wXJcnaM1m64)
 
 
-[![video_kohacon16](https://i.ytimg.com/vi/wXJcnaM1m64/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLCL_QAX9A0wpp_VFeKwyxqKN9b4sg)](https://www.youtube.com/watch?v=wXJcnaM1m64)
+[![video_kohacon16](https://i.ytimg.com/vi/wXJcnaM1m64/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLCL_QAX9A0wpp_VFeKwyxqKN9b4sg)](http://www.livemedia.com/video/236823)
 
-KohaCon14 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon14.pdf) | [Video Recording](https://www.youtube.com/watch?v=cw0Aq4cPick)
+KohaCon14 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon14.pdf) | [Video Recording](http://www.livemedia.com/video/236823)
 
 [![video_kohacon14](https://i.ytimg.com/vi/cw0Aq4cPick/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLBHfYzKnVARdh1OuZgtU-nIH1JqPw)](https://www.youtube.com/watch?v=cw0Aq4cPick)
 
