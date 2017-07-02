@@ -35,6 +35,7 @@ Video Presentations
 ========================
 
 KohaCon17 | Video | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KonaCon17.pdf)
+[![video_kohacon17](https://i.ytimg.com/vi/38xb_ysctfQ/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLDiwKmM0GFbSM3gWRXOHDlYgIrPxQ)](https://www.youtube.com/watch?v=38xb_ysctfQ)
 
 KohaCon16 | Video | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon16.pdf)
 
