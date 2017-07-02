@@ -31,11 +31,11 @@ use Encode;
 use Try::Tiny;
 use Net::IP;
 
-
+our $apiType = 'rest';
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $edsswitchtext, $kohaswitchtext, $edsselecttext, $edsselectinfo, $kohaselectinfo, $defaultparams, $instancepath, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
+my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker)="";
 
 my $PluginClass='Koha::Plugin::EDS';
 my $table='plugin_data';
@@ -57,14 +57,8 @@ given($r->{plugin_key}){
 		when('logerrors') {$logerrors=$r->{plugin_value};}
 		when('iprange') {$iprange=$r->{plugin_value};}
 		when('authtoken') {$authtoken=$r->{plugin_value};}
-		when('edsswitchtext') {$edsswitchtext=$r->{plugin_value};}
-		when('kohaswitchtext') {$kohaswitchtext=$r->{plugin_value};}
-		when('edsselecttext') {$edsselecttext=$r->{plugin_value};}
-		when('edsselectinfo') {$edsselectinfo=$r->{plugin_value};}
-		when('kohaselectinfo') {$kohaselectinfo=$r->{plugin_value};}
 		when('defaultparams') {$defaultparams=$r->{plugin_value};}
 		when('edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
-		when('instancepath') {$instancepath=$r->{plugin_value};}
 		when('lastedsinfoupdate') {$lastedsinfoupdate=$r->{plugin_value};
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
@@ -134,6 +128,8 @@ sub CreateAuth
 	
 	
 	my $response =  CallREST('POST',$uri,$json, '', '');
+	#use Data::Dumper; die Dumper 'gtracker='.$GuestTracker.' cookie='.$input->cookie('guest');
+
 	$authtoken = decode_json( $response );
 	$authtoken = $authtoken->{AuthToken};
 	$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $authtoken, $PluginClass, 'authtoken'); 
@@ -215,7 +211,7 @@ sub GetSession
 
 sub EDSGetConfiguration
 {
-	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","edsswitchtext":"'.$edsswitchtext.'","kohaswitchtext":"'.$kohaswitchtext.'","edsselecttext":"'.$edsselecttext.'","edsselectinfo":"'.$edsselectinfo.'","instancepath":"'.$instancepath.'","kohaselectinfo":"'.$kohaselectinfo.'","defaultparams":"'.$defaultparams.'"}';
+	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","defaultparams":"'.$defaultparams.'"}';
 	return $JSONConfig;
 }
 
@@ -224,8 +220,8 @@ sub EDSSearch
 	my ($EDSQuery, $GuestStatus) = @_;
 	if($input->param("default") eq 1){
 		$EDSQuery=$EDSQuery.EDSDefaultQueryBuilder();
-
 	}
+	
 
 	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
 		$GuestTracker = $GuestStatus;
@@ -244,7 +240,7 @@ sub EDSSearch
 		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
 	}
 	$EDSQuery =~s/ /\+/g;
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/rest/'.$EDSQuery; 
+	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery; 
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
 	my $response;
@@ -340,29 +336,36 @@ sub EDSDefaultQueryBuilder
 			$defaultEDSQuery = $defaultEDSQuery.'|expander='.$ExpanderDefault->{Id};
 		}
 	}
-	my @AvailableSearchModes = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableSearchModes}}; 	
-	foreach my $AvailableSearchMode (@AvailableSearchModes){
-		if($AvailableSearchMode->{DefaultOn} eq 'y'){
-			$defaultEDSQuery = $defaultEDSQuery.'|searchmode='.$AvailableSearchMode->{Mode};
-		}
-	}
-	my @AvailableLimiters = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableLimiters}}; 	
-	foreach my $AvailableLimiter (@AvailableLimiters){
-		if($AvailableLimiter->{DefaultOn} eq 'y'){
-			if($AvailableLimiter->{Type} eq 'select'){
-				$defaultEDSQuery = $defaultEDSQuery.'|limiter='.$AvailableLimiter->{Id}.':'.'y';
+	
+	if($apiType eq "rest"){
+		my @AvailableSearchModes = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableSearchModes}}; 	
+		foreach my $AvailableSearchMode (@AvailableSearchModes){
+			if($AvailableSearchMode->{DefaultOn} eq 'y'){
+				$defaultEDSQuery = $defaultEDSQuery.'|searchmode='.$AvailableSearchMode->{Mode};
 			}
 		}
 	}
-	if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
-		my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
-		foreach my $AvailableRelatedContent (@AvailableRelatedContents){
-			if($AvailableRelatedContent->{DefaultOn} eq 'y'){
-				if($AvailableRelatedContent->{Type} eq 'emp'){
-					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+	if($apiType eq "rest"){
+		my @AvailableLimiters = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableLimiters}}; 	
+		foreach my $AvailableLimiter (@AvailableLimiters){
+			if($AvailableLimiter->{DefaultOn} eq 'y'){
+				if($AvailableLimiter->{Type} eq 'select'){
+					$defaultEDSQuery = $defaultEDSQuery.'|limiter='.$AvailableLimiter->{Id}.':'.'y';
 				}
-				if($AvailableRelatedContent->{Type} eq 'rs'){
-					$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+			}
+		}
+	}
+	if($apiType eq "rest"){
+		if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
+			my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}}; 	
+			foreach my $AvailableRelatedContent (@AvailableRelatedContents){
+				if($AvailableRelatedContent->{DefaultOn} eq 'y'){
+					if($AvailableRelatedContent->{Type} eq 'emp'){
+						$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+					}
+					if($AvailableRelatedContent->{Type} eq 'rs'){
+						$defaultEDSQuery = $defaultEDSQuery.'|action='.$AvailableRelatedContent->{AddAction};
+					}
 				}
 			}
 		}
@@ -370,7 +373,7 @@ sub EDSDefaultQueryBuilder
 		
 	$defaultEDSQuery = $defaultEDSQuery.'|resultsperpage='.$EDSInfoData->{ViewResultSettings}->{ResultsPerPage};	
 	$defaultEDSQuery = $defaultEDSQuery.'|view='.$EDSInfoData->{ViewResultSettings}->{ResultListView};
-		
+
 	return $defaultEDSQuery;			
 		
 }

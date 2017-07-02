@@ -1,5 +1,5 @@
 [% INCLUDE 'doc-head-open.inc' %]
- <title>Koha: EDS API Integration: Configuration</title>
+ <title>Koha: EDS API Configure</title>
  <style type="text/css">
  .settingLabel {
 	text-align: right;
@@ -15,198 +15,195 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API Integration &rsaquo; Configuration</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Configure</div>
 
 <div id="doc3">
     <div align="right" style="float:right;width:170px"><a href="http://eadmin.ebscohost.com" target="_blank"><img src="http://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
 <p>Visit <a href="http://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
 
 <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
-    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="[% PLUGIN_PATH %]/images/eds_logo.jpg" width="82" /></a>
-    <h3>Koha: EDS API Integration: Configuration</h3>
+    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="https://widgets.ebscohost.com/prod/api/koha/eds_logo.png" width="250" /></a>
+    <h3>Koha: EDS API: Configure</h3>
 <!-- Notice our form here has no 'action', this is good, it means that our forms will always get passed back to 'plugins/run.pl'. You could hard code it instead if you prefer -->
     <form method="get">
         <!-- Always pass these two parameters so the plugin system knows what to execute! -->
         <input type="hidden" name="class" value="[% CLASS %]"/>
         <input type="hidden" name="method" value="[% METHOD %]"/>
 
-        <table width="100%" border="0" cellspacing="2" cellpadding="2">
+        <table width="100%" id="eds-config" border="0" cellspacing="2" cellpadding="2">
           <tr>
             <th width="5%" nowrap class="settingLabel" scope="col">EDS API Settings</th>
-            <th width="10%" scope="col">Value</th>
-            <th width="60%" scope="col">Instructions</th>
+            <th scope="col">Value</th>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row"> User Name: </th>
 			[% IF edsusername == '' %][% edsusername = 'Enter Username' %][% END %]
-            <td align="left" valign="top"><input name="edsusername" type="text" class="textbox" id="edsusername" value="[% edsusername %]"></td>
-            <td align="left" valign="top">*Keep blank for IP access. User Name with permission to access the EDS API. This is in EBSCO Admin, Authentication tab</td>
+            <td align="left" valign="top">
+            	<input name="edsusername" type="text" class="textbox" id="edsusername" value="[% edsusername %]">
+            	<small>*User Name with permission to access the EDS API. This is in EBSCO Admin, Authentication tab</small>
+            </td>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Password: </th>
 			[% IF edspassword == '' %][% edspassword = 'Enter Password' %][% END %]
-            <td align="left" valign="top"><input name="edspassword" type="password" class="textbox" id="edspassword" value="[% edspassword %]"></td>
-            <td align="left" valign="top">*Keep blank for IP access. Password with permissions to access the EDS API. This is in EBSCO Admin, Authentication tab.</td>
+            <td align="left" valign="top">
+            	<input name="edspassword" type="text" class="textbox" id="edspassword" value="[% edspassword %]">
+            	<small>*Password with permissions to access the EDS API. This is in EBSCO Admin, Authentication tab.</small>
+            </td>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Profile ID: </th>
 			[% IF edsprofileid == '' %][% edsprofileid = 'Enter Profile ID' %][% END %]
-            <td align="left" valign="top"><input name="edsprofileid" type="text" class="textbox" id="edsprofileid" value="[% edsprofileid %]"></td>
-            <td align="left" valign="top">*Required. Name of the EDS Profile in EBSCO Admin.</td>
+            <td align="left" valign="top">
+            	<input name="edsprofileid" type="text" class="textbox" id="edsprofileid" value="[% edsprofileid %]">
+            	<small>*Required. Name of the EDS Profile in EBSCO Admin.</small>
+            </td>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Customer ID:</th>
 			[% IF edscustomerid == '' %][% edscustomerid = 'Enter Customer ID' %][% END %]
-            <td align="left" valign="top"><input name="edscustomerid" type="text" class="textbox" id="edscustomerid" value="[% edscustomerid %]"></td>
-            <td align="left" valign="top">*Required. Value of the Customer site ID in EBSCO Admin.</td>
-          </tr>
-          <tr>
-            <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Instance Path</th>
-			[% IF instancepath == '' %][% instancepath = '/usr/share/koha/opac/htdocs/opac-tmpl/prog/<enter library name>' %][% END %]
-            <td align="left" valign="top"><input name="instancepath" type="text" class="textbox" id="instancepath" value="[% instancepath %]"></td>
-            <td align="left" valign="top">*Required for prog theme only. Server Path where the instance files reside. This is generally located at the default directory specified; change 
-              <enter library name> at the end of the line to the name of your library if unsure.</td>
-          </tr>
-          <tr>
-            <th colspan="3" align="left" valign="top" nowrap class="settingLabel" scope="row">&nbsp;</th>
+            <td align="left" valign="top">
+            	<input name="edscustomerid" type="text" class="textbox" id="edscustomerid" value="[% edscustomerid %]">
+            	<small>*Required. Value of the Customer site ID in EBSCO Admin.</small>
+            </td>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Catalogue Id:</th>
 			[% IF cataloguedbid == '' %][% cataloguedbid = 'Enter Catalogue ID' %][% END %]
-            <td align="left" valign="top"><input name="cataloguedbid" type="text" class="textbox" id="cataloguedbid" value="[% cataloguedbid %]"></td>
-            <td align="left" valign="top"><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format.<br>
+            <td align="left" valign="top">
+            	<input name="cataloguedbid" type="text" class="textbox" id="cataloguedbid" value="[% cataloguedbid %]">
+            	<small><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format.<br>
               This is available in EBSCO Admin, databases tab. This required value is in brackets next to the name of the catalogue. <br>
-              e.g. Sample Catalogue(catid). Enter catid in the text field.</p></td>
+              e.g. Sample Catalogue(catid). Enter catid in the text field.</p></small>
+			</td>
           </tr>
 
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Catalogue AN prefix:</th>
 			[% IF catalogueanprefix == '' %][% catalogueanprefix = 'Enter Catalogue Prefix' %][% END %]
-            <td align="left" valign="top"><input name="catalogueanprefix" type="text" class="textbox" id="catalogueanprefix" value="[% catalogueanprefix %]"></td>
-            <td align="left" valign="top"><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format. You can get this from the URL of a detailed record or permalink in EDS.<br>
-              e.g. 
-            http://ehis.ebscohost.com/eds/detail?AN=prefval.530894. Enter prefval including period (dot) into the text field.</p></td>
+            <td align="left" valign="top">
+            	<input name="catalogueanprefix" type="text" class="textbox" id="catalogueanprefix" value="[% catalogueanprefix %]">
+            	<small><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format. You can get this from the URL of a detailed record or permalink in EDS.<br>e.g. 
+            http://ehis.ebscohost.com/eds/detail?AN=prefval.530894. Enter prefval including period (dot) into the text field.</p></small>
+			</td>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Cookie Expiry:</th>
 			[% IF cookieexpiry == '' %][% cookieexpiry = 'Enter Cookie Expiry' %][% END %]
-            <td align="left" valign="top">[% IF cookieexpiry == '' %]<input name="cookieexpiry" type="text" class="textbox" id="cookieexpiry" value="30">[% ELSE %]<input name="cookieexpiry" type="text" class="textbox" id="cookieexpiry" value="[% cookieexpiry %]">[% END %]</td>
-            <td align="left" valign="top">in minutes. Enter a space if you do not want cookies to expire.</td>
+            <td align="left" valign="top">
+            	[% IF cookieexpiry == '' %]<input name="cookieexpiry" type="text" class="textbox" id="cookieexpiry" value="30">[% ELSE %]<input name="cookieexpiry" type="text" class="textbox" id="cookieexpiry" value="[% cookieexpiry %]">[% END %]
+            	<small>in minutes. Enter a space if you do not want cookies to expire.</small>
+            </td>
           </tr>
           <tr>
             <th align="left" valign="top" nowrap class="settingLabel" scope="row">  IP Addresses:</th>
-            <td align="left" valign="top">[% IF iprange == '' %]<input name="iprange" type="text" class="textbox" id="iprange" value="">[% ELSE %]<input name="iprange" type="text" class="textbox" id="iprange" value="[% iprange %]">[% END %]</td>
-            <td align="left" valign="top">Authenticate into EDS using local IP by entering valid IPs seperated by comma(,) e.g. 127.0.0.1,127.0.0.2. To Enter a range; use the example format 100.0.0.0 - 200.79.255.255 <!-- http://stackoverflow.com/questions/24916371/how-do-i-check-if-an-ip-address-is-in-a-specific-range-in-perl -->(<a href="javascript:GetLocalIP();">Get Local IP</a>)</td>
-          </tr>
-          <tr>
-            <th colspan="3" align="left" valign="top" nowrap class="settingLabel" scope="row">&nbsp;</th>
+            <td align="left" valign="top">
+            	[% IF iprange == '' %]<input name="iprange" type="text" class="textbox" id="iprange" value="">[% ELSE %]<input name="iprange" type="text" class="textbox" id="iprange" value="[% iprange %]">[% END %]
+            	<small>Authenticate into EDS using local IP by entering valid IPs seperated by comma(,) e.g. 127.0.0.1,127.0.0.2. To Enter a range; use the example format 100.0.0.0 - 200.79.255.255 <!-- http://stackoverflow.com/questions/24916371/how-do-i-check-if-an-ip-address-is-in-a-specific-range-in-perl -->(<a href="javascript:GetLocalIP();">Get Local IP</a>)</small>
+            </td>
           </tr>
           <tr>
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Default Search Engine:</th>
             <td align="left" valign="top">
-			
-			<select class="textbox" name="defaultsearch">
-            [% IF defaultsearch == 'eds' %]
-                <option value="eds" selected="selected">EDS</option>
-            [% ELSE %]
-                <option value="eds">EDS</option>
-            [% END %]
-            [% IF defaultsearch == 'koha' %]
-                <option value="koha" selected="selected">Koha</option>
-            [% ELSE %]
-                <option value="koha">Koha</option>
-            [% END %]
-            [% IF defaultsearch == 'off' %]
-                <option value="off" selected="selected">Default (without EDS)</option>
-            [% ELSE %]
-                <option value="off">Default (without EDS)</option>
-            [% END %]
-        	</select></td>
-            <td align="left" valign="top">Select the default search engine mode for users who visit the library catalogue for the first time.</td>
+				<select class="textbox" name="defaultsearch">
+				[% IF defaultsearch == 'eds' %]
+					<option value="eds" selected="selected">EDS</option>
+				[% ELSE %]
+					<option value="eds">EDS</option>
+				[% END %]
+				[% IF defaultsearch == 'koha' %]
+					<option value="koha" selected="selected">Koha</option>
+				[% ELSE %]
+					<option value="koha">Koha</option>
+				[% END %]
+				[% IF defaultsearch == 'off' %]
+					<option value="off" selected="selected">Default (without EDS)</option>
+				[% ELSE %]
+					<option value="off">Default (without EDS)</option>
+				[% END %]
+				</select>
+        		<small>Select the default search engine mode for users who visit the library catalogue for the first time.<br>
+        			This setting updates the OpacUserJS System Preference. It may take a while to reflect online baased on caching.<br>
+					<a target="_blank" href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=opacuserjs">Click here</a> to see the current settings. Paste the below code manually at the end of OpacUserJS if this does not get added automatically.
+					<pre style="border: 1px solid #CCC;padding: 10px;border-radius: 5px;background-color: #000;color: #FFF;">/*eds{*/var defaultSearch="eds";$(document).ready(function(){$.ajax({url:"/plugin/Koha/Plugin/EDS/js/EDSScript.js",dataType:"script",cache:true}); });/*}eds*/</pre>
+				</small>
+        	</td>
           </tr>
-          <tr>
-            <th align="left" valign="top" nowrap class="settingLabel" scope="row">EDS Switch Text:</th>
-            <td align="left" valign="top">[% IF edsswitchtext == '' %]<input name="edsswitchtext" type="text" class="textbox" id="edsswitchtext" value="Switch to Discovery">[% ELSE %]<input name="edsswitchtext" type="text" class="textbox" id="edsswitchtext" value="[% edsswitchtext %]">[% END %]</td>
-            <td align="left" valign="top">Configurable text to display in the search dropdown menu to switch to EDS search.</td>
-          </tr>
-          <tr>
-            <th align="left" valign="top" nowrap class="settingLabel" scope="row">Koha Switch Text:</th>
-            <td align="left" valign="top">[% IF kohaswitchtext == '' %]<input name="kohaswitchtext" type="text" class="textbox" id="kohaswitchtext" value="Switch to Catalogue">[% ELSE %]<input name="kohaswitchtext" type="text" class="textbox" id="kohaswitchtext" value="[% kohaswitchtext %]">[% END %]</td>
-            <td align="left" valign="top">Configurable text to display in the search dropdown menu to switch to Koha search.</td>
-          </tr>
-          <tr>
-            <th align="left" valign="top" nowrap class="settingLabel" scope="row">EDS SelectText:</th>
-            <td align="left" valign="top">[% IF edsselecttext == '' %]<input name="edsselecttext" type="text" class="textbox" id="edsselecttext" value="Discovery">[% ELSE %]<input name="edsselecttext" type="text" class="textbox" id="edsselecttext" value="[% edsselecttext %]">[% END %]</td>
-            <td align="left" valign="top">Configurable text to display in the search dropdown menu when a user selects EDS.</td>
-          </tr>
-          <tr>
-            <th align="left" valign="top" nowrap class="settingLabel" scope="row">EDS Select Info:</th>
-            <td align="left" valign="top">[% IF edsselectinfo == '' %]<input name="edsselectinfo" type="text" class="textbox" id="edsselectinfo" value="<h3>Search EDS</h3>Select a known item and enter a search term">[% ELSE %]<input name="edsselectinfo" type="text" class="textbox" id="edsselectinfo" value="[% edsselectinfo %]">[% END %]</td>
-            <td align="left" valign="top">Configurable text to display when a user selects EDS from the dropdown menu.</td>
-          </tr>
-          <tr>
-            <th align="left" valign="top" nowrap class="settingLabel" scope="row">Koha Select Info:</th>
-            <td align="left" valign="top">[% IF kohaselectinfo == '' %]<input name="kohaselectinfo" type="text" class="textbox" id="kohaselectinfo" value="<h3>Search Koha</h3>Select a known item and enter a search term">[% ELSE %]<input name="kohaselectinfo" type="text" class="textbox" id="kohaselectinfo" value="[% kohaselectinfo %]">[% END %]</td>
-            <td align="left" valign="top">Configurable text to display when a user selects Koha from the dropdown menu.</td>
-          </tr>
-          <tr>
             <th align="left" valign="top" nowrap class="settingLabel" scope="row">Default Parameters: </th>
-            <td align="left" valign="top">[% IF defaultparams == '' %]<input name="defaultparams" type="text" class="textbox" id="defaultparams" value="">[% ELSE %]<input name="defaultparams" type="text" class="textbox" id="defaultparams" value="[% defaultparams %]">[% END %]</td>
-            <td align="left" valign="top">Enter default parameters and search conditions EDS should include by default e.g. to add the english language as default enter |facetfilter=1,Language:english. <br>
-<strong>NOTE:</strong> Ensure to enter the pipe character (|) before any parameters. Refer to the EDS API documentation on the EDSWiki for more parameters.</td>
-          </tr>
-          <tr>
-            <th colspan="3" align="left" valign="top" nowrap class="settingLabel" scope="row">&nbsp;</th>
+            <td align="left" valign="top">
+            	[% IF defaultparams == '' %]<input name="defaultparams" type="text" class="textbox" id="defaultparams" value="">[% ELSE %]<input name="defaultparams" type="text" class="textbox" id="defaultparams" value="[% defaultparams %]">[% END %]
+            	<small>Enter default parameters and search conditions EDS should include by default e.g. to add the english language as default enter |facetfilter=1,Language:english. <br>
+<strong>NOTE:</strong> Ensure to enter the pipe character (|) before any parameters. Refer to the EDS API documentation on the EDSWiki for more parameters.</small>
+            </td>
           </tr>
             <tr>
                 <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Log Errors:</th>
-                <td align="left" valign="top">
-                
-                <select class="textbox" name="logerrors">
-                [% IF logerrors == 'no' %]
-                    <option value="no" selected="selected">No</option>
-                [% ELSE %]
-                    <option value="no">No</option>
-                [% END %]
-                [% IF logerrors == 'yes' %]
-                    <option value="yes" selected="selected">Yes</option>
-                [% ELSE %]
-                    <option value="yes">Yes</option>
-                [% END %]
-                </select></td>
-                <td align="left" valign="top">Select yes to log errors in the error log (best for debugging). Select no to display no errors and warnings.</td>
+                <td align="left" valign="top">                
+					<select class="textbox" name="logerrors">
+					[% IF logerrors == 'no' %]
+						<option value="no" selected="selected">No</option>
+					[% ELSE %]
+						<option value="no">No</option>
+					[% END %]
+					[% IF logerrors == 'yes' %]
+						<option value="yes" selected="selected">Yes</option>
+					[% ELSE %]
+						<option value="yes">Yes</option>
+					[% END %]
+					</select>
+                	<small>Select yes to log errors in the error log (best for debugging). Select no to display no errors and warnings.</small>
+                </td>
             </tr>
           <tr>
             <th align="left" valign="top" nowrap class="settingLabel" scope="row">Auth Token</th>
-            <td colspan="2" align="left" valign="top">
+            <td align="left" valign="top">
             [% IF authtoken == '' %][% authtoken = 'Not Authenticated' %][% END %]
 				<input type="hidden" name="authtoken" value="[% authtoken %]" id="authtoken">
 	            <input type="text" class="textbox" value="[% authtoken %]" disabled="disabled" >
             </td>
           </tr>
           <tr>
-            <th align="left" valign="top" nowrap class="settingLabel" scope="row">EDS Info</th>
-            <td colspan="2" align="left" valign="top">
+            <th align="left" valign="top" nowrap class="settingLabel" scope="row">EDS Settings</th>
+            <td align="left" valign="top">
 			[% IF edsinfo == '' %][% edsinfo = 'Update Required' %][% lastedsinfoupdate='Never' %][% END %]
 	            <input type="hidden" name="edsinfo" value="[% edsinfo %]" id="edsinfo">
 				<input type="hidden" name="lastedsinfoupdate" value="[% lastedsinfoupdate %]" id="lastedsinfoupdate">
             <textarea cols="45" rows="5" disabled="disabled" class="textbox">[% edsinfo %]</textarea>
-			<label> Last Updated on: [% lastedsinfoupdate %] </label><input id="updateInfoBtn" name="updateInfoBtn" type="button" value="Update Info Now" onclick="EDSUpdateInfo()" />
+            
+			<p>
+				<small>
+					<p>
+						EBSCOAdmin Settings are cached by the plugin and updated once a day automatically.<br>
+						The below update button can be used to manually update setting and it uses the OPACBaseURL system preference which is set to - <strong>"[% OPACBaseURL %]"</strong><br>
+						<a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=opacbaseurl">Click here</a> to set the OPACBaseURL preference if it is empty or does not point to the Koha front-end/OPAC.
+					</p>
+					<input id="updateInfoBtn" name="updateInfoBtn" type="button" value="Load setting from EBSCOAdmin Now" onclick="EDSUpdateInfo()" />
+					<label> Last Updated on: <strong>[% lastedsinfoupdate %]</strong> </label>
+					<p>Save any configuration changes before clicking the Load button.</p>
+				</small>
+			</p>
 			</td>
           </tr>
+          <tr>
+            <td colspan="2" align="left" valign="top">
+				<p>
+					<input type="hidden" name="save" value="1" />
+					<input type="submit" value="Save configuration" /> 
+					<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
+				</p>			
+            </td>
+          </tr>
         </table>
-        <p>
-          <input type="hidden" name="save" value="1" />
-
-        <input type="submit" value="Save configuration" /> 
-		<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
 </form>
 <script>
 function EDSUpdateInfo(){
-	$('#updateInfoBtn').val('Updating. Please wait...');
+	$('#updateInfoBtn').val('Loading - this page will refresh in 10 seconds. Please wait...');
 	$('#updateInfoBtn').attr('disabled','disabled');
-	var infoUpdateWindow=window.open('[% OPACBaseURL %]/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=info','infoUpdateWindow',"width=100, height=10, top=0, left=0");
-	setTimeout(function(){location.reload();},5000);
+
+	var updateURL = '[% OPACBaseURL %]/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=info';
+	console.log(updateURL);
+	var infoUpdateWindow=window.open(updateURL,'infoUpdateWindow',"width=100, height=10, top=0, left=0");
+	setTimeout(function(){location.reload();},10000);
 	
 }
 
@@ -215,4 +212,9 @@ function GetLocalIP(){
 }
 
 </script>
+<style>
+	#eds-config td, #eds-config th{
+		padding:10px;
+	}
+</style>
 [% INCLUDE 'intranet-bottom.inc' %]

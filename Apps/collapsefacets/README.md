@@ -1,0 +1,1 @@
+Copy code from JS file and paste into App Manager
