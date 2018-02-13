@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 # Copyright 2009 BibLibre
 #
@@ -35,6 +35,7 @@ use utf8;
 my $query = new CGI;
 my $eds_data =""; my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data'); #EDS Patch
 
+
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
         template_name   => "opac-downloadcart.tt",
@@ -69,8 +70,10 @@ if ($bib_list && $format) {
         });
         foreach my $biblio (@bibs) {
 
-            my $record = GetMarcBiblio($biblio, 1);
-			my $dat = "";if($biblio =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);} #EDS Patch
+            my $record = GetMarcBiblio({
+                biblionumber => $biblio,
+                embed_items  => 1 });
+            my $dat = "";if($biblio =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);} #EDS Patch
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({
                 interface => 'opac',
@@ -113,7 +116,7 @@ if ($bib_list && $format) {
     print $output;
 
 } else { 
-    $template->param(csv_profiles => [ Koha::CsvProfiles->search({ type => 'marc' }) ]);
+    $template->param(csv_profiles => [ Koha::CsvProfiles->search({ type => 'marc', used_for => 'export_records' }) ]);
     $template->param(bib_list => $bib_list); 
     output_html_with_http_headers $query, $cookie, $template->output;
 }

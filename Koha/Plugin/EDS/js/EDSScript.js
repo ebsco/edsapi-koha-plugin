@@ -24,12 +24,20 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
-var versionEDSKoha = '16.1103';
+var versionEDSKoha = '17.11';
 var edsLangStore = '';
 
-$(window).error(function (e) { e.preventDefault(); }); // keep executing if there is an error.
+if(QueryString('debug')!="1"){$(window).error(function (e) { e.preventDefault(); });}
+else{console.log('JS debug enabled')}// keep executing if there is an error.}
 
-jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js", dataType: "script", cache: true }).done(function (data, textStatus, jqxhr) { 
+
+jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js", dataType: "script", cache: true }).done(function (data, textStatus, jqxhr) {
+	
+	if(jQuery.jStorage.get('edsVersion')!=versionEDSKoha){
+		jQuery.jStorage.flush();
+		jQuery.jStorage.set('edsVersion',versionEDSKoha,{ TTL: edsConfig.cookieexpiry * 60 * 1000 });
+	}
+	
     if (typeof EDSLANG === 'undefined') {
 
         if ($.jStorage.get("edsLang_" + jQuery('html').attr('lang')) == null) {
@@ -92,7 +100,7 @@ function StartEDS(edsLang) {
 
 jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true }); // load customisations.
 
-PFIAtoZBar();
+
 function PFIAtoZBar() {
     var barHolder = '<div class="pagination-small"><ul><li><stong>' + EDSLANG.pfi_atoz_bar + '</strong> </li>';
     var firstChar = "A", lastChar = "Z";
@@ -615,26 +623,26 @@ function SetEDSCartField(){
 	$('.action').prepend('<input type="hidden" name="eds_data" value="'+encodeURIComponent(JSON.stringify(fieldDataObj))+'">');
 }
 
-jQuery('#sendbasketform').attr('action', '/plugin/Koha/Plugin/EDS/opac/1611/opac-sendbasket.pl');
+jQuery('#sendbasketform').attr('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-sendbasket.pl');
 function sendBasket() { // override function in basket.js
     var nameCookie = "bib_list";
     var valCookie = readCookie(nameCookie);
     var strCookie = nameCookie + "=" + valCookie;
 
-    var loc = "/plugin/Koha/Plugin/EDS/opac/1611/opac-sendbasket.pl?" + strCookie;
+    var loc = "/plugin/Koha/Plugin/EDS/opac/1711/opac-sendbasket.pl?" + strCookie;
 
     var optWin = "scrollbars=yes,resizable=yes,height=600,width=900,top=50,left=100";
     var win_form = open(loc, "win_form", optWin);
 }
 
-jQuery('form[action="/cgi-bin/koha/opac-downloadcart.pl"]').attr('action', '/plugin/Koha/Plugin/EDS/opac/1611/opac-downloadcart.pl');
+jQuery('form[action="/cgi-bin/koha/opac-downloadcart.pl"]').attr('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl');
 function downloadBasket() { // override function in basket.js
     alert('asdf');
     var nameCookie = "bib_list";
     var valCookie = readCookie(nameCookie);
     var strCookie = nameCookie + "=" + valCookie;
 
-    var loc = "/plugin/Koha/Plugin/EDS/opac/1611/opac-downloadcart.pl?" + strCookie;
+    var loc = "/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl?" + strCookie;
 
     open(loc, "win_form", 'scrollbars=no,resizable=no,height=300,width=450,top=50,left=100');
 }

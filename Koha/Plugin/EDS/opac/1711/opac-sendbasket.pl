@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 # Copyright Doxulting 2004
 #
@@ -22,7 +22,6 @@ use Modern::Perl;
 use CGI qw ( -utf8 );
 use Encode qw(encode);
 use Carp;
-use Digest::MD5 qw(md5_base64);
 use Mail::Sendmail;
 use MIME::QuotedPrint;
 use MIME::Base64;
@@ -34,6 +33,7 @@ use C4::Output;
 use C4::Members;
 use C4::Templates ();
 use Koha::Email;
+use Koha::Patrons;
 use Koha::Token;
 
 my $query = new CGI;
@@ -56,16 +56,15 @@ my $dbh          = C4::Context->dbh;
 
 if ( $email_add ) {
     die "Wrong CSRF token" unless Koha::Token->new->check_csrf({
-        id     => Encode::encode( 'UTF-8', C4::Context->userenv->{id} ),
-        secret => md5_base64( Encode::encode( 'UTF-8', C4::Context->config('pass') ) ),
+        session_id => scalar $query->cookie('CGISESSID'),
         token  => scalar $query->param('csrf_token'),
     });
     my $email = Koha::Email->new();
-    my $user = GetMember(borrowernumber => $borrowernumber);
+    my $patron = Koha::Patrons->find( $borrowernumber );
     my $user_email = GetFirstValidEmailAddress($borrowernumber)
     || C4::Context->preference('KohaAdminEmailAddress');
 
-    my $email_replyto = "$user->{firstname} $user->{surname} <$user_email>";
+    my $email_replyto = $patron->firstname . " " . $patron->surname . " <$user_email>";
     my $comment    = $query->param('comment');
 
    # if you want to use the KohaAdmin address as from, that is the default no need to set it
@@ -89,9 +88,11 @@ if ( $email_add ) {
         $template2->param( biblionumber => $biblionumber );
 
         my $dat              = GetBiblioData($biblionumber);
-        my $record           = GetMarcBiblio($biblionumber, 1);
-		if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         next unless $dat;
+        my $record           = GetMarcBiblio({
+            biblionumber => $biblionumber,
+            embed_items  => 1 });
+        if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
 
@@ -119,14 +120,14 @@ if ( $email_add ) {
     $template2->param(
         BIBLIO_RESULTS => $resultsarray,
         comment        => $comment,
-        firstname      => $user->{firstname},
-        surname        => $user->{surname},
+        firstname      => $patron->firstname,
+        surname        => $patron->surname,
     );
 
     # Getting template result
     my $template_res = $template2->output();
     my $body;
-	$template_res = CartSendLinks($template_res,@bibs); #EDS Patch
+    $template_res = CartSendLinks($template_res,@bibs); #EDS Patch
 
     # Analysing information and getting mail properties
 
@@ -200,11 +201,8 @@ else {
         url            => "/cgi-bin/koha/opac-sendbasket.pl",
         suggestion     => C4::Context->preference("suggestion"),
         virtualshelves => C4::Context->preference("virtualshelves"),
-        csrf_token     => Koha::Token->new->generate_csrf(
-            {   id     => Encode::encode( 'UTF-8', C4::Context->userenv->{id} ),
-                secret => md5_base64( Encode::encode( 'UTF-8', C4::Context->config('pass') ) ),
-            }
-        ),
+        csrf_token => Koha::Token->new->generate_csrf(
+            { session_id => scalar $query->cookie('CGISESSID'), } ),
     );
     output_html_with_http_headers $query, $cookie, $template->output;
 }
