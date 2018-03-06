@@ -39,7 +39,6 @@ use Koha::Token;
 my $query = new CGI;
 my $eds_data ="";my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data'); #EDS Patch
 
-
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
         template_name   => "opac-sendbasketform.tt",
@@ -88,11 +87,11 @@ if ( $email_add ) {
         $template2->param( biblionumber => $biblionumber );
 
         my $dat              = GetBiblioData($biblionumber);
-        next unless $dat;
         my $record           = GetMarcBiblio({
             biblionumber => $biblionumber,
             embed_items  => 1 });
         if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
+        next unless $dat;
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
 
