@@ -33,6 +33,8 @@
 
 use Modern::Perl;
 
+use Koha::ItemTypes;
+use Koha::Patrons;
 use C4::Context;
 use CGI;
 use C4::Auth qw(:DEFAULT get_session);
@@ -45,7 +47,6 @@ use IO::File;
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use POSIX qw/ceil/;
-use C4::Members qw(GetMember); 
 use URI::Escape;
 #use Koha::Libraries;
 
@@ -387,14 +388,16 @@ sub GetCatalogueAvailability
 	my @sort_by='relevance_asc';
 	my @servers='biblioserver';
 	my $branches = ''; # GetBranches();#  { map { $->branchcode => $->unblessed } Koha::Libraries->search };
-	my $itemtypes = GetItemTypes;
+	my $itemtypes = Koha::ItemTypes->search_with_localization;
 	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
 	
 	my $search_context = {};
 	$search_context->{'interface'} = 'opac';
 	if (C4::Context->preference('OpacHiddenItemsExceptions')){
-		my $borrower = GetMember( borrowernumber => $borrowernumber );
+		my $borrower_obj = Koha::Patrons->find($borrowernumber);
+        my $borrower = $borrower_obj ? $borrower->unblessed : undef;
+        
 		$search_context->{'category'} = $borrower->{'categorycode'};
 	}
 	
