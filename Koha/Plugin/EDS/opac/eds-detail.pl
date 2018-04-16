@@ -51,9 +51,10 @@ require 'eds-methods.pl';
 my $EDSConfig = decode_json(EDSGetConfiguration());
 {no warnings;local $^W = 0;
 
-my $PluginDir = dirname(abs_path($0));
-$PluginDir =~s /EDS\/opac/EDS/;
-$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
+$PluginDir = $PluginDir . '/Koha/Plugin/EDS/' . C4::Context->preference('opacthemes');
 
 my $cgi = new CGI;
 
