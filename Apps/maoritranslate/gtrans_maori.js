@@ -28,7 +28,7 @@
         .skiptranslate {\
             display: none;\
         }\
-        #opac-main {\
+        body {\
             top: 0px !important;\
         }\
         #g_logo{\
