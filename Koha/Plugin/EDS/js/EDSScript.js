@@ -16,7 +16,7 @@ var edsSelectInfo = '';
 var kohaSelectInfo = '';
 
 var defaultParams ='';
-var multiFacet=[];
+var multiFacet={};
 var activeFacets=0;
 //-basket stuff
 var edsConfig ="";
@@ -32,12 +32,12 @@ else{console.log('JS debug enabled')}// keep executing if there is an error.}
 
 
 jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js", dataType: "script", cache: true }).done(function (data, textStatus, jqxhr) {
-	
+
 	if(jQuery.jStorage.get('edsVersion')!=versionEDSKoha){
 		jQuery.jStorage.flush();
 		jQuery.jStorage.set('edsVersion',versionEDSKoha,{ TTL: edsConfig.cookieexpiry * 60 * 1000 });
 	}
-	
+
     if (typeof EDSLANG === 'undefined') {
 
         if ($.jStorage.get("edsLang_" + jQuery('html').attr('lang')) == null) {
@@ -52,22 +52,22 @@ function StartEDS(edsLang) {
 
     if (edsLang != 0) {$.jStorage.set("edsLang_" + jQuery('html').attr('lang'), edsLang, { TTL: edsConfig.cookieexpiry * 60 * 1000 });
     } else {jQuery.globalEval($.jStorage.get("edsLang_" + jQuery('html').attr('lang')));}
-	
+
 //-configurable in plugin config
     edsSwitchText = EDSLANG.eds_switch_text;
     kohaSwitchText = EDSLANG.koha_switch_text;
     edsSelectText = EDSLANG.eds_select_text;
     edsSelectInfo = EDSLANG.eds_select_info;
     kohaSelectInfo = EDSLANG.koha_select_info;
-	
+
 
 	jQuery(window).resize(function () { try { ApplyPlaceAdjustments(); } catch (err) { ApplyPlaceAdjustments(); } });
 	ApplyPlaceAdjustments();
 
 
 	PublisherDateSlider();
-	
-		
+
+
 	if ($.cookie("guest") == 'y') {
 	    jQuery('.results_summary.actions.links a').each(function () {
 	        jQuery(this).attr('href', 'javascript:LoginRequired()');
@@ -135,15 +135,15 @@ function ConfigDefaultData() {
 }
 
 function ConfigData(data){
-	
+
 	edsConfig=data;
 	if($.jStorage.get("edsConfig")==null)
 		$.jStorage.set("edsConfig",(JSON.stringify(data)),{TTL:edsConfig.cookieexpiry*60*1000}); // cache in browser storage
-	
+
 	catalogueId = (data.cataloguedbid=="-")?"":data.cataloguedbid;
 	defaultParams = (data.defaultparams == "-") ? "" : data.defaultparams;
 	defaultSearch = (data.defaultsearch == "-") ? "" : data.defaultsearch;
-	
+
 	if (defaultSearch != "off") {
 	    if (!$.jStorage.get('defaultSearch')) {
 	        defaultSearch = data.defaultsearch;
@@ -163,7 +163,7 @@ function GoDiscovery(firstTime) {
 
 		try{edsSelectedKnownItem=edsKnownItem}catch(e){edsSelectedKnownItem='';}
 
-		
+
 		var optionSelect = 1;
 		    kohaOptions = '';
 		    $('#masthead_search option').each(function () {
@@ -175,7 +175,7 @@ function GoDiscovery(firstTime) {
 		        if (firstTime) { firstTimeSearchOptions = kohaOptions; }
 		        $(this).remove();
 		    });
-            
+
 		    if (firstTimeSearchOptions!=""){
 		        kohaOptions = firstTimeSearchOptions;
 		    }
@@ -190,7 +190,7 @@ function GoDiscovery(firstTime) {
 		    else if (($(this).val() == '') && (defaultSearch != 'koha')) { SetKoha(1); }// Search Koha
 		});
 
-		
+
 		if($.jStorage.get("edsKnownItems")!=null){
 			var knownItems = $.jStorage.get('edsKnownItems');
 			SetEDSOptions(JSON.parse(knownItems));
@@ -198,14 +198,14 @@ function GoDiscovery(firstTime) {
 			SetEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));// Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
 			$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=knownitems',function(data){StoreEDSOptions(data);});
 		}
-		
 
-		
+
+
 }
 
 function StoreEDSOptions(data){
 	if($.jStorage.get("edsKnownItems")==null){
-		$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});	
+		$.jStorage.set('edsKnownItems',JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
 		SetEDSOptions(data);
 	}
 }
@@ -218,10 +218,10 @@ function SetEDSOptions(data){
 		if(edsSelectedKnownItem==data[i].FieldCode){selectedItem='selected="selected"'}
 		edsOptions+='<option '+selectedItem+' value="'+data[i].FieldCode+'">--- '+data[i].FieldCode+': '+data[i].Label+'</option>';
 	}
-	
+
 	if(defaultSearch=="eds"){SetEDS(0);
 	}else if(defaultSearch=="koha"){SetKoha(0);}
-	
+
 	var date = new Date();
 	var minutes = 30;
 	date.setTime(date.getTime() + (minutes * 60 * 1000));
@@ -250,13 +250,13 @@ function SetEDS(showInfo){
 			}else{
 				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
 			}
-	
+
 			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/pfi-search.pl")!=-1){
 				$('#masthead_search option[value="JN"]').prop('selected',true);
 				knownItem="JN";
 			}
-	
-			
+
+
 }
 
 function SetKoha(showInfo){
@@ -300,10 +300,10 @@ function ShowInfo(msg){
 
 function SearchEDS(){
 	var searchTerm;
-	
+
   try{searchTerm = $('#transl1').val().replace(/\&/g,"%2526");}catch(err){
 	  if(searchTerm==undefined) searchTerm = $('.transl1').val().replace(/\&/g,"%2526");} // for bootstrap
-	  
+
   if(knownItem=='eds'){knownItem='';}
   if (defaultParams === undefined) { defaultParams = ''; }
   var apiSearchType = "eds";
@@ -327,7 +327,7 @@ function EDSGoToRecord(data){
 
 
 function EDSBrowseResults(fetchURL){
-	
+
 	var currentBrowsePage = fetchURL;
 	regex = /pagenumber\=\d/;
 	currentBrowsePage = currentBrowsePage.match(regex)[0];
@@ -335,7 +335,7 @@ function EDSBrowseResults(fetchURL){
 	browseNextPage=eval(currentBrowsePage)+1;
 	browseNextPage = fetchURL.replace(/pagenumber\=\d/,'pagenumber='+browseNextPage);
 	$("li[title='More Results']").html('<center><span><img src="/opac-tmpl/bootstrap/images/loading.gif" width="14"></span></center>');
-	
+
 	$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q=Search?'+fetchURL,function(data){EDSAppendToBrowse(data);});
 }
 
@@ -367,7 +367,7 @@ function EDSSetDetailPageNavigator(){
 	$('#titleBread').text($('#titleBread').text()+$('.title').text());
 	if($('.back_results a').attr('href').indexOf('q=Search?')>-1){
 		$("#a_listResults").unbind('click');
-		$("#ul_pagination_list").append('<div align="center" id="browseLoader"><img title="' + more_loading_msg + '" src="/opac-tmpl/bootstrap/images/loading.gif" width="14" ></div>');
+		$("#ul_pagination_list").append('<div align="center" id="browseLoader"><img title="' + EDSLANG.more_loading_msg + '" src="/opac-tmpl/bootstrap/images/loading.gif" width="14" ></div>');
 		$("#a_listResults").click(function(e) {
 			var navigation = $(".results-pagination");
 			if (navigation.css("display") == 'none') {
@@ -392,11 +392,11 @@ function EDSSetDetailPageNavigator(){
 		    $('.left_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + previousResult + '\',\'left_results\')" title="' + EDSLANG.previous_title + '">&laquo; ' + EDSLANG.previous + '</a>');
 		}
 		if(nextResult<250 && nextResult<$.cookie('ResultTotal')){
-		    $('.right_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + nextResult + '\',\'right_results\')" title="' + next_title + '">' + next + ' &raquo;</a>');
+		    $('.right_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + nextResult + '\',\'right_results\')" title="' + EDSLANG.next_title + '">' + EDSLANG.next + ' &raquo;</a>');
 		}
 	}
 	$('.breadcrumb a:contains("Details for:")').text('Details for: '+$('.title').text());
-	
+
 	if(QueryString('fulltext')=='html'){
 		$('.html-customlink').each(function(){
 			if($(this).text().trim()=="HTML Full Text"){
@@ -417,7 +417,7 @@ function EDSSetDetailPageNavigator(){
 }
 
 function MinFullTextLoader(){
-	
+
 	if($('.FullTextLoader').css('height')=="40px")
 		$('.FullTextLoader').css('height','100%');
 	else
@@ -490,26 +490,26 @@ function InitCartWithEDS() {
 }
 
 function PrepareItems(){
-	if(callPrepareItems==false){callPrepareItems=true;}else{return;} 
+	if(callPrepareItems==false){callPrepareItems=true;}else{return;}
 
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
 
 	var recordId=recordList.split("/");
-	
+
 	for(var edsItemCount=0;edsItemCount<recordId.length-1;edsItemCount++){
 		if(recordId[edsItemCount].indexOf(edsConfig.cataloguedbid)==-1)
 			if(recordId[edsItemCount].indexOf("|")!=-1)
 				EDSItems++;
 	}
-	
-	if(EDSItems>0){ 
+
+	if(EDSItems>0){
 		$('.print-large, .print').attr('onclick',''); // .print for prog
 		$('.print-large, .print').attr('href','javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + EDSLANG.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 		$(".dataTables_empty").css('display','none');
 	}
-	
+
 	for(i=0;i<recordId.length-1;i++){
 		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records
 			var recordDataCache = $.jStorage.get(recordId[i]);
@@ -519,7 +519,7 @@ function PrepareItems(){
 					if(verbose==1){BuildMoreDetails(data)}else{GetEDSItems(data);}});
 			}else{
 				if(verbose==1){
-					BuildMoreDetails(JSON.parse(recordDataCache));			
+					BuildMoreDetails(JSON.parse(recordDataCache));
 				}else{
 					GetEDSItems(JSON.parse(recordDataCache));
 				}
@@ -530,8 +530,8 @@ function PrepareItems(){
 		if((EDSItems==0)){
 			$('#EDSBasketLoader').css('display','none');
 		}
-		
-		
+
+
 }
 
 function GetEDSItems(data){
@@ -541,7 +541,7 @@ function GetEDSItems(data){
 	if(EDSItems==0){$('#EDSBasketLoader').css('display','none');}
 
 	$.jStorage.set(data.Record.Header.An+'|'+data.Record.Header.DbId,JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
-	
+
 	} catch (e) {
 	    console.log(e);
 		EDSItems--;
@@ -610,9 +610,9 @@ function SetEDSCartField(){
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
 	var recordId=recordList.split("/");
-	
+
 	var fieldDataObj = {Records:[]};
-	
+
 	for(i=0;i<recordId.length-1;i++){
 		if(recordId[i].indexOf(edsConfig.cataloguedbid)==-1){ // ignore catalogue records
 			var fieldRecordObj = {};
@@ -711,13 +711,13 @@ function AdvSearchEDS(){
 	for(sbCount=1;sbCount<=searchBlockCount;sbCount++){
 		var advBool=$("#searchFields_"+sbCount+" .advBool").val(); if(advBool==undefined){advBool="AND";}
 		var advKi=$("#searchFields_"+sbCount+" .advFieldCode").val();
-		var advTerm=$("#searchFields_"+sbCount+" .advInput").val(); 
+		var advTerm=$("#searchFields_"+sbCount+" .advInput").val();
 		if(advTerm==undefined){advTerm="";}else{advTerm=advTerm.replace(/\&/g,"%2526");}
-	
+
 		if(advTerm.length>1)
 			advQuery+="query-"+sbCount+"="+advBool+","+advKi+":{"+advTerm+"}|";
 	}
-	
+
 	$("input.advSBOps").each(function(index,value){
 
 		if(jQuery(this).attr("type")=="checkbox" || jQuery(this).attr("type")=="radio"){
@@ -732,11 +732,11 @@ function AdvSearchEDS(){
 			}
 		}
 	});
-	
+
 	$("select.advSBOps option:selected").each(function(index,value){
 			advQuery+="action="+$(this).val()+"|";
 	});
-	
+
 	//dateRange
 	var fromMonth=($("#common_DT1").val()=="")?"01":$("#common_DT1").val();
 	var toMonth=($("#common_DT1_ToMonth").val()=="")?"12":$("#common_DT1_ToMonth").val();
@@ -751,27 +751,53 @@ function AdvSearchEDS(){
 			advQuery+="action="+jQuery("#common_DT1_FromYear").attr("data-action").replace(":value",":"+fromYear+"-"+fromMonth+"/"+toYear+"-"+toMonth);
 		}
 	}
-	
-	//alert(advQuery);	
+
+	//alert(advQuery);
 	window.location.href="eds-search.pl?q=Search?"+advQuery;
-	
+
 }
-//ADVANCED SEARCH END 
+//ADVANCED SEARCH END
 
 // Multiple Facets START
 
 function SetFacet(checkBoxItem){
+
 	var facetAction = jQuery(checkBoxItem).next().attr('href');
-	facetAction = facetAction.substring(facetAction.indexOf('|action'));
+
+	// If no multiFacet store, create it
+	if (Object.keys(multiFacet).length == 0){
+		var action = [];
+		facetAction.split("|").slice(1).forEach(function(item, index, arr){
+			var e = item.split("=");
+			multiFacet[e[0]] = e[1];
+		});
+		multiFacet.action = action;
+	}
+
+	var newAction = facetAction.substring(facetAction.indexOf('|action')).replace("|","").split("=");
+
 	if(jQuery(checkBoxItem).is(':checked')){
-		multiFacet.push(facetAction);
+		multiFacet.action.push(newAction[1]);
 		activeFacets++;
 		UpdateFacetButton(1);
-	}else{
-		multiFacet.splice( $.inArray(facetAction, multiFacet), 1 );
+	} else {
+		multiFacet.action = removeMatchArray(newAction[1], multiFacet.action);
 		activeFacets--;
 		UpdateFacetButton(0);
 	}
+	// multiFacet[newAction[0]] += "&" + newAction[1];
+	// multiFacet.action.push(newAction[1]);
+
+}
+
+function removeMatchArray(match, array){
+	for (var i = 0; i < array.length; i++) {
+		if (array[i] == match){
+			array.splice(i,1);
+			return array;
+		}
+	}
+	return array;
 }
 
 function UpdateFacetButton(state){
@@ -789,8 +815,17 @@ function UpdateFacetButton(state){
 
 function UpdateFacet(){
 	var newEDSURL = document.URL.replace("&default=1","");
-	newEDSURL=newEDSURL+multiFacet.join('');
-	window.location.href=newEDSURL;
+	var str = [];
+	for (var e in multiFacet){
+		if (e == "action"){
+			for (var i = 0; i < multiFacet.action.length; i++) {
+				str.push("action=" + multiFacet.action[i]);
+			}
+		} else {
+			str.push(e + "=" + multiFacet[e]);
+		}
+	}
+	window.location.href = document.URL.split("|")[0].replace("&default=1", "") + "|" + str.join("|");
 }
 
 
@@ -815,18 +850,18 @@ function PlacardTabs(placardTab){
 		jQuery('#'+placardTab+'-tab').addClass('placard-tab-item-active');
 		jQuery('#'+placardTab).parent().parent().css('display','');
 	}
-		
+
 	if(jQuery('#placard-tabs a').length>1){
 		jQuery('#placard-tabs').parent().css('display','');
 	}
-		
+
 	jQuery('#'+placardTab+'-tab').click(function(){
 		jQuery('.placardtab').css('display','none');
 		jQuery('#placard-tabs a').removeClass('placard-tab-item-active');
 		jQuery('#'+placardTab).parent().parent().css('display','');
 		jQuery('#'+placardTab+'-tab').addClass('placard-tab-item-active');
 	});
-	
+
 }
 
 function ApplyPlaceAdjustments() {
