@@ -94,7 +94,9 @@ function StartEDS(edsLang) {
 	    jQuery('#searchsubmit').trigger('click');
 	});
 
-
+	if (edsConfig.autocomplete == "yes"){
+		EDSAutoComp();
+	}
 
 }
 
@@ -229,56 +231,57 @@ function SetEDSOptions(data){
 }
 
 function SetEDS(showInfo){
-			$('#searchform').submit(function(){return false;});
-			$('#searchsubmit').click(SearchEDS);
-			$('#masthead_search option').each(function(){$(this).remove();});
-			if(showInfo){ShowInfo(edsSelectInfo);}
-			$('#masthead_search').append(edsOptions);
-			//$.removeCookie('defaultSearch', { path: '/' });
-			$.jStorage.set('defaultSearch', 'eds', { TTL: edsConfig.cookieexpiry * 60 * 1000 });
-			defaultSearch="eds";
-			$('#transl1').val($.cookie('QueryTerm'));
-			$('.transl1').val($.cookie('QueryTerm')); //for 314
-			$('#searchBread').text(EDSLANG.search_breadcrumb + " " + $.cookie('QueryTerm'));
-			$('#transl1').removeClass('placeholder');
-			//advSearch
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
-			}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}else{
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}
+	$('#searchform').submit(function(){return false;});
+	$('#searchsubmit').click(SearchEDS);
+	$('#masthead_search option').each(function(){$(this).remove();});
+	if(showInfo){ShowInfo(edsSelectInfo);}
+	$('#masthead_search').append(edsOptions);
+	//$.removeCookie('defaultSearch', { path: '/' });
+	$.jStorage.set('defaultSearch', 'eds', { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+	defaultSearch="eds";
+	$('#transl1').val($.cookie('QueryTerm'));
+	$('.transl1').val($.cookie('QueryTerm')); //for 314
+	$('#searchBread').text(EDSLANG.search_breadcrumb + " " + $.cookie('QueryTerm'));
+	$('#transl1').removeClass('placeholder');
+	//advSearch
+	if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
+	}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
+	}else{
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
+	}
 
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/pfi-search.pl")!=-1){
-				$('#masthead_search option[value="JN"]').prop('selected',true);
-				knownItem="JN";
-			}
+	if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/pfi-search.pl")!=-1){
+		$('#masthead_search option[value="JN"]').prop('selected',true);
+		knownItem="JN";
+	}
 
-
+	EDSAutoComp();
 }
 
 function SetKoha(showInfo){
-			$('#searchform').unbind('submit');
-			$('#searchsubmit').unbind('click');
-			$('#masthead_search option').each(function(){$(this).remove();});
-			if(showInfo){ShowInfo(kohaSelectInfo);}
-			$('#masthead_search').append(kohaOptions);
-			$('#masthead_search option[value="eds"]').remove();
-			$('#masthead_search').prepend("<option value='eds'>"+edsSwitchText+"</option>");
-			//$.removeCookie('defaultSearch', { path: '/' });
-			$.jStorage.set('defaultSearch', 'koha', { TTL: edsConfig.cookieexpiry * 60 * 1000 })
-			defaultSearch="koha";
-			//advSearch
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
-			}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}else{
-				$('a[href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl"]').attr('href','/cgi-bin/koha/opac-search.pl');
-			}
+	$('#searchform').unbind('submit');
+	$('#searchsubmit').unbind('click');
+	$('#masthead_search option').each(function(){$(this).remove();});
+	if(showInfo){ShowInfo(kohaSelectInfo);}
+	$('#masthead_search').append(kohaOptions);
+	$('#masthead_search option[value="eds"]').remove();
+	$('#masthead_search').prepend("<option value='eds'>"+edsSwitchText+"</option>");
+	//$.removeCookie('defaultSearch', { path: '/' });
+	$.jStorage.set('defaultSearch', 'koha', { TTL: edsConfig.cookieexpiry * 60 * 1000 })
+	defaultSearch="koha";
+	//advSearch
+	if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
+	}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
+	}else{
+		$('a[href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl"]').attr('href','/cgi-bin/koha/opac-search.pl');
+	}
+	$('#translControl1').autocomplete("destroy");
 }
 
 function ShowInfo(msg){
@@ -972,3 +975,65 @@ function DateHandleKeyPress(e, searchBox) {
         }
     }
 }
+
+function EDSAutoComp(){
+
+	var creds = $.jStorage.get("autoComp");
+
+	var idx = "rawqueries";
+	if (edsConfig.autocomplete_mode == "title"){
+		idx = "holdings";
+	}
+
+	if (defaultSearch != "eds"){
+		return;
+	}
+
+	if (!creds){
+		$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-ac.pl?type=auth', function (data) {
+			jQuery.jStorage.set('autoComp',data,{ TTL: parseInt(data.AuthTimeout) });
+			EDSAutoComp();
+		});
+	} else {
+		console.log("EDS AC active");
+		$('#translControl1').autocomplete({
+            source: function(request, response) {
+                var promise = $.ajax(creds.Autocomplete.Url, {
+                    data: {
+                        token: creds.Autocomplete.Token,
+                        term: request.term,
+                        idx: idx,
+                        filters: JSON.stringify([{
+                            name: 'custid',
+                            values: [creds.Autocomplete.CustId]
+                        }])
+                    }
+                });
+
+                promise.done(function(data) {
+					if (data.error){
+						jQuery.jStorage.set('autoComp',null);
+						EDSAutoComp();
+					} else {
+						var terms = data.terms.map(function(wrapper) {
+							return wrapper.term;
+						});
+						response(terms);
+					}
+                });
+			},
+			select: EDSautoSearch
+		});
+	}
+}
+
+function EDSautoSearch(event, ui){
+	$.when( $('#translControl1').val(ui.item.value)).done(function() {
+		$("#searchsubmit").click();
+ 	});
+}
+$('body').on('click', '#translControl1', function() {
+	if (defaultSearch == "eds"){
+		$( "#translControl1" ).autocomplete( "search" );
+	}
+});
