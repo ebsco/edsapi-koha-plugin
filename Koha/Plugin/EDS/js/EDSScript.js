@@ -442,62 +442,42 @@ function InitCartWithEDS() {
     jQuery('#addto').change(function () { CheckEDSRecordsforAddToList(); });
     jQuery('.addto input:submit').click(function () { CheckEDSRecordsforAddToList(); });
 
-
-
-
-    if ($.jStorage.get("bib_list") != null) {
-        try {
-            var jbib_list = $.jStorage.get("bib_list");
-			if(parent.opener){
-				parent.opener.document.cookie = 'bib_list=' + jbib_list  + ";path=/";
-			} else {
-				document.cookie = 'bib_list=' + jbib_list  + ";path=/";
-			}
-            if (basketcount == "") basketcount = 0;
-            //if (basketcount != jbib_list.split('/').length - 1)
-               //updateBasket(jbib_list.length -1);
-        } catch (err) { }
-    }
-
+    // if ($.jStorage.get("bib_list") != null) {
+    //     try {
+    //         var jbib_list = $.jStorage.get("bib_list");
+    //         document.cookie = 'bib_list=' + jbib_list  + ";path=/";
+    //         if (basketcount == "") basketcount = 0;
+    //         //if (basketcount != jbib_list.split('/').length - 1)
+    //            //updateBasket(jbib_list.length -1);
+    //     } catch (err) { }
+    // }
 
     if (document.URL.indexOf('opac-basket.pl') != -1) {// basket stuff.
-        $.jStorage.set("bib_list", QueryString('bib_list'), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
-		if(parent.opener){
-			parent.opener.document.cookie = 'bib_list=' + QueryString('bib_list')  + ";path=/";
-		} else {
-			document.cookie = 'bib_list=' + QueryString('bib_list')  + ";path=/";
-		}
+        // $.jStorage.set("bib_list", QueryString('bib_list'), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+        document.cookie = 'bib_list=' + QueryString('bib_list')  + ";path=/";
         PrepareItems();
 
-        $('.empty').removeAttr('onclick');
-        $('.empty').click(function () { // copy of delBasket in Koha's basket.js
-            var nameCookie = "bib_list";
-            var rep = false;
-            rep = confirm(MSG_CONFIRM_DEL_BASKET);
-            if (rep) {
-				// delCookie(nameCookie);
-				var exp = new Date();
-				exp.setTime(exp.getTime()-1);
-				if(parent.opener){
-					parent.opener.document.cookie = name + "=null; expires=" + exp.toGMTString() + ";path=/";
-				} else {
-					document.cookie = name + "=null; expires=" + exp.toGMTString() + ";path=/";
-				}
-                updateAllLinks(top.opener);
-                document.location = "about:blank";
-                updateBasket(0, top.opener);
-                $.jStorage.set("bib_list", "", { TTL: edsConfig.cookieexpiry * 60 * 1000 }); // added this line
-                window.close();
-            }
-        });
-        $('.addtocart').click(function () {
-            $.jStorage.set("bib_list", $.cookie("bib_list"), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
-        });
-        $('.cartRemove').click(function () {
-            $.jStorage.set("bib_list", $.cookie("bib_list"), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
-        });
+        // $('.empty').removeAttr('onclick');
+        // $('.empty').click(function () { // copy of delBasket in Koha's basket.js
+        //     var nameCookie = "bib_list";
+        //     var rep = false;
+        //     rep = confirm(MSG_CONFIRM_DEL_BASKET);
+        //     if (rep) {
+        //         delCookie(nameCookie);
+        //         updateAllLinks(top.opener);
+        //         document.location = "about:blank";
+        //         updateBasket(0, top.opener);
+        //         // $.jStorage.set("bib_list", "", { TTL: edsConfig.cookieexpiry * 60 * 1000 }); // added this line
+        //         window.close();
+        //     }
+        // });
+        // $('.addtocart').click(function () {
+        //     $.jStorage.set("bib_list", $.cookie("bib_list"), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+        // });
+        // $('.cartRemove').click(function () {
+        //     $.jStorage.set("bib_list", $.cookie("bib_list"), { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+        // });
     }
-
 
     if ((document.URL.indexOf('opac-downloadcart.pl') != -1) || (document.URL.indexOf('opac-sendbasket.pl') != -1)) {
         SetEDSCartField();
