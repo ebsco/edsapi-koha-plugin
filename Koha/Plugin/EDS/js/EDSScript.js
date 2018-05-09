@@ -7,6 +7,7 @@ var edsSelectedKnownItem="";
 //var defaultSearch=""; set by configure
 var browseNextPage="";
 var catalogueId="";
+var nocorrect="";
 
 //-configurable in plugin config
 var edsSwitchText = '';
@@ -98,8 +99,14 @@ function StartEDS(edsLang) {
 	InitCartWithEDS(); // cart management
 
 	jQuery('#eds-autosuggest').click(function () {
-	    var autoSuggest = this;
-	    var autoSuggestText = jQuery(autoSuggest).text();
+		nocorrect = "nocorrect=1";
+	    var autoSuggestText = jQuery(this).text();
+	    jQuery('#translControl1').val(autoSuggestText);
+	    jQuery('#searchsubmit').trigger('click');
+	});
+
+	jQuery('#eds-edsautocorrect').click(function () {
+	    var autoSuggestText = jQuery(this).text();
 	    jQuery('#translControl1').val(autoSuggestText);
 	    jQuery('#searchsubmit').trigger('click');
 	});
@@ -321,7 +328,7 @@ function SearchEDS(){
   if (defaultParams === undefined) { defaultParams = ''; }
   var apiSearchType = "eds";
   if (knownItem == 'JN') { apiSearchType = "pfi"; }
-  window.location = '/plugin/Koha/Plugin/EDS/opac/' + apiSearchType + '-search.pl?q=Search?query-1=AND,' + knownItem + ':{' + searchTerm + '}' + defaultParams + '&default=1';
+  window.location = '/plugin/Koha/Plugin/EDS/opac/' + apiSearchType + '-search.pl?q=Search?query-1=AND,' + knownItem + ':{' + searchTerm + '}' + defaultParams + '&default=1' + nocorrect;
 }
 
 function EDSGetRecord(recordURL,callingObjParent){
