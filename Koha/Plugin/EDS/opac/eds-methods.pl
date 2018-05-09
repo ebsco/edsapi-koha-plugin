@@ -325,14 +325,18 @@ sub EDSGetSessionToken
 
 sub EDSDefaultQueryBuilder
 {
-	$defaultEDSQuery = "";
+	my $defaultEDSQuery = "";
 	my $EDSInfoData = decode_json($edsinfo);
 
 	my @AutoSuggests = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}};
 	foreach my $AutoSuggest (@AutoSuggests){
-		#if($AutoSuggest->{DefaultOn} eq 'y'){
-			$defaultEDSQuery = $defaultEDSQuery.'|autosuggest='.$AutoSuggest->{DefaultOn};
-		#}
+		# $input->param("default")
+		if ($AutoSuggest->{Id} eq "AutoCorrect" && $input->param("nocorrect") eq 1){
+			$defaultEDSQuery = lc $defaultEDSQuery.'|autocorrect=n';
+			$input->delete("nocorrect");
+		} else {
+			$defaultEDSQuery = lc $defaultEDSQuery.'|'.$AutoSuggest->{Id}.'='.$AutoSuggest->{DefaultOn};
+		}
 	}
 
 	my @ExpanderDefaults = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableExpanders}};
