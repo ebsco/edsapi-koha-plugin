@@ -27,6 +27,16 @@ var bibListLocal = 0;
 var versionEDSKoha = '17.11';
 var edsLangStore = '';
 
+delCookie = function(name) {
+	var exp = new Date();
+    exp.setTime(exp.getTime()-1);
+    if(parent.opener){
+	parent.opener.document.cookie = name + "=null; path=/; expires=" + exp.toGMTString();
+    } else {
+	document.cookie = name + "=null; path=/; expires=" + exp.toGMTString();
+    }
+}
+
 if(QueryString('debug')!="1"){$(window).error(function (e) { e.preventDefault(); });}
 else{console.log('JS debug enabled')}// keep executing if there is an error.}
 
