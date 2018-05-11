@@ -20,7 +20,7 @@
 [% INCLUDE 'doc-head-close.inc' %]
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>
-<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
     [% BLOCK cssinclude %]
         <link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />
@@ -267,6 +267,15 @@
 					</div>
 				[% END %]
 			  [% END %]
+            [% IF RECORD.ImageQuickViewItems %]
+                <div style="margin-bottom: 0.5em;" >
+                    [% FOREACH IMG IN RECORD.ImageQuickViewItems %]
+                        <a href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
+                            <img class="diag-img" src="[% IMG.Url %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
+                        </a>
+                    [% END %]
+                </div>
+            [% END %]
 
 			  [% #CustomLinks %]
 			  [% IF RECORD.CustomLinks OR RECORD.FullText.Links OR RECORD.FullText.CustomLinks OR RECORD.FullText.Text.Availability==1 %]
@@ -280,7 +289,7 @@
 					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Links %]
 
-								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]">
+								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
 									[% IF CUSTOMLINK.Type == 'pdflink' %][% EDSLANG.eds_results_TT_links_pdf %]
 									[% ELSIF CUSTOMLINK.Type == 'ebook-pdf' %][% EDSLANG.eds_results_TT_links_ebook %]
 									[% ELSE %][% CUSTOMLINK.Type %][% END %]

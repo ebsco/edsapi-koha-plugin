@@ -382,6 +382,7 @@ sub EDSDefaultQueryBuilder
 
 	$defaultEDSQuery = $defaultEDSQuery.'|resultsperpage='.$EDSInfoData->{ViewResultSettings}->{ResultsPerPage};
 	$defaultEDSQuery = $defaultEDSQuery.'|view='.$EDSInfoData->{ViewResultSettings}->{ResultListView};
+	$defaultEDSQuery = $defaultEDSQuery.'|includeimagequickview='.$EDSInfoData->{ViewResultSettings}->{IncludeImageQuickView}->{DefaultOn};
 
 	return $defaultEDSQuery;
 
