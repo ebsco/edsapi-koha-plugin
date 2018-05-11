@@ -49,6 +49,24 @@ jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js", dataType: 
     } else { StartEDS(0) }
 });
 
+function eds_img_resize(e){
+	if (e.height > e.width){
+		console.log("Scale by height");
+		$(e).addClass("sc_height");
+    } else {
+		$(e).addClass("sc_width");
+    }
+}
+$('body').on('click', '.diag-img', function(e) {
+	e.preventDefault();
+	$("body").addClass("eds_noscroll");
+	$("body").append('\
+	<div class="c_modal" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">\
+		<span class="close" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">&times;</span>\
+		<img class="c_modal-content" src="' + e.target.parentNode.href + '" onload="eds_img_resize(this)"  >\
+	</div>');
+});
+
 function StartEDS(edsLang) {
 
     if (edsLang != 0) {$.jStorage.set("edsLang_" + jQuery('html').attr('lang'), edsLang, { TTL: edsConfig.cookieexpiry * 60 * 1000 });
