@@ -270,7 +270,7 @@
             [% IF RECORD.ImageQuickViewItems %]
                 <div style="margin-bottom: 0.5em;" >
                     [% FOREACH IMG IN RECORD.ImageQuickViewItems %]
-                        <a href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
+                        <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
                             <img class="diag-img" src="[% IMG.Url %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
                         </a>
                     [% END %]
