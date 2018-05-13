@@ -1,7 +1,7 @@
 {
   "name": "edsapi-koha-plugin",
-  "version": "2.1.3",
-  "previous_version": "2.1.2",
+  "version": "2.1.4",
+  "previous_version": "2.1.3",
   "description": "Koha EDS Plugin",
   "devDependencies": {
     "gulp": "^3.9.1",
