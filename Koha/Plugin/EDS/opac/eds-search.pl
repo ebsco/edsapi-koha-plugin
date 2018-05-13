@@ -67,12 +67,14 @@ use File::Basename qw( dirname );
 
 require 'eds-methods.pl';
 
-my $PluginDir = dirname(abs_path($0));
-$PluginDir =~s /EDS\/opac/EDS/;
-$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
+#my $PluginDir = dirname(abs_path($0));
+#$PluginDir =~s /EDS\/opac/EDS/;
+#$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 #leaving this in as alternate code.
-#my $PluginDir = C4::Context->config("pluginsdir");
-#$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+#FIXME below should be adjusted to handle multiple directories
+my $PluginDir = C4::Context->config("pluginsdir");
+$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
 my $cgi = new CGI;
 #my $format = $cgi->param("format") || 'html';
