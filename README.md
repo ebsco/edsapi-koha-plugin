@@ -73,15 +73,18 @@ Minimum Koha version required is Koha 3.12 with plugins enabled
 
 # Videos & Presentations
 KohaCon17 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KonaCon17.pdf) | [Video Recording](https://www.youtube.com/watch?v=38xb_ysctfQ)
+
 [![video_kohacon17](https://i.ytimg.com/vi/38xb_ysctfQ/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLDiwKmM0GFbSM3gWRXOHDlYgIrPxQ)](https://www.youtube.com/watch?v=38xb_ysctfQ)
 
 KohaCon16 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon16.pdf) | [Video Recording](http://www.livemedia.com/video/236823)
+
 [![video_kohacon16](https://i.ytimg.com/vi/wXJcnaM1m64/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLCL_QAX9A0wpp_VFeKwyxqKN9b4sg)](http://www.livemedia.com/video/236823)
 
 KohaCon14 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon14.pdf) | [Video Recording](https://www.youtube.com/watch?v=cw0Aq4cPick)
+
 [![video_kohacon14](https://i.ytimg.com/vi/cw0Aq4cPick/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLBHfYzKnVARdh1OuZgtU-nIH1JqPw)](https://www.youtube.com/watch?v=cw0Aq4cPick)
 <br>
 # Quick Links
-[Wiki](https://github.com/ebsco/edsapi-koha-plugin/wiki/001.-Home)
-[Patches](https://github.com/ebsco/edsapi-koha-plugin/wiki/Patches)
-[Open Athen Plugin](https://github.com/ebsco/openathens-koha-plugin)
+- [Wiki](https://github.com/ebsco/edsapi-koha-plugin/wiki/001.-Home)
+- [Patches](https://github.com/ebsco/edsapi-koha-plugin/wiki/Patches)
+- [Open Athen Plugin](https://github.com/ebsco/openathens-koha-plugin)
