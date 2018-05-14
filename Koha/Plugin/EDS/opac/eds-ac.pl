@@ -17,7 +17,7 @@ my $EDSConfig = decode_json(EDSGetConfiguration());
 # auth to API
 if ($type eq "auth"){
     $ua->agent("Koha-EDS-Autocomplete/0.1");
-    my $req = HTTP::Request->new(POST => 'http://eds-api.ebscohost.com/authservice/rest/uidauth');
+    my $req = HTTP::Request->new(POST => 'https://eds-api.ebscohost.com/authservice/rest/uidauth');
     $req->content_type('application/json');
     $req->content('{"UserId":"'.$EDSConfig->{'edsusername'}.'","Password":"'.$EDSConfig->{'edspassword'}.'","Options":["autocomplete"],"InterfaceId":"'.$EDSConfig->{'edsprofileid'}.'"}');
     my $res = $ua->request($req);
