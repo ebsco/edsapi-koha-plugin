@@ -1,7 +1,7 @@
 
 **edsapi-koha-plugin** - [![Join the chat at https://gitter.im/ebsco/edsapi-koha-plugin](https://badges.gitter.im/ebsco/edsapi-koha-plugin.svg)](https://gitter.im/ebsco/edsapi-koha-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# May 2018 Major Update - Changelog
+# May 2018 Major Update - Changelog {WIP}
 
 **AutoComplete**
  - Suggested results that appear underneath the search box as a user types
