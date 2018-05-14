@@ -1026,7 +1026,7 @@ function EDSAutoComp(){
 	var creds = $.jStorage.get("autoComp");
 
 	var idx = "rawqueries";
-	if (edsConfig.autocomplete_mode == "title"){
+	if (edsConfig.autocomplete_mode != "title"){
 		idx = "holdings";
 	}
 
