@@ -7,6 +7,7 @@
  - Suggested results that appear underneath the search box as a user types
  - Article or title level completion
  - Enabled through app configuration
+
 ![AutoComplete Example](https://media.giphy.com/media/1UVBdpefGBobBzWPpN/giphy.gif)
 
 **AutoCorrect**
