@@ -2,6 +2,22 @@
 layout: default
 ---
 
+# Features
+
+* Pull search results and view records from the EBSCO Discovery Service from Koha
+
+* Completely integrates into native Koha interface
+
+* Auto-Complete
+    * Predictive results based on your holdings
+
+* Auto-Suggest
+    * Search suggestions for similar spellings
+
+* Auto-Correct
+    * Automatically correct mispellings
+
+
 # Versions
 
 | Koha Version     | Documentation Link |
@@ -32,25 +48,10 @@ layout: default
 7.  Wait for the page to refresh. (You might have to click Update Info twice if it initiating connection takes time the first time.)
 
 
-# Video Presentations
-
-KohaCon17 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KonaCon17.pdf) | [Video Recording](https://www.youtube.com/watch?v=38xb_ysctfQ)
-
-
-[![video_kohacon17](https://i.ytimg.com/vi/38xb_ysctfQ/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLDiwKmM0GFbSM3gWRXOHDlYgIrPxQ)](https://www.youtube.com/watch?v=38xb_ysctfQ)
-
-KohaCon16 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon16.pdf) | [Video Recording](http://www.livemedia.com/video/236823)
-
-
-[![video_kohacon16](https://i.ytimg.com/vi/wXJcnaM1m64/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLCL_QAX9A0wpp_VFeKwyxqKN9b4sg)](http://www.livemedia.com/video/236823)
-
-KohaCon14 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KohaCon14.pdf) | [Video Recording](https://www.youtube.com/watch?v=cw0Aq4cPick)
-
-[![video_kohacon14](https://i.ytimg.com/vi/cw0Aq4cPick/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLBHfYzKnVARdh1OuZgtU-nIH1JqPw)](https://www.youtube.com/watch?v=cw0Aq4cPick)
-
+# [Video Presentations](./videos)
 
 # Quick Links
 
 [Latest Documentation](./docs/17.11)
 
-[OpenAthens plugin](https://github.com/ebsco/openathens-koha-plugin)
+[OpenAthens Plugin](https://github.com/ebsco/openathens-koha-plugin)
