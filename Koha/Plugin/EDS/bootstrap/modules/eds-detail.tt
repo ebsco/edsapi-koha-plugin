@@ -492,16 +492,16 @@
 						  [% IF ITEM.Group.match('Ti') %]
 							<h1 class="title">[% ITEM.Data %]</h1>
 							  [% IF DETAILED_RECORD.Header.IsSearchable =="y" %]
-								<div style="clear:both;"></div> 
-								<div class="input-prepend input-append">			
-									<input type="text" class="input-xlarge search-in-pub-field" placeholder="Search within Publication" data-action="[% DETAILED_RECORD.Header.ResourceType %]:[% DETAILED_RECORD.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull FILTER lower %]">		  
+								<div style="clear:both;"></div>
+								<div class="input-prepend input-append">
+									<input type="text" class="input-xlarge search-in-pub-field" placeholder="Search within Publication" data-action="[% DETAILED_RECORD.Header.ResourceType %]:[% DETAILED_RECORD.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull FILTER lower %]">
 									<span class="add-on search-in-pub-button" style="cursor:pointer" >
 										<i class="icon-search"></i>
-									</span>		
+									</span>
 								</div>
 							  [% END %]
 						  [% ELSE %] <span class="results_summary"><span class="label">[% ITEM.Label %] : </span>[% ITEM.Data %]</span> [% END %]
-					  [% END %] 
+					  [% END %]
 				  [% ELSE %]
 					  <h1 class="title">[% EDSLANG.eds_detail_TT_login_msg %]</h1>
 				  [% END %]
@@ -511,14 +511,16 @@
                         Images
                     </div>
                     <div id="qv_cont" >
-                        [% FOREACH IMG IN DETAILED_RECORD.ImageQuickViewItems %]
-                            <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
-                                <img class="diag-img" src="[% IMG.Url.replace('small','large') %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
-                            </a>
+                        [% IF (DETAILED_RECORD.ImageQuickViewItems) %]
+                            [% FOREACH IMG IN DETAILED_RECORD.ImageQuickViewItems %]
+                                <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
+                                    <img class="diag-img" src="[% IMG.Url.replace('small','large') %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
+                                </a>
+                            [% END %]
                         [% END %]
                     </div>
                 </div>
-				  
+
 
 
 
