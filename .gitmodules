@@ -1,0 +1,3 @@
+[submodule "edsapi-koha-plugin.wiki"]
+	path = edsapi-koha-plugin.wiki
+	url = git://github.com/ebsco/edsapi-koha-plugin.wiki
