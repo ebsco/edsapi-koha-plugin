@@ -21,14 +21,16 @@ layout: default
 
 # Versions
 
+Please read through the appropiate documentation for your Koha version
+
 | Koha Version     | Documentation Link |
 |:-----------------|:-------------------|
-| 17.05+           | [Documentation](./docs/17.05)      |
-| 16.11            | [Documentation](./docs/16.11)      |
-| 3.22.1 - 16.05   | [Documentation](./docs/3.22.1)     |
-| 3.16 - 3.22      | [Documentation](./docs/3.16)       |
-| 3.14             | [Documentation](./docs/3.14)       |
-| 3.12             | [Documentation](./docs/3.12)       |
+| 17.05+           | [Documentation](./docs/17.05)                   |
+| 16.11            | [Documentation](./docs/16.11)  (Depreciated)    |
+| 3.22.1 - 16.05   | [Documentation](./docs/3.22.1) (Depreciated)    |
+| 3.16 - 3.22      | [Documentation](./docs/3.16)   (Depreciated)    |
+| 3.14             | [Documentation](./docs/3.14)   (Depreciated)    |
+| 3.12             | [Documentation](./docs/3.12)   (Depreciated)    |
 
 
 
@@ -56,3 +58,7 @@ layout: default
 [Latest Documentation](./docs/17.11)
 
 [OpenAthens Plugin](https://github.com/ebsco/openathens-koha-plugin)
+
+# Support
+
+Please report all bugs or issues in the [GitHub issue tracker](https://github.com/ebsco/edsapi-koha-plugin/issues)
