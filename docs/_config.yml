@@ -1,5 +1,7 @@
-title: Cayman theme
-description: Cayman is a clean, responsive theme for GitHub Pages.
+title: EBSCO Koha Plugin
+description: Integrate results and functionality from the EDSAPI into Koha
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-cayman
+github:
+  zip_url: https://github.com/ebsco/edsapi-koha-plugin/raw/master/eds_plugin_17.05.kpz

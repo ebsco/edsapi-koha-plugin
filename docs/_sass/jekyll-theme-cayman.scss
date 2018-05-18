@@ -106,6 +106,11 @@ a {
   }
 }
 
+.page-header > a {
+  color: $header-heading-color !important;
+  text-decoration: none !important;
+}
+
 .project-name {
   margin-top: 0;
   margin-bottom: 0.1rem;
