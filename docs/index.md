@@ -18,6 +18,8 @@ layout: default
 
 * Quick View Images: See attached images from the results list
 
+* Expandable functionality with apps
+
 
 # Versions
 

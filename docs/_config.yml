@@ -1,5 +1,4 @@
 title: EBSCO Koha Plugin
-description: Integrate results and functionality from the EDSAPI into Koha
+description: Integrate results and functionality from the EDS API into Koha
 show_downloads: true
-google_analytics:
 theme: jekyll-theme-cayman
