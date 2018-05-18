@@ -8,14 +8,15 @@ layout: default
 
 * Completely integrates into native Koha interface
 
-* Auto-Complete
-    * Predictive results based on your holdings
+* Research Starters: provides links to citable, authoritative summary articles for thousands of popular topics
 
-* Auto-Suggest
-    * Search suggestions for similar spellings
+* Auto-Complete: predictive results based on  holdings
 
-* Auto-Correct
-    * Automatically correct mispellings
+* Auto-Suggest: search suggestions for similar spellings
+
+* Auto-Correct: automatically correct mispellings
+
+* Quick View Images: See attached images from the results list
 
 
 # Versions
@@ -33,7 +34,7 @@ layout: default
 
 # Quick Installation Steps
 
-1.  Download the package file EDS_Plugin_xx.kpz
+1.  Download the package file [eds_plugin_17.05.kpz](https://github.com/ebsco/edsapi-koha-plugin/blob/master/eds_plugin_17.05.kpz)
 
 2.  Login to Koha Admin and go to the plugin screen
 
