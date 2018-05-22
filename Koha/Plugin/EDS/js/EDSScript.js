@@ -769,12 +769,24 @@ function SetFacet(checkBoxItem){
 
 	var facetAction = jQuery(checkBoxItem).next().attr('href');
 
-	// If no multiFacet store, create it
+	// If no multiFacet store, create it 
 	if (Object.keys(multiFacet).length == 0){
 		var action = [];
 		facetAction.split("|").slice(1).forEach(function(item, index, arr){
 			var e = item.split("=");
-			multiFacet[e[0]] = e[1];
+			
+			if (multiFacet[e[0]]) {
+				if (typeof multiFacet[e[0]] == "object"){
+					multiFacet[e[0]].push(e[1]);
+				} else {
+					var arr = [multiFacet[e[0]]];
+					arr.push(e[1]);
+					multiFacet[e[0]] = arr;
+				}
+			} else {
+				multiFacet[e[0]] = e[1];
+			}
+
 		});
 		multiFacet.action = action;
 	}
@@ -790,8 +802,6 @@ function SetFacet(checkBoxItem){
 		activeFacets--;
 		UpdateFacetButton(0);
 	}
-	// multiFacet[newAction[0]] += "&" + newAction[1];
-	// multiFacet.action.push(newAction[1]);
 
 }
 
@@ -822,9 +832,9 @@ function UpdateFacet(){
 	var newEDSURL = document.URL.replace("&default=1","");
 	var str = [];
 	for (var e in multiFacet){
-		if (e == "action"){
-			for (var i = 0; i < multiFacet.action.length; i++) {
-				str.push("action=" + multiFacet.action[i]);
+		if (typeof multiFacet[e] == "object"){
+			for (var i = 0; i < multiFacet[e].length; i++) {
+				str.push(e + "=" + multiFacet[e][i]);
 			}
 		} else {
 			str.push(e + "=" + multiFacet[e]);
