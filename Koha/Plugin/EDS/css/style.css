@@ -1,3 +1,6 @@
+@import url("//cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.1.3/css/ion.rangeSlider.min.css");
+@import url("//cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.1.3/css/ion.rangeSlider.skinNice.min.css");
+
 #qv_images {
 	margin: .5em 0 0;
     background-color: #F3F3F3;
@@ -74,8 +77,6 @@ c_modal .close:focus {
     height: 100%;
     overflow: hidden}
 }
-@import url("//cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.1.3/css/ion.rangeSlider.min.css");
-@import url("//cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.1.3/css/ion.rangeSlider.skinNice.min.css");
 
 .pt-icon { width: 70px; float: left; display: inline-block; background-image: url('../images/PT_Sprite.png'); background-repeat: no-repeat; }
 .pt-serialPeriodical { background-position: -30px -30px; height: 59px; }
