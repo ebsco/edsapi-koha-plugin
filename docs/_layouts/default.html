@@ -13,10 +13,10 @@
     <section class="page-header">
       <a href="//ebsco.github.io/edsapi-koha-plugin/"><h1 class="project-name">EBSCO Koha Plugin</h1></a>
       <h3 class="project-tagline">{{ site.description }}</h3>
-      {% if site.show_downloads %}
         <a href="https://github.com/ebsco/edsapi-koha-plugin" class="btn">GitHub Link</a>
         <a href="{{ site.github.zip_url }}" class="btn">Download Version 17.11</a>
-      {% endif %}
+        <!-- Place this tag where you want the button to render. -->
+        <a class="github-button" href="https://github.com/ebsco/edsapi-koha-plugin" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ebsco/edsapi-koha-plugin on GitHub">Star</a>
     </section>
 
     <section class="main-content">
@@ -33,6 +33,7 @@
 
       <!-- Global site tag (gtag.js) - Google Analytics -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119473427-1"></script>
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
       <script>
 function scrollto(id){
         $('html, body').animate({
