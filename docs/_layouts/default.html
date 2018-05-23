@@ -12,7 +12,7 @@
   <body>
     <section class="page-header">
       <a href="//ebsco.github.io/edsapi-koha-plugin/"><h1 class="project-name">EBSCO Koha Plugin</h1></a>
-      <h2 class="project-tagline">{{ site.description }}</h2>
+      <h3 class="project-tagline">{{ site.description }}</h3>
       {% if site.show_downloads %}
         <a href="https://github.com/ebsco/edsapi-koha-plugin" class="btn">GitHub Link</a>
         <a href="{{ site.github.zip_url }}" class="btn">Download Version 17.11</a>
@@ -26,7 +26,7 @@
       </footer>
     </section>
     <div id="page_menu" >
-
+      <b>Menu</b>
     </div>
 
       <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -38,7 +38,7 @@ function scrollto(id){
         }, 100, 'linear');
       }
         $(function() {
-            var arr = document.querySelectorAll("h2");
+            var arr = document.querySelectorAll("h1");
               for (var i = 0; i < arr.length; i++) {
                 $("#menu ul").append('\
                   <li><a onclick="scrollto(\'#' + arr[i].id + '\')" href="javascript:void(0)">\
