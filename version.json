@@ -1,0 +1,15 @@
+{
+    "MajorVersion": "17.11",
+    "MinorVersion": "000",
+    "ReleaseNotes": [
+        {
+            "author": "cwu@ebsco.com",
+            "note": "this is a note"
+        },
+        {
+            "author": "cwu@ebsco.com",
+            "note": "this is another note"
+        }
+    ],
+    "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
+}
