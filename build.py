@@ -118,4 +118,5 @@ for item in filedata:
 #########################
 
 ## Update kpz
-os.system("zip -r eds_plugin_17.05.kpz Koha")
+os.system("rm *.kpz")
+os.system("zip -r eds_plugin_" + majorVersion + minorVersion +  ".kpz Koha")
