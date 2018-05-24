@@ -1,78 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>16.1103</latestversion>
+	<latestversion>17.11000</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>02/Jul/2017</lastupdated>
+	<lastupdated>2018/5/24</lastupdated>
 	<releasenotes>
-		<release version="16.1103" date="02/Jul/2017">
-			<note id="1" author="amiranda@ebsco.com">Publication Finder integration</note>
-			<note id="2" author="amiranda@ebsco.com">Fixed Research Starter not displaying correctly</note>
-			<note id="3" author="amiranda@ebsco.com">Moved path of custom.js file to custom directlry</note>
-			<note id="4" author="amiranda@ebsco.com">Fixed custom link display at the bottom in detailed records of EDS</note>
-		</release>
-		<release version="16.1102" date="13/Jun/2017">
-			<note id="1" author="amiranda@ebsco.com">No more patching</note>
-			<note id="2" author="amiranda@ebsco.com">Multi-language Support</note>
-			<note id="3" author="amiranda@ebsco.com">Removed Live Update</note>
-			<note id="4" author="amiranda@ebsco.com">Embeded Apps Manager</note>
-			<note id="5" author="amiranda@ebsco.com">Fixes to support Kohav.16.11</note>
-			<note id="6" author="amiranda@ebsco.com">Removed text settings from configure and improved layout.</note>
-			<note id="7" author="amiranda@ebsco.com">Fixed Update Info button - OpacBaseURL.</note>
-		</release>
-		<release version="3.2205" date="03/Jun/2016">
-			<note id="1" author="amiranda@ebsco.com">Results: Ignore catalogue items only so deselect message does not appear.</note>
-			<note id="2" author="amiranda@ebsco.com">Admin: Upgrade ACE editor to 1.2.3.</note>
-			<note id="3" author="amiranda@ebsco.com">Admin: ACE Editor; encode HTML to preserve HTML in script.</note>
-			<note id="4" author="amiranda@ebsco.com">Results: Remove publication date format from label; can be set in eAdmin.</note>
-			<note id="5" author="amiranda@ebsco.com">Results: Added eds-facet-label as hook for facets.</note>
-			<note id="6" author="amiranda@ebsco.com">Results: Display page number only if there are results.</note>
-			<note id="7" author="amiranda@ebsco.com">Results: Display refine section when there are no results.</note>
-			<note id="8" author="amiranda@ebsco.com">Js: Remove SetNoResults() as refine appears if no results.</note>
-			<note id="9" author="amiranda@ebsco.com">Results: Remove SetNoResults() as refine appears if no results.</note>
-			<note id="10" author="amiranda@ebsco.com">Results: Execute deselect add to list alert immediatly instead of waiting for page load to complete.</note>
-		</release>
-		<release version="3.2204" date="25/May/2016">
-			<note id="1" author="amiranda@ebsco.com">Results: Check only selected items when checking add to list</note>
-		</release>
-		<release version="3.2203" date="25/May/2016">
-			<note id="1" author="amiranda@ebsco.com">Result: Applied span2/span3 switch for refine results when window width is less/greater than 1200</note>
-			<note id="2" author="amiranda@ebsco.com">Result: Added Auto Suggest feature.</note>
-			<note id="3" author="amiranda@ebsco.com">Result: Added Date Slider.</note>
-			<note id="4" author="amiranda@ebsco.com">Result: Added buttons to apply and clear date limiter.</note>
-			<note id="5" author="amiranda@ebsco.com">Result: Removed RSS settings which were for koha instead of EDS.</note>
-			<note id="6" author="amiranda@ebsco.com">Result: Better placement of exact match placard.</note>
-			<note id="7" author="amiranda@ebsco.com">Result: Moved Research starter CSS to stylesheet.</note>
-			<note id="8" author="amiranda@ebsco.com">Result: Break long URLs to ensure layout responsiveness.</note>
-			<note id="9" author="amiranda@ebsco.com">Result: Refine section clean up and cosmetics.</note>
-			<note id="10" author="amiranda@ebsco.com">Result: Alert user to deselect titles from discovery to add to list.</note>
-			<note id="11" author="amiranda@ebsco.com">Details: Removed Marc view.</note>
-		</release>
-		<release version="3.2202" date="23/May/2016">
-			<note id="1" author="amiranda@ebsco.com">Cart: Fixed addition of catalogue items for hold and list from EDS</note>
-			<note id="2" author="amiranda@ebsco.com">Results: Removed breadcrumb from to page</note>
-			<note id="3" author="amiranda@ebsco.com">Details: Removed breadcrumb from to page</note>
-			<note id="4" author="amiranda@ebsco.com">Advanced: Removed breadcrumb from to page</note>
-		</release>
-		<release version="3.2201" date="23/May/2016">
-			<note id="1" author="amiranda@ebsco.com">Admin: Removed Prog from setup tool</note>
-			<note id="2" author="amiranda@ebsco.com">Admin: Pointed release notes to sha/3.22.json</note>
-			<note id="3" author="amiranda@ebsco.com">Admin: Updated setup.tt with new opac-sendbasket.pl patch info</note>
-			<note id="4" author="amiranda@ebsco.com">Admin: Updated setup.tt with new doc-head-close.inc patch info</note>
-			<note id="5" author="amiranda@ebsco.com">Admin: Applied prettify to patch code section in run tool section</note>
-			<note id="6" author="amiranda@ebsco.com">Prog: Removed prog folder and all its contents as this template was removed</note>
-			<note id="7" author="amiranda@ebsco.com">Cart: Override Place Hold to prompt users to remove titles from discovery</note>
-			<note id="8" author="amiranda@ebsco.com">Cart: Override Add to List to prompt users to remove titles from discovery</note>
-			<note id="9" author="amiranda@ebsco.com">Cart: Call enableCheckboxActions(); on .cb click for Discovery items too</note>
-			<note id="10" author="amiranda@ebsco.com">Cart: Removed function EDSSendBasket() - legacy to control EDS items in cart when add to cart was an optional patch</note>
-			<note id="11" author="amiranda@ebsco.com">Cart: Removed bibListLocal - used for legacy cart patch </note>
-			<note id="12" author="amiranda@ebsco.com">Cart: Removed edsListLocal - used for legacy cart patch </note>
-			<note id="13" author="amiranda@ebsco.com">Js: Removed $(document).ready(); made redundant by trackCall </note>
-			<note id="14" author="amiranda@ebsco.com">Js: Preload EDS Select Text and Default Search from the script tag to remove delays loading EDS options to the dropdown. </note>
-			<note id="15" author="amiranda@ebsco.com">Js: Fix position of search switch message to appear just below the dropdown. </note>
-			<note id="16" author="amiranda@ebsco.com">Results: Select field code by default if set in bootstrap theme. </note>
-		</release>
-		<release version="3.1646" date="11/Nov/2015">
-			<note id="1" author="amiranda@ebsco.com">Create AuthToken if session token request is incomplete</note>
+		<release version="17.11000" date="2018/5/24">
+			<note id="1" author="cwu@ebsco.com">this is a note</note>
+			<note id="2" author="cwu@ebsco.com">this is another note</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
