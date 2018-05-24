@@ -3,11 +3,13 @@
 <kohaplugin>
 	<latestversion>17.11000</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2018/5/24</lastupdated>
+	<lastupdated>2018/5/25</lastupdated>
 	<releasenotes>
-		<release version="17.11000" date="2018/5/24">
-			<note id="1" author="cwu@ebsco.com">this is a note</note>
-			<note id="2" author="cwu@ebsco.com">this is another note</note>
+		<release version="17.11000" date="2018/5/25">
+			<note id="1" author="cwu@ebsco.com">Auto-Complete: predictive results based on holdings</note>
+			<note id="2" author="cwu@ebsco.com">Auto-Suggest: search suggestions for similar spellings</note>
+			<note id="3" author="cwu@ebsco.com">Auto-Correct: automatically correct mispellings</note>
+			<note id="4" author="cwu@ebsco.com">Quick View Images: See attached images from the results list</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

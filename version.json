@@ -4,11 +4,19 @@
     "ReleaseNotes": [
         {
             "author": "cwu@ebsco.com",
-            "note": "this is a note"
+            "note": "Auto-Complete: predictive results based on holdings"
         },
         {
             "author": "cwu@ebsco.com",
-            "note": "this is another note"
+            "note": "Auto-Suggest: search suggestions for similar spellings"
+        },
+        {
+            "author": "cwu@ebsco.com",
+            "note": "Auto-Correct: automatically correct mispellings"
+        },
+        {
+            "author": "cwu@ebsco.com",
+            "note": "Quick View Images: See attached images from the results list"
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
