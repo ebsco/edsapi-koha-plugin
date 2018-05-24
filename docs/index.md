@@ -64,3 +64,5 @@ Please read through the appropiate documentation for your Koha version
 # Support
 
 Please report all bugs or issues in the [GitHub issue tracker](https://github.com/ebsco/edsapi-koha-plugin/issues)
+
+# [Contributing](./contributing)
