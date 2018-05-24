@@ -1,1 +1,1 @@
-# Please refer to [http://ebsco.github.io/edsapi-koha-plugin/](Koha EDS Plugin)
+# Please refer to (http://ebsco.github.io/edsapi-koha-plugin/)[Koha EDS Plugin]
