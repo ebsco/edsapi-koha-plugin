@@ -20,8 +20,13 @@ my $mech = WWW::Mechanize->new(ssl_opts => {
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
-## Here we set our plugin version
-our $VERSION = 16.1103;
+################# DO NOT TOUCH - CONTROLLED BY build.py
+our $MAJOR_VERSION = "17.11";
+our $SUB_VERSION = "000";
+our $VERSION = $MAJOR_VERSION + $SUB_VERSION;
+our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
+our $DATE_UPDATE = "2018-5-24";
+######################################################
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -30,8 +35,8 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2017-07-02',
-    minimum_version => '16.11',
+    date_updated    => $DATE_UPDATE,
+    minimum_version => $MAJOR_VERSION,
     maximum_version => '',
     version         => $VERSION,
 };
@@ -277,7 +282,7 @@ sub SetupTool {
 	## Pull SHA data for version info.
 	my $shaData = '';
 	try{
-		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/1611.json');
+		$mech->get($SHA_ADD);
 		$shaData= $mech->content();
 		$shaData=decode_json($shaData);
 	}catch{
