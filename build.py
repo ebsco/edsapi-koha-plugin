@@ -43,7 +43,7 @@ for line in range(len(filedata)):
 
     # Set date
     if ("our $DATE_UPDATE" in templine):
-        filedata[line] = 'our $DATE_UPDATE = "' + str(now.year) + "/" + str(now.month) + "/" + str(now.day) + '";\n'
+        filedata[line] = 'our $DATE_UPDATE = \'' + str(now.year) + "-" + str('%02d' % now.month) + "-" + str('%02d' % now.day) + '\';\n'
 
 # write updated array to file
 wfile = open('Koha/Plugin/EDS.pm', 'w')
@@ -87,7 +87,7 @@ for line in range(len(filedata)):
 
     # Set version
     if ("<release version" in templine):
-        filedata[line] = '\t\t<release version="' + majorVersion + minorVersion + '" date="' + str(now.year) + "/" + str(now.month) + "/" + str(now.day) + '">\n'
+        filedata[line] = '\t\t<release version="' + majorVersion + minorVersion + '" date="' + str(now.year) + "/" + str('%02d' % now.month) + "/" + str('%02d' % now.day) + '">\n'
 
     # Set version
     if ("<latestversion>" in templine):
@@ -95,7 +95,7 @@ for line in range(len(filedata)):
 
     # Set date
     if ("<lastupdated>" in templine):
-        filedata[line] = '\t<lastupdated>' + str(now.year) + "/" + str(now.month) + "/" + str(now.day) + '</lastupdated>\n'
+        filedata[line] = '\t<lastupdated>' + str(now.year) + "/" + str('%02d' % now.month) + "/" + str('%02d' % now.day) + '</lastupdated>\n'
 
     # add notes
     if ("<note id" in templine):
