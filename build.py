@@ -43,7 +43,7 @@ for line in range(len(filedata)):
 
     # Set date
     if ("our $DATE_UPDATE" in templine):
-        filedata[line] = 'our $DATE_UPDATE = "' + str(now.year) + "-" + str(now.month) + "-" + str(now.day) + '";\n'
+        filedata[line] = 'our $DATE_UPDATE = "' + str(now.year) + "/" + str(now.month) + "/" + str(now.day) + '";\n'
 
 # write updated array to file
 wfile = open('Koha/Plugin/EDS.pm', 'w')
