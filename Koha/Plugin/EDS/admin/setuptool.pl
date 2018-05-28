@@ -99,6 +99,10 @@ sub GetCustomJS{
 sub SetCustomJS{
 	my ($jsCode) = @_;	
 	
+	unless (-f $PluginDir."/js/custom/custom.js") {
+		open my $fc, ">", $PluginDir."/js/custom/custom.js";
+    	close $fc;
+	}
 	open FILE, "+>", $PluginDir."/js/custom/custom.js" or die $!;
 	print FILE $jsCode;
 	close FILE;
