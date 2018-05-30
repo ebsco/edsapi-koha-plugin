@@ -20,7 +20,7 @@
 [% INCLUDE 'doc-head-close.inc' %]
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>
-<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
     [% BLOCK cssinclude %]
         <link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />

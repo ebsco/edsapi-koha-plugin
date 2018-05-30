@@ -1,6 +1,6 @@
 package Koha::Plugin::EDS;
 
-use Modern::Perl; 
+use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
 use C4::Members;
@@ -10,7 +10,7 @@ use File::Basename qw( dirname );
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use IO::Socket::SSL qw();
-use WWW::Mechanize qw(); 
+use WWW::Mechanize qw();
 my $mech = WWW::Mechanize->new(ssl_opts => {
     SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
     verify_hostname => 0,
@@ -20,8 +20,13 @@ my $mech = WWW::Mechanize->new(ssl_opts => {
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
-## Here we set our plugin version
-our $VERSION = 16.1103;
+################# DO NOT TOUCH - CONTROLLED BY build.py
+our $MAJOR_VERSION = "17.11";
+our $SUB_VERSION = "000";
+our $VERSION = $MAJOR_VERSION + $SUB_VERSION;
+our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
+our $DATE_UPDATE = '2018-05-28';
+######################################################
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -30,8 +35,8 @@ our $metadata = {
     description =>
 'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
     date_authored   => '2013-10-27',
-    date_updated    => '2017-07-02',
-    minimum_version => '16.11',
+    date_updated    => $DATE_UPDATE,
+    minimum_version => $MAJOR_VERSION,
     maximum_version => '',
     version         => $VERSION,
 };
@@ -68,7 +73,7 @@ sub tool {
 sub configure {
     my ( $self, $args ) = @_;
     my $cgi = $self->{'cgi'};
-	
+
 	#Get OpacUserJS Data
 		my $OpacUserJS = C4::Context->preference("OpacUserJS");
 
@@ -90,17 +95,19 @@ sub configure {
 			edsinfo				=> $self->retrieve_data('edsinfo'),
 			lastedsinfoupdate	=> $self->retrieve_data('lastedsinfoupdate'),
 			authtoken			=> $self->retrieve_data('authtoken'),
-			OPACBaseURL			=> C4::Context->preference('OPACBaseURL'),		
-			defaultparams	=> $self->retrieve_data('defaultparams'),
-			
-			
+			OPACBaseURL			=> C4::Context->preference('OPACBaseURL'),
+			defaultparams	    => $self->retrieve_data('defaultparams'),
+			autocomplete_mode	=> $self->retrieve_data('autocomplete_mode'),
+			autocomplete	    => $self->retrieve_data('autocomplete'),
+
+
         );
 
         print $cgi->header();
         print $template->output();
     }
     else {
-		
+
 		$self->store_data(
 				{
 					edsusername 		=> ($cgi->param('edsusername')?$cgi->param('edsusername'):"-"),
@@ -108,49 +115,49 @@ sub configure {
 					edsprofileid 		=> ($cgi->param('edsprofileid')?$cgi->param('edsprofileid'):"-"),
 					edscustomerid 		=> ($cgi->param('edscustomerid')?$cgi->param('edscustomerid'):"-"),
 					cataloguedbid 		=> ($cgi->param('cataloguedbid')?$cgi->param('cataloguedbid'):"-"),
-					catalogueanprefix 	=> ($cgi->param('catalogueanprefix')?$cgi->param('catalogueanprefix'):"-"), 
+					catalogueanprefix 	=> ($cgi->param('catalogueanprefix')?$cgi->param('catalogueanprefix'):"-"),
 					defaultsearch 		=> ($cgi->param('defaultsearch')?$cgi->param('defaultsearch'):"-"),
 					logerrors			=> ($cgi->param('logerrors')?$cgi->param('logerrors'):"-"),
 					iprange				=> ($cgi->param('iprange')?$cgi->param('iprange'):"-"),
 					cookieexpiry 		=> ($cgi->param('cookieexpiry')?$cgi->param('cookieexpiry'):"-"),
 					last_configured_by => C4::Context->userenv->{'number'},
 					defaultparams	=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
+					autocomplete_mode	=> ($cgi->param('autocomplete_mode')?$cgi->param('autocomplete_mode'):"-"),
+					autocomplete	=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
 				}
 			);
-		
-			if($cgi->param('edsinfo') eq 'Update Required'){ 
-				
+
+			if($cgi->param('edsinfo') eq 'Update Required'){
+
 				$self->store_data(
 					{
-						authtoken 			=> $cgi->param('authtoken'), 
+						authtoken 			=> $cgi->param('authtoken'),
 						lastedsinfoupdate	=> $cgi->param('lastedsinfoupdate'),
 						edsinfo 			=> $cgi->param('edsinfo'),
 						$self->store_data
 					}
-				);	
+				);
 
 			}
-			
+
 			my $edsJS = '';
-			
+
 			$OpacUserJS=~s/\/\*eds{\*\/.*\/\*\}eds\*\///g;
-			
-			if($cgi->param('defaultsearch') eq 'eds'){ 
+
+			if($cgi->param('defaultsearch') eq 'eds'){
 				$edsJS = '/*eds{*/var defaultSearch="eds";$(document).ready(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/EDSScript.js", dataType: "script", cache: true }); });/*}eds*/';
 				$OpacUserJS = $OpacUserJS.$edsJS;
 
 			}
-			if($cgi->param('defaultsearch') eq 'koha'){ 
+			if($cgi->param('defaultsearch') eq 'koha'){
 				$edsJS = '/*eds{*/var defaultSearch="koha";$(document).ready(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/EDSScript.js", dataType: "script", cache: true }); });/*}eds*/';
 				$OpacUserJS = $OpacUserJS.$edsJS;
 
 			}
-			
-            my $dbh = C4::Context->dbh;
-            my $sql = "UPDATE systempreferences SET value = ? WHERE variable = 'OpacUserJS'";
-            my $sth = $dbh->prepare($sql);
-            $sth->execute($OpacUserJS);
-			
+        my $dbh = C4::Context->dbh;
+        my $sql = "UPDATE systempreferences SET value = ? WHERE variable = 'OpacUserJS'";
+        my $sth = $dbh->prepare($sql);
+        $sth->execute($OpacUserJS);
         $self->go_home();
     }
 }
@@ -165,19 +172,19 @@ sub install() {
 #		CREATE TABLE $table (
 #		`edsid` INT NOT NULL AUTO_INCREMENT,
 #		`edskey` VARCHAR(100) NOT NULL,
-#		`edsvalue` TEXT NOT NULL, 
+#		`edsvalue` TEXT NOT NULL,
 #		PRIMARY KEY (`edsid`)) ENGINE = INNODB;
-#    " ); 
+#    " );
 
-	
-	
+
+
 	#my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '1', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
-	
-	
+
+
 	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='1' WHERE `variable`='EDSEnabled'");
-	
+
 	my $pluginSQL = C4::Context->dbh->do("INSERT INTO `plugin_data` (`plugin_class`, `plugin_key`, `plugin_value`) VALUES ('Koha::Plugin::EDS', 'installedversion', '".$VERSION."')");
-	#use Data::Dumper; die Dumper $pluginSQL;		
+	#use Data::Dumper; die Dumper $pluginSQL;
 }
 
 
@@ -190,7 +197,7 @@ sub uninstall() {
 
 #    return C4::Context->dbh->do("DROP TABLE $table");
 	#my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '0', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
-	
+
 	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='0' WHERE `variable`='EDSEnabled'");
 }
 
@@ -205,49 +212,49 @@ sub PageURL{
 		$page_url .= $ENV{SERVER_NAME}.":".$ENV{SERVER_PORT}.$ENV{REQUEST_URI};
 	} else {
 		$page_url .= $ENV{SERVER_NAME}.$ENV{REQUEST_URI};
-	}	
-	
+	}
+
 	return $page_url;
-	
+
 }
 
 sub SetupTool {
     my ( $self, $args ) = @_;
     my $cgi = $self->{'cgi'};
-	
+
 	###BEGIN UpdatePlugin
-	
+
 	my $updateSHA = $cgi->param('updateto');
 	my $updateVersion = $cgi->param('v');
 	my $checkFile = $cgi->param('check');
 	my $customJS = $cgi->param('js');
 	my $jsCode = $cgi->param('code');
 
-	
+
 	my $updateLog = '';
 	my $readWriteStatus = '';
 	my @customJSContent;
-	
+
 	if(defined $checkFile){
 		require $PluginDir.'/admin/setuptool.pl';
 		$readWriteStatus = CheckWriteStatus($checkFile);
 	}
-	
+
 	if(defined $customJS){
 		require $PluginDir.'/admin/setuptool.pl';
-		
+
 		if($customJS eq "2"){
-			SetCustomJS($jsCode);	
+			SetCustomJS($jsCode);
 		}
-		
+
 		@customJSContent = GetCustomJS();
 		#use Data::Dumper; die Dumper scalar(@customJSContent);
 		if(scalar(@customJSContent) eq 0){
 			push(@customJSContent,'//Enter JavaScript here');
 		}
-		
+
 	}
-		
+
 	if(defined $updateSHA){
 		if($updateSHA ne 'done'){
 			require $PluginDir.'/admin/setuptool.pl';
@@ -256,26 +263,26 @@ sub SetupTool {
 
 		}
 	}
-	
+
 	###END UpdatePlugin
-	
+
 	### Setup installed version no. in plugin table if this was not set during installation.
 	my $installedVersionNo = $self->retrieve_data('installedversion');
 	if(not defined $installedVersionNo){
-		
+
 		$self->store_data(
 		{
 			installedversion 		=> $VERSION,
 		});
 		$self->go_home();
-	
-	} 
-	
-	
+
+	}
+
+
 	## Pull SHA data for version info.
 	my $shaData = '';
 	try{
-		$mech->get('https://widgets.ebscohost.com/prod/api/koha/sha/1611.json');
+		$mech->get($SHA_ADD);
 		$shaData= $mech->content();
 		$shaData=decode_json($shaData);
 	}catch{
@@ -316,7 +323,7 @@ sub SetupTool {
 			customjs			=>\@customJSContent,
 			jsstate				=>$customJS,
 			plugin_dir			=>$PluginDir,
-				
+
         );
 
     print $cgi->header();

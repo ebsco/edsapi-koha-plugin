@@ -18,7 +18,7 @@
 
 <div id="editor">[% FOR jsline IN customjs %][% jsline %][% END %]</div>
 
-<script type="text/javascript" src="http://widgets.ebscohost.com/prod/common/javascript/gss-common.js"></script>
+<script type="text/javascript" src="https://widgets.ebscohost.com/prod/common/javascript/gss-common.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
 function htmlEncode(value){
