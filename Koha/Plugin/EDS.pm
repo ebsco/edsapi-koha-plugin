@@ -146,8 +146,10 @@ sub configure {
 
 			}
 			
-			my $enableEDSQuery = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='".$OpacUserJS."' WHERE `variable`='OpacUserJS'");
-			
+            my $dbh = C4::Context->dbh;
+            my $sql = "UPDATE systempreferences SET value = ? WHERE variable = 'OpacUserJS'";
+            my $sth = $dbh->prepare($sql);
+            $sth->execute($OpacUserJS);
 			
         $self->go_home();
     }
