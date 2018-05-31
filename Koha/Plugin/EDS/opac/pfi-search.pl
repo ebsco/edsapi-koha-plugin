@@ -149,7 +149,7 @@ if($cgi->cookie("bib_list")){
 
 if ($format eq 'rss2' or $format eq 'opensearchdescription' or $format eq 'atom') {
     $template->param($format => 1);
-    $template->param(timestamp => strftime("%Y-%m-%dT%H:%M:%S-00:00", gmtime)) if ($format eq 'atom'); 
+    $template->param(timestamp => strftime("%Y-%m-%dT%H:%M:%S-00:00", gmtime)) if ($format eq 'atom');
     # FIXME - the timestamp is a hack - the biblio update timestamp should be used for each
     # entry, but not sure if that's worth an extra database query for each bib
 }
@@ -159,7 +159,7 @@ if (C4::Context->preference("marcflavour") eq "UNIMARC" ) {
 elsif (C4::Context->preference("marcflavour") eq "MARC21" ) {
     $template->param('usmarc' => 1);
 }
-	
+
 $template->param( 'AllowOnShelfHolds' => C4::Context->preference('AllowOnShelfHolds') );
 $template->param( 'OPACNoResultsFound' => C4::Context->preference('OPACNoResultsFound') );
 
@@ -279,9 +279,9 @@ my $GuestMode = $cgi->cookie(
                 );
 $cookie = [$cookie, $ResultTotal, $SearchQueryWithOutPage, $returnToResults, $QueryTerm, $SessionToken, $GuestMode];
 
-my $session = get_session($cgi->cookie("CGISESSID")); 
+my $session = get_session($cgi->cookie("CGISESSID"));
 $session->param('busc'=>'q=Search?'.$EDSSearchQuery.'&amp;listBiblios=1&amp;total='.$EDSResponse->{SearchResult}->{Statistics}->{TotalHits}); #to enable back for opac-details
-				
+
 my $content_type = ( $format eq 'rss' or $format eq 'atom' ) ? $format : 'html';
 output_with_http_headers $cgi, $cookie, $template->output, $content_type;
 
@@ -302,7 +302,7 @@ sub GetSearchParam
 
 sub EDSProcessResults
 { try{	#process Search Results
-	@EDSResults = @{$EDSResponse->{SearchResult}->{Data}->{Records}}; 
+	@EDSResults = @{$EDSResponse->{SearchResult}->{Data}->{Records}};
 	foreach my $Result (@EDSResults){
 		foreach my $Items ($Result->{Items}){
 			try
@@ -311,7 +311,7 @@ sub EDSProcessResults
 				foreach my $Item (@Items){
 					$Item = EDSProcessItem($Item);
 					try{
-						if(($Result->{Header}->{DbId} eq $EDSConfig->{cataloguedbid}) && ($Item->{Name} eq 'Title')){ 
+						if(($Result->{Header}->{DbId} eq $EDSConfig->{cataloguedbid}) && ($Item->{Name} eq 'Title')){
 							my $CatalogueRecordId=$Result->{Header}->{An};
 							$CatalogueRecordId=~s/\w+\.//;
 							$Item->{CatData} = GetCatalogueAvailability($CatalogueRecordId);
@@ -325,7 +325,7 @@ sub EDSProcessResults
 			{}
 
 		}
-	}	
+	}
 }catch{};}
 
 
@@ -335,7 +335,7 @@ sub EDSProcessRelatedPublications
 	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}){
 		return;
 	}
-	@PublicationExactMatch = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}}; 
+	@PublicationExactMatch = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedPublications}};
 	foreach my $PublicationExactMatch (@PublicationExactMatch){
 		if($PublicationExactMatch->{Type} eq 'emp'){
 			my @RelatedPublications = @{$PublicationExactMatch->{PublicationRecords}};
@@ -349,7 +349,7 @@ sub EDSProcessRelatedPublications
 			}
 		}
 	}
-	#use Data::Dumper; die Dumper @PublicationExactMatch;	
+	#use Data::Dumper; die Dumper @PublicationExactMatch;
 }
 
 
@@ -359,7 +359,7 @@ sub EDSProcessRelatedContent
 	if(not defined $EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}){
 		return;
 	}
-	@ResearchStarters = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}}; 
+	@ResearchStarters = @{$EDSResponse->{SearchResult}->{RelatedContent}->{RelatedRecords}};
 	foreach my $ResearchStarters (@ResearchStarters){
 		if($ResearchStarters->{Type} eq 'rs'){
 			my @RelatedContents = @{$ResearchStarters->{Records}};
@@ -376,7 +376,7 @@ sub EDSProcessRelatedContent
 			}
 		}
 	}
-	#use Data::Dumper; die Dumper @ResearchStarters;	
+	#use Data::Dumper; die Dumper @ResearchStarters;
 }
 
 sub GetCatalogueAvailability
@@ -391,16 +391,14 @@ sub GetCatalogueAvailability
 	my $itemtypes = Koha::ItemTypes->search_with_localization;
 	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
-	
+
 	my $search_context = {};
 	$search_context->{'interface'} = 'opac';
 	if (C4::Context->preference('OpacHiddenItemsExceptions')){
-		my $borrower_obj = Koha::Patrons->find($borrowernumber);
-        my $borrower = $borrower_obj ? $borrower->unblessed : undef;
-        
+        my $borrower = Koha::Patrons->find( $borrowernumber )->unblessed;
 		$search_context->{'category'} = $borrower->{'categorycode'};
 	}
-	
+
 	my @CatalogueResults = searchResults($search_context, $query, $hits, '100', 0, $scan, $results_hashref->{$servers[0]}->{"RECORDS"});
 	return $CatalogueResults[0]->{"XSLTResultsRecord"};
 }
@@ -434,10 +432,10 @@ sub EDSProcessFacets
 
 sub EDSProcessFilters
 {
-	try {	
+	try {
 		#process FacetsFilters
 		@EDSFacetFilters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{FacetFiltersWithAction}};
-	
+
 		foreach my $facetFilter (@EDSFacetFilters){
 			foreach my $facetFilterValues ($facetFilter->{FacetValuesWithAction}){
 				my @facetFilterValues = @{$facetFilterValues};
@@ -454,10 +452,10 @@ sub EDSProcessFilters
 
 sub EDSProcessQueries
 {
-	try {	
+	try {
 		#process Queries
 		@EDSQueries = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{QueriesWithAction}};
-	
+
 		foreach my $EDSQuery (@EDSQueries){
 			foreach my $EDSQueryAction ($EDSQuery){
 				$EDSQueryAction->{RemoveAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSQueryAction->{RemoveAction};
@@ -480,13 +478,13 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 			if($Limiter->{Id} eq 'RV')
 			{
 				#warn "no limiters";
-				$Limiter->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};		
+				$Limiter->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};
 				$Limiter->{AddAction} =~s/value/y/;
 				$Limiter->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
 				$Limiter->{AddAction} =~s/\&/\%2526/g;
 
 				try{
-					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};					
+					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};
 					foreach my $EDSRemoveLimiter (@EDSRemoveLimiters)
 					{
 						if($EDSRemoveLimiter->{Id} eq $Limiter->{Id}){
@@ -502,14 +500,14 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 				$Limiter = undef;
 			}
 		}
-		
+
 		if($Limiter->{Type} eq 'ymrange'){
 			$Limiter->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
 			$Limiter->{AddAction} =~s/\&/\%2526/g;
 					try{
-					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};				
+					my @EDSRemoveLimiters = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{LimitersWithAction}};
 						foreach my $EDSRemoveLimiter (@EDSRemoveLimiters)
-						{	
+						{
 							if($EDSRemoveLimiter->{Id} eq $Limiter->{Id}){
 								$Limiter->{DateValue} = $EDSRemoveLimiter->{LimiterValuesWithAction}[0]->{Value};
 							}
@@ -518,7 +516,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 						#warn 'no limiters';
 					};
 		}
-	}	
+	}
 }
 
 sub EDSProcessExpanders #e.g. thesaurus, fulltext.
@@ -527,13 +525,13 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 	foreach my $Expander (@EDSExpanders)
 	{
 		#warn "no limiters";
-		$Expander->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};		
+		$Expander->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};
 		#$Expander->{AddAction} =~s/value/y/;
 		$Expander->{AddAction} = 'pfi-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Expander->{AddAction};
 		$Expander->{AddAction} =~s/\&/\%2526/g;
 
 			try{
-			my @EDSRemoveExpanders = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{ExpandersWithAction}};					
+			my @EDSRemoveExpanders = @{$EDSResponse->{SearchRequestGet}->{SearchCriteriaWithActions}->{ExpandersWithAction}};
 				foreach my $EDSRemoveExpander (@EDSRemoveExpanders)
 				{
 					if($EDSRemoveExpander->{Id} eq $Expander->{Id}){
@@ -545,7 +543,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 			} catch {
 				#warn 'no limiters';
 			};
-	}	
+	}
 }
 
 sub EDSProcessPages
@@ -559,9 +557,9 @@ sub EDSProcessPages
 		);
 	$pager{'URL'}=$EDSSearchQueryWithOutPage;
 	$pager{'TotalResults'} = $EDSResponse->{SearchResult}->{Statistics}->{TotalHits};
-	
-	
-	
+
+
+
 	my @PageFinder = split('\|',$EDSSearchQuery);
 	foreach my $PageVal (@PageFinder){
 		if($PageVal=~ m/pagenumber/){
@@ -577,7 +575,7 @@ sub EDSProcessPages
 	$pager{'NoOfPages'} = ($pager{'NoOfPages'}>$EDSInfo->{ApiSettings}->{MaxRecordJumpAhead})? ceil(int($EDSInfo->{ApiSettings}->{MaxRecordJumpAhead})/int($pager{'ResultsPerPage'})) : $pager{'NoOfPages'};
 	$pager{'PagePrevious'}= $pager{'PageNumber'}-1;
 	$pager{'PageNext'}= ($pager{'PageNumber'}<$pager{'NoOfPages'})? $pager{'PageNumber'}+1 : 0;
-	
+
 	$pager{'MaxPageNo'}=$pager{'PageNumber'}+1;
 	while((int($pager{'MaxPageNo'}) % 10) != 0){
 		$pager{'MaxPageNo'}++;

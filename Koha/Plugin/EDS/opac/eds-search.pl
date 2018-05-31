@@ -402,7 +402,7 @@ sub GetCatalogueAvailability
 	my $search_context = {};
 	$search_context->{'interface'} = 'opac';
 	if (C4::Context->preference('OpacHiddenItemsExceptions')){
-                my $borrower = Koha::Patrons->find( $borrowernumber )->unblessed;
+        my $borrower = Koha::Patrons->find( $borrowernumber )->unblessed;
 		$search_context->{'category'} = $borrower->{'categorycode'};
 	}
 
