@@ -227,7 +227,6 @@ sub EDSSearch
 		$EDSQuery=$EDSQuery.EDSDefaultQueryBuilder();
 	}
 
-
 	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
 		$GuestTracker = $GuestStatus;
 	}
@@ -248,12 +247,14 @@ sub EDSSearch
 	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
+
 	my $response;
 	if($EDSQuery eq "info"){
 		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
 	}else{
 		$response =  CallREST('GET',$uri,'', GetAuth(), GetSession());
 	}
+
 	if(index($response,'ErrorNumber')!=-1){ # TODO: check for 104 or 109 error and request accordingly
 		#use Data::Dumper; die Dumper $response;
 		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
@@ -328,25 +329,29 @@ sub EDSDefaultQueryBuilder
 	my $defaultEDSQuery = "";
 	my $EDSInfoData = decode_json($edsinfo);
 
-	my @AutoSuggests = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}};
-	foreach my $AutoSuggest (@AutoSuggests){
-		# $input->param("default")
-		if ($AutoSuggest->{Id} eq "AutoCorrect" && $input->param("nocorrect") eq 1){
-			$defaultEDSQuery = lc $defaultEDSQuery.'|autocorrect=n';
-			$input->delete("nocorrect");
-		} else {
-			$defaultEDSQuery = lc $defaultEDSQuery.'|'.$AutoSuggest->{Id}.'='.$AutoSuggest->{DefaultOn};
+	if (exists $EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}) {
+		my @AutoSuggests = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}};
+		foreach my $AutoSuggest (@AutoSuggests){
+			# $input->param("default")
+			if ($AutoSuggest->{Id} eq "AutoCorrect" && $input->param("nocorrect") eq 1){
+				$defaultEDSQuery = lc $defaultEDSQuery.'|autocorrect=n';
+				$input->delete("nocorrect");
+			} else {
+				$defaultEDSQuery = lc $defaultEDSQuery.'|'.$AutoSuggest->{Id}.'='.$AutoSuggest->{DefaultOn};
+			}
 		}
 	}
 
-	my @ExpanderDefaults = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableExpanders}};
-	foreach my $ExpanderDefault (@ExpanderDefaults){
-		if($ExpanderDefault->{DefaultOn} eq 'y'){
-			$defaultEDSQuery = $defaultEDSQuery.'|expander='.$ExpanderDefault->{Id};
+	if (exists $EDSInfoData->{AvailableSearchCriteria}->{AvailableExpanders}) {
+		my @ExpanderDefaults = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableExpanders}};
+		foreach my $ExpanderDefault (@ExpanderDefaults){
+			if($ExpanderDefault->{DefaultOn} eq 'y'){
+				$defaultEDSQuery = $defaultEDSQuery.'|expander='.$ExpanderDefault->{Id};
+			}
 		}
 	}
 
-	if($apiType eq "rest"){
+	if($apiType eq "rest" && exists $EDSInfoData->{AvailableSearchCriteria}->{AvailableSearchModes}){
 		my @AvailableSearchModes = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableSearchModes}};
 		foreach my $AvailableSearchMode (@AvailableSearchModes){
 			if($AvailableSearchMode->{DefaultOn} eq 'y'){
@@ -354,7 +359,7 @@ sub EDSDefaultQueryBuilder
 			}
 		}
 	}
-	if($apiType eq "rest"){
+	if($apiType eq "rest" && exists $EDSInfoData->{AvailableSearchCriteria}->{AvailableLimiters}){
 		my @AvailableLimiters = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableLimiters}};
 		foreach my $AvailableLimiter (@AvailableLimiters){
 			if($AvailableLimiter->{DefaultOn} eq 'y'){
@@ -364,7 +369,7 @@ sub EDSDefaultQueryBuilder
 			}
 		}
 	}
-	if($apiType eq "rest"){
+	if($apiType eq "rest" && $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
 		if(defined $EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}){
 			my @AvailableRelatedContents = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableRelatedContent}};
 			foreach my $AvailableRelatedContent (@AvailableRelatedContents){

@@ -971,7 +971,8 @@ function PublisherDateSlider() {
             max: pubMaxDate,
             from: pubFromDate,
             to: pubToDate,
-            drag_interval: true
+			drag_interval: true,
+			prettify_enabled: false
         });
 
         rangeSlider = jQuery("#range-published-date").data("ionRangeSlider");
@@ -1030,7 +1031,7 @@ function EDSAutoComp(){
 	var creds = $.jStorage.get("autoComp");
 
 	var idx = "rawqueries";
-	if (edsConfig.autocomplete_mode != "title"){
+	if (edsConfig.autocomplete_mode != "normal"){
 		idx = "holdings";
 	}
 

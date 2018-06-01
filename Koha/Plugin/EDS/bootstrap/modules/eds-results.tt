@@ -207,7 +207,11 @@
     [% ELSE %]
     <tr>
     [% END %]
-	[% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
+    [% IF index(RECORD.Header.An, catalogueanprefix) %]
+        [% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
+    [% ELSE %]
+        [% ResultRecordId = RECORD.Header.An %]
+    [% END %]
 	  <td class="select selectcol">
 		[% IF RECORD.Items %] [% #Check if items exist (guest mode) %]
 			[% IF ( opacbookbag ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
@@ -269,10 +273,14 @@
 			  [% END %]
             [% IF RECORD.ImageQuickViewItems %]
                 <div style="margin-bottom: 0.5em;" >
-                    [% FOREACH IMG IN RECORD.ImageQuickViewItems %]
-                        <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
-                            <img class="diag-img" src="[% IMG.Url %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
-                        </a>
+                    [% IF ( loggedinusername ) %]
+                        [% FOREACH IMG IN RECORD.ImageQuickViewItems %]
+                            <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
+                                <img class="diag-img" src="[% IMG.Url %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
+                            </a>
+                        [% END %]
+                    [% ELSE %]
+                        <div onclick="$('#loginModal').modal('show');" style="padding: 5px; font-weight: bold;" ><a href="javascript:void(0)" >[% EDSLANG.eds_results_TT_quickview_login %]</a></div>
                     [% END %]
                 </div>
             [% END %]

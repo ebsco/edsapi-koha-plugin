@@ -20,10 +20,12 @@
     eds_results_TT_annosuggestions						= 'Not finding what you\'re looking for?'
     eds_results_TT_annosuggestions_makea				= 'Make a'
     eds_results_TT_annosuggestions_purchase				= 'purchase suggestion'
+    eds_results_TT_quickview_login                      = 'Login to see attached images'
 
 	eds_detail_TT_details_for							= 'Details for:'
 	eds_detail_TT_normal_view							= 'Normal view:'
 	eds_detail_TT_login_msg								= 'Login to gain access to this result.'
+    eds_detail_TT_quickview_login                      = 'Login to see attached images'
 
     eds_detail_customlinks_INC_html_fulltext			= 'HTML Full Text'
     eds_detail_customlinks_INC_pdf_fulltext				= 'PDF Full Text'
