@@ -47,13 +47,14 @@ use Try::Tiny;
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-require 'eds-methods.pl';
+my $PluginDir = dirname(abs_path($0));
+require "$PluginDir/eds-methods.pl";
+
 if($input->param("api") eq 'pub'){our $apiType="publication";}
 my $EDSConfig = decode_json(EDSGetConfiguration());
 #{if($EDSConfig->{logerrors} eq 'no'){no warnings;local $^W = 0;}
 {no warnings;local $^W = 0;
 
-my $PluginDir = dirname(abs_path($0));
 $PluginDir =~s /EDS\/opac/EDS/;
 $PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
