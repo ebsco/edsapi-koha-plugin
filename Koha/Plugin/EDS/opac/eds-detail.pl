@@ -187,7 +187,8 @@ sub EDSProcessResults
 	    listResults            => 1,
 		plugin_dir		=>$PluginDir,
 		instancepath	=>$EDSConfig->{instancepath},
-		theme			=>C4::Context->preference('opacthemes'), #314
+		theme			=>C4::Context->preference('opacthemes'),
+		guestTrack 		=>$GuestTracker,
 	);
 	
 	# Social Networks

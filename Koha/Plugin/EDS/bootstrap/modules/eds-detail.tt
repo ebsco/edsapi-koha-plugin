@@ -513,7 +513,7 @@
                     </div>
                     <div id="qv_cont" >
                         [% IF (DETAILED_RECORD.ImageQuickViewItems) %]
-                            [% IF ( loggedinusername ) %]
+                            [% IF ( guestTrack == "n" ) %]
                                 [% FOREACH IMG IN DETAILED_RECORD.ImageQuickViewItems %]
                                     <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
                                         <img class="diag-img" src="[% IMG.Url.replace('small','large') %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">

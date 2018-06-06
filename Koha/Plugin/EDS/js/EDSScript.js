@@ -71,6 +71,7 @@ function eds_img_resize(e){
 		$(e).addClass("sc_width");
     }
 }
+
 $('body').on('click', '.diag-img', function(e) {
 	e.preventDefault();
 	$("body").addClass("eds_noscroll");
@@ -79,6 +80,14 @@ $('body').on('click', '.diag-img', function(e) {
 		<span class="close" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">&times;</span>\
 		<img class="c_modal-content" src="' + e.target.parentNode.href + '" onload="eds_img_resize(this)"  >\
 	</div>');
+});
+
+$.each($.cookie('bib_list').split("/"), function(){
+	if (this != ""){
+		var code = this.split("|")[0];
+		$(".cart" + code).html(MSG_ITEM_IN_CART).addClass("incart");
+		$(".cartR" + code).show();
+    }
 });
 
 function StartEDS(edsLang) {

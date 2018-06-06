@@ -245,6 +245,7 @@ if($cgi->param("q")){
 		daterange		=> $EDSResponse->{SearchResult}->{AvailableCriteria}->{DateRange},
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
 		expanders		=>$EDSInfo->{AvailableSearchCriteria}->{AvailableExpanders},
+		guestTrack 		=>$GuestTracker,
 	);
 
 my $casAuthentication = C4::Context->preference('casAuthentication');

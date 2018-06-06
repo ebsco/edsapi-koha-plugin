@@ -417,7 +417,11 @@ sub CheckIPAuthentication
 		}
 	}
 	#use Data::Dumper; die Dumper 'GuestForIP='.$GuestForIP;
-	return $GuestForIP;
+	if ($GuestTracker eq 'n' || $GuestForIP eq 'n'){
+		return 'n';
+	} else {
+		return 'y';
+	}
 }
 
 sub GetLocalIP
