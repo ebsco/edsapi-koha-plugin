@@ -32,7 +32,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 use Modern::Perl;
-
+use Koha::ItemTypes;
+use Koha::Patrons;
 use C4::Context;
 use CGI;
 use C4::Auth qw(:DEFAULT get_session);
@@ -45,16 +46,18 @@ use IO::File;
 use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use POSIX qw/ceil/;
-use C4::Members qw(GetMember); 
+use C4::Members; 
+use URI::Escape;
+#use Koha::Libraries;
 
 #legacy from template... may not be required.
 use C4::Languages qw(getAllLanguages);
 use C4::Search;
 use C4::Biblio;  # GetBiblioData
 use C4::Tags qw(get_tags);
-use C4::Branch; # GetBranches
+#use C4::Branch; # GetBranches
 use C4::SocialData;
-use C4::Ratings;
+#use C4::Ratings;
 #use POSIX qw(ceil floor strftime);
 use URI::Escape;
 use Business::ISBN;
@@ -130,15 +133,9 @@ if ($template_name eq 'opac-results.tt') {
 }
 
 #manage guest mode.
-my $GuestTracker=$cgi->cookie('guest');
-if($GuestTracker eq ''){
-	$GuestTracker='y';
-}else{
-	if($borrowernumber){
-		if($GuestTracker ne 'set'){$GuestTracker='n';}
-	}else{
-		if($GuestTracker eq 'set'){$GuestTracker='y';}
-	}
+my $GuestTracker='y';
+if($borrowernumber ne undef){
+	$GuestTracker='n';
 }
 
 
@@ -186,7 +183,7 @@ my %pager;
 if($cgi->param("q")){
 	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
 	#use Data::Dumper; die Dumper $EDSResponse;
-	try{# uncomment the try block when debugging
+	try{# uncomment the try block when debugging or uncomment dumper in catch
 		EDSProcessResults();
 		EDSProcessRelatedPublications();
 		EDSProcessRelatedContent();
@@ -204,6 +201,7 @@ if($cgi->param("q")){
 		EDSProcessPages();
 	} catch {
 		#warn "no results";
+		#use Data::Dumper; die Dumper $_; #uncomment for debugging.
 		$template->param(
 	 searchdesc     => 1,
 	total  => 0,);
@@ -237,8 +235,11 @@ if($cgi->param("q")){
 		cataloguedbid	=> $EDSConfig->{cataloguedbid},
 		catalogueanprefix=> $EDSConfig->{catalogueanprefix},
 		plugin_dir		=>$PluginDir,
+		edsRaw			=>uri_escape(encode_json($EDSResponse)),
 		theme			=>C4::Context->preference('opacthemes'), #314
 		instancepath	=>$EDSConfig->{instancepath},
+		edsautosuggest	=> EDSProcessAutoSuggestedTerms(),
+		daterange		=> $EDSResponse->{SearchResult}->{AvailableCriteria}->{DateRange},
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
 		expanders		=>$EDSInfo->{AvailableSearchCriteria}->{AvailableExpanders},
 	);
@@ -304,7 +305,7 @@ sub GetSearchParam
 }
 
 sub EDSProcessResults
-{	#process Search Results
+{ try{	#process Search Results
 	@EDSResults = @{$EDSResponse->{SearchResult}->{Data}->{Records}}; 
 	foreach my $Result (@EDSResults){
 		foreach my $Items ($Result->{Items}){
@@ -329,7 +330,7 @@ sub EDSProcessResults
 
 		}
 	}	
-}
+}catch{};}
 
 
 
@@ -390,15 +391,15 @@ sub GetCatalogueAvailability
 	my $query = 'biblionumber='.$DBId;
 	my @sort_by='relevance_asc';
 	my @servers='biblioserver';
-	my $branches = GetBranches();
-	my $itemtypes = GetItemTypes;
+	my $branches = ''; # GetBranches();#  { map { $->branchcode => $->unblessed } Koha::Libraries->search };
+	my $itemtypes = Koha::ItemTypes->search_with_localization;
 	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
 	
 	my $search_context = {};
 	$search_context->{'interface'} = 'opac';
 	if (C4::Context->preference('OpacHiddenItemsExceptions')){
-		my $borrower = GetMember( borrowernumber => $borrowernumber );
+                my $borrower = Koha::Patrons->find( $borrowernumber )->unblessed;
 		$search_context->{'category'} = $borrower->{'categorycode'};
 	}
 	
@@ -406,11 +407,19 @@ sub GetCatalogueAvailability
 	return $CatalogueResults[0]->{"XSLTResultsRecord"};
 }
 
-
+sub EDSProcessAutoSuggestedTerms
+{
+	try{
+		my @EDSAutoSuggestedTerms = @{$EDSResponse->{SearchResult}->{AutoSuggestedTerms}};
+		foreach my $EDSAutoSuggestedTerm (@EDSAutoSuggestedTerms){
+			return $EDSAutoSuggestedTerm;
+		}
+	} catch { return ''; };
+}
 
 
 sub EDSProcessFacets
-{	#process Facets
+{try{	#process Facets
 	@EDSFacets = @{$EDSResponse->{SearchResult}->{AvailableFacets}};
 	foreach my $facet (@EDSFacets){
 		foreach my $facetValues ($facet->{AvailableFacetValues}){
@@ -422,7 +431,7 @@ sub EDSProcessFacets
 			}
 		}
 	}
-}
+}catch{};}
 
 sub EDSProcessFilters
 {

@@ -12,7 +12,7 @@
             [% END %]
         [% END %]
     [% END %]
-    <li><a class="print-large" href="#" onclick="window.print();">Print</a></li>
+    <li><a class="print-large" href="#" onclick="window.print();">[% EDSLANG.eds_detail_sidebar_INC_print %]</a></li>
    <!-- [%# IF Koha.Preference( 'virtualshelves' ) == 1 %]
         [%# IF ( ( Koha.Preference( 'opacuserlogin' ) == 1 ) && loggedinusername ) %]
             <li><a class="addtoshelf" href="/cgi-bin/koha/opac-addbybiblionumber.pl?biblionumber=[%# biblionumber %]" onclick="Dopop('opac-addbybiblionumber.pl?biblionumber=[% biblionumber %]'); return false;">
@@ -22,9 +22,9 @@
     [%# END %] -->
     [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
         [% IF ( incart ) %]
-            <li><a class="incart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">In your cart</a> <a class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">(remove)</a></li>
+            <li><a class="incart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_in_cart %]</a> <a class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
         [% ELSE %]
-            <li><a class="addtocart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">Add to your cart</a>  <a style="display:none;" class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">(remove)</a></li>
+            <li><a class="addtocart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_add_cart %]</a>  <a style="display:none;" class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
         [% END %]
     [% END %]
     [% IF ( OpacHighlightedWords && query_desc ) %]

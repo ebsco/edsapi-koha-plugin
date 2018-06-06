@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Customisation Manager</title>
+<title>Apps Manager</title>
 <style type="text/css" media="screen">
     #editor { 
         position: absolute;
@@ -17,12 +17,25 @@
 <body>
 
 <div id="editor">[% FOR jsline IN customjs %][% jsline %][% END %]</div>
-    
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" src="http://widgets.ebscohost.com/prod/common/javascript/gss-common.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
+function htmlEncode(value){
+  //create a in-memory div, set it's inner text(which jQuery automatically encodes)
+  //then grab the encoded contents back out.  The div never exists on the page.
+  return $('<div/>').text(value).html();
+}
+
+function htmlDecode(value){
+  return $('<div/>').html(value).text();
+}
+
+	jQuery('#editor').html(htmlEncode(jQuery('#editor').html()));
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
+	editor.getSession().setUseWrapMode(true);
     
 	var jsState = '[%jsstate%]';
 	if(jsState==2){
@@ -36,7 +49,7 @@
     }
     
 </script>
-<div style="float:left;"><strong>Customisation Manager</strong></div>
+<div style="float:left;"><strong>Apps Manager</strong></div>
 <div style="float:right;">
     <form method="post" action="/cgi-bin/koha/plugins/run.pl" id="customjsform">
         <input name="class" id="class" type="hidden" value="Koha::Plugin::EDS">

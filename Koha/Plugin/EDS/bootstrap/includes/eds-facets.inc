@@ -1,12 +1,12 @@
 <div id="search-facets">
-    <h4><a href="#" class="menu-collapse-toggle">Refine your search</a></h4>
+    <h4><a href="#" class="menu-collapse-toggle">[% EDSLANG.eds_facets_INC_refine_search %]</a></h4>
     <ul class="menu-collapse">
         <li id="availability_facet">
-			Current Search
+			[% EDSLANG.eds_facets_INC_current_search %]
 			
 			[% IF query %]
 				<ul>
-				<li>Search Term(s)</li>
+				<li>[% EDSLANG.eds_facets_INC_search_term %]</li>
 				[% FOR searchQuery IN query %]
 				  <li>
 					<a href="[% searchQuery.RemoveAction %]"><input type="checkbox" checked onchange="window.location.href=($(this).parent().attr('href'));$(this).attr('disabled','disabled');" > [% searchQuery.Query.BooleanOperator %][% IF searchQuery.Query.FieldCode %], [% searchQuery.Query.FieldCode %][% END %] : <span id="searchTerm">[% searchQuery.Query.Term %]</span></a>
@@ -18,7 +18,7 @@
 			
 			[% IF filters %]
 				<ul>
-				<li>Limiters</li>
+				<li><strong>[% EDSLANG.eds_facets_INC_active_facets %]</strong></li>
 				[% FOR facetFilter IN filters %]
 				[% FOR facetFilterItem IN facetFilter.FacetValuesWithAction %]
 				  <li>
@@ -33,17 +33,9 @@
 		
 		[% IF limiters %]
 		<li>
-		[% IF limiters and expanders %]
-		Limiters & Expanders
-		[% ELSE %]
-			[%IF limiters %]
-				Limiters
-			[% ELSE %]
-				Expanders
-			[% END %]
-		[% END %]
+
 			<ul>
-				<li>Limit To:</li>
+				<li><strong>[% EDSLANG.eds_facets_INC_limit_to %]</strong></li>
 				[% FOR EDSLimit IN limiters %]
 					[% IF EDSLimit.Type =='select' %]
 						  <li>
@@ -53,40 +45,30 @@
 				[% END %]
 			</ul>
 			[% FOR EDSLimit IN limiters %][% IF EDSLimit.Type =='ymrange' %]
+				[% IF daterange %]
 				<ul>
-					<li>[% EDSLimit.Label %] 
-						[% IF EDSLimit.DateValue %]
-							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;" placeholder="YYYY-MM/YYYY-MM" value="[% EDSLimit.DateValue %]" >
-						[% ELSE %]
-							<input title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;" placeholder="YYYY-MM/YYYY-MM" >
-						[% END %]
-						[% #action=removelimiter(DT1) %]
-						<script>
-						function DateHandleKeyPress(e,searchBox){
-							var key=e.keyCode || e.which;
-							if (key==13){
-								var dateAction = "[% EDSLimit.AddAction %]";
-								if(searchBox.value==""){
-									dateAction= dateAction.replace('action=addlimiter(DT1:value)','action=removelimiter(DT1)');
-									window.location.href=dateAction;
-								}else{
-									var regex = /^\d{4}-(0[1-9]|1[012])\/\d{4}-(0[1-9]|1[012])$/; 
-									// '/\d{4}-\d[1-12]\/\d{4}-\d[1-12]/; - old'
-									if(regex.test(searchBox.value)){
-										dateAction= dateAction.replace('DT1:value','DT1:'+searchBox.value);
-										window.location.href=dateAction;
-									}else{alert('Invalid date. Please enter a date value in YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remove all characters and hit enter to remove the date limiter.');}
+					<li><strong>[% EDSLimit.Label %]</strong> <br>
 
-								}
-							}
-						}
-						</script>
+							<div id="eds-dateholder" align="center">
+                                <div class="input-append">
+                                    <input id="published-date" name="published-date"   title="Enter a date range and press Enter or clear this textbox to remove the date limiter." type="text" onkeypress="DateHandleKeyPress(event,this)" style="text-align:center;font-size:12px;" placeholder="YYYY-MM/YYYY-MM" value="[% EDSLimit.DateValue %]" >
+                                    <span id="eds-clear-date" style="cursor:pointer;"  class="add-on"  title="Clear"><i class="icon-remove"></i></span>
+                                    <span  id="eds-apply-date" style="cursor:pointer;" class="add-on" title="Apply"><i class="icon-ok"></i></span>
+                                </div>
+                            </div>
+                            
+                            <input id="range-published-date" data-mindate="[% daterange.MinDate %]" data-maxdate="[% daterange.MaxDate %]" name="range-published-date" type="text" style="text-align:center;width:80%;" >
+                            
+
+						[% #action=removelimiter(DT1) %]
+						<script>var dateAction = "[% EDSLimit.AddAction %]";</script>
 					</li>
 				</ul>
+				[% END %]
 			[% END %][% END %]
 			[% IF expanders %]
 				<ul>
-					<li>Expand To:</li>
+					<li><strong>[% EDSLANG.eds_facets_INC_expand_to %]</strong></li>
 					[% FOR expander IN expanders %]
 					  <li>
 						<a href="[% expander.AddAction %]">[% expander.Label %] </a>
@@ -99,8 +81,8 @@
 		[% END %]
 		
       [% FOR facets IN facets_loop %]
-        <li>
-          [% facets.Label %]
+        <li class="eds-facets">
+          <span class="eds-facet-label">[% facets.Label %]</span>
           <div style="max-height:200px;overflow:auto;margin:3px;">
 			  <ul>
 				[% FOR FacetValues IN facets.AvailableFacetValues %]

@@ -1,7 +1,11 @@
 [% USE Koha %]
 [% INCLUDE 'doc-head-open.inc' %]
-[% IF ( LibraryNameTitle ) %][% LibraryNameTitle %][% ELSE %]Koha online[% END %]
-    catalog &rsaquo; Advanced search
+
+<script>
+[% TRY %][% edsLang = "$plugin_dir/includes/lang/$lang"_".inc" %][% PROCESS "$edsLang" %]
+[% CATCH %][% PROCESS "$plugin_dir/includes/lang/default.inc" %][% END %]
+</script>
+
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
 [% BLOCK cssinclude %][% END %]
@@ -11,8 +15,8 @@
 <form id="advSearchForm" onSubmit="AdvSearchEDS();return false;">
     <div class="main">
         <ul class="breadcrumb">
-            <li><a href="/cgi-bin/koha/opac-main.pl">Home</a> <span class="divider">&rsaquo;</span></li>
-            <li><a href="#">Advanced search</a></li>
+            <li><a href="/cgi-bin/koha/opac-main.pl">[% EDSLANG.eds_advsearch_TT_breadcrumb_home %]</a> <span class="divider">&rsaquo;</span></li>
+            <li><a href="#">[% EDSLANG.eds_advsearch_TT_breadcrumb_advanced_search %]</a></li>
         </ul>
 
         <div class="container-fluid">
@@ -28,22 +32,22 @@
 			<li id="searchFields_1">
 				<input name="advInput" type="text" class="advInput advSB" style="width: 300px;">
 				<select name="advFieldCode" class="advFieldCode  advSB">
-				  <option value="">Select a Field (optional)</option>
+				  <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
 				[% FOREACH field IN search_fields %]
 						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
 				[% END %]	
 				</select>
-				<input class="btn btn-success" type="submit" value="Search" class="advSB">
+				<input class="btn btn-success advSB" type="submit" value="[% EDSLANG.eds_advsearch_TT_btn_search %]">
 			</li>
 			<li id="searchFields_2">
 				<select name="advBool" class="advBool advSB">
-				  <option value="AND">AND</option>
-				  <option value="OR">OR</option>
-				  <option value="NOT">NOT</option>
+				  <option value="AND">[% EDSLANG.eds_advsearch_TT_bool_and %]</option>
+				  <option value="OR">[% EDSLANG.eds_advsearch_TT_bool_or %]</option>
+				  <option value="NOT">[% EDSLANG.eds_advsearch_TT_bool_not %]</option>
 				</select>
 				<input  name="advInput" type="text"  class="advInput advSB">
 				<select name="advFieldCode" class="advFieldCode advSB">
-				  <option value="">Select a Field (optional)</option>
+				  <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
 				[% FOREACH field IN search_fields %]
 						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
 				[% END %]				  
@@ -51,17 +55,17 @@
 			</li>
 			<li id="searchFields_3">
 				<select name="advBook" class="advBool advSB">
-				  <option value="AND">AND</option>
-				  <option value="OR">OR</option>
-				  <option value="NOT">NOT</option>
+				  <option value="AND">[% EDSLANG.eds_advsearch_TT_bool_and %]</option>
+				  <option value="OR">[% EDSLANG.eds_advsearch_TT_bool_or %]</option>
+				  <option value="NOT">[% EDSLANG.eds_advsearch_TT_bool_not %]</option>
 				</select>
 				<input  name="advInput" type="text"  class="advInput advSB">
 				<select name="advFieldCode" class="advFieldCode advSB">
-				  <option value="">Select a Field (optional)</option>
+				  <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
 				[% FOREACH field IN search_fields %]
 						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
 				[% END %]	
-				</select> <span class="addRemoveLinks"><a href="" title="Add" onClick="AddSearchBlock(3); return false;">[ + Add ]</a>  <a href="" title="Remove" style="display:none;" onClick="RemoveSearchBlock(3); return false;">[ - Remove ]</a></span>
+				</select> <span class="addRemoveLinks"><a href="" title="[% EDSLANG.eds_advsearch_TT_opt_add %]" onClick="AddSearchBlock(3); return false;">[ + [% EDSLANG.eds_advsearch_TT_opt_add %] ]</a>  <a href="" title="[% EDSLANG.eds_advsearch_TT_opt_remove %]" style="display:none;" onClick="RemoveSearchBlock(3); return false;">[ - [% EDSLANG.eds_advsearch_TT_opt_remove %] ]</a></span>
 			</li>
 		</ul>
 		
@@ -69,14 +73,14 @@
 		<div id="optionsBlock">
 		  <p>
 		  <fieldset>
-			<legend>Search Options</legend>
+			<legend>[% EDSLANG.eds_advsearch_TT_search_options %]</legend>
 			<p>
-			<div align="right"><input class="btn btn-success" type="reset" class="advSB" /></div>
+			<div align="right"><input class="btn btn-success advSB" type="reset" value="[% EDSLANG.eds_advsearch_TT_btn_reset %]" /></div>
 			<fieldset>
-			  <legend>Search Modes and Expanders</legend>
+			  <legend>[% EDSLANG.eds_advsearch_TT_search_opt_heading %]</legend>
 			 <dl>
 				<dt class="search-option-label"> 
-						<strong>Search modes</strong>
+						<strong>[% EDSLANG.eds_advsearch_TT_search_opt_modes %]</strong>
 					<a class="helplink" target="_blank" href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=">
 						<img valign="middle" src="../images/iconQuestionMarkGeneric.png" width="21" alt="Help (opens in new window)">
 					</a>
@@ -87,18 +91,24 @@
 					<ul>
 						[% FOREACH mode IN search_modes %]
 						<li>	
-							[% IF mode.DefaultOn == 'y' %]
-								<input name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-							[% ELSE %]
-								<input name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-							[% END %]
                             [% IF mode.Mode == 'smart' %]
-                                <label for="[% mode.Mode %]" >[% mode.Label %]
-                                 <sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="Enter as much text for your search as you want - a phrase, a sentence, paragraph, or even whole pages. This mode searches EBSCO Databases only.">Hint</a></sub>
-                                 
+                                <label for="[% mode.Mode %]" >                                 
+                                    [% IF mode.DefaultOn == 'y' %]
+                                        <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% ELSE %]
+                                        <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% END %]
+                                    [% mode.Label %]<sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
                                 </label>
                             [% ELSE %]
-                                <label for="[% mode.Mode %]" >[% mode.Label %]</label>
+                                <label for="[% mode.Mode %]" >
+                                    [% IF mode.DefaultOn == 'y' %]
+                                        <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% ELSE %]
+                                        <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                    [% END %]
+                                    [% mode.Label %]
+                                </label>
                             [% END %]
 						</li>
 						[% END %]	
@@ -107,14 +117,14 @@
 				
 				[% FOREACH expander IN expanders %]
 				<li id="limiterItem">	
-					<label for="[% expander.Id %]" class="advItemLabel" >[% expander.Label %]</label>
-					<section>
-					[% IF expander.DefaultOn == 'y' %]
-						<input name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
-					[% ELSE %]
-						<input name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
-					[% END %]
-					</section>
+					<label for="[% expander.Id %]" class="advItemLabel" >
+                        [% IF expander.DefaultOn == 'y' %]
+                            <input class="advSBOps" name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+                        [% ELSE %]
+                            <input class="advSBOps" name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+                        [% END %]
+                        [% expander.Label %]
+                    </label>
 				</li>
 				[% END %]	
 				
@@ -125,66 +135,71 @@
 			</p>
 			<p>
 			<fieldset>
-			  <legend>Limit your results</legend>
+			  <legend>[% EDSLANG.eds_advsearch_TT_limit_legend %]</legend>
 			  
 			  	<ul>
 					[% FOREACH advlimiter IN advlimiters %]										
 					  <li  id="limiterItem">
-						<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
-						<section>
 							[% IF advlimiter.Type =='select' %]
 								[% IF advlimiter.DefaultOn == 'y' %]
-									<input name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<label for="[% advlimiter.Id %]" class="advItemLabel" >
+                                    <input class="advSBOps" name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+                                    [% advlimiter.Label %]</label>
 								[% ELSE %]
-									<input name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+									<label for="[% advlimiter.Id %]" class="advItemLabel" >
+										<input class="advSBOps" name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+                                    	[% advlimiter.Label %]
+                                    </label>
 								[% END %]
 							[% END %]
 							[% IF advlimiter.Type =='ymrange' %]
+	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
 																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
-									<option selected="selected" value="">Month</option>
-									<option value="01">January</option>
-									<option value="02">February</option>
-									<option value="03">March</option>
-									<option value="04">April</option>
-									<option value="05">May</option>
-									<option value="06">June</option>
-									<option value="07">July</option>
-									<option value="08">August</option>
-									<option value="09">September</option>
-									<option value="10">October</option>
-									<option value="11">November</option>
-									<option value="12">December</option>
+									<option selected="selected" value="">[% EDSLANG.eds_advsearch_TT_date_month %]</option>
+									<option value="01">[% EDSLANG.eds_advsearch_TT_date_month_jan %]</option>
+									<option value="02">[% EDSLANG.eds_advsearch_TT_date_month_feb %]</option>
+									<option value="03">[% EDSLANG.eds_advsearch_TT_date_month_mar %]</option>
+									<option value="04">[% EDSLANG.eds_advsearch_TT_date_month_apr %]</option>
+									<option value="05">[% EDSLANG.eds_advsearch_TT_date_month_may %]</option>
+									<option value="06">[% EDSLANG.eds_advsearch_TT_date_month_jun %]</option>
+									<option value="07">[% EDSLANG.eds_advsearch_TT_date_month_jul %]</option>
+									<option value="08">[% EDSLANG.eds_advsearch_TT_date_month_aug %]</option>
+									<option value="09">[% EDSLANG.eds_advsearch_TT_date_month_sep %]</option>
+									<option value="10">[% EDSLANG.eds_advsearch_TT_date_month_oct %]</option>
+									<option value="11">[% EDSLANG.eds_advsearch_TT_date_month_nov %]</option>
+									<option value="12">[% EDSLANG.eds_advsearch_TT_date_month_dec %]</option>
 								</select>
-								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_FromYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB">
+								[% EDSLANG.eds_advsearch_TT_date_year %] <input size="4" maxlength="4" title="" type="text" id="common_DT1_FromYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB">
 								-
 								<select name="common_DT1_ToMonth" id="common_DT1_ToMonth" title="Date Published"  class="advSB">
-									<option selected="selected" value="">Month</option>
-									<option value="01">January</option>
-									<option value="02">February</option>
-									<option value="03">March</option>
-									<option value="04">April</option>
-									<option value="05">May</option>
-									<option value="06">June</option>
-									<option value="07">July</option>
-									<option value="08">August</option>
-									<option value="09">September</option>
-									<option value="10">October</option>
-									<option value="11">November</option>
-									<option value="12">December</option>
+									<option selected="selected" value="">[% EDSLANG.eds_advsearch_TT_date_month %]</option>
+									<option value="01">[% EDSLANG.eds_advsearch_TT_date_month_jan %]</option>
+									<option value="02">[% EDSLANG.eds_advsearch_TT_date_month_feb %]</option>
+									<option value="03">[% EDSLANG.eds_advsearch_TT_date_month_mar %]</option>
+									<option value="04">[% EDSLANG.eds_advsearch_TT_date_month_apr %]</option>
+									<option value="05">[% EDSLANG.eds_advsearch_TT_date_month_may %]</option>
+									<option value="06">[% EDSLANG.eds_advsearch_TT_date_month_jun %]</option>
+									<option value="07">[% EDSLANG.eds_advsearch_TT_date_month_jul %]</option>
+									<option value="08">[% EDSLANG.eds_advsearch_TT_date_month_aug %]</option>
+									<option value="09">[% EDSLANG.eds_advsearch_TT_date_month_sep %]</option>
+									<option value="10">[% EDSLANG.eds_advsearch_TT_date_month_oct %]</option>
+									<option value="11">[% EDSLANG.eds_advsearch_TT_date_month_nov %]</option>
+									<option value="12">[% EDSLANG.eds_advsearch_TT_date_month_dec %]</option>
 								</select>
-								Year: <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
+								[% EDSLANG.eds_advsearch_TT_date_year %] <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
-								<input title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+								<input class="advSBOps" title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
 							[% END %]
 							[% IF advlimiter.Type =='multiselectvalue' %]
-								<select id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
+								<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+								<select class="advSBOps" id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
 									[% FOREACH limiterValue IN advlimiter.LimiterValues %]
 										<option value="[% limiterValue.AddAction %]">[% limiterValue.Value %]</option>
 									[% END %]	
 								</select>
 							[% END %]
-						</section>
 					  </li>
 					[% END %]
 				</ul>
@@ -192,7 +207,7 @@
 			  
 			</fieldset>
 			</p>
-			<div align="right"><input class="btn btn-success" type="submit" value="Search" class="advSB" /></div>
+			<div align="right"><input class="btn btn-success advSB" type="submit" value="[% EDSLANG.eds_advsearch_TT_btn_search %]" /></div>
 		  </fieldset>
 		  </p>
 		</div>
@@ -228,7 +243,7 @@
 		input.val(input.attr('placeholder'));
 	  }
 	}).blur();
-// 	required for EDS date funciton to work
+// 	required for EDS date function to work
 </script>
 
 [% END %]

@@ -1,0 +1,2 @@
+    var   js = document.createElement('script'); 	
+    js.src ='//widgets.ebscohost.com/prod/simplekey/plu.mx/plu.mx.js?'+Math.floor((Math.random() * 1000000000) + 1);	parent.document.body.appendChild(js);

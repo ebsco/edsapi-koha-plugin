@@ -1,5 +1,5 @@
 [% IF PAGE_NUMBERS %]
-Results per page:<select id="resultsperpage" name="resultsperpage" onChange="getSelectedText('#resultsperpage')">
+[% EDSLANG.eds_resort_form_INC_results_per_page %]<select id="resultsperpage" name="resultsperpage" onChange="getSelectedText('#resultsperpage')">
 	[% IF PAGE_NUMBERS.ResultsPerPage == '5' %]
 		<option name="perpage5" selected="selected" value="SetResultsPerPage(5)">5</option>
 	[% ELSE %]
@@ -36,21 +36,21 @@ Results per page:<select id="resultsperpage" name="resultsperpage" onChange="get
 
 
 [% IF current_view %]
-View:<select id="searchview" name="searchview" onChange="getSelectedText('#searchview')">
+[% EDSLANG.eds_resort_form_INC_view %]<select id="searchview" name="searchview" onChange="getSelectedText('#searchview')">
 	[% IF current_view == 'title' %]
-		<option name="title" selected="selected" value="setView(title)">Title</option>
+		<option name="title" selected="selected" value="setView(title)">[% EDSLANG.eds_resort_form_INC_view_title %]</option>
 	[% ELSE %]
-		<option name="title" value="setView(title)">Title</option>
+		<option name="title" value="setView(title)">[% EDSLANG.eds_resort_form_INC_view_title %]</option>
 	[% END %]
 	[% IF current_view == 'brief' %]
-		<option name="brief" selected="selected" value="setView(brief)">Brief</option>
+		<option name="brief" selected="selected" value="setView(brief)">[% EDSLANG.eds_resort_form_INC_view_brief %]</option>
 	[% ELSE %]
-		<option name="brief" value="setView(brief)">Brief</option>
+		<option name="brief" value="setView(brief)">[% EDSLANG.eds_resort_form_INC_view_brief %]</option>
 	[% END %]
 	[% IF current_view == 'detailed' %]
-		<option name="detailed" selected="selected" value="setView(detailed)">Detailed</option>
+		<option name="detailed" selected="selected" value="setView(detailed)">[% EDSLANG.eds_resort_form_INC_view_detail %]</option>
 	[% ELSE %]
-		<option name="detailed" value="setView(detailed)">Detailed</option>
+		<option name="detailed" value="setView(detailed)">[% EDSLANG.eds_resort_form_INC_view_detail %]</option>
 	[% END %]
 </select>
 [% END %]
@@ -58,16 +58,15 @@ View:<select id="searchview" name="searchview" onChange="getSelectedText('#searc
 
 
 [% IF search_modes %]
-
-Search mode:<select id="searchmode" name="searchmode" onChange="getSelectedText('#searchmode')">
-	[% FOREACH mode IN search_modes %]
-		[% IF current_mode == mode.Mode %]
-			<option name="[% mode.Mode %]" selected="selected" value="[% mode.AddAction %]">[% mode.Label %]</option>
-		[% ELSE %]
-			<option name="[% mode.Mode %]" value="[% mode.AddAction %]">[% mode.Label %]</option>
-		[% END %]
-	[% END %]
-</select>
+    [% EDSLANG.eds_resort_form_INC_search_mode %]<select id="searchmode" name="searchmode" onChange="getSelectedText('#searchmode')">
+        [% FOREACH mode IN search_modes %]
+            [% IF current_mode == mode.Mode %]
+                <option name="[% mode.Mode %]" selected="selected" value="[% mode.AddAction %]">[% mode.Label %]</option>
+            [% ELSE %]
+                <option name="[% mode.Mode %]" value="[% mode.AddAction %]">[% mode.Label %]</option>
+            [% END %]
+        [% END %]
+    </select>
 [% END %]
 
 
@@ -77,7 +76,7 @@ Search mode:<select id="searchmode" name="searchmode" onChange="getSelectedText(
 		window.location.href="?q=Search?[% search_string %]|action="+$(featureID+" option:selected").attr('value');
 	}
 </script>
-Sort by:<select id="sortby" name="sortby" onChange="getSelectedText('#sortby')">
+[% EDSLANG.eds_resort_form_INC_sort_by %]<select id="sortby" name="sortby" onChange="getSelectedText('#sortby')">
 	[% FOREACH ind IN sortable_indexes.sort %]
 		[% IF sort_by == ind.Id %]
 			<option name="[% ind.Id %]" selected="selected" value="[% ind.AddAction %]">[% ind.Label %]</option>

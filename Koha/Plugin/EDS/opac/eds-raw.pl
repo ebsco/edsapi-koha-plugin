@@ -48,6 +48,7 @@ my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
 require 'eds-methods.pl';
+if($input->param("api") eq 'pub'){our $apiType="publication";}
 my $EDSConfig = decode_json(EDSGetConfiguration());
 #{if($EDSConfig->{logerrors} eq 'no'){no warnings;local $^W = 0;}
 {no warnings;local $^W = 0;
@@ -68,21 +69,17 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
 );
 
 #manage guest mode.
-my $GuestTracker=$input->cookie('guest');
-if($GuestTracker eq ''){
-	$GuestTracker='y';
-}else{
-	if($borrowernumber){
-		if($GuestTracker ne 'set'){$GuestTracker='n';}
-	}else{
-		if($GuestTracker eq 'set'){$GuestTracker='y';}
-	}
+my $GuestTracker='y';
+if($borrowernumber ne undef){
+	$GuestTracker='n';
 }
 
 my $api_response;
 
 if($input->param("q") eq 'config'){
 	$api_response = EDSGetConfiguration();
+}elsif($input->param("q") eq 'getip'){
+	$api_response = GetLocalIP();
 }else{
 	# Send Known Items
 	if($input->param("q") eq 'knownitems'){
@@ -97,7 +94,7 @@ if($input->param("q") eq 'config'){
 		};
 	}else{
 		if(defined $input->param("q")){
-			$api_response = EDSSearch($input->param("q"));
+			$api_response = EDSSearch($input->param("q"),$GuestTracker);
 		}else{ 
 			$api_response = '<html><head><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" /><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script></head><body></body></html>';
 		}

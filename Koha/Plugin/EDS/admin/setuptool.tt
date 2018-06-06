@@ -22,15 +22,18 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API Integration &rsaquo; Setup Tool</div>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<link rel="stylesheet" href="https://cdn.rawgit.com/google/code-prettify/master/styles/sunburst.css"></link>
+<style>pre{width:90%!important; color:#FFF;}</style>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Setup Tool</div>
 
 <div id="doc3">
     <div align="right" style="float:right;width:170px"><a href="http://eadmin.ebscohost.com" target="_blank"><img src="http://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
 <p>Visit <a href="http://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
 
-    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="[% PLUGIN_PATH %]/images/eds_logo.jpg" width="82" /></a>
-    <h3>Koha: EDS API Integration: Setup Tool</h3>
-    <p>This setup tool documents instrutions on how to install files from the plugin directory to the main Koha folder structure.</p>
+    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="https://widgets.ebscohost.com/prod/api/koha/eds_logo.png" width="250" /></a>
+    <h3>Koha: EDS API: Setup Tool</h3>
+    <p>This setup tool details version information and provides access to the App manager.</p>
 
 <form method="post">
         <input type="hidden" name="class" value="[% CLASS %]"/>
@@ -55,11 +58,11 @@
         <td align="center" valign="middle" nowrap scope="col">[%  pluginversion %]
           </th>        
   </tr>
-      <tr>
+      <tr  style="display:none;">
         <td width="5%" title="This is the version installed by a Koha administrator" style="cursor:help" align="left" valign="middle" nowrap scope="col"><strong>Live Update Version</strong></td>
         <td width="5%" align="center" valign="middle" nowrap scope="col">[%  installedversion %]</th>
       </tr>
-      <tr>
+      <tr style="display:none;">
         <td colspan="2" align="center" valign="middle" nowrap scope="col"><input id="update-button" type="button" value="Update to selected version" onclick="UpdatePlugin();"></td>
   </tr>
 </table>
@@ -67,307 +70,22 @@
 	
 <table width="100%" border="0" cellspacing="5" cellpadding="5">
   <tr>
-    <th width="1%" align="left" valign="top" scope="col">File</th>
-    <th align="left" valign="top" scope="col">Notes</th>
-    <th width="1%" align="left" valign="top" nowrap scope="col"><button type="button" class="btn btn-primary" title="Live Update Check" id="check-all" data-write="0" data-path="/opac/eds-detail.pl" onClick="CheckAll(this);">Live Update Check</button></th>
-  </tr>
-<tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">IMPORTANT: Koha files to patch - the plugin will integrate itself to the site through these changes.</th>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">doc-head-close.inc</th>
-    <td align="left" valign="top" nowrap><p><strong>OPEN</strong> doc-head-close.inc in \opac\htdocs\opac-tmpl\&lt;themelang&gt;\includes and add the below line to the end of the file.
-	<br><strong>NOTE:</strong> there are spaces between ( [ and % ) and ( % and ] )in the below code. Please remove the space for the condition to work.</p>
-      <p>
-        <textarea name="textarea" cols="45" rows="3" readonly id="textarea" style="width:99%">[ % IF ( EDSEnabled ) % ]<script type="text/javascript" language="javascript" src="/plugin/Koha/Plugin/EDS/js/EDSScript.js"></script>[ % END % ] </textarea>
-  </p></td>
-    <td width="1%" align="left" valign="top" nowrap>PATCH</td>
+    <th width="1%" align="left" valign="top" scope="col"> </th>
+    <th align="left" valign="top" scope="col">
+    	Code is stored in pluginDir/js/custom/custom.js. Set file Chmod to 755 <a target="_blank" href="https://github.com/ebsco/edsapi-koha-plugin/wiki/Customisation-Manager">Click here</a> to learn more...<br>
+    	 
+	</th>
+    <th width="1%" align="left" valign="top" nowrap scope="col"></th>
   </tr>
   <tr>
-    <th align="left" valign="top" nowrap scope="row">Auth.pm</th>
-    <td align="left" valign="top" nowrap><p><strong>OPEN </strong>Auth.pm in  \lib\C4 and add the below line after <span style="background-color:#fffc00">CalendarFirstDayOfWeek    =&gt;</span> at 2 possible locations.</p>
-    <p>
-      <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">EDSEnabled                   => C4::Context->preference("EDSEnabled"),</textarea>
-    </p></td>
-    <td align="left" valign="top" nowrap>PATCH</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">opac-downloadcart.pl</th>
-    <td align="left" valign="top" nowrap><p><strong>OPEN </strong>opac-downloadcart.pl in  \opac\cgi-bin\opac and add the below line after <span style="background-color:#fffc00">my $query = new CGI;</span> </p>
-    <p>
-      <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">my $eds_data ="";if((eval{C4::Context->preference('EDSEnabled')})){my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data');} #EDS Patch</textarea>
-      
-    <p>add the below line after <span style="background-color:#fffc00">my $record = GetMarcBiblio($biblio, 1);</span> </p>
-        <p>
-          <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">if((eval{C4::Context->preference('EDSEnabled')})){my $dat = "";if($biblio =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);}}#EDS Patch</textarea>
-    </p></td>
-    <td align="left" valign="top" nowrap>PATCH</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">opac-sendbasket.pl</th>
-    <td align="left" valign="top" nowrap><p><strong>OPEN </strong>opac-sendbasket.pl in  \opac\cgi-bin\opac and add the below line after <span style="background-color:#fffc00">my $query = new CGI;</span> </p>
-    <p>
-      <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">my $eds_data ="";if((eval{C4::Context->preference('EDSEnabled')})){my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data');} #EDS Patch</textarea>
-      
-    <p>add the below line after <span style="background-color:#fffc00">my $record           = GetMarcBiblio($biblionumber);</span> </p>
-        <p>
-          <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">if((eval{C4::Context->preference('EDSEnabled')})){if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);}}# EDS Patch</textarea>
-    </p>
-    <p>add the below line after <span style="background-color:#fffc00">my $body;</span> </p>
-        <p>
-          <textarea name="textarea2" cols="45" rows="3" readonly id="textarea2" style="width:99%">if((eval{C4::Context->preference('EDSEnabled')})){$template_res = CartSendLinks($template_res,@bibs);}#EDS Patch</textarea>
-    </p>
+    <th align="left" valign="top" nowrap scope="row"> </th>
+    <td align="left" valign="top" nowrap>
+		<iframe frameborder="0" src="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::EDS&method=tool&js=1" width="100%" height="400"></iframe>
     </td>
-    <td align="left" valign="top" nowrap>PATCH</td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row"> Folder [opac]: Perl Files - <strong> folder and file permissions:</strong> Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.pl</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/opac/eds-detail.pl" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-methods.pl</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/opac/eds-methods.pl" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-raw.pl</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/opac/eds-raw.pl" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-search.pl</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/opac/eds-search.pl" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [bootstrap/modules] :
-		<br>
-		Template Files - <strong> folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap id="check_1"><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/modules/eds-detail.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-raw.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/modules/eds-raw.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-results.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/modules/eds-results.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-advsearch.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/modules/eds-advsearch.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [prog/modules] : <br>
-Template Files - <strong> folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/modules/eds-detail.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-raw.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/modules/eds-raw.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-results.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/modules/eds-results.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-advsearch.tt</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/modules/eds-advsearch.tt" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [bootstrap/includes] : <br>
-    Includes - <strong> folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-detail_customlinks.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-detail_customlinks.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-facets.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-facets.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-page-numbers.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-page-numbers.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-detail_sidebar.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-detail_sidebar.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-resort_form.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-resort_form.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-researchstarters.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-researchstarters.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-<tr>
-    <th align="left" valign="top" nowrap scope="row">eds-publicationexactmatch.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/bootstrap/includes/eds-publicationexactmatch.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders  [prog/includes] :
-		<br> 
-		Includes - <strong> folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-detail_customlinks.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-detail_customlinks.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-facets.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-facets.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-page-numbers.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-page-numbers.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-detail_sidebar.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-detail_sidebar.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds-resort_form.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-resort_form.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-researchstarters.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-researchstarters.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th width="1%" align="left" valign="top" nowrap scope="row">eds-publicationexactmatch.inc</th>
-    <td align="left" valign="middle">&nbsp;</td>
-    <td width="1%" align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/prog/includes/eds-publicationexactmatch.inc" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row"><p>Folder [admin]: Plugin Admin -  <strong> folder and file permissions:</strong>Read (Everyone), Write(Owner), Execute(Everyone) or 755<br>
-      Note: these files are used to setup and manage the plugin.</p></th>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">configure.tt</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td rowspan="7" align="left" valign="top" nowrap><p>UPLOAD PLUGIN
-        <br>
-        TO UPDATE
-    </p></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">release_notes.xml</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">setuptool.pl</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">setuptool.tt</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">customjs.inc</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">modal.inc</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">setuptooljs.inc</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [images] -  folder and file permissions: Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">eds_logo.jpg</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/images/eds_logo.jpg" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">formats-sm-sprite.png</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/images/formats-sm-sprite.png" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">loading.gif</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/images/loading.gif" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">PT_Sprite.png</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/images/PT_Sprite.png" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">iconQuestionMarkGeneric.png</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/images/iconQuestionMarkGeneric.png" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [css] -  folder and file permissions: Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">pubtype-icons.css</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/css/pubtype-icons.css" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th colspan="3" align="left" valign="top" nowrap scope="row">Folders [js] -  folder and file permissions: Read (Everyone), Write(Owner), Execute(Everyone) or 755</th>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">EDSScript.js</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/js/EDSScript.js" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">jquery.cookie.min.js</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-default btn-small check-write" data-write="0" data-path="/js/jquery.cookie.min.js" onClick="CheckStatus(this);">Check Updatability</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">custom.js</th>
-    <td align="left" valign="top" nowrap>Place customisations in this file. This will not be modified by Live Update. Click the Manage button to modify this file and apply front-end customisations.</td>
-    <td align="left" valign="top" nowrap><button type="button" class="btn btn-primary btn-small"  onClick="$('#myModal').modal();">Manage</button></td>
-  </tr>
-  <tr>
-    <th align="left" valign="top" nowrap scope="row">&nbsp;</th>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
-    <td align="left" valign="top" nowrap>&nbsp;</td>
+    <td align="left" valign="top" nowrap><button type="button" style="display:none;" class="btn btn-primary btn-small"  onClick="$('#myModal').modal();">Manage</button></td>
   </tr>
 </table>
-		<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
+		<input type="button" value="Return to Plugin home" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
         
 [% INCLUDE "$plugin_dir/admin/setuptooljs.inc" %]
 
