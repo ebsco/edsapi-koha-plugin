@@ -103,7 +103,6 @@ my @params = $cgi->param("limit");
 my $search_desc = 1;
 my $adv_search = 0;
 
-
 my $format = $cgi->param("format") || '';
 my $build_grouped_results = C4::Context->preference('OPACGroupResults');
 if ($format =~ /(rss|atom|opensearchdescription)/) {
@@ -134,12 +133,13 @@ if ($template_name eq 'opac-results.tt') {
    $template->param('COinSinOPACResults' => C4::Context->preference('COinSinOPACResults'));
 }
 
-#manage guest mode.
-my $GuestTracker='y';
-if($borrowernumber ne undef){
-	$GuestTracker='n';
+#manage guest status.
+$SessionToken = $cgi->cookie('sessionToken');
+$GuestTracker = $cgi->cookie('guest');
+if($SessionToken eq ""){
+	$GuestTracker=CheckIPAuthentication();
+	$SessionToken=CreateSession();
 }
-
 
 # get biblionumbers stored in the cart
 my @cart_list;

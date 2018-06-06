@@ -72,10 +72,12 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
     }
 );
 
-#manage guest mode.
-my $GuestTracker='y';
-if($borrowernumber ne undef){
-	$GuestTracker='n';
+#manage guest status.
+$SessionToken = $cgi->cookie('sessionToken');
+$GuestTracker = $cgi->cookie('guest');
+if($SessionToken eq ""){
+	$GuestTracker=CheckIPAuthentication();
+	$SessionToken=CreateSession();
 }
 
 my $format = $cgi->param("format") || 'html';
