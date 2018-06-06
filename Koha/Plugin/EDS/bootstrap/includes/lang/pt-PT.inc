@@ -96,6 +96,7 @@ var EDSLANG = {
 	eds_switch_text										: 'Alterar para Discovery',
 	koha_switch_text									: 'Alterar para Catalogo',
 	eds_select_text										: "Discovery",
+	koha_select_text                                    : 'Catalogo',
 	eds_select_info										: '<h3>Pesquisa EDS</h3>Selecione um termo e digite uma expressão de pesquisa',
 	koha_select_info									: '<h3>Pesquisa Koha</h3>Selecione um termo e digite uma expressão de pesquisa',
 	search_breadcrumb									: 'Resultados da pesquisa',

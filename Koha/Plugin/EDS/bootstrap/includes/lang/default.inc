@@ -96,6 +96,7 @@ var EDSLANG = {
 	eds_switch_text										: 'Switch to Discovery',
 	koha_switch_text									: 'Switch to Catalogue',
 	eds_select_text										: "Discovery",
+	koha_select_text                                    : 'Catalogue',
 	eds_select_info										: '<h3>Search EDS</h3>Select a known item and enter a search term',
 	koha_select_info									: '<h3>Search Koha</h3>Select a known item and enter a search term',
 	search_breadcrumb									: 'Results of search',

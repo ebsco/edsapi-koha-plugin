@@ -96,6 +96,7 @@ var EDSLANG = {
 	eds_switch_text										: 'قم بالتبديل إلى اكتشاف',
 	koha_switch_text									: 'قم بالتبديل إلى الفهرس',
 	eds_select_text										: "اكتشاف",
+	koha_select_text                                    : 'Catalogue',
 	eds_select_info										: '<h3> بحث EDS<h3>قم بتحديد عنصر معروف وأدخل مصطلح البحث',
 	koha_select_info									: '<h3>بحث Koha</h3>قم بتحديد عنصر معروف وأدخل مصطلح البحث',
 	search_breadcrumb									: 'نتائج البحث',
