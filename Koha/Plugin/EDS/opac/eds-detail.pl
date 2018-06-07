@@ -51,9 +51,10 @@ require 'eds-methods.pl';
 my $EDSConfig = decode_json(EDSGetConfiguration());
 {no warnings;local $^W = 0;
 
-my $PluginDir = dirname(abs_path($0));
-$PluginDir =~s /EDS\/opac/EDS/;
-$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
+$PluginDir = $PluginDir . '/Koha/Plugin/EDS/' . C4::Context->preference('opacthemes');
 
 my $cgi = new CGI;
 
@@ -71,10 +72,12 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
     }
 );
 
-#manage guest mode.
-my $GuestTracker='y';
-if($borrowernumber ne undef){
-	$GuestTracker='n';
+#manage guest status.
+my $SessionToken = $cgi->cookie('sessionToken');
+my $GuestTracker = $cgi->cookie('guest');
+if($SessionToken eq ""){
+	$GuestTracker=CheckIPAuthentication();
+	$SessionToken=CreateSession();
 }
 
 my $format = $cgi->param("format") || 'html';
@@ -114,6 +117,49 @@ if($cgi->param("q")){
 	EDSProcessResults();
 }
 
+# MODULAR SEARCH
+sub cust_EDSSearch
+{
+	my $GuestStatus = shift;
+
+	# Build query
+	my $EDSQuery = "Search?query-1=AND,AN ";
+	$EDSQuery=$EDSQuery.$EDSResponse->{Record}->{Header}->{An};
+	$EDSQuery = $EDSQuery . "|resultsperpage=1|includeimagequickview=y";
+
+	my $GuestTracker = "";
+	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
+		$GuestTracker = $GuestStatus;
+	}
+
+	# encoded correctly
+	if($EDSQuery =~m/\{.*?\}/){
+		my $encodedTerm=$&;
+		$encodedTerm=~s/{//g;
+		$encodedTerm=~s/}//g;
+		$encodedTerm=~s/\,/\\,/g;
+		$encodedTerm=~s/:/\\\:/g;
+		$encodedTerm=~s/\(/\\\(/g;
+		$encodedTerm=~s/\)/\\\)/g;
+		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
+	}
+	$EDSQuery =~s/ /\+/g;
+
+	# generate URI
+	my $uri = 'http://eds-api.ebscohost.com/edsapi/rest/'.$EDSQuery;
+	$uri=~s/\|/\&/g;
+
+	my $response =  decode_json(CallREST('GET',$uri,'', GetAuth(), GetSession()));
+	my $quickview = "";
+	
+	if (exists $response->{SearchResult}->{Data}->{Records}[0]->{ImageQuickViewItems}) {
+		$quickview = $response->{SearchResult}->{Data}->{Records}[0]->{ImageQuickViewItems};
+	}
+
+	return $quickview;
+
+}
+
 sub EDSProcessResults
 {	#process Search Results
 	foreach my $Result ($EDSResponse->{Record}){
@@ -129,6 +175,13 @@ sub EDSProcessResults
 	}
 }
 
+	# get qv results, if required
+	if ($EDSInfo->{ViewResultSettings}->{IncludeImageQuickView}->{DefaultOn} eq 'y'){
+		my $qv_EDSResponse = cust_EDSSearch($GuestTracker);
+		if ($qv_EDSResponse ne ""){
+			$EDSResponse->{Record}{ImageQuickViewItems} = $qv_EDSResponse;
+		}
+	}
 
 	# Pager template params
 	$template->param(
@@ -136,7 +189,8 @@ sub EDSProcessResults
 	    listResults            => 1,
 		plugin_dir		=>$PluginDir,
 		instancepath	=>$EDSConfig->{instancepath},
-		theme			=>C4::Context->preference('opacthemes'), #314
+		theme			=>C4::Context->preference('opacthemes'),
+		guestTrack 		=>$GuestTracker,
 	);
 	
 	# Social Networks
@@ -163,9 +217,9 @@ my $GuestMode = $cgi->cookie(
                             -expires => $CookieExpiry
                 );
 $cookie = [$cookie, $SessionToken, $GuestMode];
-#use Data::Dumper; die Dumper $cookie;
 
 my $content_type = ( $format eq 'rss' or $format eq 'atom' ) ? $format : 'html';
 output_with_http_headers $cgi, $cookie, $template->output, $content_type;
 
-}#end no warnings
+}
+#end no warnings

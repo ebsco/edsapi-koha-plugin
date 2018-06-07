@@ -16,11 +16,11 @@
 [% TRY %][% edsLang = "$plugin_dir/includes/lang/$lang"_".inc" %][% PROCESS "$edsLang" %]
 [% CATCH %][% PROCESS "$plugin_dir/includes/lang/default.inc" %][% END %]
 </script>
-																 
+
 [% INCLUDE 'doc-head-close.inc' %]
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>
-<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
     [% BLOCK cssinclude %]
         <link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />
@@ -101,13 +101,14 @@
                         <div id="didyoumean">Not what you expected? Check for <a href="/cgi-bin/koha/svc/suggestion?render=standalone&amp;q=[% querystring |uri %]">suggestions</a></div>
                     [% END %]
 
-
+                    [% IF ( edsautocorrect ) %]
+                        [% EDSLANG.eds_results_TT_correction %] <a href="javascript:{}" id="eds-edsautocorrect">[% edsautocorrect %]</a><br />
+                    [% END # / IF edsautocorrect %]
 
                     [% IF ( edsautosuggest ) %]
                         [% EDSLANG.eds_results_TT_did_you_mean %] <a href="javascript:{}" id="eds-autosuggest">[% edsautosuggest %]</a>
+                    [% END # / IF koha_spsuggest %]
 
-                    [% END # / IF koha_spsuggest%]
-                    
                     [% UNLESS ( total ) #Display refine even if there are not results. %]
                             <div class="row">
 	                            <p>&nbsp;</p>
@@ -122,7 +123,7 @@
                             [% query_error %]
                         </div>
                     [% END %]
-                    
+
                     <div id="top-pages">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
 
                     <!-- Search Results Table -->
@@ -179,8 +180,8 @@
                                         </span> <!-- / .links -->
                                 </div> <!-- / #selections-toolbar -->
 							 <div  style="display:none;"><div id="placard-tabs"></div></div>
-                               [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]	
-							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
+                               [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]
+							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
 
@@ -206,21 +207,25 @@
     [% ELSE %]
     <tr>
     [% END %]
-	[% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
+    [% IF index(RECORD.Header.An, catalogueanprefix) %]
+        [% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
+    [% ELSE %]
+        [% ResultRecordId = RECORD.Header.An %]
+    [% END %]
 	  <td class="select selectcol">
 		[% IF RECORD.Items %] [% #Check if items exist (guest mode) %]
 			[% IF ( opacbookbag ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-					<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" /> 
+					<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" />
 					<label for="bib[% ResultRecordId %]"></label>
-				[% ELSE %] 
+				[% ELSE %]
 					[% IF ( virtualshelves ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-						<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" /> 
+						<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" />
 						<label for="bib[% ResultRecordId %]"></label>
-					[% ELSE %] 
+					[% ELSE %]
 					[% IF ( RequestOnOpac ) %]
 						[% UNLESS ( RECORD.norequests ) #TODO: currently returns yes by default %]
 							[% IF ( opacuserlogin ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-								<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" /> 
+								<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" />
 								<label for="bib[% ResultRecordId %]"></label>
 							[% END %]
 						[% END %]
@@ -230,10 +235,10 @@
         [% END %]
 		</td>
 		<td class="select selectcol">[% UNLESS suppress_result_number %][% RECORD.ResultId %].[% END %]</td>
-  
-			<td>					
-			
-			  [% FOREACH ITEM IN RECORD.Items #removed .nsort %] 
+
+			<td>
+
+			  [% FOREACH ITEM IN RECORD.Items #removed .nsort %]
 				[% IF ITEM.Name.match('Title') AND ITEM.Name.length < 6 %]
 				<div style="margin-bottom:5px;">
 					[% IF RECORD.Header.DbId.match(cataloguedbid) %]
@@ -243,76 +248,89 @@
 							[% ITEM.CatData %]
 							[% BREAK %]
 						[% END %]
-					[% ELSE %]	
+					[% ELSE %]
 						<a class="title" href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&resultid=[% RECORD.ResultId %]" title="[% EDSLANG.eds_results_TT_title_attr %]">[% ITEM.Data %]</a>
-					[% END %]	
-				</div>	
+					[% END %]
+				</div>
 				[% #IMAGE START %]
-				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:70px;margin-right:5px;margin-bottom:5px;padding:2px;">		
-				[% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%] 
+				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:70px;margin-right:5px;margin-bottom:5px;padding:2px;">
+				[% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
 					<div align="center">
 						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" />
-					</div> 
+					</div>
 				[% ELSE %]
-					<div align="center" class="pt-icon pt-[% RECORD.Header.PubTypeId %]"></div> 
+					<div align="center" class="pt-icon pt-[% RECORD.Header.PubTypeId %]"></div>
 				[% END %]
 				<div style="clear:both;"></div>
 				<div align="center">[% RECORD.Header.PubType |replace(' ','<br />')  %]</div>
 				</div>
 				[% #IMAGE END %]
-				[% ELSE %]	
+				[% ELSE %]
 					<div class="results_summary">
 						<span class="label">[% ITEM.Label %]: </span>[% ITEM.Data %]
-					</div>	
+					</div>
 				[% END %]
-			  [% END %]	
-			  
+			  [% END %]
+            [% IF RECORD.ImageQuickViewItems %]
+                <div style="margin-bottom: 0.5em;" >
+                    [% IF ( guestTrack == "n" ) %]
+                        [% FOREACH IMG IN RECORD.ImageQuickViewItems %]
+                            <a class="diag-link" href="[% IMG.Url.replace('small%5Fthumb','actual') %]">
+                                <img class="diag-img" src="[% IMG.Url %]" style="padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%;">
+                            </a>
+                        [% END %]
+                    [% ELSE %]
+                        <div onclick="$('#loginModal').modal('show');" style="padding: 5px; font-weight: bold;" ><a href="javascript:void(0)" >[% EDSLANG.eds_results_TT_quickview_login %]</a></div>
+                    [% END %]
+                </div>
+            [% END %]
+
 			  [% #CustomLinks %]
 			  [% IF RECORD.CustomLinks OR RECORD.FullText.Links OR RECORD.FullText.CustomLinks OR RECORD.FullText.Text.Availability==1 %]
 				  <div class="results_summary actions links">
 						<span class="label">[% EDSLANG.eds_results_TT_links %] </span>
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Text.Availability %]
-							
+
 								<a class="html-customlink" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=html" title="[% CUSTOMLINK.MouseOverText %]">
 									[% EDSLANG.eds_results_TT_links_html %]
 								</a>
-					  [% END %]	
+					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Links %]
-							
-								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]">
+
+								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
 									[% IF CUSTOMLINK.Type == 'pdflink' %][% EDSLANG.eds_results_TT_links_pdf %]
 									[% ELSIF CUSTOMLINK.Type == 'ebook-pdf' %][% EDSLANG.eds_results_TT_links_ebook %]
 									[% ELSE %][% CUSTOMLINK.Type %][% END %]
 								</a>
-							
 
-					  [% END %]										
+
+					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.CustomLinks %]
-							
+
 								<a class="hold" target="_blank" href="[% CUSTOMLINK.Url %]" title="[% CUSTOMLINK.MouseOverText %]">
 									[% CUSTOMLINK.Text %]
 								</a>
-							
-					  [% END %]						
+
+					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.CustomLinks %]
-							
+
 								<a class="hold" target="_blank" href="[% CUSTOMLINK.Url %]" title="[% CUSTOMLINK.MouseOverText %]">
 									[% CUSTOMLINK.Text %]
 								</a>
-							
+
 					  [% END %]
 				  </div>
 			  [% END %]
-			[% #Actions %] 
+			[% #Actions %]
             [% IF RECORD.Items %] [% #check if items exist (guest mode) %]
                 [% IF 1 #RECORD.Header.DbId.match(cataloguedbid) %]
                     <span class="results_summary actions"><span class="label">
                         [% EDSLANG.eds_results_TT_actions %]
                     </span>
-                    [% IF ( RequestOnOpac ) %] 
-                        [% UNLESS ( SEARCH_RESULT.norequests ) %] 
-                            [% IF ( opacuserlogin ) %] 
-                                [% IF ( AllowOnShelfHolds AND RECORD.Header.DbId.match(cataloguedbid) ) %] 
+                    [% IF ( RequestOnOpac ) %]
+                        [% UNLESS ( SEARCH_RESULT.norequests ) %]
+                            [% IF ( opacuserlogin ) %]
+                                [% IF ( AllowOnShelfHolds AND RECORD.Header.DbId.match(cataloguedbid) ) %]
                                     <a class="hold" href="/cgi-bin/koha/opac-reserve.pl?biblionumber=[% ResultRecordId %]">
                                         [% EDSLANG.eds_results_TT_place_reserve %]
                                     </a><!-- add back when available 0 holds in queue-->
@@ -333,34 +351,34 @@
                                     [% EDSLANG.eds_results_TT_save_to_list %]
                                 </a>
                             [% END %]
-                        [% END %] 
-                    [% END %] 
-                    [% IF ( opacbookbag ) %] 
-                        [% IF ( SEARCH_RESULT.incart ) %] 
+                        [% END %]
+                    [% END %]
+                    [% IF ( opacbookbag ) %]
+                        [% IF ( SEARCH_RESULT.incart ) %]
                             <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_in_cart %]
-                            </a> 
+                            </a>
                             <a class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_remove_cart %]
                             </a>
-                        [% ELSE %] 
+                        [% ELSE %]
                             <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_add_cart %]
-                            </a> 
+                            </a>
                             <a style="display:none;" class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_remove_cart %]
                             </a>
-                        [% END %] 
-                    [% END %] 
+                        [% END %]
+                    [% END %]
                 [% END %]
             [% ELSE %]
             	<span>[% EDSLANG.eds_results_TT_login_msg %]</span>
             [% END %]
-			[% #Actions END %] 
-			  
+			[% #Actions END %]
+
 	</td>
-	
-	
+
+
 	</tr>
 [% END %]
 

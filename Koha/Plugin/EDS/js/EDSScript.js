@@ -7,6 +7,7 @@ var edsSelectedKnownItem="";
 //var defaultSearch=""; set by configure
 var browseNextPage="";
 var catalogueId="";
+var nocorrect="";
 
 //-configurable in plugin config
 var edsSwitchText = '';
@@ -24,7 +25,11 @@ var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
-var versionEDSKoha = '17.11';
+
+// DO NOT TOUCH - controlled by build.py
+var versionEDSKoha = "17.11000";
+///////////////////////////////////////
+
 var edsLangStore = '';
 
 delCookie = function(name) {
@@ -56,6 +61,33 @@ jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/jquery.cookie.min.js", dataType: 
                 .fail(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/bootstrap/includes/lang/default.inc", dataType: "script", cache: true }).done(function (data) { StartEDS(data); }); });
         } else { StartEDS(0) }
     } else { StartEDS(0) }
+});
+
+function eds_img_resize(e){
+	if (e.height > e.width){
+		console.log("Scale by height");
+		$(e).addClass("sc_height");
+    } else {
+		$(e).addClass("sc_width");
+    }
+}
+
+$('body').on('click', '.diag-img', function(e) {
+	e.preventDefault();
+	$("body").addClass("eds_noscroll");
+	$("body").append('\
+	<div class="c_modal" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">\
+		<span class="close" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">&times;</span>\
+		<img class="c_modal-content" src="' + e.target.parentNode.href + '" onload="eds_img_resize(this)"  >\
+	</div>');
+});
+
+$.each($.cookie('bib_list').split("/"), function(){
+	if (this != ""){
+		var code = this.split("|")[0];
+		$(".cart" + code).html(MSG_ITEM_IN_CART).addClass("incart");
+		$(".cartR" + code).show();
+    }
 });
 
 function StartEDS(edsLang) {
@@ -98,13 +130,21 @@ function StartEDS(edsLang) {
 	InitCartWithEDS(); // cart management
 
 	jQuery('#eds-autosuggest').click(function () {
-	    var autoSuggest = this;
-	    var autoSuggestText = jQuery(autoSuggest).text();
+		nocorrect = "nocorrect=1";
+	    var autoSuggestText = jQuery(this).text();
 	    jQuery('#translControl1').val(autoSuggestText);
 	    jQuery('#searchsubmit').trigger('click');
 	});
 
+	jQuery('#eds-edsautocorrect').click(function () {
+	    var autoSuggestText = jQuery(this).text();
+	    jQuery('#translControl1').val(autoSuggestText);
+	    jQuery('#searchsubmit').trigger('click');
+	});
 
+	if (edsConfig.autocomplete == "yes"){
+		EDSAutoComp();
+	}
 
 }
 
@@ -239,56 +279,57 @@ function SetEDSOptions(data){
 }
 
 function SetEDS(showInfo){
-			$('#searchform').submit(function(){return false;});
-			$('#searchsubmit').click(SearchEDS);
-			$('#masthead_search option').each(function(){$(this).remove();});
-			if(showInfo){ShowInfo(edsSelectInfo);}
-			$('#masthead_search').append(edsOptions);
-			//$.removeCookie('defaultSearch', { path: '/' });
-			$.jStorage.set('defaultSearch', 'eds', { TTL: edsConfig.cookieexpiry * 60 * 1000 });
-			defaultSearch="eds";
-			$('#transl1').val($.cookie('QueryTerm'));
-			$('.transl1').val($.cookie('QueryTerm')); //for 314
-			$('#searchBread').text(EDSLANG.search_breadcrumb + " " + $.cookie('QueryTerm'));
-			$('#transl1').removeClass('placeholder');
-			//advSearch
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
-			}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}else{
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}
+	$('#searchform').submit(function(){return false;});
+	$('#searchsubmit').click(SearchEDS);
+	$('#masthead_search option').each(function(){$(this).remove();});
+	if(showInfo){ShowInfo(edsSelectInfo);}
+	$('#masthead_search').append(edsOptions);
+	//$.removeCookie('defaultSearch', { path: '/' });
+	$.jStorage.set('defaultSearch', 'eds', { TTL: edsConfig.cookieexpiry * 60 * 1000 });
+	defaultSearch="eds";
+	$('#transl1').val($.cookie('QueryTerm'));
+	$('.transl1').val($.cookie('QueryTerm')); //for 314
+	$('#searchBread').text(EDSLANG.search_breadcrumb + " " + $.cookie('QueryTerm'));
+	$('#transl1').removeClass('placeholder');
+	//advSearch
+	if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
+	}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
+	}else{
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
+	}
 
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/pfi-search.pl")!=-1){
-				$('#masthead_search option[value="JN"]').prop('selected',true);
-				knownItem="JN";
-			}
+	if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/pfi-search.pl")!=-1){
+		$('#masthead_search option[value="JN"]').prop('selected',true);
+		knownItem="JN";
+	}
 
-
+	EDSAutoComp();
 }
 
 function SetKoha(showInfo){
-			$('#searchform').unbind('submit');
-			$('#searchsubmit').unbind('click');
-			$('#masthead_search option').each(function(){$(this).remove();});
-			if(showInfo){ShowInfo(kohaSelectInfo);}
-			$('#masthead_search').append(kohaOptions);
-			$('#masthead_search option[value="eds"]').remove();
-			$('#masthead_search').prepend("<option value='eds'>"+edsSwitchText+"</option>");
-			//$.removeCookie('defaultSearch', { path: '/' });
-			$.jStorage.set('defaultSearch', 'koha', { TTL: edsConfig.cookieexpiry * 60 * 1000 })
-			defaultSearch="koha";
-			//advSearch
-			if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
-			}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
-				$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
-			}else{
-				$('a[href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl"]').attr('href','/cgi-bin/koha/opac-search.pl');
-			}
+	$('#searchform').unbind('submit');
+	$('#searchsubmit').unbind('click');
+	$('#masthead_search option').each(function(){$(this).remove();});
+	if(showInfo){ShowInfo(kohaSelectInfo);}
+	$('#masthead_search').append(kohaOptions);
+	$('#masthead_search option[value="eds"]').remove();
+	$('#masthead_search').prepend("<option value='eds'>"+edsSwitchText+"</option>");
+	//$.removeCookie('defaultSearch', { path: '/' });
+	$.jStorage.set('defaultSearch', 'koha', { TTL: edsConfig.cookieexpiry * 60 * 1000 })
+	defaultSearch="koha";
+	//advSearch
+	if(document.URL.indexOf("/plugin/Koha/Plugin/EDS/opac/eds-search.pl")!=-1 && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',kohaSwitchText);
+	}else if(document.URL.indexOf("/cgi-bin/koha/opac-search.pl")!=-1  && QueryString('q')==""){
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title',edsSwitchText);
+		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href','/plugin/Koha/Plugin/EDS/opac/eds-search.pl');
+	}else{
+		$('a[href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl"]').attr('href','/cgi-bin/koha/opac-search.pl');
+	}
+	$('#translControl1').autocomplete("destroy");
 }
 
 function ShowInfo(msg){
@@ -318,7 +359,7 @@ function SearchEDS(){
   if (defaultParams === undefined) { defaultParams = ''; }
   var apiSearchType = "eds";
   if (knownItem == 'JN') { apiSearchType = "pfi"; }
-  window.location = '/plugin/Koha/Plugin/EDS/opac/' + apiSearchType + '-search.pl?q=Search?query-1=AND,' + knownItem + ':{' + searchTerm + '}' + defaultParams + '&default=1';
+  window.location = '/plugin/Koha/Plugin/EDS/opac/' + apiSearchType + '-search.pl?q=Search?query-1=AND,' + knownItem + ':{' + searchTerm + '}' + defaultParams + '&default=1' + nocorrect;
 }
 
 function EDSGetRecord(recordURL,callingObjParent){
@@ -939,7 +980,8 @@ function PublisherDateSlider() {
             max: pubMaxDate,
             from: pubFromDate,
             to: pubToDate,
-            drag_interval: true
+			drag_interval: true,
+			prettify_enabled: false
         });
 
         rangeSlider = jQuery("#range-published-date").data("ionRangeSlider");
@@ -992,3 +1034,65 @@ function DateHandleKeyPress(e, searchBox) {
         }
     }
 }
+
+function EDSAutoComp(){
+
+	var creds = $.jStorage.get("autoComp");
+
+	var idx = "rawqueries";
+	if (edsConfig.autocomplete_mode != "normal"){
+		idx = "holdings";
+	}
+
+	if (defaultSearch != "eds"){
+		return;
+	}
+
+	if (!creds){
+		$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-ac.pl?type=auth', function (data) {
+			jQuery.jStorage.set('autoComp',data,{ TTL: parseInt(data.AuthTimeout) });
+			EDSAutoComp();
+		});
+	} else {
+		console.log("EDS AC active");
+		$('#translControl1').autocomplete({
+            source: function(request, response) {
+                var promise = $.ajax(creds.Autocomplete.Url, {
+                    data: {
+                        token: creds.Autocomplete.Token,
+                        term: request.term,
+                        idx: idx,
+                        filters: JSON.stringify([{
+                            name: 'custid',
+                            values: [creds.Autocomplete.CustId]
+                        }])
+                    }
+                });
+
+                promise.done(function(data) {
+					if (data.error){
+						jQuery.jStorage.set('autoComp',null);
+						EDSAutoComp();
+					} else {
+						var terms = data.terms.map(function(wrapper) {
+							return wrapper.term;
+						});
+						response(terms);
+					}
+                });
+			},
+			select: EDSautoSearch
+		});
+	}
+}
+
+function EDSautoSearch(event, ui){
+	$.when( $('#translControl1').val(ui.item.value)).done(function() {
+		$("#searchsubmit").click();
+ 	});
+}
+$('body').on('click', '#translControl1', function() {
+	if (defaultSearch == "eds"){
+		$( "#translControl1" ).autocomplete( "search" );
+	}
+});
