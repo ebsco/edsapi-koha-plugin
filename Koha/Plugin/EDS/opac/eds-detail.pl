@@ -73,8 +73,8 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
 );
 
 #manage guest status.
-$SessionToken = $cgi->cookie('sessionToken');
-$GuestTracker = $cgi->cookie('guest');
+my $SessionToken = $cgi->cookie('sessionToken');
+my $GuestTracker = $cgi->cookie('guest');
 if($SessionToken eq ""){
 	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();

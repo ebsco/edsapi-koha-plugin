@@ -134,8 +134,8 @@ if ($template_name eq 'opac-results.tt') {
 }
 
 #manage guest status.
-$SessionToken = $cgi->cookie('sessionToken');
-$GuestTracker = $cgi->cookie('guest');
+my $SessionToken = $cgi->cookie('sessionToken');
+my $GuestTracker = $cgi->cookie('guest');
 if($SessionToken eq ""){
 	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();
