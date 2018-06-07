@@ -32,7 +32,7 @@
             top: 0px !important;\
         }\
         #g_logo{\
-            background: url(http://gss.ebscohost.com/cwu/apps/mgt/gi.png);\
+            background: url(https://gss.ebscohost.com/cwu/apps/mgt/gi.png);\
             height: 16px;\
             width: 16px;\
             background-size: cover;\
