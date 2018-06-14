@@ -133,13 +133,14 @@ if ($template_name eq 'opac-results.tt') {
    $template->param('COinSinOPACResults' => C4::Context->preference('COinSinOPACResults'));
 }
 
-#manage guest status.
 my $SessionToken = $cgi->cookie('sessionToken');
-my $GuestTracker = $cgi->cookie('guest');
+# $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
-	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();
 }
+my $GuestTracker=CheckIPAuthentication();
+1;
+
 
 # get biblionumbers stored in the cart
 my @cart_list;

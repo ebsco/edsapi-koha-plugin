@@ -133,11 +133,12 @@ if ($template_name eq 'opac-results.tt') {
 }
 
 #manage guest mode.
-my $GuestTracker='y';
-if($borrowernumber ne undef){
-	$GuestTracker='n';
+my $SessionToken = $cgi->cookie('sessionToken');
+# $GuestTracker = $input->cookie('guest');
+if($SessionToken eq ""){
+	$SessionToken=CreateSession();
 }
-
+my $GuestTracker=CheckIPAuthentication();
 
 # get biblionumbers stored in the cart
 my @cart_list;

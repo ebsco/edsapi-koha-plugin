@@ -74,11 +74,11 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
 
 #manage guest status.
 my $SessionToken = $cgi->cookie('sessionToken');
-my $GuestTracker = $cgi->cookie('guest');
+# $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
-	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();
 }
+my $GuestTracker=CheckIPAuthentication();
 
 my $format = $cgi->param("format") || 'html';
 

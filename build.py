@@ -87,11 +87,11 @@ for line in range(len(filedata)):
 
     # Set version
     if ("<release version" in templine):
-        filedata[line] = '\t\t<release version="' + majorVersion + minorVersion + '" date="' + str(now.year) + "/" + str('%02d' % now.month) + "/" + str('%02d' % now.day) + '">\n'
+        filedata[line] = '\t\t<release version="' + majorVersion + "." + minorVersion + '" date="' + str(now.year) + "/" + str('%02d' % now.month) + "/" + str('%02d' % now.day) + '">\n'
 
     # Set version
     if ("<latestversion>" in templine):
-        filedata[line] = '\t<latestversion>' + majorVersion + minorVersion + '</latestversion>\n'
+        filedata[line] = '\t<latestversion>' + majorVersion + "." + minorVersion + '</latestversion>\n'
 
     # Set date
     if ("<lastupdated>" in templine):

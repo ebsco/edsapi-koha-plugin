@@ -27,7 +27,7 @@ var verbose = QueryString('verbose');
 var bibListLocal = 0;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11000";
+var versionEDSKoha = "17.11001";
 ///////////////////////////////////////
 
 var edsLangStore = '';

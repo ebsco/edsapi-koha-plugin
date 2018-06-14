@@ -93,11 +93,11 @@ my ( $template, $user, $cookie ) = get_template_and_user(
 );
 #manage guest status.
 $SessionToken = $input->cookie('sessionToken');
-$GuestTracker = $input->cookie('guest');
+# $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
-	$GuestTracker=CheckIPAuthentication();
 	$SessionToken=CreateSession();
 }
+$GuestTracker=CheckIPAuthentication();
 1;
 
 
@@ -187,11 +187,12 @@ sub GetSession
 	if($input->cookie('guest') eq ''){
 		return $SessionToken;
 	}elsif($GuestTracker ne $input->cookie('guest')){
-		if(CheckIPAuthentication() ne 'n'){
-			return CreateSession();
-		}else{
-			return $SessionToken;
-		}
+		# if(CheckIPAuthentication() ne 'n'){
+		# 	return CreateSession();
+		# }else{
+		# 	return $SessionToken;
+		# }
+		return CreateSession();
 	}else{
 		return $SessionToken;
 	}
@@ -400,6 +401,11 @@ sub CheckIPAuthentication
 		$GuestTracker='n';
 		$GuestForIP = 'n';
 	}
+
+	if ($user){
+		$GuestTracker='n';
+	}
+
 	if($GuestTracker ne "n"){ # User has not logged in or authtoken is not IP. Do a local IP check.
 		if(length($iprange) > 4){ # Check local IP range if specified.
 			my @allowedIPs = split /,/, $iprange;
