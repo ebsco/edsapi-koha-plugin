@@ -45,23 +45,23 @@ my $table='plugin_data';
     $sth->execute( $PluginClass );
 $sth->execute();
 while ( my $r = $sth->fetchrow_hashref() ) {
-given($r->{plugin_key}){
-		when('edsusername') {$edsusername=$r->{plugin_value};}
-		when('edsprofileid') {$edsprofileid=$r->{plugin_value};}
-		when('edspassword') {$edspassword=$r->{plugin_value};}
-		when('edscustomerid') {$edscustomerid=$r->{plugin_value};}
-		when('defaultsearch') {$defaultsearch=$r->{plugin_value};}
-		when('cookieexpiry') {$cookieexpiry=$r->{plugin_value};}
-		when('cataloguedbid') {$cataloguedbid=$r->{plugin_value};}
-		when('catalogueanprefix') {$catalogueanprefix=$r->{plugin_value};}
-		when('logerrors') {$logerrors=$r->{plugin_value};}
-		when('iprange') {$iprange=$r->{plugin_value};}
-		when('authtoken') {$authtoken=$r->{plugin_value};}
-		when('autocomplete') {$autocomplete=$r->{plugin_value};}
-		when('autocomplete_mode') {$autocomplete_mode=$r->{plugin_value};}
-		when('defaultparams') {$defaultparams=$r->{plugin_value};}
-		when('edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
-		when('lastedsinfoupdate') {$lastedsinfoupdate=$r->{plugin_value};
+    if(my $plugin_key = $r->{plugin_key}){
+		if ($plugin_key eq 'edsusername') {$edsusername=$r->{plugin_value};}
+		if ($plugin_key eq 'edsprofileid') {$edsprofileid=$r->{plugin_value};}
+		if ($plugin_key eq 'edspassword') {$edspassword=$r->{plugin_value};}
+		if ($plugin_key eq 'edscustomerid') {$edscustomerid=$r->{plugin_value};}
+		if ($plugin_key eq 'defaultsearch') {$defaultsearch=$r->{plugin_value};}
+		if ($plugin_key eq 'cookieexpiry') {$cookieexpiry=$r->{plugin_value};}
+		if ($plugin_key eq 'cataloguedbid') {$cataloguedbid=$r->{plugin_value};}
+		if ($plugin_key eq 'catalogueanprefix') {$catalogueanprefix=$r->{plugin_value};}
+		if ($plugin_key eq 'logerrors') {$logerrors=$r->{plugin_value};}
+		if ($plugin_key eq 'iprange') {$iprange=$r->{plugin_value};}
+		if ($plugin_key eq 'authtoken') {$authtoken=$r->{plugin_value};}
+		if ($plugin_key eq 'autocomplete') {$autocomplete=$r->{plugin_value};}
+		if ($plugin_key eq 'autocomplete_mode') {$autocomplete_mode=$r->{plugin_value};}
+		if ($plugin_key eq 'defaultparams') {$defaultparams=$r->{plugin_value};}
+		if ($plugin_key eq 'edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
+		if ($plugin_key eq 'lastedsinfoupdate') {$lastedsinfoupdate=$r->{plugin_value};
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
 			my $dateString = $mday.'/'.$months[$mon].'/'.(1900+$year);
@@ -311,8 +311,8 @@ sub EDSGetInfo
 		$sth->execute( $PluginClass );
 		$sth->execute();
 		while ( my $r = $sth->fetchrow_hashref() ) {
-		given($r->{plugin_key}){
-				when('edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
+		if (my $plugin_key = $r->{plugin_key}){
+				if ($plugin_key eq 'edsinfo') {$edsinfo=$r->{plugin_value};$edsinfo = Encode::encode('UTF-8', $edsinfo);}
 			}
 		}
 	}
