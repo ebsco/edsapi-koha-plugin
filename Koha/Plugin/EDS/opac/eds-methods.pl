@@ -221,6 +221,62 @@ sub EDSGetConfiguration
 	return $JSONConfig;
 }
 
+
+sub PFISearch
+{
+	my ($EDSQuery, $GuestStatus) = @_;
+	if($input->param("default") eq 1){
+		$EDSQuery=$EDSQuery;
+	}
+
+	if(CheckIPAuthentication() ne 'n'){ # Apply guest status from caller if not IP authenticated.
+		$GuestTracker = $GuestStatus;
+	}
+
+	if($EDSQuery =~m/\{.*?\}/){
+		my $encodedTerm=$&;
+
+		$encodedTerm=~s/{//g;
+		$encodedTerm=~s/}//g;
+		$encodedTerm=~s/\,/\\,/g;
+		$encodedTerm=~s/:/\\\:/g;
+		$encodedTerm=~s/\(/\\\(/g;
+		$encodedTerm=~s/\)/\\\)/g;
+
+		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
+	}
+	$EDSQuery =~s/ /\+/g;
+	print STDERR "---==---" . $EDSQuery;
+	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
+	$uri=~s/\|/\&/g;
+	#	use Data::Dumper; die Dumper $uri;
+	print STDERR "---==---" . $uri;
+
+	my $response;
+	if($EDSQuery eq "info"){
+		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
+	}else{
+		$response =  CallREST('GET',$uri,'', GetAuth(), GetSession());
+	}
+
+	if(index($response,'ErrorNumber')!=-1){ # TODO: check for 104 or 109 error and request accordingly
+		#use Data::Dumper; die Dumper $response;
+		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
+	}
+
+	if($EDSQuery eq "info"){
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+		my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
+		my $dateString = $mday.'/'.$months[$mon].'/'.(1900+$year);
+		$response=~s/\"Label\"\:\"ISBN\"\}/\"Label\"\:\"ISBN\"\}\,\{\"FieldCode\"\:\"JN\"\,\"Label\"\:\"Journal Title\"\}/; #" Hack to add Journal Title search
+		$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $response, $PluginClass, 'edsinfo');
+		$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $dateString, $PluginClass, 'lastedsinfoupdate');
+		return 'info stored';
+	}else{
+		return $response;
+	}
+}
+
 sub EDSSearch
 {
 	my ($EDSQuery, $GuestStatus) = @_;

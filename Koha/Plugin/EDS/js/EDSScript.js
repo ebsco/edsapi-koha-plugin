@@ -27,10 +27,12 @@ var verbose = QueryString('verbose');
 var bibListLocal = 0;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11001";
+var versionEDSKoha = "17.11002";
 ///////////////////////////////////////
 
 var edsLangStore = '';
+
+jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true });
 
 delCookie = function(name) {
 	var exp = new Date();
@@ -147,9 +149,6 @@ function StartEDS(edsLang) {
 	}
 
 }
-
-jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true }); // load customisations.
-
 
 function PFIAtoZBar() {
     var barHolder = '<div class="pagination-small"><ul><li><stong>' + EDSLANG.pfi_atoz_bar + '</strong> </li>';

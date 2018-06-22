@@ -182,7 +182,7 @@ my @EDSExpanders;
 my $sort_by;
 my %pager;
 if($cgi->param("q")){
-	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
+	$EDSResponse = decode_json(PFISearch($EDSQuery,$GuestTracker));
 	#use Data::Dumper; die Dumper $EDSResponse;
 	try{# uncomment the try block when debugging
 		EDSProcessResults();
