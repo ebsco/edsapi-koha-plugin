@@ -27,7 +27,7 @@ var verbose = QueryString('verbose');
 var bibListLocal = 0;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11002";
+var versionEDSKoha = "17.11003";
 ///////////////////////////////////////
 
 var edsLangStore = '';
@@ -73,6 +73,13 @@ function eds_img_resize(e){
 		$(e).addClass("sc_width");
     }
 }
+
+$('body').on('click', '.search-in-pub-button', function() {
+    currentPubButton = this;
+    searchTerm = jQuery(currentPubButton).parent().find('.search-in-pub-field').val();
+    pubAction = jQuery(currentPubButton).parent().find('.search-in-pub-field').data('action');
+    SearchPublication(searchTerm, pubAction);
+});
 
 $('body').on('click', '.diag-img', function(e) {
 	e.preventDefault();
@@ -165,13 +172,6 @@ function PFIAtoZBar() {
         window.location.href = "pfi-search.pl?q=Search?query-1=AND,:{JN+" + jQuery(currentAlpha).text() + "*}|sort=title";
     });
 }
-
-jQuery('.search-in-pub-button').click(function () {
-    currentPubButton = this;
-    searchTerm = jQuery(currentPubButton).parent().find('.search-in-pub-field').val();
-    pubAction = jQuery(currentPubButton).parent().find('.search-in-pub-field').data('action');
-    SearchPublication(searchTerm, pubAction);
-});
 
 function SearchPublication(searchinTerm, pubAction) {
     window.location.href = '/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,:{' + searchinTerm + '}|action=addfacetfilter(' + encodeURIComponent(pubAction) + ')&default=1';
