@@ -83,7 +83,7 @@
 			[% IF catalogueanprefix == '' %][% catalogueanprefix = 'Enter Catalogue Prefix' %][% END %]
             <td align="left" valign="top">
             	<input name="catalogueanprefix" type="text" class="textbox" id="catalogueanprefix" value="[% catalogueanprefix %]">
-            	<small><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format. You can get this from the URL of a detailed record or permalink in EDS.<br>e.g. 
+            	<small><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format. You can get this from the URL of a detailed record or permalink in EDS.<br>e.g.
             http://ehis.ebscohost.com/eds/detail?AN=prefval.530894. Enter prefval including period (dot) into the text field.</p></small>
 			</td>
           </tr>
@@ -138,7 +138,7 @@
           </tr>
             <tr>
                 <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Log Errors:</th>
-                <td align="left" valign="top">                
+                <td align="left" valign="top">
 					<select class="textbox" name="logerrors">
 					[% IF logerrors == 'no' %]
 						<option value="no" selected="selected">No</option>
@@ -152,6 +152,42 @@
 					[% END %]
 					</select>
                 	<small>Select yes to log errors in the error log (best for debugging). Select no to display no errors and warnings.</small>
+                </td>
+            </tr>
+            <tr>
+                <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Autocomplete</th>
+                <td align="left" valign="top">
+					<select class="textbox" name="autocomplete">
+					[% IF autocomplete == 'no' %]
+						<option value="no" selected="selected">Disabled</option>
+					[% ELSE %]
+						<option value="no">Disabled</option>
+					[% END %]
+					[% IF autocomplete == 'yes' %]
+						<option value="yes" selected="selected">Enabled</option>
+					[% ELSE %]
+						<option value="yes">Enabled</option>
+					[% END %]
+					</select>
+                	<small>EDS autocomplete</small>
+                </td>
+            </tr>
+            <tr>
+                <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Autocomplete Level</th>
+                <td align="left" valign="top">
+					<select class="textbox" name="autocomplete_mode">
+					[% IF autocomplete_mode == 'normal' %]
+						<option value="normal" selected="selected">Article</option>
+					[% ELSE %]
+						<option value="normal">Article</option>
+					[% END %]
+					[% IF autocomplete_mode == 'title' %]
+						<option value="title" selected="selected">Title</option>
+					[% ELSE %]
+						<option value="title">Title</option>
+					[% END %]
+					</select>
+                	<small>Use title or article level completion</small>
                 </td>
             </tr>
           <tr>
@@ -169,7 +205,7 @@
 	            <input type="hidden" name="edsinfo" value="[% edsinfo %]" id="edsinfo">
 				<input type="hidden" name="lastedsinfoupdate" value="[% lastedsinfoupdate %]" id="lastedsinfoupdate">
             <textarea cols="45" rows="5" disabled="disabled" class="textbox">[% edsinfo %]</textarea>
-            
+
 			<p>
 				<small>
 					<p>
@@ -188,9 +224,9 @@
             <td colspan="2" align="left" valign="top">
 				<p>
 					<input type="hidden" name="save" value="1" />
-					<input type="submit" value="Save configuration" /> 
-					<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" /> 
-				</p>			
+					<input type="submit" value="Save configuration" />
+					<input type="button" value="Cancel" onclick="window.location.href='/cgi-bin/koha/plugins/plugins-home.pl';" />
+				</p>
             </td>
           </tr>
         </table>
@@ -204,7 +240,7 @@ function EDSUpdateInfo(){
 	console.log(updateURL);
 	var infoUpdateWindow=window.open(updateURL,'infoUpdateWindow',"width=100, height=10, top=0, left=0");
 	setTimeout(function(){location.reload();},10000);
-	
+
 }
 
 function GetLocalIP(){

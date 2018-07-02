@@ -42,9 +42,8 @@ use URI::Escape;
 use HTML::Entities;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
-
-
-
+use utf8;
+use open ':encoding(utf-8)';
 use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
@@ -54,16 +53,9 @@ use Try::Tiny;
 use File::Find qw(finddepth);
 use POSIX qw(strftime);
 
-
-
-
-
-
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 my $htaccessWrite = 0;
-
-
 
 sub CheckWriteStatus{
 	my($FilePath) = @_;
@@ -83,22 +75,25 @@ sub CheckWriteStatus{
 }
 
 sub GetCustomJS{
-
 	my @customJSCode;
 	my $customjsFile = $PluginDir."/js/custom/custom.js";
 
-		if(-e $customjsFile){
-			open FILE, "<", $customjsFile or die $!;
-			@customJSCode = <FILE>;
-			close FILE;
-		}
-	#use Data::Dumper; die Dumper @customJSCode;
+	if(-e $customjsFile){
+		open FILE, "<", $customjsFile or die $!;
+		@customJSCode = <FILE>;
+		close FILE;
+	}
+
 	return @customJSCode;
 }
 
 sub SetCustomJS{
 	my ($jsCode) = @_;	
 	
+	unless (-f $PluginDir."/js/custom/custom.js") {
+		open my $fc, ">", $PluginDir."/js/custom/custom.js";
+    	close $fc;
+	}
 	open FILE, "+>", $PluginDir."/js/custom/custom.js" or die $!;
 	print FILE $jsCode;
 	close FILE;

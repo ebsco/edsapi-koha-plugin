@@ -7,7 +7,7 @@
 </script>
 
 [% INCLUDE 'doc-head-close.inc' %]
-<link rel="stylesheet" type="text/css" href="../css/pubtype-icons.css" />
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
 [% BLOCK cssinclude %][% END %]
 </head>
 <body id="advsearch" class="scrollto">
