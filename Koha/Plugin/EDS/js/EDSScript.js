@@ -108,6 +108,7 @@ function StartEDS(edsLang) {
     edsSwitchText = EDSLANG.eds_switch_text;
     kohaSwitchText = EDSLANG.koha_switch_text;
     edsSelectText = EDSLANG.eds_select_text;
+    kohaSelectText = EDSLANG.koha_select_text;
     edsSelectInfo = EDSLANG.eds_select_info;
     kohaSelectInfo = EDSLANG.koha_select_info;
 
@@ -219,6 +220,7 @@ function GoDiscovery(firstTime) {
 		        var optionText = $(this).text().replace('--- ', '');
 		        var optionSelected = "";
 		        if ($(this).val() != "") { optionText = "--- " + optionText; }
+		        if ($(this).val() == "") { optionText = kohaSelectText; }
 		        if ($(this).attr('selected') && optionSelect == 1) { optionSelected = ' selected="selected" '; optionSelect = 0 }
 		        kohaOptions += '<option ' + optionSelected + ' value="' + $(this).val() + '">' + optionText + '</option>';
 		        if (firstTime) { firstTimeSearchOptions = kohaOptions; }

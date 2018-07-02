@@ -99,6 +99,7 @@ var EDSLANG = {
 	eds_switch_text										: 'Switch to Discovery',
 	koha_switch_text									: 'Switch to Catalogue',
 	eds_select_text										: "Discovery",
+	koha_select_text                                    : 'Catalogue',
 	eds_select_info										: '<h3>Search EDS</h3>Select a known item and enter a search term',
 	koha_select_info									: '<h3>Search Koha</h3>Select a known item and enter a search term',
 	search_breadcrumb									: 'Results of search',
@@ -118,5 +119,5 @@ var EDSLANG = {
 	basket_deselect_hold								: 'Deselect titles from Discovery to Place hold.',
 	basket_deselect_list								: 'Deselect titles from Discovery to Add to list.',
 	date_valid_format									: 'Please enter a valid year in YYYY format',
-	date_invalid										: 'Invalid date. Please enter a date value in YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remove all characters and hit enter to remove the date limiter.'
+	date_invalid										: 'Invalid date. Please enter a date value in YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remove all characters and hit enter to remove the date limiter.'						
 };
