@@ -1,7 +1,11 @@
 {
     "MajorVersion": "17.11",
-    "MinorVersion": "003",
+    "MinorVersion": "004",
     "ReleaseNotes": [
+        {
+            "author": "cwu@ebsco.com",
+            "note": "Citation Export: download .ris file of the record"
+        },
         {
             "author": "cwu@ebsco.com",
             "note": "Auto-Complete: predictive results based on holdings"

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>17.11.003</latestversion>
+	<latestversion>17.11.004</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2018/06/25</lastupdated>
+	<lastupdated>2018/07/06</lastupdated>
 	<releasenotes>
-		<release version="17.11.003" date="2018/06/25">
-			<note id="1" author="cwu@ebsco.com">Auto-Complete: predictive results based on holdings</note>
-			<note id="2" author="cwu@ebsco.com">Auto-Suggest: search suggestions for similar spellings</note>
-			<note id="3" author="cwu@ebsco.com">Auto-Correct: automatically correct mispellings</note>
-			<note id="4" author="cwu@ebsco.com">Quick View Images: See attached images from the results list</note>
+		<release version="17.11.004" date="2018/07/06">
+			<note id="1" author="cwu@ebsco.com">Citation Export: download .ris file of the record</note>
+			<note id="2" author="cwu@ebsco.com">Auto-Complete: predictive results based on holdings</note>
+			<note id="3" author="cwu@ebsco.com">Auto-Suggest: search suggestions for similar spellings</note>
+			<note id="4" author="cwu@ebsco.com">Auto-Correct: automatically correct mispellings</note>
+			<note id="5" author="cwu@ebsco.com">Quick View Images: See attached images from the results list</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

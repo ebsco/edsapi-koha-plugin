@@ -27,12 +27,47 @@ var verbose = QueryString('verbose');
 var bibListLocal = 0;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11003";
+var versionEDSKoha = "17.11004";
 ///////////////////////////////////////
 
 var edsLangStore = '';
 
 jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true });
+
+if (document.location.pathname.indexOf("eds-detail.pl") > -1){
+	$("#ulactioncontainer ul:contains(cart)").append('\
+	<li>\
+		<a class="print-large" href="#" onclick="ris_download();">\
+			Download Citation\
+		</a>\
+	</li>\
+	');
+	function ris_download() {
+
+		var details = {};
+		$(document.location.search.split(/[&\?|]/)).each(function(){
+			if (this != ""){
+				var a = this.split("=");
+				details[a[0]] = a[1];
+			}
+		});
+
+		$.get("/plugin/Koha/Plugin/EDS/opac/eds-cite.pl?an=" + details.an + "&dbid=" + details.dbid).done(function(data){
+
+			var text = JSON.parse(data).Data;
+			var element = document.createElement('a');
+			var filename = $(".title")[0].innerText + ".ris";
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+			element.setAttribute('download', filename);
+			element.style.display = 'none';
+			document.body.appendChild(element);
+			element.click();
+			document.body.removeChild(element);
+		});
+	}
+
+	window.ris_download = ris_download;
+}
 
 delCookie = function(name) {
 	var exp = new Date();
