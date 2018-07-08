@@ -38,7 +38,7 @@ Please read through the appropiate documentation for your Koha version
 
 # Quick Installation Steps
 
-1.  Download the package file [eds_plugin_17.05.kpz](https://github.com/ebsco/edsapi-koha-plugin/blob/master/eds_plugin_17.05.kpz)
+1.  Download the package file [eds_plugin_17.11004.kpz](https://github.com/ebsco/edsapi-koha-plugin/blob/master/eds_plugin_17.11004.kpz)
 
 2.  Login to Koha Admin and go to the plugin screen
 
