@@ -57,12 +57,12 @@ Please read through the appropiate documentation for your Koha version
 
 # Quick Links
 
-[Latest Documentation](./docs/17.11)
+[Latest Documentation](./docs/17.05)
 
 [OpenAthens Plugin](https://github.com/ebsco/openathens-koha-plugin)
 
 # Support
 
-Please report all bugs or issues in the [GitHub issue tracker](https://github.com/ebsco/edsapi-koha-plugin/issues)
+Please report all bugs or issues to [EBSCO Support](mailto:support@ebsco.com)
 
 # [Contributing](./contributing)
