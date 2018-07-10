@@ -26,8 +26,11 @@ var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
 
+// Adv search settings
+var searchBlockCount=3;
+
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11004";
+var versionEDSKoha = "17.11005";
 ///////////////////////////////////////
 
 var edsLangStore = '';
@@ -772,7 +775,6 @@ function BuildMoreDetails(detailedRecord) {
 
 
 //ADVANCED SEARCH START
-var searchBlockCount=3;
 function AddSearchBlock(blockNo){
 	var newBlock = $('#searchFields_'+blockNo).html();
 	newBlock = newBlock.replace("("+blockNo+")","("+(blockNo+1)+")");

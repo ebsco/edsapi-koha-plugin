@@ -54,14 +54,16 @@ my $email_add    = $query->param('email_add');
 my $dbh          = C4::Context->dbh;
 
 if ( $email_add ) {
+    my $new_session_id = $cookie->value;
     die "Wrong CSRF token" unless Koha::Token->new->check_csrf({
-        session_id => scalar $query->cookie('CGISESSID'),
+        session_id => $new_session_id,
         token  => scalar $query->param('csrf_token'),
     });
+    # csrf_token => Koha::Token->new->generate_csrf(
+    # { session_id => $new_session_id, } ),
     my $email = Koha::Email->new();
     my $patron = Koha::Patrons->find( $borrowernumber );
-    my $user_email = GetFirstValidEmailAddress($borrowernumber)
-    || C4::Context->preference('KohaAdminEmailAddress');
+    my $user_email = C4::Context->preference('KohaAdminEmailAddress');
 
     my $email_replyto = $patron->firstname . " " . $patron->surname . " <$user_email>";
     my $comment    = $query->param('comment');
