@@ -207,11 +207,7 @@
     [% ELSE %]
     <tr>
     [% END %]
-    [% IF index(RECORD.Header.An, catalogueanprefix) %]
         [% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
-    [% ELSE %]
-        [% ResultRecordId = RECORD.Header.An %]
-    [% END %]
 	  <td class="select selectcol">
 		[% IF RECORD.Items %] [% #Check if items exist (guest mode) %]
 			[% IF ( opacbookbag ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
