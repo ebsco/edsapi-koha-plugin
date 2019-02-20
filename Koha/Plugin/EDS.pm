@@ -22,10 +22,10 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "17.11";
-our $SUB_VERSION = "005";
+our $SUB_VERSION = "006";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2018-07-10';
+our $DATE_UPDATE = '2019-02-20';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -139,26 +139,6 @@ sub configure {
 				);
 
 			}
-
-			my $edsJS = '';
-
-			$OpacUserJS=~s/\/\*eds{\*\/.*\/\*\}eds\*\///g;
-
-			if($cgi->param('defaultsearch') eq 'eds'){
-				$edsJS = '/*eds{*/var defaultSearch="eds";$(document).ready(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/EDSScript.js", dataType: "script", cache: true }); });/*}eds*/';
-				$OpacUserJS = $OpacUserJS.$edsJS;
-
-			}
-			if($cgi->param('defaultsearch') eq 'koha'){
-				$edsJS = '/*eds{*/var defaultSearch="koha";$(document).ready(function () { jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/EDSScript.js", dataType: "script", cache: true }); });/*}eds*/';
-				$OpacUserJS = $OpacUserJS.$edsJS;
-
-			}
-        my $dbh = C4::Context->dbh;
-        my $sql = "UPDATE systempreferences SET value = ? WHERE variable = 'OpacUserJS'";
-        my $sth = $dbh->prepare($sql);
-        $sth->execute($OpacUserJS);
-        $self->go_home();
     }
 }
 
@@ -200,6 +180,19 @@ sub uninstall() {
 
 	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='0' WHERE `variable`='EDSEnabled'");
 }
+
+sub opac_js {
+    my ( $self ) = @_;
+    my $default_search = $self->retrieve_data('defaultsearch');
+    return q|
+    <script>
+    var defaultSearch="| . $default_search . q|";
+    </script>
+    <script src="/plugin/Koha/Plugin/EDS/js/EDSScript.js">
+    </script>
+    |;
+}
+
 
 sub PageURL{
 	# http://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
