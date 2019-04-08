@@ -722,7 +722,6 @@ function sendBasket() { // override function in basket.js
 
 jQuery('form[action="/cgi-bin/koha/opac-downloadcart.pl"]').attr('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl');
 function downloadBasket() { // override function in basket.js
-    alert('asdf');
     var nameCookie = "bib_list";
     var valCookie = readCookie(nameCookie);
     var strCookie = nameCookie + "=" + valCookie;
