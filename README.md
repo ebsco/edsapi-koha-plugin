@@ -38,6 +38,11 @@ Click Load settings from EBSCOAdmin. Wait for the page to refresh. You might hav
 Video Presentations
 ========================
 
+KohaCon18 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KonaCon18.pdf) | [Video Recording](https://www.youtube.com/watch?v=o3A4YCwBgQI)
+
+
+[![video_kohacon18](https://i.ytimg.com/vi/o3A4YCwBgQI/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLDVEx9SicmjHJJ9wimNPM5BnhaLIA)](https://www.youtube.com/watch?v=o3A4YCwBgQI)
+
 KohaCon17 | [Presentation](https://github.com/ebsco/edsapi-koha-plugin/blob/master/Xtras-help/kohacon/KonaCon17.pdf) | [Video Recording](https://www.youtube.com/watch?v=38xb_ysctfQ)
 
 
