@@ -465,7 +465,8 @@ sub CheckIPAuthentication
 	if($GuestTracker ne "n"){ # User has not logged in or authtoken is not IP. Do a local IP check.
 		if(length($iprange) > 4){ # Check local IP range if specified.
 			my @allowedIPs = split /,/, $iprange;
-			my $localIP      = Net::IP->new($ENV{'REMOTE_ADDR'});
+			my $raw_ip = $ENV{'HTTP_X_FORWARDED_FOR'} || $ENV{'REMOTE_ADDR'};
+			my $localIP = Net::IP->new($raw_ip);
 			foreach my $allowedIP (@allowedIPs){
 				my $currentRange = Net::IP->new($allowedIP);
 				my $ipMatch = $currentRange->overlaps($localIP) ? 1 : 0;
