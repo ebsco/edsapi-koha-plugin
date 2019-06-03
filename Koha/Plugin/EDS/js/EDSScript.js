@@ -30,7 +30,7 @@ var bibListLocal = 0;
 var searchBlockCount=3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11006";
+var versionEDSKoha = "17.11007";
 ///////////////////////////////////////
 
 var edsLangStore = '';

@@ -66,6 +66,8 @@ use File::Basename qw( dirname );
 
 
 
+use FindBin;
+use lib $FindBin::Bin;
 require 'eds-methods.pl';
 our $apiType = 'publication';
 
