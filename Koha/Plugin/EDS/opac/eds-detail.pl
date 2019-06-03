@@ -46,6 +46,8 @@ use POSIX qw/ceil/;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
+use FindBin;
+use lib $FindBin::Bin;
 require 'eds-methods.pl';
 
 my $EDSConfig = decode_json(EDSGetConfiguration());

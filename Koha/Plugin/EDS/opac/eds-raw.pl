@@ -47,6 +47,8 @@ use Try::Tiny;
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
+use FindBin;
+use lib $FindBin::Bin;
 require 'eds-methods.pl';
 if($input->param("api") eq 'pub'){our $apiType="publication";}
 my $EDSConfig = decode_json(EDSGetConfiguration());

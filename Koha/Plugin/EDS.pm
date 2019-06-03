@@ -25,7 +25,7 @@ our $MAJOR_VERSION = "17.11";
 our $SUB_VERSION = "007";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2019-05-17';
+our $DATE_UPDATE = '2019-05-28';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -120,10 +120,10 @@ sub configure {
 					logerrors			=> ($cgi->param('logerrors')?$cgi->param('logerrors'):"-"),
 					iprange				=> ($cgi->param('iprange')?$cgi->param('iprange'):"-"),
 					cookieexpiry 		=> ($cgi->param('cookieexpiry')?$cgi->param('cookieexpiry'):"-"),
-					last_configured_by => C4::Context->userenv->{'number'},
-					defaultparams	=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
+					last_configured_by 	=> "1",
+					defaultparams		=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
 					autocomplete_mode	=> ($cgi->param('autocomplete_mode')?$cgi->param('autocomplete_mode'):"-"),
-					autocomplete	=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
+					autocomplete		=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
 				}
 			);
 

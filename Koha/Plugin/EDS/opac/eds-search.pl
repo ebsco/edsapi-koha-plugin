@@ -64,7 +64,8 @@ use Business::ISBN;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
-
+use FindBin;
+use lib $FindBin::Bin;
 require 'eds-methods.pl';
 
 #my $PluginDir = dirname(abs_path($0));

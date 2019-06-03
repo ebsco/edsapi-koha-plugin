@@ -5,6 +5,8 @@ use warnings;
 use LWP::Simple;
 use CGI;
 
+use FindBin;
+use lib $FindBin::Bin;
 require 'eds-methods.pl';
 
 my $q = CGI->new;
