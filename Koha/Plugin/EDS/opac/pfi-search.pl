@@ -66,7 +66,7 @@ use File::Basename qw( dirname );
 
 
 
-require 'eds-methods.pl';
+require './eds-methods.pl';
 our $apiType = 'publication';
 
 my $pluginsdir = C4::Context->config("pluginsdir");

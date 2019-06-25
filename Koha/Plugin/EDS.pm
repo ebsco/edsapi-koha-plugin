@@ -140,6 +140,7 @@ sub configure {
 
 			}
     }
+    $self->go_home();
 }
 
 

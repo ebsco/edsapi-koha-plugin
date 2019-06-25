@@ -65,7 +65,7 @@ use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
 
-require 'eds-methods.pl';
+require './eds-methods.pl';
 
 #my $PluginDir = dirname(abs_path($0));
 #$PluginDir =~s /EDS\/opac/EDS/;

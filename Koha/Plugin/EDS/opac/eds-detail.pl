@@ -46,7 +46,7 @@ use POSIX qw/ceil/;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
-require 'eds-methods.pl';
+require './eds-methods.pl';
 
 my $EDSConfig = decode_json(EDSGetConfiguration());
 {no warnings;local $^W = 0;
