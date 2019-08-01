@@ -22,8 +22,8 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-<link rel="stylesheet" href="https://cdn.rawgit.com/google/code-prettify/master/styles/sunburst.css"></link>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify/loader/run_prettify.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/google/code-prettify/styles/sunburst.css"></link>
 <style>pre{width:90%!important; color:#FFF;}</style>
 <div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Setup Tool</div>
 

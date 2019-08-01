@@ -1275,7 +1275,13 @@
 
     [% IF ( OpacBrowseResults && busc ) %]
         var arrPagination = new Array();
-        var pag_index_ini = [% indexPag %];
+
+        [% indexPag %]
+            var pag_index_ini = [% indexPag %];
+        [% ELSE %]
+            var pag_index_ini = 1;
+        [% END %]
+
         [% IF ( listResults ) %]
             [% FOREACH listResult IN listResults %]
                 arrPagination[[% listResult.index %]] = {

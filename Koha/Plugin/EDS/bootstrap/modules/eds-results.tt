@@ -207,11 +207,7 @@
     [% ELSE %]
     <tr>
     [% END %]
-    [% IF index(RECORD.Header.An, catalogueanprefix) %]
-        [% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
-    [% ELSE %]
-        [% ResultRecordId = RECORD.Header.An %]
-    [% END %]
+    [% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
 	  <td class="select selectcol">
 		[% IF RECORD.Items %] [% #Check if items exist (guest mode) %]
 			[% IF ( opacbookbag ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
@@ -355,14 +351,14 @@
                     [% END %]
                     [% IF ( opacbookbag ) %]
                         [% IF ( SEARCH_RESULT.incart ) %]
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="eds_addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_in_cart %]
                             </a>
                             <a class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_remove_cart %]
                             </a>
                         [% ELSE %]
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="eds_addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_add_cart %]
                             </a>
                             <a style="display:none;" class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">

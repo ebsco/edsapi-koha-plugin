@@ -30,14 +30,18 @@ var bibListLocal = 0;
 var searchBlockCount=3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "17.11006";
+var versionEDSKoha = "19.05001";
 ///////////////////////////////////////
 
 var edsLangStore = '';
 
+if (document.title == ""){
+	document.title = "Koha - EDS Plugin";
+}
+
 jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true });
 
-if (document.location.pathname.indexOf("eds-detail.pl") > -1){
+if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && ($.cookie("guest") == 'y')){
 	$("#ulactioncontainer ul:contains(cart)").append('\
 	<li>\
 		<a class="print-large" href="#" onclick="ris_download();">\
@@ -159,10 +163,11 @@ function StartEDS(edsLang) {
 
 
 	if ($.cookie("guest") == 'y') {
-	    jQuery('.results_summary.actions.links a').each(function () {
+	    jQuery('.results_summary.actions.links a, #opac-detail a.pdflink').each(function () {
 	        jQuery(this).attr('href', 'javascript:LoginRequired()');
 	        jQuery(this).attr('target', '_self');
-	    });
+		});
+		
 	}
 
 	if ($.jStorage.get("edsConfig") != null) {
@@ -1133,3 +1138,11 @@ $('body').on('click', '#translControl1', function() {
 		$( "#translControl1" ).autocomplete( "search" );
 	}
 });
+
+function eds_addRecord(val){
+	if (val.indexOf(edsConfig.cataloguedbid) != -1){
+		addRecord(parseInt(val.split("|")[0]));
+	} else {
+		addRecord(val);
+	}
+}
