@@ -1276,8 +1276,8 @@
     [% IF ( OpacBrowseResults && busc ) %]
         var arrPagination = new Array();
 
-        [% indexPag %]
-            var pag_index_ini = [% indexPag %];
+        [% IF ( indexPag ) %]
+            var pag_index_ini = indexPag;
         [% ELSE %]
             var pag_index_ini = 1;
         [% END %]
