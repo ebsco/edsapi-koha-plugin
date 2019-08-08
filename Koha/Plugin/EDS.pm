@@ -25,7 +25,7 @@ our $MAJOR_VERSION = "19.05";
 our $SUB_VERSION = "001";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2019-08-01';
+our $DATE_UPDATE = '2019-08-08';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
