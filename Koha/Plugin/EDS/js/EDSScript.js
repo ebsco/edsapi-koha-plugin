@@ -41,7 +41,7 @@ if (document.title == ""){
 
 jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/js/custom/custom.js", dataType: "script", cache: true });
 
-if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && ($.cookie("guest") == 'y')){
+if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && ($.cookie("guest") == 'n')){
 	$("#ulactioncontainer ul:contains(cart)").append('\
 	<li>\
 		<a class="print-large" href="#" onclick="ris_download();">\
