@@ -607,7 +607,7 @@ function PrepareItems(){
 				recordId[i] = "Retrieve?an="+recordId[i].replace("|","|dbid=");
 				$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl'+'?'+'q='+recordId[i],function(data){
 					if(verbose==1){BuildMoreDetails(data)}else{GetEDSItems(data);}});
-			}else{
+			} else if (recordDataCache) {
 				if(verbose==1){
 					BuildMoreDetails(JSON.parse(recordDataCache));
 				}else{
@@ -618,7 +618,7 @@ function PrepareItems(){
 	}
 
 		if((EDSItems==0)){
-			$('#EDSBasketLoader').css('display','none');
+			$('#EDSBasketLoader').remove()
 		}
 
 
@@ -628,14 +628,14 @@ function GetEDSItems(data){
 	try{
 	    $('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" name="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" id="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" onclick="selRecord(value,checked);"></td><td><a href="#" onclick="opener.document.location=\'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + $("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + $("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + EDSLANG.basket_item_location + '</td></tr>');
 	EDSItems--;
-	if(EDSItems==0){$('#EDSBasketLoader').css('display','none');}
+	if(EDSItems==0){$('#EDSBasketLoader').remove()}
 
 	$.jStorage.set(data.Record.Header.An+'|'+data.Record.Header.DbId,JSON.stringify(data),{TTL:edsConfig.cookieexpiry*60*1000});
 
 	} catch (e) {
 	    console.log(e);
 		EDSItems--;
-		if(EDSItems==0){$('#EDSBasketLoader').css('display','none');}
+		if(EDSItems==0){$('#EDSBasketLoader').remove()}
 	}
 
 	jQuery('.cb').click(function () {
