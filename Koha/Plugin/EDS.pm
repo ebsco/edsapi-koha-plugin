@@ -16,8 +16,9 @@ my $mech = WWW::Mechanize->new(ssl_opts => {
     verify_hostname => 0,
 });
 
-
-my $PluginDir = C4::Context->config("pluginsdir");
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
