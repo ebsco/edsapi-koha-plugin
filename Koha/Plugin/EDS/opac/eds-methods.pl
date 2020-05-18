@@ -88,7 +88,6 @@ my ( $template, $user, $cookie ) = get_template_and_user(
         query           => $input,
 		is_plugin		=>1,
         authnotrequired => ( C4::Context->preference("OpacPublic") ? 1 : 0 ),
-        flagsrequired   => { borrow => 1 },
     }
 );
 #manage guest status.
