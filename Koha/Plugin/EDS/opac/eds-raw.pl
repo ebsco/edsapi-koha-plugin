@@ -47,7 +47,7 @@ use Try::Tiny;
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-require 'eds-methods.pl';
+require './eds-methods.pl';
 if($input->param("api") eq 'pub'){our $apiType="publication";}
 my $EDSConfig = decode_json(EDSGetConfiguration());
 #{if($EDSConfig->{logerrors} eq 'no'){no warnings;local $^W = 0;}

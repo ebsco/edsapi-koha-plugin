@@ -5,7 +5,7 @@ use warnings;
 use LWP::Simple;
 use CGI;
 
-require 'eds-methods.pl';
+require './eds-methods.pl';
 
 print "Content-type: text/html\n\n";
 

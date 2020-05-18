@@ -5,7 +5,7 @@ use warnings;
 use LWP::Simple;
 use CGI;
 
-require 'eds-methods.pl';
+require './eds-methods.pl';
 
 my $q = CGI->new;
 my $an = $q->param('an');

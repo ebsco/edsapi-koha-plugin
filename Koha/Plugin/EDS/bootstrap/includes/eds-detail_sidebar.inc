@@ -22,9 +22,9 @@
     [%# END %] -->
     [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
         [% IF ( incart ) %]
-            <li><a class="incart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_in_cart %]</a> <a class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
+            <li><a class="incart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="eds_addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_in_cart %]</a> <a class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
         [% ELSE %]
-            <li><a class="addtocart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_add_cart %]</a>  <a style="display:none;" class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
+            <li><a class="addtocart cart[% DETAILED_RECORD.Header.An %]" href="#" onclick="eds_addRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_add_cart %]</a>  <a style="display:none;" class="cartRemove cartR[% DETAILED_RECORD.Header.An %]" href="#" onclick="delSingleRecord('[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]'); return false;">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
         [% END %]
     [% END %]
     [% IF ( OpacHighlightedWords && query_desc ) %]
