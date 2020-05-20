@@ -467,12 +467,14 @@ sub CheckIPAuthentication
 			my $localIP = Net::IP->new($ENV{'HTTP_X_FORWARDED_FOR'} || $ENV{'REMOTE_ADDR'});
 			foreach my $allowedIP (@allowedIPs){
 				my $currentRange = Net::IP->new($allowedIP);
-				my $ipMatch = $currentRange->overlaps($localIP) ? 1 : 0;
-				#use Data::Dumper; die Dumper 'IPMatch='.$ipMatch.'/rangeip='.$allowedIP.'/localip='.$localIP;
-				if($ipMatch==1){
-					$GuestTracker='n';
-					$GuestForIP = 'n';
-					last; # exit foreach
+				if ($currentRange){
+					my $ipMatch = $currentRange->overlaps($localIP) ? 1 : 0;
+					#use Data::Dumper; die Dumper 'IPMatch='.$ipMatch.'/rangeip='.$allowedIP.'/localip='.$localIP;
+					if($ipMatch==1){
+						$GuestTracker='n';
+						$GuestForIP = 'n';
+						last; # exit foreach
+					}
 				}
 			}
 		}
