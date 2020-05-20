@@ -35,10 +35,10 @@ our $apiType = 'rest';
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
-my ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode)="";
+our ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode)="";
 
-my $PluginClass='Koha::Plugin::EDS';
-my $table='plugin_data';
+our $PluginClass='Koha::Plugin::EDS';
+our $table='plugin_data';
 
     my $sql = "SELECT plugin_key, plugin_value FROM plugin_data WHERE plugin_class = ? ";
     my $sth = $dbh->prepare($sql);

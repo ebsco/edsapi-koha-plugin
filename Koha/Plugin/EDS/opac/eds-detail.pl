@@ -46,9 +46,9 @@ use POSIX qw/ceil/;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
-require './eds-methods.pl';
+do './eds-methods.pl';
 
-my $EDSConfig = decode_json(EDSGetConfiguration());
+our $EDSConfig = decode_json(EDSGetConfiguration());
 {no warnings;local $^W = 0;
 
 my $pluginsdir = C4::Context->config("pluginsdir");

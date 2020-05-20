@@ -5,14 +5,14 @@ use warnings;
 use LWP::Simple;
 use CGI;
 
-require './eds-methods.pl';
+do './eds-methods.pl';
 
 print "Content-type: text/html\n\n";
 
 my $q = CGI->new;
 my $ua = LWP::UserAgent->new;
 my $type = $q->param('type');
-my $EDSConfig = decode_json(EDSGetConfiguration());
+our $EDSConfig = decode_json(EDSGetConfiguration());
 
 # auth to API
 if ($type eq "auth"){
