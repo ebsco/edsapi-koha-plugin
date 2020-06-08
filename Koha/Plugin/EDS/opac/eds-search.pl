@@ -289,7 +289,7 @@ my $GuestMode = $cgi->cookie(
 $cookie = [$cookie, $ResultTotal, $SearchQueryWithOutPage, $returnToResults, $QueryTerm, $SessionToken, $GuestMode];
 
 my $session = get_session($cgi->cookie("CGISESSID"));
-$session->param('busc'=>'q=Search?'.$EDSSearchQuery.'&amp;listBiblios=1&amp;total='.$EDSResponse->{SearchResult}->{Statistics}->{TotalHits}); #to enable back for opac-details
+# $session->param('busc'=>'q=Search?'.$EDSSearchQuery.'&amp;listBiblios=1&amp;total='.$EDSResponse->{SearchResult}->{Statistics}->{TotalHits}); #to enable back for opac-details
 
 my $content_type = ( $format eq 'rss' or $format eq 'atom' ) ? $format : 'html';
 output_with_http_headers $cgi, $cookie, $template->output, $content_type;
