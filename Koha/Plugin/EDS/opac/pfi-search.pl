@@ -66,7 +66,7 @@ use File::Basename qw( dirname );
 
 
 
-require './eds-methods.pl';
+do './eds-methods.pl';
 our $apiType = 'publication';
 
 my $pluginsdir = C4::Context->config("pluginsdir");
@@ -77,8 +77,8 @@ $PluginDir = $PluginDir . '/Koha/Plugin/EDS/' . C4::Context->preference('opacthe
 my $cgi = new CGI;
 #my $format = $cgi->param("format") || 'html';
 
-my $EDSInfo =  decode_json(EDSGetInfo(0));
-my $EDSConfig = decode_json(EDSGetConfiguration());
+our $EDSInfo =  decode_json(EDSGetInfo(0));
+our $EDSConfig = decode_json(EDSGetConfiguration());
 
 #{if($EDSConfig->{logerrors} eq 'no'){no warnings;local $^W = 0;}
 {no warnings;local $^W = 0;

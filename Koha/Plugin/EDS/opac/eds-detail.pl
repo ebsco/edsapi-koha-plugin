@@ -32,23 +32,28 @@
 
 use Modern::Perl;
 
+use Koha::Patrons;
 use C4::Context;
-use CGI;
-use C4::Auth;
+use CGI qw ( -utf8 );
+use C4::Auth qw(:DEFAULT get_session);
 use C4::Koha;
 use C4::Output;
 use HTML::Entities;
 use LWP;
 use IO::File;
-use JSON;
+use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use POSIX qw/ceil/;
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
+use C4::Members;
+use URI::Escape;
+# use Data::Dumper;
+use Koha::AuthorisedValues;
 
-require './eds-methods.pl';
+do './eds-methods.pl';
 
-my $EDSConfig = decode_json(EDSGetConfiguration());
+our $EDSConfig = decode_json(EDSGetConfiguration());
 {no warnings;local $^W = 0;
 
 my $pluginsdir = C4::Context->config("pluginsdir");
@@ -201,8 +206,7 @@ if ( C4::Context->preference( "SocialNetworks" ) ) {
 
 my $OpacBrowseResults = C4::Context->preference("OpacBrowseResults");
 $template->{VARS}->{'OpacBrowseResults'} = $OpacBrowseResults;
-$template->{VARS}->{'busc'} = $cgi->cookie("ReturnToResults");	
-
+# $template->{VARS}->{'busc'} = $cgi->cookie("ReturnToResults");	
 
 my $SessionManager = decode_json(EDSGetSessionToken());
 

@@ -65,7 +65,7 @@ use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 
 
-require './eds-methods.pl';
+do './eds-methods.pl';
 
 #my $PluginDir = dirname(abs_path($0));
 #$PluginDir =~s /EDS\/opac/EDS/;
@@ -79,8 +79,8 @@ $PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 my $cgi = new CGI;
 #my $format = $cgi->param("format") || 'html';
 
-my $EDSInfo =  decode_json(EDSGetInfo(0));
-my $EDSConfig = decode_json(EDSGetConfiguration());
+our $EDSInfo =  decode_json(EDSGetInfo(0));
+our $EDSConfig = decode_json(EDSGetConfiguration());
 
 #{if($EDSConfig->{logerrors} eq 'no'){no warnings;local $^W = 0;}
 {no warnings;local $^W = 0;
@@ -170,19 +170,19 @@ $template->param(
     OpacStarRatings => C4::Context->preference("OpacStarRatings") );
 
 #EDS config begins here
-my $EDSResponse;
-my @EDSResults;
-my @ResearchStarters;
-my @PublicationExactMatch;
-my $EDSSearchQuery;
-my $EDSSearchQueryWithOutPage;
-my @EDSFacets;
-my @EDSFacetFilters;
-my @EDSQueries;
-my @EDSLimiters;
-my @EDSExpanders;
-my $sort_by;
-my %pager;
+our $EDSResponse;
+our @EDSResults;
+our @ResearchStarters;
+our @PublicationExactMatch;
+our $EDSSearchQuery;
+our $EDSSearchQueryWithOutPage;
+our @EDSFacets;
+our @EDSFacetFilters;
+our @EDSQueries;
+our @EDSLimiters;
+our @EDSExpanders;
+our $sort_by;
+our %pager;
 if($cgi->param("q")){
 	$EDSResponse = decode_json(EDSSearch($EDSQuery,$GuestTracker));
 	#use Data::Dumper; die Dumper $EDSResponse;
@@ -289,7 +289,7 @@ my $GuestMode = $cgi->cookie(
 $cookie = [$cookie, $ResultTotal, $SearchQueryWithOutPage, $returnToResults, $QueryTerm, $SessionToken, $GuestMode];
 
 my $session = get_session($cgi->cookie("CGISESSID"));
-$session->param('busc'=>'q=Search?'.$EDSSearchQuery.'&amp;listBiblios=1&amp;total='.$EDSResponse->{SearchResult}->{Statistics}->{TotalHits}); #to enable back for opac-details
+# $session->param('busc'=>'q=Search?'.$EDSSearchQuery.'&amp;listBiblios=1&amp;total='.$EDSResponse->{SearchResult}->{Statistics}->{TotalHits}); #to enable back for opac-details
 
 my $content_type = ( $format eq 'rss' or $format eq 'atom' ) ? $format : 'html';
 output_with_http_headers $cgi, $cookie, $template->output, $content_type;
