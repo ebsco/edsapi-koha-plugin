@@ -120,13 +120,22 @@ else { console.log('JS debug enabled') }// keep executing if there is an error.}
 /////  Language data setup  /////
 function getLanguage(code, callback) {
 
+	// Use cache 
 	var sessionLang = eds_sessionStorage.get('lang_' + code);
-	if (sessionLang) callback(sessionLang);
+	if (sessionLang){
+		callback(sessionLang);
+	
+	// If custom language, and there's no language file for it
+	} else if (code != 'default' && eds_sessionStorage.get('nolang_' + code)) {
+		getLanguage('default', callback);
+		return;
+	}
 
-	// Parse the language file
+	// Fetch the language file
 	jQuery.ajax({ url: "/plugin/Koha/Plugin/EDS/bootstrap/includes/lang/" + code + ".inc", dataType: "script", cache: true })
 		.done(function (data) {
 
+			// Parse language file
 			var langData = {};
 			var lineData = data.split("var EDSLANG =")[1].split("\n");
 			for (line in lineData) {
@@ -137,15 +146,17 @@ function getLanguage(code, callback) {
 					langData[key] = val;
 				}
 			}
+
 			eds_sessionStorage.set('lang_' + code, langData);
 			callback(langData);
 
-			// No language file, try default
+		// No language file, try default
 		}).fail(function () {
 			if (code == 'default') {
 				callback(null);
 			} else {
 				console.error("No " + code + " language file, trying default");
+				eds_sessionStorage.set('nolang_' + code, true);
 				getLanguage('default', callback);
 			}
 		});
