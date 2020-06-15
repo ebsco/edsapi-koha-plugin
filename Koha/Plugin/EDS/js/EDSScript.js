@@ -1103,6 +1103,13 @@ function DateHandleKeyPress(e, searchBox) {
 
 function EDSAutoComp() {
 
+	// Check for expired credentials
+	var credsExpiry = eds_sessionStorage.get("autoComp_expiry");
+	if (credsExpiry && credsExpiry < Math.round(Date.now() / 1000)){
+		eds_sessionStorage.remove('autoComp');
+		eds_sessionStorage.remove('autoComp_expiry');
+	}
+
 	var creds = eds_sessionStorage.get("autoComp");
 
 	var idx = "rawqueries";
@@ -1117,6 +1124,7 @@ function EDSAutoComp() {
 	if (!creds) {
 		$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-ac.pl?type=auth', function (data) {
 			eds_sessionStorage.set('autoComp', data);
+			eds_sessionStorage.set('autoComp_expiry',Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
 			EDSAutoComp();
 		});
 	} else {
@@ -1137,6 +1145,8 @@ function EDSAutoComp() {
 				promise.done(function (data) {
 					if (data.error) {
 						eds_sessionStorage.remove('autoComp');
+						eds_sessionStorage.remove('autoComp_expiry');
+
 						EDSAutoComp();
 					} else {
 						var terms = data.terms.map(function (wrapper) {
