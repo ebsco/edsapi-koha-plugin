@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>19.05.003</latestversion>
+	<latestversion>19.05.004</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2020/06/10</lastupdated>
+	<lastupdated>2020/06/16</lastupdated>
 	<releasenotes>
-		<release version="19.05.003" date="2020/06/10">
+		<release version="19.05.004" date="2020/06/16">
 			<note id="1" author="cwu@ebsco.com">Citation Export: download .ris file of the record</note>
 			<note id="2" author="cwu@ebsco.com">Auto-Complete: predictive results based on holdings</note>
 			<note id="3" author="cwu@ebsco.com">Auto-Suggest: search suggestions for similar spellings</note>
