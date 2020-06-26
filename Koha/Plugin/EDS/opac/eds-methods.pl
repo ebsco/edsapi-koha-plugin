@@ -18,7 +18,8 @@
 
 use strict;
 use warnings;
-use CGI;
+use CGI qw ( -utf8 );
+use Encode qw(encode);
 use C4::Auth;    # get_template_and_user
 use C4::Output;
 use LWP;
@@ -27,7 +28,6 @@ use JSON;
 use URI::Escape;
 use HTML::Entities;
 use feature qw(switch);
-use Encode;
 use Try::Tiny;
 use Net::IP;
 
