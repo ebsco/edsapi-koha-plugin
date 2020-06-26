@@ -119,12 +119,11 @@ else { console.log('JS debug enabled') }// keep executing if there is an error.}
 
 /////  Language data setup  /////
 function getLanguage(code, callback) {
-
 	// Use cache 
 	var sessionLang = eds_sessionStorage.get('lang_' + code);
 	if (sessionLang){
 		callback(sessionLang);
-	
+		return;
 	// If custom language, and there's no language file for it
 	} else if (code != 'default' && eds_sessionStorage.get('nolang_' + code)) {
 		getLanguage('default', callback);
@@ -201,7 +200,6 @@ $.each($.cookie('bib_list').split("/"), function () {
 });
 
 function StartEDS(edsLang) {
-
 	if (!edsLang) {
 		console.error("No language files found, the plugin is broken");
 		return;
@@ -588,7 +586,6 @@ function QueryString(key) {
 
 //BASKET START---------
 function InitCartWithEDS() {
-
 	jQuery('#addto').change(function () { CheckEDSRecordsforAddToList(); });
 	jQuery('.addto input:submit').click(function () { CheckEDSRecordsforAddToList(); });
 
@@ -603,8 +600,8 @@ function InitCartWithEDS() {
 }
 
 function PrepareItems() {
-	if (callPrepareItems == false) { callPrepareItems = true; } else { return; }
-
+	if (callPrepareItems == false) { callPrepareItems = true; } 
+	else { return; }
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
 
@@ -736,7 +733,6 @@ function SetEDSCartField() {
 	}
 	$('.action').prepend('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
 }
-
 jQuery('#sendbasketform').attr('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-sendbasket.pl');
 function sendBasket() { // override function in basket.js
 	var nameCookie = "bib_list";
