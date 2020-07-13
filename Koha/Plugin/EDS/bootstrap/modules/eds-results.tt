@@ -318,11 +318,10 @@
 				  </div>
 			  [% END %]
 			[% #Actions %]
+            <div class="actions-menu noprint">
             [% IF RECORD.Items %] [% #check if items exist (guest mode) %]
                 [% IF 1 #RECORD.Header.DbId.match(cataloguedbid) %]
-                    <span class="results_summary actions"><span class="label">
-                        [% EDSLANG.eds_results_TT_actions %]
-                    </span>
+                    <span class="results_summary actions">
                     [% IF ( RequestOnOpac ) %]
                         [% UNLESS ( SEARCH_RESULT.norequests ) %]
                             [% IF ( opacuserlogin ) %]
@@ -350,25 +349,43 @@
                         [% END %]
                     [% END %]
                     [% IF ( opacbookbag ) %]
-                        [% IF ( SEARCH_RESULT.incart ) %]
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="eds_addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
-                                [% EDSLANG.eds_results_TT_in_cart %]
-                            </a>
-                            <a class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
-                                [% EDSLANG.eds_results_TT_remove_cart %]
-                            </a>
+                        [%IF RECORD.Header.DbId.match(cataloguedbid) %]
+                            [% IF ( SEARCH_RESULT.incart ) %]
+                                <a data-biblionumber="[% ResultRecordId %]" class="addtocart cart cart[% ResultRecordId %]" href="#">
+                                    [% EDSLANG.eds_results_TT_in_cart %]
+                                </a>
+                                <a data-biblionumber="[% ResultRecordId %]" class="remove cartRemove cartR[% ResultRecordId %]" href="#">
+                                    [% EDSLANG.eds_results_TT_remove_cart %]
+                                </a>
+                            [% ELSE %]
+                                <a data-biblionumber="[% ResultRecordId %]" class="addtocart cart cart[% ResultRecordId %]" href="#" >
+                                    [% EDSLANG.eds_results_TT_add_cart %]
+                                </a>
+                                <a data-biblionumber="[% ResultRecordId %]" style="display:none;" class="remove cartRemove cartR[% ResultRecordId %]" href="#" >
+                                    [% EDSLANG.eds_results_TT_remove_cart %]
+                                </a>
+                            [% END %]
                         [% ELSE %]
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="eds_addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
-                                [% EDSLANG.eds_results_TT_add_cart %]
-                            </a>
-                            <a style="display:none;" class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
-                                [% EDSLANG.eds_results_TT_remove_cart %]
-                            </a>
+                            [% IF ( SEARCH_RESULT.incart ) %]
+                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" class="addtocart cart cart[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#">
+                                    [% EDSLANG.eds_results_TT_in_cart %]
+                                </a>
+                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" class="remove cartRemove cartR[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#">
+                                    [% EDSLANG.eds_results_TT_remove_cart %]
+                                </a>
+                            [% ELSE %]
+                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" class="addtocart cart cart[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#" >
+                                    [% EDSLANG.eds_results_TT_add_cart %]
+                                </a>
+                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" style="display:none;" class="remove cartRemove cartR[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#" >
+                                    [% EDSLANG.eds_results_TT_remove_cart %]
+                                </a>
+                            [% END %]
                         [% END %]
                     [% END %]
                 [% END %]
             [% ELSE %]
-            	<span>[% EDSLANG.eds_results_TT_login_msg %]</span>
+            	<span>[% EDSLANG.eds_results_TT_login_msg %]</span></div>
             [% END %]
 			[% #Actions END %]
 
