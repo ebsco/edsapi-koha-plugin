@@ -30,7 +30,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "19.05005";
+var versionEDSKoha = "19.05006";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -162,7 +162,7 @@ function getLanguage(code, callback) {
 }
 
 var plugin_lang = document.querySelector('html').lang;
-getLanguage(plugin_lang, StartEDS)
+getLanguage(plugin_lang, StartEDS);
 
 /////////////////////////////
 
@@ -200,6 +200,7 @@ $.each($.cookie('bib_list').split("/"), function () {
 });
 
 function StartEDS(edsLang) {
+	//console.log("Running startEDS...");
 	if (!edsLang) {
 		console.error("No language files found, the plugin is broken");
 		return;
@@ -1168,10 +1169,3 @@ $('body').on('click', '#translControl1', function () {
 	}
 });
 
-function eds_addRecord(val) {
-	if (val.indexOf(edsConfig.cataloguedbid) != -1) {
-		addRecord(parseInt(val.split("|")[0]));
-	} else {
-		addRecord(val);
-	}
-}
