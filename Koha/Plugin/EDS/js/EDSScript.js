@@ -30,7 +30,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "19.05006";
+var versionEDSKoha = "19.05007";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -246,7 +246,7 @@ function StartEDS(edsLang) {
 	InitCartWithEDS(); // cart management
 
 	jQuery('#eds-autosuggest').click(function () {
-		nocorrect = "nocorrect=1";
+		nocorrect = "&nocorrect=1";
 		var autoSuggestText = jQuery(this).text();
 		jQuery('#translControl1').val(autoSuggestText);
 		jQuery('#searchsubmit').trigger('click');
