@@ -24,7 +24,7 @@ use C4::Auth;    # get_template_and_user
 use C4::Output;
 use LWP;
 use IO::File;
-use JSON;
+use JSON qw (encode_json);
 use URI::Escape;
 use HTML::Entities;
 use feature qw(switch);
@@ -34,6 +34,7 @@ use Net::IP;
 our $apiType = 'rest';
 my $input = new CGI;
 my $dbh   = C4::Context->dbh;
+
 
 our ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode)="";
 
@@ -120,7 +121,13 @@ sub CreateAuth
 {
 	#ask for AuthToken from EDSAPI
 	my $uri = 'https://eds-api.ebscohost.com/authservice/rest/uidauth';
-	my $json = '{"UserId":"'.$edsusername.'","Password":"'.$edspassword.'","InterfaceId":"KohaEDS"}';
+	my %jsondata =(
+		'UserId'	=>	$edsusername,
+		'Password'	=>	$edspassword,
+		'InterfaceId'	=>	'KohaEDS'
+	);
+	my $json = encode_json \%jsondata;
+	#my $json = encode_json '{"UserId":"'.$edsusername.'","Password":"'.$edspassword.'","InterfaceId":"KohaEDS"}';
 
 	if($edsusername eq "-"){
 		$uri = 'https://eds-api.ebscohost.com/authservice/rest/ipauth';
@@ -212,8 +219,24 @@ sub GetSession
 }
 
 sub EDSGetConfiguration
-{
-	my $JSONConfig = '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","defaultparams":"'.$defaultparams.'","autocomplete": "'.$autocomplete.'", "autocomplete_mode": "'.$autocomplete_mode.'", "edsusername":"'.$edsusername.'", "edsprofileid":"'.$edsprofileid.'", "edspassword":"'.$edspassword.'"}';
+{	
+	my %ConfigArray = (
+		'defaultsearch'	=>	$defaultsearch,
+		'logerrors'		=>	$logerrors,
+		'iprange'		=>	$iprange,
+		'cookieexpiry'	=>	$cookieexpiry,
+		'cataloguedbid'	=>	$cataloguedbid,
+		'catalogueanprefix'	=>	$catalogueanprefix,
+		'defaultparams'		=>	$defaultparams,
+		'autocomplete'		=>	$autocomplete,
+		'autocomplete_mode'	=>	$autocomplete_mode,
+		'edsusername'		=>	$edsusername,
+		'edsprofileid'		=>	$edsprofileid,
+		'edspassword'		=>	$edspassword
+	);
+	my $JSONConfig = encode_json \%ConfigArray;
+	#my $JSONConfig = encode_json '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","defaultparams":"'.$defaultparams.'","autocomplete": "'.$autocomplete.'", "autocomplete_mode": "'.$autocomplete_mode.'", "edsusername":"'.$edsusername.'", "edsprofileid":"'.$edsprofileid.'", "edspassword":"'.$edspassword.'"}';
+	#my $JSONConfig = "Test String";
     # when('edsusername') {$edsusername=$r->{plugin_value};}
     # when('edsprofileid') {$edsprofileid=$r->{plugin_value};}
     # when('edspassword') {$edspassword=$r->{plugin_value};}
