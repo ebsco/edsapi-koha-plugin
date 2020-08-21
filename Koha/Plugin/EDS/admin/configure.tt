@@ -39,7 +39,7 @@
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row"> User Name: </th>
 			[% IF edsusername == '' %][% edsusername = 'Enter Username' %][% END %]
             <td align="left" valign="top">
-            	<input name="edsusername" type="text" class="textbox" id="edsusername" value="[% edsusername %]">
+            	<input name="edsusername" type="text" class="textbox" id="edsusername" value="[% edsusername | html %]">
             	<small>*User Name with permission to access the EDS API. This is in EBSCO Admin, Authentication tab</small>
             </td>
           </tr>
@@ -47,7 +47,7 @@
             <th width="5%" align="left" valign="top" nowrap class="settingLabel" scope="row">Password: </th>
 			[% IF edspassword == '' %][% edspassword = 'Enter Password' %][% END %]
             <td align="left" valign="top">
-            	<input name="edspassword" type="text" class="textbox" id="edspassword" value="[% edspassword %]">
+            	<input name="edspassword" type="text" class="textbox" id="edspassword" value="[% edspassword | html %]">
             	<small>*Password with permissions to access the EDS API. This is in EBSCO Admin, Authentication tab.</small>
             </td>
           </tr>
