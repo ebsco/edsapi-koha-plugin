@@ -30,7 +30,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "19.05008";
+var versionEDSKoha = "19.05009";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -320,7 +320,7 @@ function GoDiscovery() {
 		var optionSelected = "";
 		if ($(this).val() != "") { optionText = "--- " + optionText; }
 		if ($(this).val() == "") { optionText = kohaSelectText; }
-		if ($(this).attr('selected') && optionSelect == 1) { optionSelected = ' selected="selected" '; optionSelect = 0 }
+		if (optionSelect == 1 && optionText == kohaSelectText) { optionSelected = ' selected '; optionSelect = 0 }
 		kohaOptions += '<option ' + optionSelected + ' value="' + $(this).val() + '">' + optionText + '</option>';
 		firstTimeSearchOptions = kohaOptions;
 		$(this).remove();
@@ -331,9 +331,11 @@ function GoDiscovery() {
 	}
 
 	$('#masthead_search option').remove();
+	kohaOptions = "<option value='eds'>" + edsSwitchText + "</option>" + kohaOptions;
 	$('#masthead_search').append(kohaOptions);
-	$('#masthead_search option[value="eds"]').remove();
-	$('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
+	//$('#masthead_search option[value="eds"]').remove();
+	//$('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
+	$('#masthead_search option[value=""]').attr("selected","selected");
 	$("#masthead_search").change(function () {
 		knownItem = $(this).val();
 		if (($(this).val() == 'eds') && (eds_sessionStorage.get('defaultSearch') != 'eds')) { SetEDS(1); }// Search EDS
