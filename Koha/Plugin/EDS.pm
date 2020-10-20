@@ -33,7 +33,7 @@ our $metadata = {
     name   => 'Koha EDS API',
     author => 'EBSCO Library Service Engineers',
     description =>
-'This plugin integrates EBSCO Discovery Service (EDS) in Koha. \n'. 
+'This plugin integrates EBSCO Discovery Service (EDS) in Koha. '. 
 'Click the action drop down and select Configure to set up the API Plugin. '.
 'More information is available at https://github.com/ebsco/edsapi-koha-plugin.  '.
 'If you need additional help or need to report an issue to EBSCO, please contact us through https://connect.ebsco.com.',
