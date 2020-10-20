@@ -22,18 +22,21 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "19.05";
-our $SUB_VERSION = "009";
+our $SUB_VERSION = "010";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2020-08-21';
+our $DATE_UPDATE = '2020-10-20';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name   => 'Koha EDS API',
-    author => 'Alvet Miranda - amiranda@ebsco.com',
+    author => 'EBSCO Library Service Engineers',
     description =>
-'This plugin integrates EBSCO Discovery Service(EDS) in Koha.<p>Go to Run tool (left) for setup instructions and then Configure(right) to configure the API Plugin.</p><p>More information is available at the <a href="https://github.com/ebsco/edsapi-koha-plugin" target="_blank"> plugin site on GitHub</a>. <br> For assistance; visit email EBSCO support at <a href="mailto:support@ebscohost.com">support@ebsco.com</a> or call the toll free international hotline at +800-3272-6000</p>',
+'This plugin integrates EBSCO Discovery Service (EDS) in Koha. \n'. 
+'Click the action drop down and select Configure to set up the API Plugin. '.
+'More information is available at https://github.com/ebsco/edsapi-koha-plugin.  '.
+'If you need additional help or need to report an issue to EBSCO, please contact us through https://connect.ebsco.com.',
     date_authored   => '2013-10-27',
     date_updated    => $DATE_UPDATE,
     minimum_version => $MAJOR_VERSION,
@@ -282,7 +285,7 @@ sub SetupTool {
 	}catch{
 		$shaData=decode_json('{"edsplugin": {"version": [{"number": "3.2201","sha": "9a10c2acfca0a4c7e13d74dd9dca4ff117b28a0e"}]}}');
 	};
-	$mech->get('https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
+	$mech->get('https://cdn.jsdelivr.net/gh/ebsco/edsapi-koha-plugin@'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
 	my $xmlReleaseNotes = $mech->content();
 	#use Data::Dumper; die Dumper $xmlReleaseNotes;
 

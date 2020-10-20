@@ -71,7 +71,7 @@ function UpdatePlugin(){
 	}, 3000);
 	
 
-	//window.open("https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/"+$('#liveupdate-version option:eq('+$('#liveupdate-version')[0].selectedIndex+')').val()+"/eds_plugin_"+$('#liveupdate-version option:eq('+$('#liveupdate-version')[0].selectedIndex+')').text()+".kpz");
+	//window.open("https://cdn.jsdelivr.net/gh/ebsco/edsapi-koha-plugin@"+$('#liveupdate-version option:eq('+$('#liveupdate-version')[0].selectedIndex+')').val()+"/eds_plugin_"+$('#liveupdate-version option:eq('+$('#liveupdate-version')[0].selectedIndex+')').text()+".kpz");
 }
 
 function QueryString(key) {
