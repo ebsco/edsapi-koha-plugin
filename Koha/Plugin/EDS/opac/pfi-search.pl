@@ -390,7 +390,7 @@ sub GetCatalogueAvailability
 	my @servers='biblioserver';
 	my $branches = ''; # GetBranches();#  { map { $->branchcode => $->unblessed } Koha::Libraries->search };
 	my $itemtypes = Koha::ItemTypes->search_with_localization;
-	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
+	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
 
 	my $search_context = {};
