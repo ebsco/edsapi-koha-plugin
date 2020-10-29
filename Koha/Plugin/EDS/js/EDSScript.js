@@ -30,7 +30,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "19.05009";
+var versionEDSKoha = "19.05010";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -232,13 +232,14 @@ function StartEDS(edsLang) {
 
 	}
 
-	var sessionConfig = eds_sessionStorage.get("edsConfig");
-	if (sessionConfig) {
-		ConfigData(sessionConfig);
-	} else {
+	//Commenting out caching in favor of immediate updating of settings
+	//var sessionConfig = eds_sessionStorage.get("edsConfig");
+	//if (sessionConfig) {
+	//	ConfigData(sessionConfig);
+	//} else {
 		// ConfigDefaultData();
 		$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
-	}
+	//}
 
 	//$("#masthead_search").attr("disabled","disabled");
 	if (typeof $('.back_results a').attr('href') != 'undefined') { EDSSetDetailPageNavigator(); }

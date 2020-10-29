@@ -120,7 +120,7 @@ my ($PluginSha) = @_;
 				if(not $file =~m/custom\.js/){
 					my $gitFile = $file;
 					$gitFile=~s/$PluginDir//;
-					my $gitURL = 'https://cdn.rawgit.com/ebsco/edsapi-koha-plugin/'.$PluginSha.'/Koha/Plugin/EDS'.$gitFile;
+					my $gitURL = 'https://cdn.jsdelivr.net/gh/ebsco/edsapi-koha-plugin@'.$PluginSha.'/Koha/Plugin/EDS'.$gitFile;
 					my $sourceCode = get($gitURL);
 					try{
 						open FILE, "+>", $file or die $!;

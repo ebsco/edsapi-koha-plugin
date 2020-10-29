@@ -124,8 +124,6 @@
 				</select>
         		<small>Select the default search engine mode for users who visit the library catalogue for the first time.<br>
         			This setting updates the OpacUserJS System Preference. It may take a while to reflect online baased on caching.<br>
-					<a target="_blank" href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=opacuserjs">Click here</a> to see the current settings. Paste the below code manually at the end of OpacUserJS if this does not get added automatically.
-					<pre style="border: 1px solid #CCC;padding: 10px;border-radius: 5px;background-color: #000;color: #FFF;">/*eds{*/var defaultSearch="eds";$(document).ready(function(){$.ajax({url:"/plugin/Koha/Plugin/EDS/js/EDSScript.js",dataType:"script",cache:true}); });/*}eds*/</pre>
 				</small>
         	</td>
           </tr>
