@@ -67,12 +67,9 @@ use File::Basename qw( dirname );
 
 do './eds-methods.pl';
 
-#my $PluginDir = dirname(abs_path($0));
-#$PluginDir =~s /EDS\/opac/EDS/;
-#$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
-#leaving this in as alternate code.
-#FIXME below should be adjusted to handle multiple directories
-my $PluginDir = C4::Context->config("pluginsdir");
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 $PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
