@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use LWP::Simple;
 use CGI;
+use JSON qw/decode_json encode_json/;
 
 do './eds-methods.pl';
 
