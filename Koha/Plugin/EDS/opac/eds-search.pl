@@ -67,12 +67,9 @@ use File::Basename qw( dirname );
 
 do './eds-methods.pl';
 
-#my $PluginDir = dirname(abs_path($0));
-#$PluginDir =~s /EDS\/opac/EDS/;
-#$PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
-#leaving this in as alternate code.
-#FIXME below should be adjusted to handle multiple directories
-my $PluginDir = C4::Context->config("pluginsdir");
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 $PluginDir = $PluginDir.'/'.C4::Context->preference('opacthemes');
 
@@ -398,7 +395,7 @@ sub GetCatalogueAvailability
 	my @servers='biblioserver';
 	my $branches = ''; # GetBranches();#  { map { $->branchcode => $->unblessed } Koha::Libraries->search };
 	my $itemtypes = Koha::ItemTypes->search_with_localization;
-	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$expanded_facet,$branches,$itemtypes,'ccl',$scan,1);};
+	eval {($error, $results_hashref, $facets) = getRecords($query,$query,\@sort_by,\@servers,'100',0,$branches,$itemtypes,'ccl',$scan,1);};
 	my $hits = $results_hashref->{$servers[0]}->{"hits"};
 
 	my $search_context = {};

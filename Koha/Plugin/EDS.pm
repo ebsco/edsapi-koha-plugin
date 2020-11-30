@@ -17,15 +17,17 @@ my $mech = WWW::Mechanize->new(ssl_opts => {
 });
 
 
-my $PluginDir = C4::Context->config("pluginsdir");
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
-our $MAJOR_VERSION = "19.05";
-our $SUB_VERSION = "010";
+our $MAJOR_VERSION = "20.05";
+our $SUB_VERSION = "001";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2020-10-20';
+our $DATE_UPDATE = '2020-11-20';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional

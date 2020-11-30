@@ -1,26 +1,10 @@
 {
-    "MajorVersion": "19.05",
-    "MinorVersion": "010",
+    "MajorVersion": "20.05",
+    "MinorVersion": "001",
     "ReleaseNotes": [
         {
-            "author": "cwu@ebsco.com",
-            "note": "Citation Export: download .ris file of the record"
-        },
-        {
-            "author": "cwu@ebsco.com",
-            "note": "Auto-Complete: predictive results based on holdings"
-        },
-        {
-            "author": "cwu@ebsco.com",
-            "note": "Auto-Suggest: search suggestions for similar spellings"
-        },
-        {
-            "author": "cwu@ebsco.com",
-            "note": "Auto-Correct: automatically correct mispellings"
-        },
-        {
-            "author": "cwu@ebsco.com",
-            "note": "Quick View Images: See attached images from the results list"
+            "author": "mabrahamson@ebsco.com",
+            "note": "Addresses multiple PRs into 20.05 compatible build.  See PR #90 for Full Details."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
