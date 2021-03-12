@@ -21,7 +21,6 @@ var multiFacet = {};
 var activeFacets = 0;
 //-basket stuff
 var edsConfig = "";
-var callPrepareItems = false;
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
@@ -30,7 +29,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "20.05001";
+var versionEDSKoha = "20.05002";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -52,7 +51,7 @@ var eds_sessionStorage = {
 		} catch (error) { }
 		return retData;
 	},
-	remove: function (key){
+	remove: function (key) {
 		sessionStorage.removeItem(key);
 	},
 	flush: function () {
@@ -121,10 +120,10 @@ else { console.log('JS debug enabled') }// keep executing if there is an error.}
 function getLanguage(code, callback) {
 	// Use cache 
 	var sessionLang = eds_sessionStorage.get('lang_' + code);
-	if (sessionLang){
+	if (sessionLang) {
 		callback(sessionLang);
 		return;
-	// If custom language, and there's no language file for it
+		// If custom language, and there's no language file for it
 	} else if (code != 'default' && eds_sessionStorage.get('nolang_' + code)) {
 		getLanguage('default', callback);
 		return;
@@ -149,7 +148,7 @@ function getLanguage(code, callback) {
 			eds_sessionStorage.set('lang_' + code, langData);
 			callback(langData);
 
-		// No language file, try default
+			// No language file, try default
 		}).fail(function () {
 			if (code == 'default') {
 				callback(null);
@@ -237,8 +236,8 @@ function StartEDS(edsLang) {
 	//if (sessionConfig) {
 	//	ConfigData(sessionConfig);
 	//} else {
-		// ConfigDefaultData();
-		$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
+	// ConfigDefaultData();
+	$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
 	//}
 
 	//$("#masthead_search").attr("disabled","disabled");
@@ -336,7 +335,7 @@ function GoDiscovery() {
 	$('#masthead_search').append(kohaOptions);
 	//$('#masthead_search option[value="eds"]').remove();
 	//$('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
-	$('#masthead_search option[value=""]').attr("selected","selected");
+	$('#masthead_search option[value=""]').attr("selected", "selected");
 	$("#masthead_search").change(function () {
 		knownItem = $(this).val();
 		if (($(this).val() == 'eds') && (eds_sessionStorage.get('defaultSearch') != 'eds')) { SetEDS(1); }// Search EDS
@@ -599,44 +598,64 @@ function InitCartWithEDS() {
 	}
 
 	if ((document.URL.indexOf('opac-downloadcart.pl') != -1) || (document.URL.indexOf('opac-sendbasket.pl') != -1)) {
+		console.log("FOUND OPAC-SENDBASKET OR OPAC-DOWNLOADCART");
 		SetEDSCartField();
 	}
 }
 
 function PrepareItems() {
-	if (callPrepareItems == false) { callPrepareItems = true; } 
-	else { return; }
+	SetEDSCartField();
+	//Get Bib numbers from the url
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
 
+	//Split bib list into array on /
 	var recordId = recordList.split("/");
 
+	//Iterate through all the record IDs
 	for (var edsItemCount = 0; edsItemCount < recordId.length - 1; edsItemCount++) {
+		//Check that it doesn't have the catalogue dbid
 		if (recordId[edsItemCount].indexOf(edsConfig.cataloguedbid) == -1)
+			//Look for bib numbers that include a | as these will be EDS records
 			if (recordId[edsItemCount].indexOf("|") != -1)
+				//If we find a EDS record, up the count
 				EDSItems++;
 	}
 
+	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
+		console.log("trying to change download_cart location");
+		$('#download_cart').prop('action', '/plugin/Koha/Plugin/EDS/opac/2005/opac-downloadcart.pl');
 		$('.print-large, .print').attr('onclick', ''); // .print for prog
 		$('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 		$(".dataTables_empty").css('display', 'none');
 	}
 
+	//iterate through all the EDS items
 	for (i = 0; i < recordId.length - 1; i++) {
-		if (recordId[i].indexOf(edsConfig.cataloguedbid) == -1) { // ignore catalogue records
+		//ignore catalogue records
+		if (recordId[i].indexOf(edsConfig.cataloguedbid) == -1) {
+			//get the current record ID from cache
 			var recordDataCache = eds_sessionStorage.get(recordId[i]);
+			console.log("RECORD DATA CACHE", recordDataCache);
+			//If recordDataCache is null or is an EDS record due to |
 			if (recordDataCache == null && recordId[i].indexOf('|') != -1) {
+				//set recordId to be a retrieve call?
 				recordId[i] = "Retrieve?an=" + recordId[i].replace("|", "|dbid=");
+				//get the data from eds through the "raw" api call
 				$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=' + recordId[i], function (data) {
+					//use the data to GetEDSItems
+					console.log("Got EDS Data", data);
 					if (verbose == 1) { BuildMoreDetails(data) } else { GetEDSItems(data); }
 				});
 			} else if (recordDataCache) {
+				//If we had recordDataCache, use that
+				console.log("We Found Record Data Cache", recordDataCache);
 				if (verbose == 1) {
-					BuildMoreDetails(JSON.parse(recordDataCache));
+					BuildMoreDetails(recordDataCache);
 				} else {
-					GetEDSItems(JSON.parse(recordDataCache));
+					GetEDSItems(recordDataCache);
 				}
 			}
 		}
@@ -647,9 +666,13 @@ function PrepareItems() {
 	}
 
 
+
 }
 
 function GetEDSItems(data) {
+	console.log("GETING EDS ITEMS");
+	console.log(data);
+	console.log(EDSItems);
 	try {
 		$('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" name="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" id="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" onclick="selRecord(value,checked);"></td><td><a href="#" onclick="opener.document.location=\'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + $("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + $("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + edsLang.basket_item_location + '</td></tr>');
 		EDSItems--;
@@ -722,44 +745,188 @@ function CheckEDSRecordsforAddToList() {
 
 
 function SetEDSCartField() {
+	//Use the EDS version of sendbasket
+
+	console.log("Running Set EDS Cart Field");
+	if ($('#sendbasketform')) {
+		console.log("attempting to change sendbasket form action", "old action", $('#sendbasketform').attr('action'));
+		$('#sendbasketform').prop('action', '/plugin/Koha/Plugin/EDS/opac/2005/opac-sendbasket.pl');
+		console.log("new action", $('#sendbasketform').attr('action'));
+	}
+	//GET record list from URL and split into array on /
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
 	var recordId = recordList.split("/");
 
 	var fieldDataObj = { Records: [] };
 
+	//For each recordID
 	for (i = 0; i < recordId.length - 1; i++) {
-		if (recordId[i].indexOf(edsConfig.cataloguedbid) == -1) { // ignore catalogue records
+		// ignore catalogue records
+		if (recordId[i].indexOf(edsConfig.cataloguedbid) == -1) {
+			//Create a field Record Object
 			var fieldRecordObj = {};
 			fieldRecordObj[recordId[i]] = eds_sessionStorage.get(recordId[i]);
+			console.log("Record Found", fieldRecordObj);
+			//Push to the FieldDataObject Records Array
 			fieldDataObj.Records.push(fieldRecordObj);
 		}
 	}
-	$('.action').prepend('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
+	//Add a hidden object with fieldDataObject
+	//if on SendCart, put in different place than if on the general cart screen
+	if ($('#sendbasketform')) {
+		$('.action').prepend('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
+	}
+	if ($('#download_cart')) {
+		$('#download_cart').append('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
+	}
+
 }
-jQuery('#sendbasketform').attr('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-sendbasket.pl');
+
+
+
 function sendBasket() { // override function in basket.js
+	console.log("USING EDS SEND BASKET FUNCTION");
 	var nameCookie = "bib_list";
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "/plugin/Koha/Plugin/EDS/opac/1711/opac-sendbasket.pl?" + strCookie;
+	var loc = "/plugin/Koha/Plugin/EDS/opac/2005/opac-sendbasket.pl?" + strCookie;
 
 	var optWin = "scrollbars=yes,resizable=yes,height=600,width=900,top=50,left=100";
 	var win_form = open(loc, "win_form", optWin);
 }
 
-jQuery('form[action="/cgi-bin/koha/opac-downloadcart.pl"]').attr('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl');
 function downloadBasket() { // override function in basket.js
+	console.log("Running Download Basket");
 	var nameCookie = "bib_list";
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
+	console.log("Cookie String is: ", strCookie);
 
-	var loc = "/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl?" + strCookie;
+	var loc = "/plugin/Koha/Plugin/EDS/opac/2005/opac-downloadcart.pl?" + strCookie;
 
 	open(loc, "win_form", 'scrollbars=no,resizable=no,height=300,width=450,top=50,left=100');
 }
 
+//overrides delSelRecords
+
+
+function delSelRecords() {
+	var recordsSel = 0;
+	var end = 0;
+	var nameCookie = "bib_list";
+	console.log("Attempting to read the cookie.");
+	var valCookie = readCookie(nameCookie, 1);
+	if (valCookie) {
+		console.log("We found the cookie!", valCookie);
+		var str = document.myform.records.value;
+		console.log("str value is", str);
+		if (str.length > 0) {
+			recordsSel = 1;
+			var str2 = valCookie;
+			while (!end) {
+				console.log("running while loop");
+				s = str.indexOf("/");
+				console.log("passing in index of", s, "for first /");
+				if (s > 0) {
+					num = str.substring(0, s);
+					str = delRecord(num, str);
+					str2 = delRecord(num, str2);
+					console.log("running updateLink");
+					updateLink(num, "del", top.opener);
+					console.log("finished running updateLink");
+				} else {
+					end = 1;
+				}
+			}
+			console.log("str2 length is", str2.length);
+			if (str2.length == 0) { // equivalent to emptying the basket
+				console.log("trying to empty the whole basket");
+				var rep = false;
+				rep = confirm(__("Are you sure you want to empty your cart?"));
+				if (rep) {
+					delCookie(nameCookie);
+					document.location = "about:blank";
+					updateBasket(0, top.opener);
+					window.close();
+				} else {
+					return;
+				}
+			} else {
+				console.log("we are updating the cookie");
+				writeCookie(nameCookie, str2, 1);
+			}
+		}
+	}
+
+	if (recordsSel) {
+		console.log("running recordsSel");
+		var strCookie = "";
+		var nameCookie = "bib_list";
+		var valCookie = readCookie(nameCookie, 1);
+		strCookie = nameCookie + "=" + valCookie;
+		var arrayRecords = valCookie.split("/");
+		console.log("array of records is", arrayRecords);
+		console.log("running updateBasket");
+		updateBasket(arrayRecords.length - 1, top.opener);
+		console.log("finished updateBasket, should redirect to /cgi-bin/koha/opac-basket.pl?" + strCookie);
+		document.location = "/cgi-bin/koha/opac-basket.pl?" + strCookie;
+	}
+	else {
+		alert(__p("Bibliographic record", "No item was selected"));
+	}
+}
+
+//overrides delRecord
+function delRecord(n, s) {
+	console.log("trying to run delRecord");
+	var re = /\d/;
+	var aux = s;
+	var found = 0;
+	var pos = -1;
+
+	while (!found) {
+		console.log("in the while loop");
+		console.log("n given", n);
+		console.log("s given", s);
+		pos = aux.indexOf(n, pos + 1);
+		console.log("pos found", pos);
+		var charAfter = aux.charAt(pos + n.length); // character right after the researched string
+		if (charAfter.match(re)) { // record number inside another one
+			continue;
+		}
+		else { // good record number
+			console.log("found a good record number", s);
+			aux = s.substring(0, pos) + s.substring(pos + n.length + 1, s.length);
+			s = aux;
+			found = 1;
+		}
+	}
+	console.log("returning s as", s);
+	return s;
+}
+
+//overrides updateLink
+function updateLink(val, op, target) {
+	if (target) {
+		if (op == "add") {
+			target.$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("In your cart")).addClass("incart");
+			target.$("a.cartR" + val).show();
+		} else {
+			target.$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("Add to cart")).removeClass("incart").addClass("addtocart cart" + val);
+			target.$("a.cartR" + val).hide();
+		}
+	} else {
+		if (op == "add") {
+			$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("In your cart")).addClass("incart");
+			$("a.cartR" + val).show();
+		} else {
+			$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("Add to cart")).removeClass("incart").addClass("addtocart cart" + val);
+			$("a.cartR" + val).hide();
+		}
+	}
+}
 //BASKET END----
 
 function BuildMoreDetails(detailedRecord) {
@@ -1105,7 +1272,7 @@ function EDSAutoComp() {
 
 	// Check for expired credentials
 	var credsExpiry = eds_sessionStorage.get("autoComp_expiry");
-	if (credsExpiry && credsExpiry < Math.round(Date.now() / 1000)){
+	if (credsExpiry && credsExpiry < Math.round(Date.now() / 1000)) {
 		eds_sessionStorage.remove('autoComp');
 		eds_sessionStorage.remove('autoComp_expiry');
 	}
@@ -1124,7 +1291,7 @@ function EDSAutoComp() {
 	if (!creds) {
 		$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-ac.pl?type=auth', function (data) {
 			eds_sessionStorage.set('autoComp', data);
-			eds_sessionStorage.set('autoComp_expiry',Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
+			eds_sessionStorage.set('autoComp_expiry', Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
 			EDSAutoComp();
 		});
 	} else {

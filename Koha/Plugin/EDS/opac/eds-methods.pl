@@ -24,7 +24,7 @@ use C4::Auth;    # get_template_and_user
 use C4::Output;
 use LWP;
 use IO::File;
-use JSON qw (encode_json);
+use JSON qw (from_json encode_json decode_json);
 use URI::Escape;
 use HTML::Entities;
 use feature qw(switch);

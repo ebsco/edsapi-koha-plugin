@@ -54,15 +54,16 @@ my $email_add    = $query->param('email_add');
 my $dbh          = C4::Context->dbh;
 
 if ( $email_add ) {
+    my $new_session_id = $cookie->value;
     die "Wrong CSRF token" unless Koha::Token->new->check_csrf({
-        session_id => scalar $query->cookie('CGISESSID'),
+        session_id => $new_session_id,
         token  => scalar $query->param('csrf_token'),
     });
+    # csrf_token => Koha::Token->new->generate_csrf(
+    # { session_id => $new_session_id, } ),
     my $email = Koha::Email->new();
     my $patron = Koha::Patrons->find( $borrowernumber );
-    my $borcat = $patron ? $patron->categorycode : q{};
-    my $user_email = $patron->first_valid_email_address
-    || C4::Context->preference('KohaAdminEmailAddress');
+    my $user_email = $patron->first_valid_email_address || C4::Context->preference('KohaAdminEmailAddress');
 
     my $email_replyto = $patron->firstname . " " . $patron->surname . " <$user_email>";
     my $comment    = $query->param('comment');
@@ -90,12 +91,9 @@ if ( $email_add ) {
         my $dat              = GetBiblioData($biblionumber);
         my $record           = GetMarcBiblio({
             biblionumber => $biblionumber,
-            embed_items  => 1,
-            opac         => 1,
-            borcat       => $borcat });
+            embed_items  => 1 });
         if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         next unless $dat;
-
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
 
@@ -137,7 +135,7 @@ if ( $email_add ) {
     if ( $template_res =~ /<SUBJECT>(.*)<END_SUBJECT>/s ) {
         $mail{subject} = $1;
         $mail{subject} =~ s|\n?(.*)\n?|$1|;
-        $mail{subject} = encode('MIME-Header',$mail{subject});
+        $mail{subject} = Encode::encode("UTF-8", $mail{subject});
     }
     else { $mail{'subject'} = "no subject"; }
 
@@ -190,13 +188,13 @@ END_OF_BODY
         $template->param( SENT      => "1" );
     }
     else {
-        # do something if it doesn't work....
+        # do something if it doesnt work....
     carp "Error sending mail: empty basket" if !defined($iso2709);
         carp "Error sending mail: $Mail::Sendmail::error" if $Mail::Sendmail::error;
         $template->param( error => 1 );
     }
     $template->param( email_add => $email_add );
-    output_html_with_http_headers $query, $cookie, $template->output, undef, { force_no_caching => 1 };
+    output_html_with_http_headers $query, $cookie, $template->output;
 }
 else {
     my $new_session_id = $cookie->value;
@@ -208,5 +206,5 @@ else {
         csrf_token => Koha::Token->new->generate_csrf(
             { session_id => $new_session_id, } ),
     );
-    output_html_with_http_headers $query, $cookie, $template->output, undef, { force_no_caching => 1 };
+    output_html_with_http_headers $query, $cookie, $template->output;
 }

@@ -37,7 +37,11 @@ use Koha::Patrons;
 use Koha::Token;
 
 my $query = new CGI;
-my $eds_data ="";my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data'); #EDS Patch
+my $eds_data ="";
+my $PluginDir = C4::Context->config("pluginsdir");
+$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+require $PluginDir.'/opac/eds-methods.pl';
+$eds_data = $query->param('eds_data'); #EDS Patch
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
@@ -54,6 +58,7 @@ my $email_add    = $query->param('email_add');
 my $dbh          = C4::Context->dbh;
 
 if ( $email_add ) {
+
     die "Wrong CSRF token" unless Koha::Token->new->check_csrf({
         session_id => scalar $query->cookie('CGISESSID'),
         token  => scalar $query->param('csrf_token'),
