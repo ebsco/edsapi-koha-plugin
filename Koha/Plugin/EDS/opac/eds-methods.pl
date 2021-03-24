@@ -30,6 +30,7 @@ use HTML::Entities;
 use feature qw(switch);
 use Try::Tiny;
 use Net::IP;
+#use MIME::Base64;
 
 our $apiType = 'rest';
 my $input = new CGI;
@@ -520,10 +521,10 @@ sub CartSendLinks
 	my ($template_res,@bibs) = @_;
 	my $EDSConfig = decode_json(EDSGetConfiguration());
 	foreach my $biblionumber (@bibs) { # SM: EDS
-		if($biblionumber =~m/\|/){
+		if($biblionumber =~m/\_\_/){
 			if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
-				$biblionumber =~s/\|/\&dbid\=/g;
-				$template_res =~s/\|/\&dbid\=/g;
+				$biblionumber =~s/\_\_/\&dbid\=/g;
+				$template_res =~s/\_\_/\&dbid\=/g;
 				$template_res =~s/\/cgi\-bin\/koha\/opac-detail\.pl\?biblionumber\=$biblionumber/\/plugin\/Koha\/Plugin\/EDS\/opac\/eds-detail.pl\?q\=Retrieve\?an\=$biblionumber/;
 			}
 		}else{
@@ -539,7 +540,8 @@ sub ProcessEDSCartItems
 	my ($biblionumber, $eds_data, $record, $dat) = @_;
 
 	my $EDSConfig = decode_json(EDSGetConfiguration());
-
+	#convert . to _dot_ in AN's to properly match selector
+	$biblionumber =~s/\./\_dot\_/g;
 	if(!($biblionumber =~m/$EDSConfig->{cataloguedbid}/)){
 		$eds_data = decode_json(uri_unescape($eds_data));
 

@@ -33,7 +33,11 @@ use Koha::RecordProcessor;
 
 use utf8;
 my $query = CGI->new();
-my $eds_data =""; my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data'); #EDS Patch
+my $eds_data =""; 
+my $PluginDir = C4::Context->config("pluginsdir");
+$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+require $PluginDir.'/opac/eds-methods.pl';
+$eds_data = $query->param('eds_data'); #EDS Patch
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
@@ -45,6 +49,8 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
 );
 
 my $bib_list = $query->param('bib_list');
+#convert _dot_ to . to properly search for items
+$bib_list =~s/\_dot\_/\./g;
 my $format  = $query->param('format');
 my $dbh     = C4::Context->dbh;
 
@@ -81,7 +87,10 @@ if ($bib_list && $format) {
                 embed_items  => 1,
                 opac         => 1,
                 borcat       => $borcat });
-            my $dat = "";if($biblio =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);} #EDS Patch
+            my $dat = "";
+            if($biblio =~m/\_\_/){
+                ($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);
+                } #EDS Patch
 
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({

@@ -192,7 +192,7 @@ $('body').on('click', '.diag-img', function (e) {
 
 $.each($.cookie('bib_list').split("/"), function () {
 	if (this != "") {
-		var code = this.split("|")[0];
+		var code = this.split("__")[0];
 		$(".cart" + code).html(MSG_ITEM_IN_CART).addClass("incart");
 		$(".cartR" + code).show();
 	}
@@ -598,13 +598,12 @@ function InitCartWithEDS() {
 	}
 
 	if ((document.URL.indexOf('opac-downloadcart.pl') != -1) || (document.URL.indexOf('opac-sendbasket.pl') != -1)) {
-		console.log("FOUND OPAC-SENDBASKET OR OPAC-DOWNLOADCART");
 		SetEDSCartField();
 	}
 }
 
-function PrepareItems() {
-	SetEDSCartField();
+async function PrepareItems() {
+
 	//Get Bib numbers from the url
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
@@ -617,48 +616,20 @@ function PrepareItems() {
 		//Check that it doesn't have the catalogue dbid
 		if (recordId[edsItemCount].indexOf(edsConfig.cataloguedbid) == -1)
 			//Look for bib numbers that include a | as these will be EDS records
-			if (recordId[edsItemCount].indexOf("|") != -1)
+			if (recordId[edsItemCount].indexOf("__") != -1)
 				//If we find a EDS record, up the count
 				EDSItems++;
 	}
 
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
-		console.log("trying to change download_cart location");
 		$('#download_cart').prop('action', '/plugin/Koha/Plugin/EDS/opac/2005/opac-downloadcart.pl');
 		$('.print-large, .print').attr('onclick', ''); // .print for prog
 		$('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 		$(".dataTables_empty").css('display', 'none');
-	}
-
-	//iterate through all the EDS items
-	for (i = 0; i < recordId.length - 1; i++) {
-		//ignore catalogue records
-		if (recordId[i].indexOf(edsConfig.cataloguedbid) == -1) {
-			//get the current record ID from cache
-			var recordDataCache = eds_sessionStorage.get(recordId[i]);
-			console.log("RECORD DATA CACHE", recordDataCache);
-			//If recordDataCache is null or is an EDS record due to |
-			if (recordDataCache == null && recordId[i].indexOf('|') != -1) {
-				//set recordId to be a retrieve call?
-				recordId[i] = "Retrieve?an=" + recordId[i].replace("|", "|dbid=");
-				//get the data from eds through the "raw" api call
-				$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=' + recordId[i], function (data) {
-					//use the data to GetEDSItems
-					console.log("Got EDS Data", data);
-					if (verbose == 1) { BuildMoreDetails(data) } else { GetEDSItems(data); }
-				});
-			} else if (recordDataCache) {
-				//If we had recordDataCache, use that
-				console.log("We Found Record Data Cache", recordDataCache);
-				if (verbose == 1) {
-					BuildMoreDetails(recordDataCache);
-				} else {
-					GetEDSItems(recordDataCache);
-				}
-			}
-		}
+		await IterateEDSItems(recordId);
+		SetEDSCartField();
 	}
 
 	if ((EDSItems == 0)) {
@@ -668,17 +639,51 @@ function PrepareItems() {
 
 
 }
+async function IterateEDSItems(recordId) {
+	//iterate through all the EDS items
+	for (i = 0; i < recordId.length - 1; i++) {
+		//ignore catalogue records
+		if (recordId[i].indexOf(edsConfig.cataloguedbid) == -1) {
+			//get the current record ID from cache
+			var recordDataCache = eds_sessionStorage.get(recordId[i]);
+			//If recordDataCache is null or is an EDS record due to __
+			if (recordDataCache == null && recordId[i].indexOf('__') != -1) {
+				//set recordId to be a retrieve call?
+				recordId[i] = "Retrieve?an=" + recordId[i].replace(/\_dot\_/g, ".").replace("__", "|dbid=");
+				//get the data from eds through the "raw" api call
+				getRecord = new Promise(resolve => {
+					$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=' + recordId[i], function (data) {
+						//use the data to GetEDSItems
+						AN = data.Record.Header.An.replace(/\./g, "_dot_");
+						let selector = AN + "__" + data.Record.Header.DbId;
+						if (verbose == 1) { BuildMoreDetails(data) } else { GetEDSItems(data); }
+						$(`[id="${selector}"]`).bind('change', function () { selRecord(this.value, this.checked) });
+						resolve(true);
+					});
+				});
+				await getRecord;
+
+			} else if (recordDataCache) {
+				//If we had recordDataCache, use that
+				if (verbose == 1) {
+					BuildMoreDetails(recordDataCache);
+				} else {
+					GetEDSItems(recordDataCache);
+				}
+			}
+
+		}
+	}
+}
 
 function GetEDSItems(data) {
-	console.log("GETING EDS ITEMS");
-	console.log(data);
-	console.log(EDSItems);
+	AN = data.Record.Header.An.replace(/\./g, "_dot_");
 	try {
-		$('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" name="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" id="' + data.Record.Header.An + '|' + data.Record.Header.DbId + '" onclick="selRecord(value,checked);"></td><td><a href="#" onclick="opener.document.location=\'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + $("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + $("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + edsLang.basket_item_location + '</td></tr>');
+		$('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + AN + '__' + data.Record.Header.DbId + '" name="' + AN + '__' + data.Record.Header.DbId + '" id="' + AN + '__' + data.Record.Header.DbId + '"></td><td><a href="#" onclick="opener.document.location=\'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + $("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + $("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + edsLang.basket_item_location + '</td></tr>');
 		EDSItems--;
 		if (EDSItems == 0) { $('#EDSBasketLoader').remove() }
 
-		eds_sessionStorage.set(data.Record.Header.An + '|' + data.Record.Header.DbId, data);
+		eds_sessionStorage.set(AN + '__' + data.Record.Header.DbId, data);
 
 	} catch (e) {
 		console.log(e);
@@ -689,7 +694,7 @@ function GetEDSItems(data) {
 	jQuery('.cb').click(function () {
 		enableCheckboxActions();
 		var selectedValues = document.myform.records.value;
-		var containsEDSItems = (selectedValues.replace('|' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('|') > -1) ? true : false;
+		var containsEDSItems = (selectedValues.replace('__' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('__') > -1) ? true : false;
 
 
 		if (containsEDSItems) {
@@ -723,7 +728,7 @@ function CheckEDSRecordsforAddToList() {
 	jQuery('tr input[type="checkbox"]:checked').each(function () {
 		var currentCheckBox = this;
 		checkBoxVal = jQuery(currentCheckBox).val();
-		var containsEDSItems = (checkBoxVal.replace('|' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('|') > -1) ? true : false;
+		var containsEDSItems = (checkBoxVal.replace('__' + edsConfig.cataloguedbid, edsConfig.cataloguedbid).indexOf('__') > -1) ? true : false;
 
 		if (containsEDSItems) {
 			containsEDS = true;
@@ -747,15 +752,13 @@ function CheckEDSRecordsforAddToList() {
 function SetEDSCartField() {
 	//Use the EDS version of sendbasket
 
-	console.log("Running Set EDS Cart Field");
 	if ($('#sendbasketform')) {
-		console.log("attempting to change sendbasket form action", "old action", $('#sendbasketform').attr('action'));
 		$('#sendbasketform').prop('action', '/plugin/Koha/Plugin/EDS/opac/2005/opac-sendbasket.pl');
-		console.log("new action", $('#sendbasketform').attr('action'));
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
+	//recordList = recordList.replace(/\_dot\_/g, ".");
 	var recordId = recordList.split("/");
 
 	var fieldDataObj = { Records: [] };
@@ -767,7 +770,6 @@ function SetEDSCartField() {
 			//Create a field Record Object
 			var fieldRecordObj = {};
 			fieldRecordObj[recordId[i]] = eds_sessionStorage.get(recordId[i]);
-			console.log("Record Found", fieldRecordObj);
 			//Push to the FieldDataObject Records Array
 			fieldDataObj.Records.push(fieldRecordObj);
 		}
@@ -786,7 +788,6 @@ function SetEDSCartField() {
 
 
 function sendBasket() { // override function in basket.js
-	console.log("USING EDS SEND BASKET FUNCTION");
 	var nameCookie = "bib_list";
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
@@ -798,135 +799,15 @@ function sendBasket() { // override function in basket.js
 }
 
 function downloadBasket() { // override function in basket.js
-	console.log("Running Download Basket");
 	var nameCookie = "bib_list";
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
-	console.log("Cookie String is: ", strCookie);
 
 	var loc = "/plugin/Koha/Plugin/EDS/opac/2005/opac-downloadcart.pl?" + strCookie;
 
 	open(loc, "win_form", 'scrollbars=no,resizable=no,height=300,width=450,top=50,left=100');
 }
 
-//overrides delSelRecords
-
-
-function delSelRecords() {
-	var recordsSel = 0;
-	var end = 0;
-	var nameCookie = "bib_list";
-	console.log("Attempting to read the cookie.");
-	var valCookie = readCookie(nameCookie, 1);
-	if (valCookie) {
-		console.log("We found the cookie!", valCookie);
-		var str = document.myform.records.value;
-		console.log("str value is", str);
-		if (str.length > 0) {
-			recordsSel = 1;
-			var str2 = valCookie;
-			while (!end) {
-				console.log("running while loop");
-				s = str.indexOf("/");
-				console.log("passing in index of", s, "for first /");
-				if (s > 0) {
-					num = str.substring(0, s);
-					str = delRecord(num, str);
-					str2 = delRecord(num, str2);
-					console.log("running updateLink");
-					updateLink(num, "del", top.opener);
-					console.log("finished running updateLink");
-				} else {
-					end = 1;
-				}
-			}
-			console.log("str2 length is", str2.length);
-			if (str2.length == 0) { // equivalent to emptying the basket
-				console.log("trying to empty the whole basket");
-				var rep = false;
-				rep = confirm(__("Are you sure you want to empty your cart?"));
-				if (rep) {
-					delCookie(nameCookie);
-					document.location = "about:blank";
-					updateBasket(0, top.opener);
-					window.close();
-				} else {
-					return;
-				}
-			} else {
-				console.log("we are updating the cookie");
-				writeCookie(nameCookie, str2, 1);
-			}
-		}
-	}
-
-	if (recordsSel) {
-		console.log("running recordsSel");
-		var strCookie = "";
-		var nameCookie = "bib_list";
-		var valCookie = readCookie(nameCookie, 1);
-		strCookie = nameCookie + "=" + valCookie;
-		var arrayRecords = valCookie.split("/");
-		console.log("array of records is", arrayRecords);
-		console.log("running updateBasket");
-		updateBasket(arrayRecords.length - 1, top.opener);
-		console.log("finished updateBasket, should redirect to /cgi-bin/koha/opac-basket.pl?" + strCookie);
-		document.location = "/cgi-bin/koha/opac-basket.pl?" + strCookie;
-	}
-	else {
-		alert(__p("Bibliographic record", "No item was selected"));
-	}
-}
-
-//overrides delRecord
-function delRecord(n, s) {
-	console.log("trying to run delRecord");
-	var re = /\d/;
-	var aux = s;
-	var found = 0;
-	var pos = -1;
-
-	while (!found) {
-		console.log("in the while loop");
-		console.log("n given", n);
-		console.log("s given", s);
-		pos = aux.indexOf(n, pos + 1);
-		console.log("pos found", pos);
-		var charAfter = aux.charAt(pos + n.length); // character right after the researched string
-		if (charAfter.match(re)) { // record number inside another one
-			continue;
-		}
-		else { // good record number
-			console.log("found a good record number", s);
-			aux = s.substring(0, pos) + s.substring(pos + n.length + 1, s.length);
-			s = aux;
-			found = 1;
-		}
-	}
-	console.log("returning s as", s);
-	return s;
-}
-
-//overrides updateLink
-function updateLink(val, op, target) {
-	if (target) {
-		if (op == "add") {
-			target.$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("In your cart")).addClass("incart");
-			target.$("a.cartR" + val).show();
-		} else {
-			target.$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("Add to cart")).removeClass("incart").addClass("addtocart cart" + val);
-			target.$("a.cartR" + val).hide();
-		}
-	} else {
-		if (op == "add") {
-			$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("In your cart")).addClass("incart");
-			$("a.cartR" + val).show();
-		} else {
-			$("a.cart" + val).html("<i class=\"fa fa-fw fa-shopping-cart\"></i> " + __("Add to cart")).removeClass("incart").addClass("addtocart cart" + val);
-			$("a.cartR" + val).hide();
-		}
-	}
-}
 //BASKET END----
 
 function BuildMoreDetails(detailedRecord) {
@@ -936,7 +817,7 @@ function BuildMoreDetails(detailedRecord) {
 
 		var moreDetailsData = '\
 		<h3>\
-			<input type="checkbox" class="cb" value="'+ recordAN + '|' + recordDbId + '" name="bib' + recordAN + '|' + recordDbId + '" id="bib' + recordAN + '|' + recordDbId + '" onclick="selRecord(value,checked)">\
+			<input type="checkbox" class="cb" value="'+ recordAN + '__' + recordDbId + '" name="bib' + recordAN + '__' + recordDbId + '" id="bib' + recordAN + '__' + recordDbId + '">\
 			'+ detailedRecord.Record.RecordInfo.BibRecord.BibEntity.Titles[0].TitleFull + '\
 		</h3>\
 		<table class="table">\
@@ -1046,7 +927,7 @@ function SetFacet(checkBoxItem) {
 	// If no multiFacet store, create it 
 	if (Object.keys(multiFacet).length == 0) {
 		var action = [];
-		facetAction.split("|").slice(1).forEach(function (item, index, arr) {
+		facetAction.split("__").slice(1).forEach(function (item, index, arr) {
 			var e = item.split("=");
 
 			if (multiFacet[e[0]]) {

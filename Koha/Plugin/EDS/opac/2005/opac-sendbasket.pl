@@ -53,6 +53,8 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
 );
 
 my $bib_list     = $query->param('bib_list') || '';
+#convert _dot_ to . to properly search for items
+$bib_list =~s/\_dot\_/\./g;
 my $email_add    = $query->param('email_add');
 
 my $dbh          = C4::Context->dbh;
@@ -98,7 +100,7 @@ if ( $email_add ) {
             embed_items  => 1,
             opac         => 1,
             borcat       => $borcat });
-        if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
+        if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         next unless $dat;
 
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );

@@ -184,17 +184,17 @@
 	 <!-- <td class="select selectcol">
 		[% IF RECORD.Items %] [% #Check if items exist (guest mode) %]
 			[% IF ( opacbookbag ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-					<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" /> 
+					<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]__[% RECORD.Header.DbId %]" /> 
 					<label for="bib[% ResultRecordId %]"></label>
 				[% ELSE %] 
 					[% IF ( virtualshelves ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-						<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" /> 
+						<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]__[% RECORD.Header.DbId %]" /> 
 						<label for="bib[% ResultRecordId %]"></label>
 					[% ELSE %] 
 					[% IF ( RequestOnOpac ) %]
 						[% UNLESS ( RECORD.norequests ) #TODO: currently returns yes by default %]
 							[% IF ( opacuserlogin ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-								<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" /> 
+								<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]__[% RECORD.Header.DbId %]" /> 
 								<label for="bib[% ResultRecordId %]"></label>
 							[% END %]
 						[% END %]
@@ -322,17 +322,17 @@
                     [% END %] 
                     [% IF ( opacbookbag ) %] 
                         [% IF ( SEARCH_RESULT.incart ) %] 
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]__[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_in_cart %]
                             </a> 
-                            <a class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]__[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_remove_cart %]
                             </a>
                         [% ELSE %] 
-                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a class="addtocart cart[% ResultRecordId %]" href="#" onclick="addRecord('[% ResultRecordId %]__[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_add_cart %]
                             </a> 
-                            <a style="display:none;" class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]|[% RECORD.Header.DbId %]'); return false;">
+                            <a style="display:none;" class="cartRemove cartR[% ResultRecordId %]" href="#" onclick="delSingleRecord('[% ResultRecordId %]__[% RECORD.Header.DbId %]'); return false;">
                                 [% EDSLANG.eds_results_TT_remove_cart %]
                             </a>
                         [% END %] 
