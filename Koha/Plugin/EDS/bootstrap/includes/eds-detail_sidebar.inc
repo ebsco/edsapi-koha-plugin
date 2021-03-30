@@ -29,9 +29,9 @@
             [% END %]
         [% ELSE %]
         [% IF ( incart ) %]
-                <li><a data-biblionumber="[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" class="incart cart[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_in_cart %]</a> <a class="data-biblionumber="[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" cartRemove cartR[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
+                <li><a data-biblionumber="[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" class="incart cart[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_in_cart %]</a> <a class="data-biblionumber="[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" cartRemove cartR[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
             [% ELSE %]
-                <li><a data-biblionumber="[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" class="addtocart cart[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_add_cart %]</a>  <a style="display:none;" class="data-biblionumber="[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" cartRemove cartR[% DETAILED_RECORD.Header.An %]|[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
+                <li><a data-biblionumber="[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" class="addtocart cart[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_add_cart %]</a>  <a style="display:none;" class="data-biblionumber="[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" cartRemove cartR[% DETAILED_RECORD.Header.An %]__[% DETAILED_RECORD.Header.DbId %]" href="#">[% EDSLANG.eds_detail_sidebar_INC_remove_cart %]</a></li>
             [% END %]
         [% END %]
     [% END %]

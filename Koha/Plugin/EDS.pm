@@ -11,6 +11,7 @@ use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use IO::Socket::SSL qw();
 use WWW::Mechanize qw();
+use MIME::Base64 qw( encode_base64 decode_base64 );
 my $mech = WWW::Mechanize->new(ssl_opts => {
     SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
     verify_hostname => 0,
@@ -24,10 +25,10 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "20.05";
-our $SUB_VERSION = "001";
+our $SUB_VERSION = "002";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2020-11-20';
+our $DATE_UPDATE = '2021-03-24';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
