@@ -215,6 +215,9 @@ function StartEDS(edsLang) {
 	edsSelectInfo = edsLang.eds_select_info;
 	kohaSelectInfo = edsLang.koha_select_info;
 
+	// Disable the search select box until raw.pl has responded
+	$("#masthead_search").attr("disabled", true);
+
 
 	jQuery(window).resize(function () { try { ApplyPlaceAdjustments(); } catch (err) { ApplyPlaceAdjustments(); } });
 	ApplyPlaceAdjustments();
@@ -341,6 +344,9 @@ function GoDiscovery() {
 		if (($(this).val() == 'eds') && (eds_sessionStorage.get('defaultSearch') != 'eds')) { SetEDS(1); }// Search EDS
 		else if (($(this).val() == '') && (eds_sessionStorage.get('defaultSearch') != 'koha')) { SetKoha(1); }// Search Koha
 	});
+
+	// Re-enable the search box
+	$("#masthead_search").attr("disabled", false);
 
 	if (eds_sessionStorage.get('edsKnownItems')) {
 		SetEDSOptions(eds_sessionStorage.get('edsKnownItems'));
