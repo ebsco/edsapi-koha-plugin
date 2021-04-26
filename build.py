@@ -15,6 +15,7 @@ with open('version.json') as f:
     data = json.load(f)
 
 majorVersion = data["MajorVersion"]
+minimumVersion = data["MinimumVersion"]
 minorVersion = data["MinorVersion"]
 releaseNotes = data["ReleaseNotes"]
 shaAdd = data["ShaAdd"]
@@ -36,6 +37,10 @@ for line in range(len(filedata)):
     # Set sub version
     if ("our $SUB_VERSION" in templine):
         filedata[line] = 'our $SUB_VERSION = "' + minorVersion + '";\n'
+
+# Set sub version
+    if ("our $MINIMUM_VERSION" in templine):
+        filedata[line] = 'our $MINIMUM_VERSION = "' + minimumVersion + '";\n'
 
     # Set sha address
     if ("our $SHA_ADD" in templine):

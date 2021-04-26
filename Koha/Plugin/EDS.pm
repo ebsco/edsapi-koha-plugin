@@ -25,10 +25,11 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "20.05";
-our $SUB_VERSION = "002";
+our $SUB_VERSION = "003";
+our $MINIMUM_VERSION = "19.11";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-03-24';
+our $DATE_UPDATE = '2021-04-26';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -42,7 +43,7 @@ our $metadata = {
 'If you need additional help or need to report an issue to EBSCO, please contact us through https://connect.ebsco.com.',
     date_authored   => '2013-10-27',
     date_updated    => $DATE_UPDATE,
-    minimum_version => $MAJOR_VERSION,
+    minimum_version => $MINIMUM_VERSION,
     maximum_version => '',
     version         => $VERSION,
 };
