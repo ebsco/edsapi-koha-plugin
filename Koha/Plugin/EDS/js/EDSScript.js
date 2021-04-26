@@ -30,7 +30,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "20.05001";
+var versionEDSKoha = "19.11001";
 ///////////////////////////////////////
 
 if (document.title == "") {
