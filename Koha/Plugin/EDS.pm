@@ -11,6 +11,7 @@ use JSON qw/decode_json encode_json/;
 use Try::Tiny;
 use IO::Socket::SSL qw();
 use WWW::Mechanize qw();
+use MIME::Base64 qw( encode_base64 decode_base64 );
 my $mech = WWW::Mechanize->new(ssl_opts => {
     SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
     verify_hostname => 0,

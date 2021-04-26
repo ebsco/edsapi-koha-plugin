@@ -5,7 +5,9 @@ edsapi-koha-plugin
 
 edsapi-koha-plugin
 
-use branch:master  for Koha 17.05, 17.11, 18.05+ (includes latest features and updates)
+use branch:Master for 19.11+ (includes latest features and updates)
+
+use branch:1905-Live  for Koha 17.05, 17.11, 18.05, 18.11, 19.05 
 
 use the branch:KohaV16.11x for Koha 16.11x (depricated)
 

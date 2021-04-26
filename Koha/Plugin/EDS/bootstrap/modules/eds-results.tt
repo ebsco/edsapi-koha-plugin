@@ -2,6 +2,7 @@
 [% #Dumper.dump(theme) %]
 
 [% USE Koha %]
+
 [% SET TagsShowEnabled = ( ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsShowOnList ) %]
 [% SET TagsInputEnabled = ( ( Koha.Preference( 'opacuserlogin' ) == 1 ) && ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsInputOnList ) %]
 
@@ -207,21 +208,25 @@
     [% ELSE %]
     <tr>
     [% END %]
+
+
     [% ResultRecordId = RECORD.Header.An |replace(catalogueanprefix,'') %]
+    [% ResultRecordId = ResultRecordId |replace("\\.","_dot_") %]
+
 	  <td class="select selectcol">
 		[% IF RECORD.Items %] [% #Check if items exist (guest mode) %]
 			[% IF ( opacbookbag ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-					<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" />
+					<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]__[% RECORD.Header.DbId %]" />
 					<label for="bib[% ResultRecordId %]"></label>
 				[% ELSE %]
 					[% IF ( virtualshelves ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-						<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" />
+						<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]__[% RECORD.Header.DbId %]" />
 						<label for="bib[% ResultRecordId %]"></label>
 					[% ELSE %]
 					[% IF ( RequestOnOpac ) %]
 						[% UNLESS ( RECORD.norequests ) #TODO: currently returns yes by default %]
 							[% IF ( opacuserlogin ) #AND RECORD.Header.DbId.match(cataloguedbid) %]
-								<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]|[% RECORD.Header.DbId %]" />
+								<input type="checkbox" id="bib[% ResultRecordId %]" name="biblionumber" value="[% ResultRecordId %]__[% RECORD.Header.DbId %]" />
 								<label for="bib[% ResultRecordId %]"></label>
 							[% END %]
 						[% END %]
@@ -245,7 +250,7 @@
 							[% BREAK %]
 						[% END %]
 					[% ELSE %]
-						<a class="title" href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&resultid=[% RECORD.ResultId %]" title="[% EDSLANG.eds_results_TT_title_attr %]">[% ITEM.Data %]</a>
+						<a class="title" href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&resultid=[% RECORD.ResultId %]" title="[% EDSLANG.eds_results_TT_title_attr %]">[% ITEM.Data %]</a>
 					[% END %]
 				</div>
 				[% #IMAGE START %]
@@ -367,17 +372,17 @@
                             [% END %]
                         [% ELSE %]
                             [% IF ( SEARCH_RESULT.incart ) %]
-                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" class="addtocart cart cart[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#">
+                                <a data-biblionumber="[% ResultRecordId %]__[% RECORD.Header.DbId %]" class="addtocart cart cart[% ResultRecordId %]__[% RECORD.Header.DbId %]" href="#">
                                     [% EDSLANG.eds_results_TT_in_cart %]
                                 </a>
-                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" class="remove cartRemove cartR[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#">
+                                <a data-biblionumber="[% ResultRecordId %]__[% RECORD.Header.DbId %]" class="remove cartRemove cartR[% ResultRecordId %]__[% RECORD.Header.DbId %]" href="#">
                                     [% EDSLANG.eds_results_TT_remove_cart %]
                                 </a>
                             [% ELSE %]
-                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" class="addtocart cart cart[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#" >
+                                <a data-biblionumber="[% ResultRecordId %]__[% RECORD.Header.DbId %]" class="addtocart cart cart[% ResultRecordId %]__[% RECORD.Header.DbId %]" href="#" >
                                     [% EDSLANG.eds_results_TT_add_cart %]
                                 </a>
-                                <a data-biblionumber="[% ResultRecordId %]|[% RECORD.Header.DbId %]" style="display:none;" class="remove cartRemove cartR[% ResultRecordId %]|[% RECORD.Header.DbId %]" href="#" >
+                                <a data-biblionumber="[% ResultRecordId %]__[% RECORD.Header.DbId %]" style="display:none;" class="remove cartRemove cartR[% ResultRecordId %]__[% RECORD.Header.DbId %]" href="#" >
                                     [% EDSLANG.eds_results_TT_remove_cart %]
                                 </a>
                             [% END %]
