@@ -24,11 +24,11 @@ my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
-our $MAJOR_VERSION = "20.05";
+our $MAJOR_VERSION = "19.11";
 our $SUB_VERSION = "002";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-03-24';
+our $DATE_UPDATE = '2021-04-27';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
