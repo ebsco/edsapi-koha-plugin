@@ -603,10 +603,12 @@ function InitCartWithEDS() {
 }
 
 async function PrepareItems() {
-
+	console.log("Running Prepare Items...");
 	//Get Bib numbers from the url
 	var recordList = document.URL;
+
 	recordList = QueryString("bib_list").toString();
+	console.log("recordlist is", recordList);
 
 	//Split bib list into array on /
 	var recordId = recordList.split("/");
@@ -620,7 +622,7 @@ async function PrepareItems() {
 				//If we find a EDS record, up the count
 				EDSItems++;
 	}
-
+	console.log("Number of EDS Items is", EDSItems);
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
 		$('#download_cart').prop('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl');
@@ -754,6 +756,10 @@ function SetEDSCartField() {
 
 	if ($('#sendbasketform')) {
 		$('#sendbasketform').prop('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-sendbasket.pl');
+	}
+	//Use the EDS version of download cart
+	if ($('form[action="/cgi-bin/koha/opac-downloadcart.pl"]')) {
+		$('form[action="/cgi-bin/koha/opac-downloadcart.pl"]').prop('action', '/plugin/Koha/Plugin/EDS/opac/1711/opac-downloadcart.pl');
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;

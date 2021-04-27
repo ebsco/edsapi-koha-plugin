@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>19.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/04/26</lastupdated>
+	<lastupdated>2021/04/27</lastupdated>
 	<releasenotes>
-		<release version="19.11.001" date="2021/04/26">
+		<release version="19.11.001" date="2021/04/27">
 			<note id="1" author="mabrahamson@ebsco.com">Exporting work from 20.05 to a stable branch of 19.11.</note>
 		</release>
 	</releasenotes>

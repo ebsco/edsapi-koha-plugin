@@ -93,7 +93,7 @@ if ( $email_add ) {
             embed_items  => 1,
             opac         => 1,
             borcat       => $borcat });
-        if($biblionumber =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
+        if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         next unless $dat;
 
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );

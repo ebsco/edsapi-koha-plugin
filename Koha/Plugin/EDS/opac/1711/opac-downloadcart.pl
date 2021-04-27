@@ -33,7 +33,11 @@ use Koha::RecordProcessor;
 
 use utf8;
 my $query = new CGI;
-my $eds_data =""; my $PluginDir = C4::Context->config("pluginsdir");$PluginDir = $PluginDir.'/Koha/Plugin/EDS';require $PluginDir.'/opac/eds-methods.pl';$eds_data = $query->param('eds_data'); #EDS Patch
+my $eds_data =""; 
+my $PluginDir = C4::Context->config("pluginsdir");
+$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+require $PluginDir.'/opac/eds-methods.pl';
+$eds_data = $query->param('eds_data'); #EDS Patch
 
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
@@ -73,7 +77,8 @@ if ($bib_list && $format) {
             my $record = GetMarcBiblio({
                 biblionumber => $biblio,
                 embed_items  => 1 });
-            my $dat = "";if($biblio =~m/\|/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);} #EDS Patch
+            my $dat = "";
+            if($biblio =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblio,$eds_data,$record,$dat);} #EDS Patch
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({
                 interface => 'opac',
