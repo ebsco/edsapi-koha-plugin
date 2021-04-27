@@ -5,9 +5,13 @@ edsapi-koha-plugin
 
 edsapi-koha-plugin
 
-use branch:Master for 19.11+ (includes latest features and updates)
+Refer to the release on the right to download the stable KPZ for your version needs.
 
-use branch:1905-Live  for Koha 17.05, 17.11, 18.05, 18.11, 19.05 
+Release 20.05-Stable is valid only for 20.05
+
+Release 19.11-Stable is valid only for 19.11
+
+Release 1905-Stable is valid for 17.05-19.05
 
 use the branch:KohaV16.11x for Koha 16.11x (depricated)
 
