@@ -28,7 +28,7 @@ our $MAJOR_VERSION = "20.05";
 our $SUB_VERSION = "002";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-03-24';
+our $DATE_UPDATE = '2021-04-29';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -132,7 +132,7 @@ sub configure {
 					autocomplete	=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
 				}
 			);
-
+			update_EDSScript_js($self, $cgi, $cgi->param('defaultsearch')?$cgi->param('defaultsearch'):"-");
 			if($cgi->param('edsinfo') eq 'Update Required'){
 
 				$self->store_data(
@@ -149,6 +149,28 @@ sub configure {
     $self->go_home();
 }
 
+sub update_EDSScript_js {
+    my ($self, $cgi, $defaultSearch) = @_;
+	my $vars = {
+		defaultSearch => $defaultSearch
+	};
+    my $pluginsdir = C4::Context->config('pluginsdir');
+    my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+    my @plugindirs;
+    foreach my $plugindir ( @pluginsdir ){
+            $plugindir .= "Koha/Plugin/EDS/js";
+            push @plugindirs, $plugindir
+    }
+    my $template = Template->new({
+        INCLUDE_PATH => \@plugindirs
+    });
+
+    my $edsscript_js;
+    $template->process('EDSScript.tt',$vars, $edsscript_js);
+	$template->process('EDSScript.tt',$vars, 'EDSScript.js');
+    $self->store_data({ edsscript_js => $edsscript_js });
+
+}
 
 sub install() {
     my ( $self, $args ) = @_;
@@ -188,16 +210,27 @@ sub uninstall() {
 	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='0' WHERE `variable`='EDSEnabled'");
 }
 
+#Update the JS file to include the correct variables without needing to call SQL
+sub update_search {
+	my ( $self, $default_search) = @_;
+
+}
+
 sub opac_js {
     my ( $self ) = @_;
     my $default_search = $self->retrieve_data('defaultsearch');
-    return q|
-    <script>
-    var defaultSearch="| . $default_search . q|";
-    </script>
-    <script src="/plugin/Koha/Plugin/EDS/js/EDSScript.js">
-    </script>
-    |;
+	my $edsscript_js = $self->retrieve_data('edsscript_js');
+    return qq{
+		<script>console.log("Testing opac_js");</script>
+        <script>$edsscript_js</script>
+    };
+    #return q|
+    #<script>
+    #var defaultSearch="| . $default_search . q|";
+    #</script>
+    #<script src="/plugin/Koha/Plugin/EDS/js/EDSScript.js">
+    #</script>
+    #|;
 }
 
 

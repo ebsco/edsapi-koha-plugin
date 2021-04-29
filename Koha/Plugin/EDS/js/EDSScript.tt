@@ -1,3 +1,5 @@
+[% USE Koha %]
+var template = "This is a template";
 var knownItem = '';
 var activeState = 0;
 var edsOptions = "";
@@ -8,7 +10,7 @@ var edsSelectedKnownItem = "";
 var browseNextPage = "";
 var catalogueId = "";
 var nocorrect = "";
-var defaultsearch = "";
+var defaultsearch = "[% defaultSearch %]";
 //-configurable in plugin config
 var edsSwitchText = '';
 var kohaSwitchText = '';
