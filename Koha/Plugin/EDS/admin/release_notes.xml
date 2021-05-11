@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>20.05.002</latestversion>
+	<latestversion>20.05.003</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/04/29</lastupdated>
+	<lastupdated>2021/05/11</lastupdated>
 	<releasenotes>
-		<release version="20.05.002" date="2021/04/29">
-			<note id="1" author="mabrahamson@ebsco.com">Addresses multiple PRs into 20.05 compatible build.  See PR #90 for Full Details.</note>
+		<release version="20.05.003" date="2021/05/11">
+			<note id="1" author="mabrahamson@ebsco.com">Addresses issues with dropdown being delayed in opening.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

@@ -3,6 +3,7 @@ package Koha::Plugin::EDS;
 use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
+use Encode qw(encode);
 use C4::Members;
 use C4::Auth;
 use Cwd            qw( abs_path );
@@ -12,6 +13,10 @@ use Try::Tiny;
 use IO::Socket::SSL qw();
 use WWW::Mechanize qw();
 use MIME::Base64 qw( encode_base64 decode_base64 );
+use Template;
+use Template::Constants qw( :debug );
+use Template::Filters;
+Template::Filters->use_html_entities;
 my $mech = WWW::Mechanize->new(ssl_opts => {
     SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
     verify_hostname => 0,
@@ -25,10 +30,10 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "20.05";
-our $SUB_VERSION = "002";
+our $SUB_VERSION = "003";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-04-29';
+our $DATE_UPDATE = '2021-05-11';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -132,7 +137,10 @@ sub configure {
 					autocomplete	=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
 				}
 			);
-			update_EDSScript_js($self, $cgi, $cgi->param('defaultsearch')?$cgi->param('defaultsearch'):"-");
+
+			#Run script to update files from templates
+			$self->update_EDSScript_js($cgi);
+			
 			if($cgi->param('edsinfo') eq 'Update Required'){
 
 				$self->store_data(
@@ -150,26 +158,38 @@ sub configure {
 }
 
 sub update_EDSScript_js {
-    my ($self, $cgi, $defaultSearch) = @_;
+    my ($self, $cgi) = @_;
 	my $vars = {
-		defaultSearch => $defaultSearch
+		edsusername 		=> quotemeta(($cgi->param('edsusername')?$cgi->param('edsusername'):"-")),
+		edspassword 		=> quotemeta(($cgi->param('edspassword')?$cgi->param('edspassword'):"-")),
+		edsprofileid 		=> ($cgi->param('edsprofileid')?$cgi->param('edsprofileid'):"-"),
+		edscustomerid 		=> ($cgi->param('edscustomerid')?$cgi->param('edscustomerid'):"-"),
+		cataloguedbid 		=> ($cgi->param('cataloguedbid')?$cgi->param('cataloguedbid'):"-"),
+		catalogueanprefix 	=> ($cgi->param('catalogueanprefix')?$cgi->param('catalogueanprefix'):"-"),
+		defaultsearch 		=> ($cgi->param('defaultsearch')?$cgi->param('defaultsearch'):"-"),
+		logerrors			=> ($cgi->param('logerrors')?$cgi->param('logerrors'):"-"),
+		iprange				=> ($cgi->param('iprange')?$cgi->param('iprange'):"-"),
+		cookieexpiry 		=> ($cgi->param('cookieexpiry')?$cgi->param('cookieexpiry'):"-"),
+		defaultparams		=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
+		autocomplete_mode	=> ($cgi->param('autocomplete_mode')?$cgi->param('autocomplete_mode'):"-"),
+		autocomplete		=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
+		authtoken 			=> $cgi->param('authtoken'),
+		lastedsinfoupdate	=> $cgi->param('lastedsinfoupdate'),
+		edsinfo 			=> quotemeta($self->retrieve_data('edsinfo'))
 	};
-    my $pluginsdir = C4::Context->config('pluginsdir');
-    my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
-    my @plugindirs;
-    foreach my $plugindir ( @pluginsdir ){
-            $plugindir .= "Koha/Plugin/EDS/js";
-            push @plugindirs, $plugindir
-    }
+    #my $pluginsdir = C4::Context->config('pluginsdir');
+    #my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+    #my @plugindirs;
+    #foreach my $plugindir ( @pluginsdir ){
+    #        $plugindir .= "/Koha/Plugin/EDS/js";
+    #        push @plugindirs, $plugindir
+    #}
     my $template = Template->new({
-        INCLUDE_PATH => \@plugindirs
+		INCLUDE_PATH => $PluginDir,
+		OUTPUT_PATH => $PluginDir
     });
-
-    my $edsscript_js;
-    $template->process('EDSScript.tt',$vars, $edsscript_js);
-	$template->process('EDSScript.tt',$vars, 'EDSScript.js');
-    $self->store_data({ edsscript_js => $edsscript_js });
-
+	$template->process('js/EDSScript.tt',$vars, 'js/EDSScript.js');
+	$template->process('opac/templates/eds-methods.tt',$vars, 'opac/eds-methods.pl');
 }
 
 sub install() {
@@ -219,18 +239,14 @@ sub update_search {
 sub opac_js {
     my ( $self ) = @_;
     my $default_search = $self->retrieve_data('defaultsearch');
-	my $edsscript_js = $self->retrieve_data('edsscript_js');
-    return qq{
-		<script>console.log("Testing opac_js");</script>
-        <script>$edsscript_js</script>
-    };
-    #return q|
-    #<script>
-    #var defaultSearch="| . $default_search . q|";
-    #</script>
-    #<script src="/plugin/Koha/Plugin/EDS/js/EDSScript.js">
-    #</script>
-    #|;
+
+    return q|
+    <script>
+    var defaultSearch="| . $default_search . q|";
+    </script>
+    <script src="/plugin/Koha/Plugin/EDS/js/EDSScript.js">
+    </script>
+    |;
 }
 
 
