@@ -41,6 +41,8 @@ Contact support@ebsco.com for field values.
 
 Click Load settings from EBSCOAdmin. Wait for the page to refresh. You might have to click Update Info twice if it initiating connection takes time the first time.
 
+UPGRADE NOTE: When upgrading any version after 20.05002, be sure to go into configure and save the configuration even if values are already present so that templates will generate properly.
+
 Video Presentations
 ========================
 

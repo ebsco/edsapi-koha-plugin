@@ -55,8 +55,10 @@ for item in filedata:
 
 
 ##### Update EDSScript.js #####
-with open('Koha/Plugin/EDS/js/EDSScript.js', 'r') as file :
+with open('Koha/Plugin/EDS/js/EDSScript.tt', 'r') as file :
     filedata = file.readlines()
+
+
 
 # find and repalce version
 for line in range(len(filedata)):
@@ -67,9 +69,11 @@ for line in range(len(filedata)):
         filedata[line] = 'var versionEDSKoha = "' + majorVersion + minorVersion + '";\n'
 
 # write updated array to file
-wfile = open('Koha/Plugin/EDS/js/EDSScript.js', 'w')
+wfile = open('Koha/Plugin/EDS/js/EDSScript.tt', 'w')
 for item in filedata:
     wfile.write(item)
+
+
 
 #########################
 
