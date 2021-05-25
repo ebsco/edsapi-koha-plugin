@@ -1,6 +1,5 @@
 [% #USE Dumper %]
 [% #Dumper.dump(theme) %]
-
 [% USE Koha %]
 
 [% SET TagsShowEnabled = ( ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsShowOnList ) %]
@@ -36,8 +35,8 @@
 
     <div class="main">
         <ul class="breadcrumb">
-            <li><a href="/cgi-bin/koha/opac-main.pl">[% EDSLANG.home_breadcrumb %]</a> <span class="divider">&rsaquo;</span></li>
-            <li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/opac-main.pl">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
                 [% IF ( searchdesc ) %]
                     <a href="#" id="searchBread">Results of search [% IF ( query_desc ) %]for '[% query_desc | html%]'[% END %][% IF ( limit_desc ) %]&nbsp;with limit(s):&nbsp;'[% limit_desc | html %]'[% END %]</a>
                 [% ELSE %]
@@ -47,9 +46,9 @@
         </ul>
 
         [% UNLESS ( total ) %]
-            <div class="container-fluid maincontent">
-                <div class="row-fluid">
-                    <div class="span12">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
                         <strong>[% EDSLANG.eds_results_TT_no_results %]</strong>
                         <p>
                             [% IF ( searchdesc ) %]
@@ -63,15 +62,15 @@
                                 [% OPACNoResultsFound %]
                             </div>
                         [% END %]
-                    </div> <!-- / .span12 -->
-                </div> <!-- / .row-fluid -->
+                    </div> <!-- / .col -->
+                </div> <!-- / .row -->
             </div> <!-- / .container-fluid -->
         [% END # / UNLESS searchdesc %]
 
-        <div id="maincontent" class="container-fluid">
-            <div class="row-fluid">
+        <div class="container-fluid">
+            <div class="row">
                 [% IF ( facets_loop && total ) %]
-                    <div class="span2 eds-refine">
+                    <div class="col-lg-2">
                         <div id="facetcontainer">
                             <!-- FACETS START -->
                             [% INCLUDE "$plugin_dir/includes/eds-facets.inc" %]
@@ -80,10 +79,12 @@
                     </div>
                 [% END %]
 
-                [% IF ( facets_loop && total ) %]<div class="span10 maincontent">[% ELSE %]<div class="span12 maincontent">[% END %]
+                [% IF ( facets_loop && total ) %]<div class="col-lg-10 order-first order-md-first order-lg-2 maincontent">[% ELSE %]
+                   <div class="col order-first order-md-first order-lg-2 maincontent"> 
+               [% END %]
 
                 [% IF ( searchdesc ) %]
-                    <p id="numresults">
+                    <h2 id="numresults">
                     [% IF ( total ) %]<strong>[% EDSLANG.eds_results_TT_results_returned_msg %] [% total |html %] [% EDSLANG.eds_results_TT_results_msg %]</strong>
                         [% IF ( related ) %]
                             (related searches:
@@ -94,7 +95,7 @@
                         [% END %]
                         <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" class="rsssearchicon"/></a>
                     [% END # / IF total %]
-                    </p>
+                    </h2>
                 [% END # / IF searchdesc %]
 
                 <div id="userresults">
@@ -124,9 +125,11 @@
                             [% query_error %]
                         </div>
                     [% END %]
-
-                    <div id="top-pages">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
-
+                    <div id="floating">
+                        <div id="toolbar" class="toolbar row align-items-center">
+                            <div id="top-pages" class="col">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
+                     </div> <!-- / #selections-toolbar -->
+                     </div> <!-- /#floating -->
                     <!-- Search Results Table -->
                     [% IF ( total ) %]
 
@@ -254,7 +257,7 @@
 					[% END %]
 				</div>
 				[% #IMAGE START %]
-				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:70px;margin-right:5px;margin-bottom:5px;padding:2px;">
+				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:auto;margin-right:5px;margin-bottom:5px;padding:2px;">
 				[% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
 					<div align="center">
 						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" />
@@ -635,7 +638,7 @@ $(document).ready(function(){
     param1 += "<option value=\"newlist\">[ "+_("New list")+" ]<\/option>";
     [% END %]
     [% END %]
-    param1 += "<\/select> <input type=\"submit\" class=\"btn btn-small\" value=\""+_("Save")+"\" />";
+    param1 += "<\/select> <input type=\"submit\" class=\"btn btn-sm\" value=\""+_("Save")+"\" />";
     [% ELSE %]
         param1 += "<a id=\"addto\" class=\"addtocart\" href=\"#\">" + _("Add to cart") + "<\/a>";
     [% END %]
