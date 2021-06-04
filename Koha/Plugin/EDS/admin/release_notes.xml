@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>20.11.001</latestversion>
+	<latestversion>20.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/06/01</lastupdated>
+	<lastupdated>2021/06/05</lastupdated>
 	<releasenotes>
-		<release version="20.11.001" date="2021/06/01">
-			<note id="1" author="agupta@ebsco.com">Addresses issues with Koha 20.11 template. Fixed search result page.</note>
+		<release version="20.11.002" date="2021/06/05">
+			<note id="1" author="agupta@ebsco.com">Addresses issues with Koha 20.11 template. Fixed opac advance page.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
