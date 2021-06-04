@@ -8,7 +8,7 @@ var edsSelectedKnownItem = "";
 var browseNextPage = "";
 var catalogueId = "";
 var nocorrect = "";
-var defaultsearch = "";
+var defaultsearch = "eds";
 //-configurable in plugin config
 var edsSwitchText = '';
 var kohaSwitchText = '';
@@ -20,16 +20,27 @@ var defaultParams = '';
 var multiFacet = {};
 var activeFacets = 0;
 //-basket stuff
-var edsConfig = "";
+var edsConfig = {};
 var EDSItems = 0;
 var verbose = QueryString('verbose');
 var bibListLocal = 0;
+
+//Config written from template
+edsConfig.logerrors = "yes";
+edsConfig.iprange = "-";
+edsConfig.cookieexpiry = "10";
+edsConfig.cataloguedbid = "cat07743a";
+edsConfig.catalogueanprefix = "wculc.";
+edsConfig.defaultparams = "-";
+edsConfig.autocomplete = "yes";
+edsConfig.autocomplete_mode = "normal";
+edsConfig.edsprofileid = "eds_api";
 
 // Adv search settings
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "20.05002";
+var versionEDSKoha = "20.11001";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -237,8 +248,9 @@ function StartEDS(edsLang) {
 	//	ConfigData(sessionConfig);
 	//} else {
 	// ConfigDefaultData();
-	$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
+	//$.getJSON('/plugin/Koha/Plugin/EDS/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
 	//}
+	ConfigData(edsConfig);
 
 	//$("#masthead_search").attr("disabled","disabled");
 	if (typeof $('.back_results a').attr('href') != 'undefined') { EDSSetDetailPageNavigator(); }
@@ -292,8 +304,7 @@ function SearchPublication(searchinTerm, pubAction) {
 
 function ConfigData(data) {
 
-	window.edsConfig = data;
-
+	//window.edsConfig = data;
 	eds_sessionStorage.set('edsConfig', data);
 
 	catalogueId = (data.cataloguedbid == "-") ? "" : data.cataloguedbid;
@@ -871,7 +882,7 @@ function AdvSearchEDS() {
 	for (sbCount = 1; sbCount <= searchBlockCount; sbCount++) {
 		var advBool = $("#searchFields_" + sbCount + " .advBool").val(); if (advBool == undefined) { advBool = "AND"; }
 		var advKi = $("#searchFields_" + sbCount + " .advFieldCode").val();
-		var advTerm = $("#searchFields_" + sbCount + " .advInput").val();
+		var advTerm = $("#searchFields_" + sbCount + " .form-control").val();
 		if (advTerm == undefined) { advTerm = ""; } else { advTerm = advTerm.replace(/\&/g, "%2526"); }
 
 		if (advTerm.length > 1)

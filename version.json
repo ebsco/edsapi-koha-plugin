@@ -1,10 +1,10 @@
 {
     "MajorVersion": "20.11",
-    "MinorVersion": "001",
+    "MinorVersion": "002",
     "ReleaseNotes": [
         {
             "author": "agupta@ebsco.com",
-            "note": "Addresses issues with Koha 20.11 template. Fixed search result page."
+            "note": "Addresses issues with Koha 20.11 template. Fixed opac advance page."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

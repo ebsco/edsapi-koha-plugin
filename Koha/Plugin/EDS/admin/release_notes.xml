@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>20.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/05/25</lastupdated>
+	<lastupdated>2021/06/01</lastupdated>
 	<releasenotes>
-		<release version="20.11.001" date="2021/05/25">
+		<release version="20.11.001" date="2021/06/01">
 			<note id="1" author="agupta@ebsco.com">Addresses issues with Koha 20.11 template. Fixed search result page.</note>
 		</release>
 	</releasenotes>
