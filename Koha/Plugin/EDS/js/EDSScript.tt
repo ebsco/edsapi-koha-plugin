@@ -40,7 +40,7 @@ edsConfig.edsprofileid = "[% edsprofileid %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "20.11003";
+var versionEDSKoha = "20.11001";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -634,7 +634,7 @@ async function PrepareItems() {
 
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
-		$('#download_cart').prop('action', '/plugin/Koha/Plugin/EDS/opac/2005/opac-downloadcart.pl');
+		$('#download_cart').prop('action', '/plugin/Koha/Plugin/EDS/opac/2011/opac-downloadcart.pl');
 		$('.print-large, .print').attr('onclick', ''); // .print for prog
 		$('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
 		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
@@ -764,7 +764,7 @@ function SetEDSCartField() {
 	//Use the EDS version of sendbasket
 
 	if ($('#sendbasketform')) {
-		$('#sendbasketform').prop('action', '/plugin/Koha/Plugin/EDS/opac/2005/opac-sendbasket.pl');
+		$('#sendbasketform').prop('action', '/plugin/Koha/Plugin/EDS/opac/2011/opac-sendbasket.pl');
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
@@ -803,7 +803,7 @@ function sendBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "/plugin/Koha/Plugin/EDS/opac/2005/opac-sendbasket.pl?" + strCookie;
+	var loc = "/plugin/Koha/Plugin/EDS/opac/2011/opac-sendbasket.pl?" + strCookie;
 
 	var optWin = "scrollbars=yes,resizable=yes,height=600,width=900,top=50,left=100";
 	var win_form = open(loc, "win_form", optWin);
@@ -814,7 +814,7 @@ function downloadBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "/plugin/Koha/Plugin/EDS/opac/2005/opac-downloadcart.pl?" + strCookie;
+	var loc = "/plugin/Koha/Plugin/EDS/opac/2011/opac-downloadcart.pl?" + strCookie;
 
 	open(loc, "win_form", 'scrollbars=no,resizable=no,height=300,width=450,top=50,left=100');
 }
@@ -882,7 +882,7 @@ function AdvSearchEDS() {
 	for (sbCount = 1; sbCount <= searchBlockCount; sbCount++) {
 		var advBool = $("#searchFields_" + sbCount + " .advBool").val(); if (advBool == undefined) { advBool = "AND"; }
 		var advKi = $("#searchFields_" + sbCount + " .advFieldCode").val();
-		var advTerm = $("#searchFields_" + sbCount + " .advInput").val();
+		var advTerm = $("#searchFields_" + sbCount + " .form-control").val();
 		if (advTerm == undefined) { advTerm = ""; } else { advTerm = advTerm.replace(/\&/g, "%2526"); }
 
 		if (advTerm.length > 1)
