@@ -43,14 +43,21 @@
 [% INCLUDE 'masthead.inc' %]
 
 <div class="main">
-    <ul class="breadcrumb">
-        <li><a href="/cgi-bin/koha/opac-main.pl">[% EDSLANG.home_breadcrumb %]</a> <span class="divider">&rsaquo;</span></li>
-        <li><a href="#">[% EDSLANG.eds_detail_TT_details_for %] [% title |html %][% FOREACH subtitl IN subtitle %], [% subtitl.subfield |html %][% END %]</a></li>
-    </ul>
+ <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/cgi-bin/koha/opac-main.pl">Home</a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="#"><span>Details for: </span> [% title |html %][% FOREACH subtitl IN subtitle %], [% subtitl.subfield |html %][% END %]</a>
+            </li>
+        </ul>
+    </nav>
+   
 
     <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span9">
+        <div class="row">
+            <div class="col-lg-9">
                 <div id="catalogue_detail_biblio" class="maincontent">
 
 
@@ -61,14 +68,16 @@
                     [% END %]
 
                     <div id="views">
-                        <span class="view"><span id="Normalview">[% EDSLANG.eds_detail_TT_normal_view %]</span></span>
-                        <span style="display:none;" class="view"><a id="MARCview" href="/cgi-bin/koha/opac-MARCdetail.pl?biblionumber=[% biblionumber %]">MARC view</a></span>
-                        [% IF ( ISBD ) %]<span class="view"><a id="ISBDview" href="/cgi-bin/koha/opac-ISBDdetail.pl?biblionumber=[% biblionumber %]">ISBD view</a></span>[% END %]
+                        <span class="view current-view"><span id="Normalview"><i class="fa fa-file-text-o" aria-hidden="true"></i> Normal view</span></span>
+                        <span style="display:none;" class="view"><a id="MARCview" class="btn btn-link" href="/cgi-bin/koha/opac-MARCdetail.pl?biblionumber=[% biblio.biblionumber | html %]"><i class="fa fa-list-alt" aria-hidden="true"></i> MARC view</a></span>
+                        [% IF ( ISBD ) %]
+                            <span class="view"><a id="ISBDview" class="btn btn-link" href="/cgi-bin/koha/opac-ISBDdetail.pl?biblionumber=[% biblio.biblionumber | html %]"><i class="fa fa-list-ul" aria-hidden="true"></i> ISBD view</a></span>
+                        [% END %]
                     </div>
                     [% IF ( OPACXSLTDetailsDisplay ) %]
                         [% XSLTBloc %]
                     [% ELSE %]
-                        <h1 class="title">[% title |html %][% IF ( subtitle ) %] <span class="subtitle">[% FOREACH subtitl IN subtitle %][% subtitl.subfield |html %] [% END %]</span>[% END %]</h1>
+                        <h1 class="title">[% title |html %][% IF ( subtitle ) %] <span class="subtitle">[% FOREACH subtitl IN subtitle %]test[% subtitl.subfield |html %] [% END %]</span>[% END %]</h1>
                         [% IF ( author ) %]<h5 class="author">by <a href="/cgi-bin/koha/opac-search.pl?q=au:[% author |url %]">[% author |html %]</a></h5>[% END %]
 
                         <span class="results_summary">[% UNLESS ( item_level_itypes ) %]
@@ -529,7 +538,7 @@
 
 
 
-						<p>[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]</p>
+                    <p>[% INCLUDE "$plugin_dir/includes/eds-detail_customlinks.inc" %]</p>
 
                     <ul style="display:none;">
                         [% IF ( defaulttab == 'holdings' ) %]
