@@ -1,10 +1,10 @@
 {
     "MajorVersion": "20.11",
-    "MinorVersion": "005",
+    "MinorVersion": "006",
     "ReleaseNotes": [
         {
             "author": "agupta@ebsco.com",
-            "note": "Addresses issues with Koha 20.11 to add multiple items in cart."
+            "note": "Addresses issues with Koha 20.11. Fixed review comments."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

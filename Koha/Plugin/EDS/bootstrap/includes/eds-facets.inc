@@ -1,5 +1,5 @@
 <div id="search-facets">
-        <h2><a href="#" class="menu-collapse-toggle">Refine your search</a></h2>
+        <h2><a href="#" class="menu-collapse-toggle">[% EDSLANG.eds_facets_INC_refine_search %]</a></h2>
         <ul class="menu-collapse">
         <li id="availability_facet">
 			[% EDSLANG.eds_facets_INC_current_search %]

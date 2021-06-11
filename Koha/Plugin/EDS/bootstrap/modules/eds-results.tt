@@ -52,7 +52,7 @@
 
     <div class="main">
         <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/cgi-bin/koha/opac-main.pl">Home</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/opac-main.pl">[% EDSLANG.home_breadcrumb %]</a></li>
             <li class="breadcrumb-item active" aria-current="page">
                 [% IF ( searchdesc ) %]
                     <a href="#" id="searchBread">Results of search [% IF ( query_desc ) %]for '[% query_desc | html%]'[% END %][% IF ( limit_desc ) %]&nbsp;with limit(s):&nbsp;'[% limit_desc | html %]'[% END %]</a>
