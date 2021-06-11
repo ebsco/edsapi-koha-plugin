@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>20.11.005</latestversion>
+	<latestversion>20.11.007</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/06/06</lastupdated>
+	<lastupdated>2021/06/11</lastupdated>
 	<releasenotes>
-		<release version="20.11.005" date="2021/06/06">
-			<note id="1" author="agupta@ebsco.com">Addresses issues with Koha 20.11 to add multiple items in cart.</note>
+		<release version="20.11.007" date="2021/06/11">
+			<note id="1" author="agupta@ebsco.com">Addresses issues with Koha 20.11. Removed EDSScript.js file.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
