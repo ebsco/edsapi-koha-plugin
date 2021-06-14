@@ -7,6 +7,8 @@ edsapi-koha-plugin
 
 Refer to the release on the right to download the stable KPZ for your version needs.
 
+Release 20.11-Stable is valid only for 20.11 
+
 Release 20.05-Stable is valid only for 20.05
 
 Release 19.11-Stable is valid only for 19.11

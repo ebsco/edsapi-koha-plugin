@@ -1,10 +1,10 @@
 {
-    "MajorVersion": "20.05",
-    "MinorVersion": "003",
+    "MajorVersion": "20.11",
+    "MinorVersion": "007",
     "ReleaseNotes": [
         {
-            "author": "mabrahamson@ebsco.com",
-            "note": "Addresses issues with dropdown being delayed in opening."
+            "author": "agupta@ebsco.com",
+            "note": "Addresses issues with Koha 20.11. Removed EDSScript.js file."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

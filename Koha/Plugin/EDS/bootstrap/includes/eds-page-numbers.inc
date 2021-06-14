@@ -1,23 +1,24 @@
+[% USE raw %]
 [% IF total %]
     [% IF ( PAGE_NUMBERS ) %]
+        <nav class="pagination pagination-sm noprint" aria-label="Search results pagination">
         [% PAGE_NUMBERS.PageCounter = PAGE_NUMBERS.MinPageNo %]
-        <div class="pagination pagination-small">
-            <ul>
+            <ul class="pagination">
             [% IF ( PAGE_NUMBERS.PagePrevious ) %]
-                <li><a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PagePrevious%]">&lt;&lt; [% EDSLANG.eds_page_numbers_INC_previous %]</a></li>
+                <li class="page-item"><a class="page-link" href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PagePrevious%]"><i class="fa fa-fw fa-angle-left" aria-hidden="true"></i>[% EDSLANG.eds_page_numbers_INC_previous %]</a></li>
             [% END %]
             [% WHILE PAGE_NUMBERS.PageCounter <=  PAGE_NUMBERS.MaxPageNo %]
                 [% IF ( PAGE_NUMBERS.PageCounter == PAGE_NUMBERS.PageNumber ) %]
-                    <li class="active"><a href="#">[% PAGE_NUMBERS.PageNumber %]</a></li>
+                    <li class="active"><a class="page-link" href="#">[% PAGE_NUMBERS.PageNumber %]</a></li>
                 [% ELSE %]
-                    <li><a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PageCounter%]">[% PAGE_NUMBERS.PageCounter %]</a></li>
+                    <li class="page-item"><a class="page-link" href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PageCounter%]">[% PAGE_NUMBERS.PageCounter %]</a></li>
                 [% END %]
                 [% PAGE_NUMBERS.PageCounter = PAGE_NUMBERS.PageCounter+1  %]
             [% END %]
             [% IF ( PAGE_NUMBERS.PageNext ) %]
-                <li> <a href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PageNext%]">[% EDSLANG.eds_page_numbers_INC_next %] &gt;&gt;</a></li>
+                <li class="page-item"> <a class="page-link" href="?q=Search?[%PAGE_NUMBERS.URL%]|pagenumber=[%PAGE_NUMBERS.PageNext%]">[% EDSLANG.eds_page_numbers_INC_next %] <i class="fa fa-fw fa-angle-double-right" aria-hidden="true"></i></a></li>
             [% END %]
             </ul>
-        </div>
+        </nav>
     [% END %]
 [% END %]

@@ -1,6 +1,6 @@
 <div id="search-facets">
-    <h4><a href="#" class="menu-collapse-toggle">[% EDSLANG.eds_facets_INC_refine_search %]</a></h4>
-    <ul class="menu-collapse">
+        <h2><a href="#" class="menu-collapse-toggle">[% EDSLANG.eds_facets_INC_refine_search %]</a></h2>
+        <ul class="menu-collapse">
         <li id="availability_facet">
 			[% EDSLANG.eds_facets_INC_current_search %]
 			

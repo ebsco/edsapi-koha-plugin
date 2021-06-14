@@ -1,11 +1,9 @@
 [% USE Koha %]
 [% INCLUDE 'doc-head-open.inc' %]
-
 <script>
 [% TRY %][% edsLang = "$plugin_dir/includes/lang/$lang"_".inc" %][% PROCESS "$edsLang" %]
 [% CATCH %][% PROCESS "$plugin_dir/includes/lang/default.inc" %][% END %]
 </script>
-
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
 [% BLOCK cssinclude %][% END %]
@@ -14,146 +12,202 @@
 [% INCLUDE 'masthead.inc' %]
 <form id="advSearchForm" onSubmit="AdvSearchEDS();return false;">
     <div class="main">
-        <ul class="breadcrumb">
-            <li><a href="/cgi-bin/koha/opac-main.pl">[% EDSLANG.eds_advsearch_TT_breadcrumb_home %]</a> <span class="divider">&rsaquo;</span></li>
-            <li><a href="#">[% EDSLANG.eds_advsearch_TT_breadcrumb_advanced_search %]</a></li>
-        </ul>
+        <nav aria-label="breadcrumb">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/cgi-bin/koha/opac-main.pl">Home</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="#">Advanced search</a>
+                </li>
+            </ul>
+        </nav>
 
         <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span12">
+            <div class="row">
+                <div class="col order-first order-md-first order-lg-2">
                     <!-- BOOLEAN SEARCH OPTIONS -->
-
-
-
-
-<div id="edsAdvSearch">
-		<ul id="searchBlock"> 
-			<li id="searchFields_1">
-				<input name="advInput" type="text" class="advInput advSB" style="width: 300px;">
-				<select name="advFieldCode" class="advFieldCode  advSB">
-				  <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
-				[% FOREACH field IN search_fields %]
-						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
-				[% END %]	
-				</select>
-				<input class="btn btn-success advSB" type="submit" value="[% EDSLANG.eds_advsearch_TT_btn_search %]">
-			</li>
-			<li id="searchFields_2">
-				<select name="advBool" class="advBool advSB">
-				  <option value="AND">[% EDSLANG.eds_advsearch_TT_bool_and %]</option>
-				  <option value="OR">[% EDSLANG.eds_advsearch_TT_bool_or %]</option>
-				  <option value="NOT">[% EDSLANG.eds_advsearch_TT_bool_not %]</option>
-				</select>
-				<input  name="advInput" type="text"  class="advInput advSB">
-				<select name="advFieldCode" class="advFieldCode advSB">
-				  <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
-				[% FOREACH field IN search_fields %]
-						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
-				[% END %]				  
-				</select>
-			</li>
-			<li id="searchFields_3">
-				<select name="advBook" class="advBool advSB">
-				  <option value="AND">[% EDSLANG.eds_advsearch_TT_bool_and %]</option>
-				  <option value="OR">[% EDSLANG.eds_advsearch_TT_bool_or %]</option>
-				  <option value="NOT">[% EDSLANG.eds_advsearch_TT_bool_not %]</option>
-				</select>
-				<input  name="advInput" type="text"  class="advInput advSB">
-				<select name="advFieldCode" class="advFieldCode advSB">
-				  <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
-				[% FOREACH field IN search_fields %]
-						<option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
-				[% END %]	
-				</select> <span class="addRemoveLinks"><a href="" title="[% EDSLANG.eds_advsearch_TT_opt_add %]" onClick="AddSearchBlock(3); return false;">[ + [% EDSLANG.eds_advsearch_TT_opt_add %] ]</a>  <a href="" title="[% EDSLANG.eds_advsearch_TT_opt_remove %]" style="display:none;" onClick="RemoveSearchBlock(3); return false;">[ - [% EDSLANG.eds_advsearch_TT_opt_remove %] ]</a></span>
-			</li>
-		</ul>
-		
-		
-		<div id="optionsBlock">
-		  <p>
-		  <fieldset>
-			<legend>[% EDSLANG.eds_advsearch_TT_search_options %]</legend>
-			<p>
-			<div align="right"><input class="btn btn-success advSB" type="reset" value="[% EDSLANG.eds_advsearch_TT_btn_reset %]" /></div>
-			<fieldset>
-			  <legend>[% EDSLANG.eds_advsearch_TT_search_opt_heading %]</legend>
-			 <dl>
-				<dt class="search-option-label"> 
-						<strong>[% EDSLANG.eds_advsearch_TT_search_opt_modes %]</strong>
-					<a class="helplink" target="_blank" href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=">
-						<img valign="middle" src="../images/iconQuestionMarkGeneric.png" width="21" alt="Help (opens in new window)">
-					</a>
-				</dt> 
-				<dd>
-				  <ul id="modeExpanders">
-			  	<li id="limiterItem">
-					<ul>
-						[% FOREACH mode IN search_modes %]
-						<li>	
-                            [% IF mode.Mode == 'smart' %]
-                                <label for="[% mode.Mode %]" >                                 
-                                    [% IF mode.DefaultOn == 'y' %]
-                                        <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-                                    [% ELSE %]
-                                        <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-                                    [% END %]
-                                    [% mode.Label %]<sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
-                                </label>
-                            [% ELSE %]
-                                <label for="[% mode.Mode %]" >
-                                    [% IF mode.DefaultOn == 'y' %]
-                                        <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-                                    [% ELSE %]
-                                        <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
-                                    [% END %]
-                                    [% mode.Label %]
-                                </label>
-                            [% END %]
-						</li>
-						[% END %]	
-					</ul>
-				</li>
+                    <div id="booleansearch" class="maincontent">
+                        <fieldset>
+                            <legend>Search for:</legend>
+                                <div id="searchBlock" class="advanced-search-terms">
+                                    
+                                    <div id="searchFields_1" class="search-term-row"> 
+		                                <div class="search-term-input">
+		                                </div>
+		       
+		                                <div class="search-term-input">
+				                            <select name="advFieldCode" class="advFieldCode  advSB">
+				                                <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
+				                                    [% FOREACH field IN search_fields %]
+						                                <option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]     
+                                                        </option>
+				                                    [% END %]	
+				                            </select>
+				                        </div>
 				
-				[% FOREACH expander IN expanders %]
-				<li id="limiterItem">	
-					<label for="[% expander.Id %]" class="advItemLabel" >
-                        [% IF expander.DefaultOn == 'y' %]
-                            <input class="advSBOps" name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
-                        [% ELSE %]
-                            <input class="advSBOps" name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
-                        [% END %]
-                        [% expander.Label %]
-                    </label>
-				</li>
-				[% END %]	
+				                        <div class="search-term-input">
+				                            <input name="advInput" type="text" class="form-control advSB">
+				                        </div>
+			                        </div> <!-- search-term-now-->
+			
+        
+		                            <div id="searchFields_2" class="search-term-row">
+			                            <div class="search-term-input">
+				                            <select name="advBool" class="advBool advSB">
+                                                <option value="AND">[% EDSLANG.eds_advsearch_TT_bool_and %]</option>
+                                                <option value="OR">[% EDSLANG.eds_advsearch_TT_bool_or %]</option>
+                                                <option value="NOT">[% EDSLANG.eds_advsearch_TT_bool_not %]</option>
+				                            </select>
+				                        </div>
 				
-			  </ul>
-				</dd>
-			  </dl>
-			</fieldset>
-			</p>
-			<p>
-			<fieldset>
-			  <legend>[% EDSLANG.eds_advsearch_TT_limit_legend %]</legend>
-			  
-			  	<ul>
-					[% FOREACH advlimiter IN advlimiters %]										
-					  <li  id="limiterItem">
-							[% IF advlimiter.Type =='select' %]
-								[% IF advlimiter.DefaultOn == 'y' %]
-									<label for="[% advlimiter.Id %]" class="advItemLabel" >
-                                    <input class="advSBOps" name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
-                                    [% advlimiter.Label %]</label>
-								[% ELSE %]
-									<label for="[% advlimiter.Id %]" class="advItemLabel" >
-										<input class="advSBOps" name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
-                                    	[% advlimiter.Label %]
+				                        <div class="search-term-input">
+				                            <select name="advFieldCode" class="advFieldCode advSB">
+				                                <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
+				                                [% FOREACH field IN search_fields %]
+						                            <option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
+				                                [% END %]				  
+				                            </select>
+			                            </div>
+				                        <div class="search-term-input">
+				                            <input name="advInput" type="text" class="form-control advSB">
+                                        </div>
+			                        </div><!-- search-term-now-->			
+			
+			                        <div id="searchFields_3" class="search-term-row">
+			                            <div class="search-term-input">
+                                            <select name="advBook" class="advBool advSB">
+                                            <option value="AND">[% EDSLANG.eds_advsearch_TT_bool_and %]</option>
+                                            <option value="OR">[% EDSLANG.eds_advsearch_TT_bool_or %]</option>
+                                            <option value="NOT">[% EDSLANG.eds_advsearch_TT_bool_not %]</option>
+                                            </select>
+                                        </div>
+			
+			                            <div class="search-term-input">
+                                            <select name="advFieldCode" class="advFieldCode advSB">
+                                            <option value="">[% EDSLANG.eds_advsearch_TT_select_field %]</option>
+                                            [% FOREACH field IN search_fields %]
+                                                    <option name="[% field.FieldCode %]" value="[% field.FieldCode %]">[% field.Label %]</option>
+                                            [% END %]	
+                                            </select> 
+				                        </div>
+			
+			                            <div class="search-term-input">
+                                            <input name="advInput" type="text" class="form-control advSB">
+                                        </div>
+                                        <div class="search-term-input">                                
+			                                <span class="addRemoveLinks"><a href="" title="[% EDSLANG.eds_advsearch_TT_opt_add %]" onClick="AddSearchBlock(3); return false;">[ + [% EDSLANG.eds_advsearch_TT_opt_add %] ]</a>  <a href="" title="[% EDSLANG.eds_advsearch_TT_opt_remove %]" style="display:none;" onClick="RemoveSearchBlock(3); return false;">[ - [% EDSLANG.eds_advsearch_TT_opt_remove %] ]</a></span>
+		                            	</div>
+			                    </div><!-- search-term-now-->			
+		                	</div><!--advanced-search-terms-->
+		                </div><!--booleansearch-->
+		            </div><!--order-md-first order-lg-2-->
+		        </div><!--row-->
+
+            <div class="text-center">
+                    <!-- SEARCH BUTTONS -->
+                    <fieldset class="action">                    
+                        <p>
+                            <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="Search">
+                            <input class="btn btn-primary advSB" type="reset" value="[% EDSLANG.eds_advsearch_TT_btn_reset %]" /></div>       
+                        </p>
+                    </fieldset>
+                    <!-- /SEARCH BUTTONS -->
+            </div>
+
+    		<div class="row" id="optionsBlock">
+                    <div class="col order-first order-md-first order-lg-2">
+                        <div id="advsearches" class="toptabs ui-tabs ui-corner-all ui-widget ui-widget-content">
+                            <ul role="tablist" class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">                            
+                                    <li id="advsearch-tab-itemtypes" role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="advsearch-itemtypes" aria-labelledby="ui-id-1" aria-selected="true" aria-expanded="true">
+                                    <a href="#advsearch-itemtypes" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-1">
+                                   [% EDSLANG.eds_advsearch_TT_search_opt_heading %]
+                                   </a></li>      
+                            </ul>
+
+                            
+                            <div id="advsearch-itemtypes" class="advsearch ui-tabs-panel ui-corner-bottom ui-widget-content" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false">
+                                <fieldset>
+                                    <legend>[% EDSLANG.eds_advsearch_TT_search_opt_modes %]<a class="helplink" target="_blank" href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=">
+						                <img valign="middle" src="../images/iconQuestionMarkGeneric.png" width="21" alt="Help (opens in new window)">
+					                    </a></legend>                     
+                                         <div id="modeExpanders">
+			  	                            <li id="limiterItem">
+					                            <ul>
+						                            [% FOREACH mode IN search_modes %]
+                                                    <li>	
+                                                    [% IF mode.Mode == 'smart' %]
+                                                        <label for="[% mode.Mode %]" >                                 
+                                                            [% IF mode.DefaultOn == 'y' %]
+                                                                <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                                            [% ELSE %]
+                                                                <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                                            [% END %]
+                                                            [% mode.Label %]<sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
+                                                        </label>
+                                                    [% ELSE %]
+                                                        <label for="[% mode.Mode %]" >
+                                                            [% IF mode.DefaultOn == 'y' %]
+                                                                <input class="advSBOps" name="searchMode" checked="checked" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                                            [% ELSE %]
+                                                                <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
+                                                            [% END %]
+                                                            [% mode.Label %]
+                                                        </label>
+                                                    [% END %]
+                                                </li>
+                                                [% END %]
+                                            </ul>
+					                </div>
+                            [% FOREACH expander IN expanders %]
+                                <li id="limiterItem">	
+                                    <label for="[% expander.Id %]" class="advItemLabel" >
+                                        [% IF expander.DefaultOn == 'y' %]
+                                            <input class="advSBOps" name="[% expander.Id %]" checked="checked" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+                                        [% ELSE %]
+                                            <input class="advSBOps" name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
+                                        [% END %]
+                                        [% expander.Label %]
                                     </label>
-								[% END %]
-							[% END %]
-							[% IF advlimiter.Type =='ymrange' %]
-	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+                                </li>
+				            [% END %]	
+                        </fieldset>                                       
+                    </div> <!-- / #advsearch-itemtypes -->
+                </div> <!-- / #advsearches -->
+            </div> <!-- / .col -->                
+        </div><!--row-->
+            
+            <div class="row" id="optionsBlock">
+                    <div class="col order-first order-md-first order-lg-2">
+                        <div id="advsearches" class="toptabs ui-tabs ui-corner-all ui-widget ui-widget-content">
+                            <ul role="tablist" class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">                            
+                                    <li id="advsearch-tab-itemtypes" role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="advsearch-itemtypes" aria-labelledby="ui-id-1" aria-selected="true" aria-expanded="true">
+                                    <a href="#advsearch-itemtypes" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-1">
+                                    [% EDSLANG.eds_advsearch_TT_limit_legend %]
+                                   </a></li>             
+                            </ul>
+
+                            
+                                <div id="advsearch-itemtypes" class="advsearch ui-tabs-panel ui-corner-bottom ui-widget-content" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false">
+                                    <fieldset>             
+                                        <div id="modeExpanders">
+			  	                            <ul>
+                                            [% FOREACH advlimiter IN advlimiters %]										
+                                            <li  id="limiterItem">
+                                                    [% IF advlimiter.Type =='select' %]
+                                                        [% IF advlimiter.DefaultOn == 'y' %]
+                                                            <label for="[% advlimiter.Id %]" class="advItemLabel" >
+                                                            <input class="advSBOps" name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+                                                            [% advlimiter.Label %]</label>
+                                                        [% ELSE %]
+                                                            <label for="[% advlimiter.Id %]" class="advItemLabel" >
+                                                                <input class="advSBOps" name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
+                                                                [% advlimiter.Label %]
+                                                            </label>
+                                                        [% END %]
+                                                    [% END %]
+							    [% IF advlimiter.Type =='ymrange' %]
+	                                <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
 																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
 									<option selected="selected" value="">[% EDSLANG.eds_advsearch_TT_date_month %]</option>
 									<option value="01">[% EDSLANG.eds_advsearch_TT_date_month_jan %]</option>
@@ -190,7 +244,7 @@
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
 	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
-								<input class="advSBOps" title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+								<input class="form-control advSBOps" title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
 							[% END %]
 							[% IF advlimiter.Type =='multiselectvalue' %]
 								<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
@@ -203,26 +257,26 @@
 					  </li>
 					[% END %]
 				</ul>
-			  
-			  
-			</fieldset>
-			</p>
-			<div align="right"><input class="btn btn-success advSB" type="submit" value="[% EDSLANG.eds_advsearch_TT_btn_search %]" /></div>
-		  </fieldset>
-		  </p>
-		</div>
-	</div>
-
-
-
-
-                     <!-- /BOOLEAN SEARCH OPTIONS -->
-                </div> <!-- / .span12 -->
+					</fieldset>                  
+            </div> <!-- / #advsearch-itemtypes -->                        
+        </div> <!-- / #advsearches -->
+    </div> <!-- / .col -->      
+</div>
+            <div class="text-center">
+                <!-- SEARCH BUTTONS -->
+                <fieldset class="action">
+                    <p>
+                        <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="Search">
+                        <a href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl" class="btn btn-default new-search">New search</a>
+                    </p>
+                </fieldset>
+                <!-- /SEARCH BUTTONS -->
+            </div>
+		 
+			
             </div> <!-- / .row-fluid -->
         </div> <!-- / .container-fluid -->
     </div> <!-- / .main -->
-
-         <!-- / .container-fluid -->
 </form>
 
 [% INCLUDE 'opac-bottom.inc' %]
