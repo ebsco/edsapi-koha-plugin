@@ -28,10 +28,10 @@
 <div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Setup Tool</div>
 
 <div id="doc3">
-    <div align="right" style="float:right;width:170px"><a href="http://eadmin.ebscohost.com" target="_blank"><img src="http://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
-<p>Visit <a href="http://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
+    <div align="right" style="float:right;width:170px"><a href="https://eadmin.ebscohost.com" target="_blank"><img src="https://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
+<p>Visit <a href="https://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
 
-    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="https://widgets.ebscohost.com/prod/api/koha/eds_logo.png" width="250" /></a>
+    <a target="_blank" href="https://www.ebscohost.com/discovery"><img src="https://widgets.ebscohost.com/prod/api/koha/eds_logo.png" width="250" /></a>
     <h3>Koha: EDS API: Setup Tool</h3>
     <p>This setup tool details version information and provides access to the App manager.</p>
 

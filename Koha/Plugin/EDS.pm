@@ -251,7 +251,7 @@ sub opac_js {
 
 
 sub PageURL{
-	# http://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
+	# https://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
 	my $page_url = 'http';
 	if ($ENV{HTTPS} == "on") {
 		#$page_url .= "s";

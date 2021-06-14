@@ -153,7 +153,7 @@ sub GetAuth
 sub CreateSession
 {
 	#end session
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/rest/endsession';
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/rest/endsession';
 	my $json = '{"sessiontoken":"'.$input->cookie('sessionToken').'"}';
 	if($authtoken eq ''){
 		$authtoken = CreateAuth();
@@ -163,8 +163,8 @@ sub CreateSession
 	#$GuestTracker = CheckIPAuthentication();
 
 	#ask for SessionToken from EDSAPI
-	$uri = 'http://eds-api.ebscohost.com/edsapi/rest/createsession';
-	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"'.$edscustomerid.'"}';
+	$uri = 'https://eds-api.ebscohost.com/edsapi/rest/createsession';
+	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"koha-'.$edscustomerid.'"}';
 
 	$response =  CallREST('POST',$uri,$json, $authtoken, '');
 
@@ -270,7 +270,7 @@ sub PFISearch
 	}
 	$EDSQuery =~s/ /\+/g;
 	print STDERR "---==---" . $EDSQuery;
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
 	print STDERR "---==---" . $uri;
@@ -324,7 +324,7 @@ sub EDSSearch
 		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
 	}
 	$EDSQuery =~s/ /\+/g;
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
 
