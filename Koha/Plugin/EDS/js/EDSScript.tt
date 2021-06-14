@@ -40,7 +40,7 @@ edsConfig.edsprofileid = "[% edsprofileid %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "20.11007";
+var versionEDSKoha = "20.11008";
 ///////////////////////////////////////
 
 if (document.title == "") {
