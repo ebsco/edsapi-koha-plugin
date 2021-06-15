@@ -128,7 +128,7 @@
                             
                             <div id="advsearch-itemtypes" class="advsearch ui-tabs-panel ui-corner-bottom ui-widget-content" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="false">
                                 <fieldset>
-                                    <legend>[% EDSLANG.eds_advsearch_TT_search_opt_modes %]<a class="helplink" target="_blank" href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=">
+                                    <legend>[% EDSLANG.eds_advsearch_TT_search_opt_modes %]<a class="helplink" target="_blank" href="https://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=">
 						                <img valign="middle" src="../images/iconQuestionMarkGeneric.png" width="21" alt="Help (opens in new window)">
 					                    </a></legend>                     
                                          <div id="modeExpanders">
@@ -143,7 +143,7 @@
                                                             [% ELSE %]
                                                                 <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
                                                             [% END %]
-                                                            [% mode.Label %]<sub><a href="http://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
+                                                            [% mode.Label %]<sub><a href="https://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
                                                         </label>
                                                     [% ELSE %]
                                                         <label for="[% mode.Mode %]" >

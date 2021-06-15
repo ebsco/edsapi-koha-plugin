@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>20.11.007</latestversion>
+	<latestversion>20.11.008</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/06/11</lastupdated>
+	<lastupdated>2021/06/14</lastupdated>
 	<releasenotes>
-		<release version="20.11.007" date="2021/06/11">
+		<release version="20.11.008" date="2021/06/14">
 			<note id="1" author="agupta@ebsco.com">Addresses issues with Koha 20.11. Removed EDSScript.js file.</note>
+			<note id="2" author="mabrahamson@ebsco.com">Updates issues with http API calls and links.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
