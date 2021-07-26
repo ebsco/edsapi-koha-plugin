@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>19.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/07/18</lastupdated>
+	<lastupdated>2021/07/26</lastupdated>
 	<releasenotes>
-		<release version="19.11.002" date="2021/07/18">
+		<release version="19.11.002" date="2021/07/26">
 			<note id="1" author="mabrahamson@ebsco.com">Corrects issues with non-PDF custom links requiring login.</note>
 		</release>
 	</releasenotes>

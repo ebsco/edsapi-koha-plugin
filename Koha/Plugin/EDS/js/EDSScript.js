@@ -224,7 +224,7 @@ function StartEDS(edsLang) {
 
 
 	if ($.cookie("guest") == 'y') {
-		jQuery('a.pdflink, a.html-customlink').each(function () {
+		jQuery('a.pdflink, a.html-customlink, a.other').each(function () {
 			jQuery(this).attr('href', 'javascript:LoginRequired()');
 			jQuery(this).attr('target', '_self');
 		});
