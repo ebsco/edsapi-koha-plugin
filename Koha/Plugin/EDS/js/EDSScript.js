@@ -29,7 +29,7 @@ var bibListLocal = 0;
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "19.11001";
+var versionEDSKoha = "19.11002";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -224,7 +224,7 @@ function StartEDS(edsLang) {
 
 
 	if ($.cookie("guest") == 'y') {
-		jQuery('.results_summary.actions.links a, #opac-detail a.pdflink').each(function () {
+		jQuery('a.pdflink, a.html-customlink, a.other').each(function () {
 			jQuery(this).attr('href', 'javascript:LoginRequired()');
 			jQuery(this).attr('target', '_self');
 		});

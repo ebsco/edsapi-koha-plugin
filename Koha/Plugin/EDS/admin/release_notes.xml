@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>19.11.001</latestversion>
+	<latestversion>19.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/04/27</lastupdated>
+	<lastupdated>2021/07/26</lastupdated>
 	<releasenotes>
-		<release version="19.11.001" date="2021/04/27">
-			<note id="1" author="mabrahamson@ebsco.com">Exporting work from 20.05 to a stable branch of 19.11.</note>
+		<release version="19.11.002" date="2021/07/26">
+			<note id="1" author="mabrahamson@ebsco.com">Corrects issues with non-PDF custom links requiring login.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
