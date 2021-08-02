@@ -30,10 +30,10 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "20.05";
-our $SUB_VERSION = "004";
+our $SUB_VERSION = "005";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-06-07';
+our $DATE_UPDATE = '2021-08-02';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
