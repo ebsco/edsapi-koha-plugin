@@ -1,14 +1,10 @@
 {
     "MajorVersion": "20.11",
-    "MinorVersion": "008",
+    "MinorVersion": "009",
     "ReleaseNotes": [
         {
-            "author": "agupta@ebsco.com",
-            "note": "Addresses issues with Koha 20.11. Removed EDSScript.js file."
-        },
-        {
             "author": "mabrahamson@ebsco.com",
-            "note": "Updates issues with http API calls and links."
+            "note": "Updates custom links to work offline."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

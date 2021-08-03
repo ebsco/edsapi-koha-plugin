@@ -305,7 +305,7 @@
 					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Links %]
 
-								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
+								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
 									[% IF CUSTOMLINK.Type == 'pdflink' %][% EDSLANG.eds_results_TT_links_pdf %]
 									[% ELSIF CUSTOMLINK.Type == 'ebook-pdf' %][% EDSLANG.eds_results_TT_links_ebook %]
 									[% ELSE %][% CUSTOMLINK.Type %][% END %]
