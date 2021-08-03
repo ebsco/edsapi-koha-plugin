@@ -10,6 +10,7 @@
     eds_results_TT_links_html							= 'HTML Full Text'
     eds_results_TT_links_pdf							= 'PDF Full Text'
     eds_results_TT_links_ebook							= 'eBook Full Text'
+    eds_results_TT_links_other                          = 'Linked Full Text'
     eds_results_TT_actions								= 'Actions:'
     eds_results_TT_place_reserve						= 'Place reserve'
     eds_results_TT_save_to_list							= 'Save to Lists'
@@ -31,6 +32,7 @@
     eds_detail_customlinks_INC_pdf_fulltext				= 'PDF Full Text'
     eds_detail_customlinks_INC_ebook_fulltext			= 'eBook Full Text'
     eds_detail_customlinks_INC_view_in_eds				= 'View in EDS'
+    eds_detail_customlinks_INC_other                    = 'Linked Full Text'
 
     eds_detail_sidebar_INC_print						= 'Print'
     eds_detail_sidebar_INC_in_cart						= 'In your cart'

@@ -1,10 +1,10 @@
 {
     "MajorVersion": "20.05",
-    "MinorVersion": "004",
+    "MinorVersion": "005",
     "ReleaseNotes": [
         {
             "author": "mabrahamson@ebsco.com",
-            "note": "Updates all API calls to HTTPS."
+            "note": "Updates better handling for custom links."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

@@ -19,6 +19,8 @@
 			[% EDSLANG.eds_detail_customlinks_INC_pdf_fulltext %]
 		[% ELSIF DETAILED_RECORD.FullText.Links.0.Type=='ebook-pdf' %]	
 			[% EDSLANG.eds_detail_customlinks_INC_ebook_fulltext %]
+		[% ELSIF DETAILED_RECORD.FullText.Links.0.Type=='other' %]	
+			[% EDSLANG.eds_detail_customlinks_INC_other %]
 		[% ELSE %]	
 			[% DETAILED_RECORD.FullText.Links.0.Type %]
 		[% END %]
