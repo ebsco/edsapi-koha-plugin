@@ -257,7 +257,7 @@
 							[% BREAK %]
 						[% END %]
 					[% ELSE %]
-						<a class="title" href="/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&resultid=[% RECORD.ResultId %]" title="[% EDSLANG.eds_results_TT_title_attr %]">[% ITEM.Data %]</a>
+						<a class="title" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&resultid=[% RECORD.ResultId %]" title="[% EDSLANG.eds_results_TT_title_attr %]">[% ITEM.Data %]</a>
 					[% END %]
 				</div>
 				[% #IMAGE START %]

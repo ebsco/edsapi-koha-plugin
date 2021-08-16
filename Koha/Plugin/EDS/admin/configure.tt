@@ -15,7 +15,7 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Configure</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="[% $path %]/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Configure</div>
 
 <div id="doc3">
     <div align="right" style="float:right;width:170px"><a href="https://eadmin.ebscohost.com" target="_blank"><img src="https://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
@@ -234,7 +234,7 @@ function EDSUpdateInfo(){
 	$('#updateInfoBtn').val('Loading - this page will refresh in 10 seconds. Please wait...');
 	$('#updateInfoBtn').attr('disabled','disabled');
 
-	var updateURL = '[% OPACBaseURL %]/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=info';
+	var updateURL = '[% OPACBaseURL %][% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=info';
 	console.log(updateURL);
 	var infoUpdateWindow=window.open(updateURL,'infoUpdateWindow',"width=100, height=10, top=0, left=0");
 	setTimeout(function(){location.reload();},10000);
@@ -242,7 +242,7 @@ function EDSUpdateInfo(){
 }
 
 function GetLocalIP(){
-	window.open('[% OPACBaseURL %]/plugin/Koha/Plugin/EDS/opac/eds-raw.pl?q=getip','getLocalIP',"width=100, height=10, top=0, left=0");
+	window.open('[% OPACBaseURL %][% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=getip','getLocalIP',"width=100, height=10, top=0, left=0");
 }
 
 </script>
