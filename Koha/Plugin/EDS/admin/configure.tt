@@ -15,7 +15,7 @@
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
 
-<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="[% $path %]/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Configure</div>
+<div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Configure</div>
 
 <div id="doc3">
     <div align="right" style="float:right;width:170px"><a href="https://eadmin.ebscohost.com" target="_blank"><img src="https://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
