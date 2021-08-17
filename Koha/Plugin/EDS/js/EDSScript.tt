@@ -4,11 +4,11 @@ var edsOptions = "";
 var kohaOptions = "";
 var firstTimeSearchOptions = "";
 var edsSelectedKnownItem = "";
-//var defaultSearch=""; set by configure
+//var defaultsearch=""; set by configure
 var browseNextPage = "";
 var catalogueId = "";
 var nocorrect = "";
-var defaultSearch = "[% defaultsearch %]";
+var defaultsearch = "[% defaultsearch %]";
 //-configurable in plugin config
 var edsSwitchText = '';
 var kohaSwitchText = '';
@@ -27,6 +27,7 @@ var bibListLocal = 0;
 
 //Config written from template
 edsConfig.logerrors = "[% logerrors %]";
+edsConfig.defaultsearch = "[% defaultsearch %]"
 edsConfig.iprange = "[% iprange %]";
 edsConfig.cookieexpiry = "[% cookieexpiry %]";
 edsConfig.cataloguedbid = "[% cataloguedbid %]";
@@ -210,7 +211,7 @@ $.each($.cookie('bib_list').split("/"), function () {
 });
 
 function StartEDS(edsLang) {
-	//console.log("Running startEDS...");
+	console.log("Running startEDS...");
 	if (!edsLang) {
 		console.error("No language files found, the plugin is broken");
 		return;
@@ -250,6 +251,7 @@ function StartEDS(edsLang) {
 	// ConfigDefaultData();
 	//$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
 	//}
+	console.log("Running ConfigData");
 	ConfigData(edsConfig);
 
 	//$("#masthead_search").attr("disabled","disabled");
@@ -303,7 +305,8 @@ function SearchPublication(searchinTerm, pubAction) {
 // }
 
 function ConfigData(data) {
-
+	console.log("ConfigData got");
+	console.log(data);
 	//window.edsConfig = data;
 	eds_sessionStorage.set('edsConfig', data);
 
@@ -311,10 +314,10 @@ function ConfigData(data) {
 	defaultParams = (data.defaultparams == "-") ? "" : data.defaultparams;
 
 
-	if (data.defaultSearch != "off") {
-		var currentDefaultSearchValue = eds_sessionStorage.get('defaultSearch');
+	if (data.defaultsearch != "off") {
+		var currentDefaultSearchValue = eds_sessionStorage.get('defaultsearch');
 		if (!currentDefaultSearchValue) {
-			eds_sessionStorage.set('defaultSearch', data.defaultSearch)
+			eds_sessionStorage.set('defaultsearch', data.defaultsearch)
 		}
 		GoDiscovery();
 	}
@@ -349,8 +352,8 @@ function GoDiscovery() {
 	$('#masthead_search option[value=""]').attr("selected", "selected");
 	$("#masthead_search").change(function () {
 		knownItem = $(this).val();
-		if (($(this).val() == 'eds') && (eds_sessionStorage.get('defaultSearch') != 'eds')) { SetEDS(1); }// Search EDS
-		else if (($(this).val() == '') && (eds_sessionStorage.get('defaultSearch') != 'koha')) { SetKoha(1); }// Search Koha
+		if (($(this).val() == 'eds') && (eds_sessionStorage.get('defaultsearch') != 'eds')) { SetEDS(1); }// Search EDS
+		else if (($(this).val() == '') && (eds_sessionStorage.get('defaultsearch') != 'koha')) { SetKoha(1); }// Search Koha
 	});
 
 	if (eds_sessionStorage.get('edsKnownItems')) {
@@ -360,7 +363,7 @@ function GoDiscovery() {
 		$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=knownitems', function (data) { StoreEDSOptions(data); });
 	}
 
-	if (eds_sessionStorage.get('defaultSearch') == 'eds') {
+	if (eds_sessionStorage.get('defaultsearch') == 'eds') {
 		SetEDS(0);
 	}
 
@@ -382,9 +385,9 @@ function SetEDSOptions(data) {
 		edsOptions += '<option ' + selectedItem + ' value="' + data[i].FieldCode + '">--- ' + data[i].FieldCode + ': ' + data[i].Label + '</option>';
 	}
 
-	if (eds_sessionStorage.get('defaultSearch') == "eds") {
+	if (eds_sessionStorage.get('defaultsearch') == "eds") {
 		SetEDS(0);
-	} else if (eds_sessionStorage.get('defaultSearch') == "koha") { SetKoha(0); }
+	} else if (eds_sessionStorage.get('defaultsearch') == "koha") { SetKoha(0); }
 
 	var date = new Date();
 	var minutes = 30;
@@ -398,7 +401,7 @@ function SetEDS(showInfo) {
 	$('#masthead_search option').each(function () { $(this).remove(); });
 	if (showInfo) { ShowInfo(edsSelectInfo); }
 	$('#masthead_search').append(edsOptions);
-	eds_sessionStorage.set('defaultSearch', 'eds');
+	eds_sessionStorage.set('defaultsearch', 'eds');
 	$('#transl1').val($.cookie('QueryTerm'));
 	$('.transl1').val($.cookie('QueryTerm')); //for 314
 	$('#searchBread').text(edsLang.search_breadcrumb + " " + $.cookie('QueryTerm'));
@@ -429,7 +432,7 @@ function SetKoha(showInfo) {
 	$('#masthead_search').append(kohaOptions);
 	$('#masthead_search option[value="eds"]').remove();
 	$('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
-	eds_sessionStorage.set('defaultSearch', 'koha')
+	eds_sessionStorage.set('defaultsearch', 'koha')
 	//advSearch
 	if (document.URL.indexOf("[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl") != -1 && QueryString('q') == "") {
 		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
@@ -1176,7 +1179,7 @@ function EDSAutoComp() {
 		idx = "holdings";
 	}
 
-	if (eds_sessionStorage.get('defaultSearch') != "eds") {
+	if (eds_sessionStorage.get('defaultsearch') != "eds") {
 		return;
 	}
 
@@ -1226,7 +1229,7 @@ function EDSautoSearch(event, ui) {
 	});
 }
 $('body').on('click', '#translControl1', function () {
-	if (eds_sessionStorage.get('defaultSearch') == "eds") {
+	if (eds_sessionStorage.get('defaultsearch') == "eds") {
 		$("#translControl1").autocomplete("search");
 	}
 });
