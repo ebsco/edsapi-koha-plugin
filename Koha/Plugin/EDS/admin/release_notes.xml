@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>20.11.009</latestversion>
+	<latestversion>21.05.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/08/02</lastupdated>
+	<lastupdated>2021/08/17</lastupdated>
 	<releasenotes>
-		<release version="20.11.009" date="2021/08/02">
-			<note id="1" author="mabrahamson@ebsco.com">Updates custom links to work offline.</note>
+		<release version="21.05.001" date="2021/08/17">
+			<note id="1" author="mabrahamson@ebsco.com">Compatibility updates for 21.05.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

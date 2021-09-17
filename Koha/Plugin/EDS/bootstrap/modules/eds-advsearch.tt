@@ -267,7 +267,7 @@
                 <fieldset class="action">
                     <p>
                         <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="Search">
-                        <a href="/plugin/Koha/Plugin/EDS/opac/eds-search.pl" class="btn btn-default new-search">New search</a>
+                        <a href="[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl" class="btn btn-default new-search">New search</a>
                     </p>
                 </fieldset>
                 <!-- /SEARCH BUTTONS -->
