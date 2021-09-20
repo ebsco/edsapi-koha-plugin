@@ -146,7 +146,7 @@ my ($PluginSha) = @_;
 					}
 				}
 	 }	 
-	# http://www.perlfect.com/articles/perlfile.shtml - PERL file operations 
+	# https://www.perlfect.com/articles/perlfile.shtml - PERL file operations 
 	#use Data::Dumper; die Dumper $PluginDir."/opac/.htaccess";
 
 	return $updateLog;	

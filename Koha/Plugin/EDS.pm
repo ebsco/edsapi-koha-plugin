@@ -25,7 +25,7 @@ our $MAJOR_VERSION = "19.05";
 our $SUB_VERSION = "010";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2020-10-20';
+our $DATE_UPDATE = '2021-09-20';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -199,7 +199,7 @@ sub opac_js {
 
 
 sub PageURL{
-	# http://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
+	# https://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
 	my $page_url = 'http';
 	if ($ENV{HTTPS} == "on") {
 		#$page_url .= "s";
