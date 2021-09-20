@@ -939,7 +939,7 @@
                                         <tr>
                                             <td>
                                             [% IF ( OPACAmazonCoverImages ) %]
-                                                <img src="http://images.amazon.com/images/P/[% XISBN.normalized_isbn %].01._AA75_PU_PU-5_.jpg" alt="" />
+                                                <img src="https://images.amazon.com/images/P/[% XISBN.normalized_isbn %].01._AA75_PU_PU-5_.jpg" alt="" />
                                             [% END %]
 
                                             [% IF ( SyndeticsEnabled && SyndeticsCoverImages ) %]
@@ -1093,9 +1093,9 @@
                 [% IF ( SocialNetworks ) %]
                     <div id="social_networks" class="clearfix">
                         <span>Share</span>
-                        <div><a id="facebook" href="http://www.facebook.com/sharer.php?u=[% protocol %][% current_url |url %]&amp;t=[% title |url %]" title="Share on Facebook">Facebook</a></div>
-                        <div><a id="linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=[% protocol %][% current_url |url %]&amp;title=[% title |url %]" title="Share on LinkedIn">LinkedIn</a></div>
-                        <div><a id="delicious" href="http://www.delicious.com/save?url=[% protocol %][% current_url |url %]&amp;title=[% title |url %]" title="Share on Delicious">Delicious</a></div>
+                        <div><a id="facebook" href="https://www.facebook.com/sharer.php?u=[% protocol %][% current_url |url %]&amp;t=[% title |url %]" title="Share on Facebook">Facebook</a></div>
+                        <div><a id="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=[% protocol %][% current_url |url %]&amp;title=[% title |url %]" title="Share on LinkedIn">LinkedIn</a></div>
+                        <div><a id="delicious" href="https://www.delicious.com/save?url=[% protocol %][% current_url |url %]&amp;title=[% title |url %]" title="Share on Delicious">Delicious</a></div>
                         <div><a id="email" href="mailto:?subject=[% title |url %]&amp;body=[% title |url %]%20([% protocol %][% current_url |url %])" title="Share by email">Email</a></div>
                         <div><div class="g-plusone" data-size="small" data-count="false"></div></div>
                         <div><a id="twitter" href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-text="[% title %]" data-lang="[% lang %]">Tweet</a></div>
@@ -1111,9 +1111,9 @@
                 <noscript>This page contains enriched content visible when JavaScript is enabled or by clicking
                 <a href="https://www.librarything.com/forlibraries/noscript.php?id=[% LibraryThingForLibrariesID %]&amp;accessibility=1">here</a>.</noscript>
             [% ELSE %]
-                <script src="http://ltfl.librarything.com/forlibraries/widget.js?systype=koha&amp;id=[% LibraryThingForLibrariesID %]" type="text/javascript"></script>
+                <script src="https://ltfl.librarything.com/forlibraries/widget.js?systype=koha&amp;id=[% LibraryThingForLibrariesID %]" type="text/javascript"></script>
                 <noscript>This page contains enriched content visible when JavaScript is enabled or by clicking
-                <a href="http://www.librarything.com/forlibraries/noscript.php?id=
+                <a href="https://www.librarything.com/forlibraries/noscript.php?id=
                 [% LibraryThingForLibrariesID %]&amp;accessibility=1">here</a>.</noscript>
             [% END %]
         [% END %]
@@ -1159,9 +1159,9 @@
         <tbody>
             [% FOREACH ITEM_RESULT IN items %]
                 [% IF ITEM_RESULT.this_branch %]
-                  <tr class="highlight-row-detail" vocab="http://schema.org/" typeof="Offer">
+                  <tr class="highlight-row-detail" vocab="https://schema.org/" typeof="Offer">
                 [% ELSE %]
-                  <tr vocab="http://schema.org/" typeof="Offer">
+                  <tr vocab="https://schema.org/" typeof="Offer">
                 [% END %]
                     [% IF ( item_level_itypes ) %]
                         <td class="itype">
@@ -1175,7 +1175,7 @@
                     [% END %]
                     <td class="location" property="seller">
                     <link property="itemOffered" href="#record" />
-                    <link property="businessFunction" href="http://purl.org/goodrelations/v1#LeaseOut">
+                    <link property="businessFunction" href="https://purl.org/goodrelations/v1#LeaseOut">
                         [% UNLESS ( singleBranchMode ) %]
                             <div class="[% ITEM_RESULT.branch_opac_info ? 'branch-info-tooltip-trigger' : '' %]">
                             [% IF ( ITEM_RESULT.branchurl ) %]
@@ -1534,7 +1534,7 @@
         if ($.browser.msie && parseInt($.browser.version, 10) >= 8 && window.XDomainRequest) {
         // Use Microsoft XDR for IE version 8 or above
             var xdr = new XDomainRequest();
-            xdr.open("get", "http://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e");
+            xdr.open("get", "https://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e");
             xdr.onload = function() {
                 json = 'json = '+xdr.responseText; // the string now looks like..  json = { ... };
                 eval(json); // json is now a regular JSON object
@@ -1542,7 +1542,7 @@
             }
             xdr.send();
         } else {
-            $.getJSON("http://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e", function(json){
+            $.getJSON("https://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e", function(json){
                 parseIDBJSON(json);
             });
         }
@@ -1557,7 +1557,7 @@
                 isbn = isbn.replace(/-/, '');
 
                 [% IF ( IDreamBooksReadometer ) %]
-                    $(".title").append('<a href="'+json.book.detail_link+'" id="idreambooksreadometer"><img src="http://idreambooks.com/remotereadometer/'+isbn+'.jpg" alt="'+json.book.title+' by '+json.book.author+'" title="Rating based on reviews of '+json.book.title+'"></a>');
+                    $(".title").append('<a href="'+json.book.detail_link+'" id="idreambooksreadometer"><img src="https://idreambooks.com/remotereadometer/'+isbn+'.jpg" alt="'+json.book.title+' by '+json.book.author+'" title="Rating based on reviews of '+json.book.title+'"></a>');
                 [% END %]
 
                 [% IF ( IDreamBooksReviews ) %]
@@ -1566,7 +1566,7 @@
 
                     //append happy-sad cloud review
 
-                    $("#catalogue_detail_biblio").append("<span class='idreambookssummary results_summary'><a href='"+json.book.detail_link+"'><img src='"+json.book.to_read_or_not_small+"' alt='"+json.book.title+" by "+json.book.author+"' title='Rating based on reviews of "+json.book.title+"'>"+json.book.rating+"%</a> <a href='http://www.idreambooks.com/'>rating based on reviews at iDreamBooks.com</a></span>");
+                    $("#catalogue_detail_biblio").append("<span class='idreambookssummary results_summary'><a href='"+json.book.detail_link+"'><img src='"+json.book.to_read_or_not_small+"' alt='"+json.book.title+" by "+json.book.author+"' title='Rating based on reviews of "+json.book.title+"'>"+json.book.rating+"%</a> <a href='https://www.idreambooks.com/'>rating based on reviews at iDreamBooks.com</a></span>");
 
                     //insert data into Book reviews tab
                     $.each(json.book.critic_reviews, function(){

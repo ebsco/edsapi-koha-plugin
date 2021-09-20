@@ -25,10 +25,10 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "19.11";
-our $SUB_VERSION = "002";
+our $SUB_VERSION = "003";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-07-26';
+our $DATE_UPDATE = '2021-09-20';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -202,7 +202,7 @@ sub opac_js {
 
 
 sub PageURL{
-	# http://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
+	# https://stackoverflow.com/questions/3412280/how-do-i-obtain-the-current-url-in-perl
 	my $page_url = 'http';
 	if ($ENV{HTTPS} == "on") {
 		#$page_url .= "s";
