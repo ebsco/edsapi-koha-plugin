@@ -152,7 +152,7 @@ sub GetAuth
 sub CreateSession
 {
 	#end session
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/rest/endsession';
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/rest/endsession';
 	my $json = '{"sessiontoken":"'.$input->cookie('sessionToken').'"}';
 	if($authtoken eq ''){
 		$authtoken = CreateAuth();
@@ -162,7 +162,7 @@ sub CreateSession
 	#$GuestTracker = CheckIPAuthentication();
 
 	#ask for SessionToken from EDSAPI
-	$uri = 'http://eds-api.ebscohost.com/edsapi/rest/createsession';
+	$uri = 'https://eds-api.ebscohost.com/edsapi/rest/createsession';
 	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"'.$edscustomerid.'"}';
 
 	$response =  CallREST('POST',$uri,$json, $authtoken, '');
@@ -269,7 +269,7 @@ sub PFISearch
 	}
 	$EDSQuery =~s/ /\+/g;
 	print STDERR "---==---" . $EDSQuery;
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
 	print STDERR "---==---" . $uri;
@@ -323,7 +323,7 @@ sub EDSSearch
 		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
 	}
 	$EDSQuery =~s/ /\+/g;
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
 
@@ -554,9 +554,9 @@ sub ProcessEDSCartItems
 		my $recordJSON = "{";
 		my $recordXML = '<?xml version="1.0" encoding="UTF-8"?>
 					<record
-						xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-						xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
-						xmlns="http://www.loc.gov/MARC21/slim">
+						xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+						xsi:schemaLocation="https://www.loc.gov/MARC21/slim https://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+						xmlns="https://www.loc.gov/MARC21/slim">
 						 <leader>000000000000000000000000</leader>
 						';
 

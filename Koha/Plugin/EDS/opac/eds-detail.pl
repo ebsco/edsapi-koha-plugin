@@ -151,7 +151,7 @@ sub cust_EDSSearch
 	$EDSQuery =~s/ /\+/g;
 
 	# generate URI
-	my $uri = 'http://eds-api.ebscohost.com/edsapi/rest/'.$EDSQuery;
+	my $uri = 'https://eds-api.ebscohost.com/edsapi/rest/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 
 	my $response =  decode_json(CallREST('GET',$uri,'', GetAuth(), GetSession()));
