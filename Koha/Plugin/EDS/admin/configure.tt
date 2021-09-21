@@ -18,11 +18,11 @@
 <div id="breadcrumbs"><a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo; <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo; EDS API &rsaquo; Configure</div>
 
 <div id="doc3">
-    <div align="right" style="float:right;width:170px"><a href="http://eadmin.ebscohost.com" target="_blank"><img src="http://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
-<p>Visit <a href="http://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
+    <div align="right" style="float:right;width:170px"><a href="https://eadmin.ebscohost.com" target="_blank"><img src="https://eadmin.ebscohost.com/eadmin/images/lib/logoAdmin.gif" ></a>
+<p>Visit <a href="https://eadmin.ebscohost.com" target="_blank">EBSCO Admin</a> to configure the EDS API profile</p></div>
 
 <!-- We can access our own plugins resource files using the PLUGIN_PATH variable. -->
-    <a target="_blank" href="http://www.ebscohost.com/discovery"><img src="https://widgets.ebscohost.com/prod/api/koha/eds_logo.png" width="250" /></a>
+    <a target="_blank" href="https://www.ebscohost.com/discovery"><img src="https://widgets.ebscohost.com/prod/api/koha/eds_logo.png" width="250" /></a>
     <h3>Koha: EDS API: Configure</h3>
 <!-- Notice our form here has no 'action', this is good, it means that our forms will always get passed back to 'plugins/run.pl'. You could hard code it instead if you prefer -->
     <form method="get">
@@ -84,7 +84,7 @@
             <td align="left" valign="top">
             	<input name="catalogueanprefix" type="text" class="textbox" id="catalogueanprefix" value="[% catalogueanprefix %]">
             	<small><p>Required if your catalogue is harvested through OAI-PMH or uploaded through FTP in MARC format. You can get this from the URL of a detailed record or permalink in EDS.<br>e.g.
-            http://ehis.ebscohost.com/eds/detail?AN=prefval.530894. Enter prefval including period (dot) into the text field.</p></small>
+            https://ehis.ebscohost.com/eds/detail?AN=prefval.530894. Enter prefval including period (dot) into the text field.</p></small>
 			</td>
           </tr>
           <tr>
@@ -99,7 +99,7 @@
             <th align="left" valign="top" nowrap class="settingLabel" scope="row">  IP Addresses:</th>
             <td align="left" valign="top">
             	[% IF iprange == '' %]<input name="iprange" type="text" class="textbox" id="iprange" value="">[% ELSE %]<input name="iprange" type="text" class="textbox" id="iprange" value="[% iprange %]">[% END %]
-            	<small>Authenticate into EDS using local IP by entering valid IPs seperated by comma(,) e.g. 127.0.0.1,127.0.0.2. To Enter a range; use the example format 100.0.0.0 - 200.79.255.255 <!-- http://stackoverflow.com/questions/24916371/how-do-i-check-if-an-ip-address-is-in-a-specific-range-in-perl -->(<a href="javascript:GetLocalIP();">Get Local IP</a>)</small>
+            	<small>Authenticate into EDS using local IP by entering valid IPs seperated by comma(,) e.g. 127.0.0.1,127.0.0.2. To Enter a range; use the example format 100.0.0.0 - 200.79.255.255 <!-- https://stackoverflow.com/questions/24916371/how-do-i-check-if-an-ip-address-is-in-a-specific-range-in-perl -->(<a href="javascript:GetLocalIP();">Get Local IP</a>)</small>
             </td>
           </tr>
           <tr>

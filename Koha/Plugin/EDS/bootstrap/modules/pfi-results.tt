@@ -406,7 +406,7 @@
     [% IF ( using_https ) %]
         <script src="https://ltfl.librarything.com/forlibraries/widget.js?id=[% LibraryThingForLibrariesID %]&amp;systype=koha" type="text/javascript"></script>
     [% ELSE %]
-        <script src="http://ltfl.librarything.com/forlibraries/widget.js?id=[% LibraryThingForLibrariesID %]&amp;systype=koha" type="text/javascript"></script>
+        <script src="https://ltfl.librarything.com/forlibraries/widget.js?id=[% LibraryThingForLibrariesID %]&amp;systype=koha" type="text/javascript"></script>
     [% END %]
 [% END %]
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.rating.js"></script>[% END %]
@@ -538,7 +538,7 @@ $(document).ready(function(){
             if ($.browser.msie && parseInt($.browser.version, 10) >= 8 && window.XDomainRequest) {
             // Use Microsoft XDR for IE version 8 or above
                 var xdr = new XDomainRequest();
-                xdr.open("get", "http://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e");
+                xdr.open("get", "https://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e");
                 xdr.onload = function() {
                     json = 'json = '+xdr.responseText; // the string now looks like..  json = { ... };
                     eval(json); // json is now a regular JSON object
@@ -551,7 +551,7 @@ $(document).ready(function(){
                 }
                 xdr.send();
             } else {
-                $.getJSON("http://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e", function(json){
+                $.getJSON("https://idreambooks.com/newbooks/api.json?q="+encodeURIComponent(isbn)+"&key=8bf66516232d1b72f3e47df939653e1e", function(json){
                     if(json.total_results > 0 && json.book.rating > 0){
                         $(element).children('a').html("<img src='"+json.book.to_read_or_not_small+"' alt='"+json.book.title+" by "+json.book.author+"' title='Rating based on reviews of "+json.book.title+"'>"+json.book.rating+"%");
                         $(element).show();
