@@ -4,6 +4,7 @@ use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
 use Encode qw(encode);
+use URI::Escape;
 use C4::Members;
 use C4::Auth;
 use Cwd            qw( abs_path );
@@ -30,10 +31,10 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "21.05";
-our $SUB_VERSION = "001";
+our $SUB_VERSION = "002";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2021-08-17';
+our $DATE_UPDATE = '2021-10-12';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -136,6 +137,7 @@ sub configure {
 					defaultparams	=> ($cgi->param('defaultparams')?$cgi->param('defaultparams'):"-"),
 					autocomplete_mode	=> ($cgi->param('autocomplete_mode')?$cgi->param('autocomplete_mode'):"-"),
 					autocomplete	=> ($cgi->param('autocomplete')?$cgi->param('autocomplete'):"-"),
+					PLUGIN_HTTP_PATH	=> $self->get_plugin_http_path(),
 				}
 			);
 
@@ -375,8 +377,6 @@ sub SetupTool {
 			customjs			=>\@customJSContent,
 			jsstate				=>$customJS,
 			plugin_dir			=>$PluginDir,
-			PLUGIN_HTTP_PATH 	=> $self->get_plugin_http_path(),
-
         );
 
     print $cgi->header();

@@ -244,6 +244,7 @@ if($cgi->param("q")){
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
 		expanders		=>$EDSInfo->{AvailableSearchCriteria}->{AvailableExpanders},
 		guestTrack 		=>$GuestTracker,
+		PLUGIN_HTTP_PATH => $EDSConfig->{pluginhttppath},
 	);
 
 my $casAuthentication = C4::Context->preference('casAuthentication');
