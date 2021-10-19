@@ -36,7 +36,7 @@ my $input = new CGI;
 my $dbh   = C4::Context->dbh;
 
 
-our ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode)="";
+our ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode, $pluginhttppath)="";
 
 our $PluginClass='Koha::Plugin::EDS';
 our $table='plugin_data';
@@ -90,6 +90,7 @@ $catalogueanprefix = "[% catalogueanprefix %]";
 $authtoken = "[% authtoken %]";
 $logerrors = "[% logerrors %]";
 $iprange = "[% iprange %]";
+$pluginhttppath = qq([% PLUGIN_HTTP_PATH %]);
 $edsinfo = Encode::encode('UTF-8',qq([% edsinfo %]));
 #$edsinfo =~ s/\\\\//g;
 print STDERR "IN METHOD, EDSINFO IS ".$edsinfo;
@@ -266,7 +267,8 @@ sub EDSGetConfiguration
 		'autocomplete_mode'	=>	$autocomplete_mode,
 		'edsusername'		=>	$edsusername,
 		'edsprofileid'		=>	$edsprofileid,
-		'edspassword'		=>	$edspassword
+		'edspassword'		=>	$edspassword,
+		'pluginhttppath'	=>	$pluginhttppath,
 	);
 	my $JSONConfig = encode_json \%ConfigArray;
 	#my $JSONConfig = encode_json '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","defaultparams":"'.$defaultparams.'","autocomplete": "'.$autocomplete.'", "autocomplete_mode": "'.$autocomplete_mode.'", "edsusername":"'.$edsusername.'", "edsprofileid":"'.$edsprofileid.'", "edspassword":"'.$edspassword.'"}';

@@ -36,12 +36,12 @@ edsConfig.defaultparams = "[% defaultparams %]";
 edsConfig.autocomplete = "[% autocomplete %]";
 edsConfig.autocomplete_mode = "[% autocomplete_mode %]";
 edsConfig.edsprofileid = "[% edsprofileid %]";
-
+edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 // Adv search settings
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "21.05001";
+var versionEDSKoha = "21.05002";
 ///////////////////////////////////////
 
 if (document.title == "") {

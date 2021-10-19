@@ -5,7 +5,6 @@
 [% SET TagsInputEnabled = ( ( Koha.Preference( 'opacuserlogin' ) == 1 ) && ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsInputOnList ) %]
 [% SET AdlibrisEnabled = Koha.Preference('AdlibrisCoversEnabled') %]
 [% SET AdlibrisURL = Koha.Preference('AdlibrisCoversURL') %]
-
 [% IF firstPage %]
      [% SET OverDriveEnabled = Koha.Preference('OverDriveLibraryID') && Koha.Preference('OverDriveClientKey') && Koha.Preference('OverDriveClientSecret') %]
      [% SET RecordedBooksEnabled = Koha.Preference('RecordedBooksLibraryID') && Koha.Preference('RecordedBooksClientSecret') %]
@@ -299,13 +298,13 @@
 						<span class="label">[% EDSLANG.eds_results_TT_links %] </span>
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Text.Availability %]
 
-								<a class="html-customlink" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=html" title="[% CUSTOMLINK.MouseOverText %]">
+								<a class="html-customlink" target="_blank" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=html" title="[% CUSTOMLINK.MouseOverText %]">
 									[% EDSLANG.eds_results_TT_links_html %]
 								</a>
 					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Links %]
 
-								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
+								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
 									[% IF CUSTOMLINK.Type == 'pdflink' %][% EDSLANG.eds_results_TT_links_pdf %]
 									[% ELSIF CUSTOMLINK.Type == 'ebook-pdf' %][% EDSLANG.eds_results_TT_links_ebook %]
 									[% ELSE %][% CUSTOMLINK.Type %][% END %]

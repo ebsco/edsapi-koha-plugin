@@ -1,10 +1,10 @@
 {
     "MajorVersion": "21.05",
-    "MinorVersion": "001",
+    "MinorVersion": "002",
     "ReleaseNotes": [
         {
             "author": "mabrahamson@ebsco.com",
-            "note": "Compatibility updates for 21.05."
+            "note": "Fixes issues with link generation."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
