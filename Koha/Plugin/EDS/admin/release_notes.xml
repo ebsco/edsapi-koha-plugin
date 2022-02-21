@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>21.05.002</latestversion>
+	<latestversion>21.05.003</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2021/10/12</lastupdated>
+	<lastupdated>2022/02/21</lastupdated>
 	<releasenotes>
-		<release version="21.05.002" date="2021/10/12">
-			<note id="1" author="mabrahamson@ebsco.com">Fixes issues with link generation.</note>
+		<release version="21.05.003" date="2022/02/21">
+			<note id="1" author="mabrahamson@ebsco.com">Fixes issues with Research Starter Display.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
