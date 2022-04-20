@@ -33,8 +33,8 @@
 use strict;
 use warnings;
 use CGI;
-use C4::Auth;    # get_template_and_user
-use C4::Output;
+use C4::Auth qw( get_template_and_user );
+use C4::Output qw( output_with_http_headers );
 use LWP;
 use IO::File;
 use JSON;
