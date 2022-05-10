@@ -78,10 +78,13 @@ var eds_sessionStorage = {
 	}
 }
 
-jQuery.ajax({ url: "[% PLUGIN_HTTP_PATH %]/js/custom/custom.js", dataType: "script", cache: true });
+jQuery.ajax({ 	
+	url: "[% PLUGIN_HTTP_PATH %]/js/custom/custom.js", 
+	dataType: "script", 
+	cache: true });
 
-if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && ($.cookie("guest") == 'n')) {
-	$("#ulactioncontainer ul:contains(cart)").append('\
+if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && (Cookies.get("guest") == 'n')) {
+	jQuery("#ulactioncontainer ul:contains(cart)").append('\
 	<li>\
 		<a class="print-large" href="#" onclick="ris_download();">\
 			Download Citation\
@@ -91,18 +94,18 @@ if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && ($.cookie("gue
 	function ris_download() {
 
 		var details = {};
-		$(document.location.search.split(/[&\?|]/)).each(function () {
+		jQuery(document.location.search.split(/[&\?|]/)).each(function () {
 			if (this != "") {
 				var a = this.split("=");
 				details[a[0]] = a[1];
 			}
 		});
 
-		$.get("[% PLUGIN_HTTP_PATH %]/opac/eds-cite.pl?an=" + details.an + "&dbid=" + details.dbid).done(function (data) {
+		jQuery.get("[% PLUGIN_HTTP_PATH %]/opac/eds-cite.pl?an=" + details.an + "&dbid=" + details.dbid).done(function (data) {
 
 			var text = JSON.parse(data).Data;
 			var element = document.createElement('a');
-			var filename = $(".title")[0].innerText + ".ris";
+			var filename = jQuery(".title")[0].innerText + ".ris";
 			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
 			element.setAttribute('download', filename);
 			element.style.display = 'none';
@@ -125,7 +128,7 @@ delCookie = function (name) {
 	}
 }
 
-if (QueryString('debug') != "1") { $(window).error(function (e) { e.preventDefault(); }); }
+if (QueryString('debug') != "1") { jQuery(window).error(function (e) { e.preventDefault(); }); }
 else { console.log('JS debug enabled') }// keep executing if there is an error.}
 
 /////  Language data setup  /////
@@ -179,39 +182,42 @@ getLanguage(plugin_lang, StartEDS);
 
 function eds_img_resize(e) {
 	if (e.height > e.width) {
-		$(e).addClass("sc_height");
+		jQuery(e).addClass("sc_height");
 	} else {
-		$(e).addClass("sc_width");
+		jQuery(e).addClass("sc_width");
 	}
 }
 
-$('body').on('click', '.search-in-pub-button', function () {
+jQuery('body').on('click', '.search-in-pub-button', function () {
 	currentPubButton = this;
 	searchTerm = jQuery(currentPubButton).parent().find('.search-in-pub-field').val();
 	pubAction = jQuery(currentPubButton).parent().find('.search-in-pub-field').data('action');
 	SearchPublication(searchTerm, pubAction);
 });
 
-$('body').on('click', '.diag-img', function (e) {
+jQuery('body').on('click', '.diag-img', function (e) {
 	e.preventDefault();
-	$("body").addClass("eds_noscroll");
-	$("body").append('\
-	<div class="c_modal" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">\
-		<span class="close" onclick="javascript: $(\'body\').removeClass(\'eds_noscroll\'); $(\'.c_modal\').remove();">&times;</span>\
+	jQuery("body").addClass("eds_noscroll");
+	jQuery("body").append('\
+	<div class="c_modal" onclick="javascript: jQuery(\'body\').removeClass(\'eds_noscroll\'); jQuery(\'.c_modal\').remove();">\
+		<span class="close" onclick="javascript: jQuery(\'body\').removeClass(\'eds_noscroll\'); jQuery(\'.c_modal\').remove();">&times;</span>\
 		<img class="c_modal-content" src="' + e.target.parentNode.href + '" onload="eds_img_resize(this)"  >\
 	</div>');
 });
 
-$.each($.cookie('bib_list').split("/"), function () {
+jQuery.each(Cookies.get('bib_list').split("/"), function () {
 	if (this != "") {
 		var code = this.split("__")[0];
-		$(".cart" + code).html(MSG_ITEM_IN_CART).addClass("incart");
-		$(".cartR" + code).show();
+		jQuery(".cart" + code).html(MSG_ITEM_IN_CART).addClass("incart");
+		jQuery(".cartR" + code).show();
 	}
 });
 
 function StartEDS(edsLang) {
-	console.log("Running startEDS...");
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running startEDS...");	
+	}
+	
 	if (!edsLang) {
 		console.error("No language files found, the plugin is broken");
 		return;
@@ -227,38 +233,50 @@ function StartEDS(edsLang) {
 	edsSelectInfo = edsLang.eds_select_info;
 	kohaSelectInfo = edsLang.koha_select_info;
 
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Trying to Apply Place Adjustments...");
+	}
 	jQuery(window).resize(function () { try { ApplyPlaceAdjustments(); } catch (err) { ApplyPlaceAdjustments(); } });
 	ApplyPlaceAdjustments();
 
 
 	PublisherDateSlider();
-
-
-	if ($.cookie("guest") == 'y') {
+	if (edsConfig.logerrors == "yes"){
+		console.log("Checking cookies...");
+	}
+	if (Cookies.get("guest") == 'y') {
+		if (edsConfig.logerrors == "yes"){
+			console.log("User is in guest mode...");
+		}
 		jQuery('a.pdflink, a.html-customlink, a.other').each(function () {
 			jQuery(this).attr('href', 'javascript:LoginRequired()');
 			jQuery(this).attr('target', '_self');
 		});
-
+	}
+	else {
+		if (edsConfig.logerrors == "yes"){
+		console.log("User is not in guest mode...");
+		}
 	}
 
-	//Commenting out caching in favor of immediate updating of settings
-	//var sessionConfig = eds_sessionStorage.get("edsConfig");
-	//if (sessionConfig) {
-	//	ConfigData(sessionConfig);
-	//} else {
-	// ConfigDefaultData();
-	//$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=config', function (data) { ConfigData(data); });
-	//}
-	console.log("Running ConfigData");
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running ConfigData...");
+	}
 	ConfigData(edsConfig);
+	if (edsConfig.logerrors == "yes"){
+		console.log("finished ConfigData...");
+	}
+	//jQuery("#masthead_search").attr("disabled","disabled");
+	if (typeof jQuery('.back_results a').attr('href') != 'undefined') { EDSSetDetailPageNavigator(); }
 
-	//$("#masthead_search").attr("disabled","disabled");
-	if (typeof $('.back_results a').attr('href') != 'undefined') { EDSSetDetailPageNavigator(); }
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running initcart...");
+	}
 	InitCartWithEDS(); // cart management
 
+	if (edsConfig.logerrors == "yes"){
+		console.log("running autosuggest...");
+	}
 	jQuery('#eds-autosuggest').click(function () {
 		nocorrect = "&nocorrect=1";
 		var autoSuggestText = jQuery(this).text();
@@ -266,12 +284,18 @@ function StartEDS(edsLang) {
 		jQuery('#searchsubmit').trigger('click');
 	});
 
+	if (edsConfig.logerrors == "yes"){
+		console.log("running autocorrect...");
+	}
 	jQuery('#eds-edsautocorrect').click(function () {
 		var autoSuggestText = jQuery(this).text();
 		jQuery('#translControl1').val(autoSuggestText);
 		jQuery('#searchsubmit').trigger('click');
 	});
 
+	if (edsConfig.logerrors == "yes"){
+		console.log("running autocomplete...");
+	}
 	if (edsConfig.autocomplete == "yes") {
 		EDSAutoComp();
 	}
@@ -299,17 +323,15 @@ function SearchPublication(searchinTerm, pubAction) {
 }
 
 
-// function ConfigDefaultData() {
-// 	GoDiscovery(true);
-// 	//console.log('configured');
-// }
-
 function ConfigData(data) {
-	console.log("ConfigData got");
-	console.log(data);
-	//window.edsConfig = data;
+	if (edsConfig.logerrors == "yes"){
+		console.log("ConfigData got");
+		console.log(data);
+	}
 	eds_sessionStorage.set('edsConfig', data);
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Set session data...");
+	}
 	catalogueId = (data.cataloguedbid == "-") ? "" : data.cataloguedbid;
 	defaultParams = (data.defaultparams == "-") ? "" : data.defaultparams;
 
@@ -317,54 +339,66 @@ function ConfigData(data) {
 	if (data.defaultsearch != "off") {
 		var currentDefaultSearchValue = eds_sessionStorage.get('defaultsearch');
 		if (!currentDefaultSearchValue) {
-			eds_sessionStorage.set('defaultsearch', data.defaultsearch)
+			eds_sessionStorage.set('defaultsearch', data.defaultsearch);
 		}
 		GoDiscovery();
 	}
 }
 
 function GoDiscovery() {
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running GoDiscovery...");
+	}
 	try { edsSelectedKnownItem = edsKnownItem } catch (e) { edsSelectedKnownItem = ''; }
 
 	var optionSelect = 1;
 	kohaOptions = '';
-	$('#masthead_search option').each(function () {
-		var optionText = $(this).text().replace('--- ', '');
+	jQuery('#masthead_search option').each(function () {
+		var optionText = jQuery(this).text().replace('--- ', '');
 		var optionSelected = "";
-		if ($(this).val() != "") { optionText = "--- " + optionText; }
-		if ($(this).val() == "") { optionText = kohaSelectText; }
+		if (jQuery(this).val() != "") { optionText = "--- " + optionText; }
+		if (jQuery(this).val() == "") { optionText = kohaSelectText; }
 		if (optionSelect == 1 && optionText == kohaSelectText) { optionSelected = ' selected '; optionSelect = 0 }
-		kohaOptions += '<option ' + optionSelected + ' value="' + $(this).val() + '">' + optionText + '</option>';
+		kohaOptions += '<option ' + optionSelected + ' value="' + jQuery(this).val() + '">' + optionText + '</option>';
 		firstTimeSearchOptions = kohaOptions;
-		$(this).remove();
+		jQuery(this).remove();
 	});
 
 	if (firstTimeSearchOptions != "") {
 		kohaOptions = firstTimeSearchOptions;
 	}
 
-	$('#masthead_search option').remove();
+	jQuery('#masthead_search option').remove();
 	kohaOptions = "<option value='eds'>" + edsSwitchText + "</option>" + kohaOptions;
-	$('#masthead_search').append(kohaOptions);
-	//$('#masthead_search option[value="eds"]').remove();
-	//$('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
-	$('#masthead_search option[value=""]').attr("selected", "selected");
-	$("#masthead_search").change(function () {
-		knownItem = $(this).val();
-		if (($(this).val() == 'eds') && (eds_sessionStorage.get('defaultsearch') != 'eds')) { SetEDS(1); }// Search EDS
-		else if (($(this).val() == '') && (eds_sessionStorage.get('defaultsearch') != 'koha')) { SetKoha(1); }// Search Koha
+	jQuery('#masthead_search').append(kohaOptions);
+	jQuery('#masthead_search option[value=""]').attr("selected", "selected");
+	jQuery("#masthead_search").change(function () {
+		knownItem = jQuery(this).val();
+		if ((jQuery(this).val() == 'eds') && (eds_sessionStorage.get('defaultsearch') != 'eds')) { SetEDS(1); }// Search EDS
+		else if ((jQuery(this).val() == '') && (eds_sessionStorage.get('defaultsearch') != 'koha')) { SetKoha(1); }// Search Koha
 	});
 
 	if (eds_sessionStorage.get('edsKnownItems')) {
+		if (edsConfig.logerrors == "yes"){
+			console.log("Running SetEDSOptions on true...");
+		}
 		SetEDSOptions(eds_sessionStorage.get('edsKnownItems'));
 	} else {
+		if (edsConfig.logerrors == "yes"){
+			console.log("Running SetEDSOptions on false...");
+		}
 		SetEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));// Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
-		$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=knownitems', function (data) { StoreEDSOptions(data); });
+		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=knownitems', function (data) { StoreEDSOptions(data); });
 	}
 
+	if (edsConfig.logerrors == "yes"){
+		console.log("Final sessionStorage check...");
+	}
 	if (eds_sessionStorage.get('defaultsearch') == 'eds') {
 		SetEDS(0);
+	}
+	if (edsConfig.logerrors == "yes"){
+		console.log("Finished GoDiscovery...");
 	}
 
 }
@@ -385,39 +419,51 @@ function SetEDSOptions(data) {
 		edsOptions += '<option ' + selectedItem + ' value="' + data[i].FieldCode + '">--- ' + data[i].FieldCode + ': ' + data[i].Label + '</option>';
 	}
 
+	if (edsConfig.logerrors == "yes"){
+		console.log("About to SetEDS or SetKoha...");
+	}
 	if (eds_sessionStorage.get('defaultsearch') == "eds") {
+		if (edsConfig.logerrors == "yes"){
+			console.log("Trying SetEDS...");
+		}
 		SetEDS(0);
-	} else if (eds_sessionStorage.get('defaultsearch') == "koha") { SetKoha(0); }
+	} else if (eds_sessionStorage.get('defaultsearch') == "koha") { 
+		if (edsConfig.logerrors == "yes"){
+			console.log("Trying SetKoha...");
+		}
+		SetKoha(0); }
 
 	var date = new Date();
 	var minutes = 30;
 	date.setTime(date.getTime() + (minutes * 60 * 1000));
-	//$.cookie("isEDSData","1", { expires: date });
+	if (edsConfig.logerrors == "yes"){
+		console.log("Finishing SetEDSOptions...");
+	}
 }
 
 function SetEDS(showInfo) {
-	$('#searchform').submit(function () { return false; });
-	$('#searchsubmit').click(SearchEDS);
-	$('#masthead_search option').each(function () { $(this).remove(); });
+	jQuery('#searchform').submit(function () { return false; });
+	jQuery('#searchsubmit').click(SearchEDS);
+	jQuery('#masthead_search option').each(function () { jQuery(this).remove(); });
 	if (showInfo) { ShowInfo(edsSelectInfo); }
-	$('#masthead_search').append(edsOptions);
+	jQuery('#masthead_search').append(edsOptions);
 	eds_sessionStorage.set('defaultsearch', 'eds');
-	$('#transl1').val($.cookie('QueryTerm'));
-	$('.transl1').val($.cookie('QueryTerm')); //for 314
-	$('#searchBread').text(edsLang.search_breadcrumb + " " + $.cookie('QueryTerm'));
-	$('#transl1').removeClass('placeholder');
+	jQuery('#transl1').val(Cookies.get('QueryTerm'));
+	jQuery('.transl1').val(Cookies.get('QueryTerm')); //for 314
+	jQuery('#searchBread').text(edsLang.search_breadcrumb + " " + Cookies.get('QueryTerm'));
+	jQuery('#transl1').removeClass('placeholder');
 	//advSearch
 	if (document.URL.indexOf("[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl") != -1 && QueryString('q') == "") {
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
 	} else if (document.URL.indexOf("/cgi-bin/koha/opac-search.pl") != -1 && QueryString('q') == "") {
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', edsSwitchText);
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', edsSwitchText);
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
 	} else {
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
 	}
 
 	if (document.URL.indexOf("[% PLUGIN_HTTP_PATH %]/opac/pfi-search.pl") != -1) {
-		$('#masthead_search option[value="JN"]').prop('selected', true);
+		jQuery('#masthead_search option[value="JN"]').prop('selected', true);
 		knownItem = "JN";
 	}
 
@@ -425,48 +471,48 @@ function SetEDS(showInfo) {
 }
 
 function SetKoha(showInfo) {
-	$('#searchform').unbind('submit');
-	$('#searchsubmit').unbind('click');
-	$('#masthead_search option').each(function () { $(this).remove(); });
+	jQuery('#searchform').unbind('submit');
+	jQuery('#searchsubmit').unbind('click');
+	jQuery('#masthead_search option').each(function () { jQuery(this).remove(); });
 	if (showInfo) { ShowInfo(kohaSelectInfo); }
-	$('#masthead_search').append(kohaOptions);
-	$('#masthead_search option[value="eds"]').remove();
-	$('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
+	jQuery('#masthead_search').append(kohaOptions);
+	jQuery('#masthead_search option[value="eds"]').remove();
+	jQuery('#masthead_search').prepend("<option value='eds'>" + edsSwitchText + "</option>");
 	eds_sessionStorage.set('defaultsearch', 'koha')
 	//advSearch
 	if (document.URL.indexOf("[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl") != -1 && QueryString('q') == "") {
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
 	} else if (document.URL.indexOf("/cgi-bin/koha/opac-search.pl") != -1 && QueryString('q') == "") {
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', edsSwitchText);
-		$('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', edsSwitchText);
+		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
 	} else {
-		$('a[href="[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl"]').attr('href', '/cgi-bin/koha/opac-search.pl');
+		jQuery('a[href="[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl"]').attr('href', '/cgi-bin/koha/opac-search.pl');
 	}
-	$('#translControl1').autocomplete("destroy");
+	jQuery('#translControl1').autocomplete("destroy");
 }
 
 function ShowInfo(msg) {
-	var topPos = $('#masthead_search').offset().top;
-	var leftPos = $('#masthead_search').offset().left;
-	var cartMsg = $("#cartDetails").html();
+	var topPos = jQuery('#masthead_search').offset().top;
+	var leftPos = jQuery('#masthead_search').offset().left;
+	var cartMsg = jQuery("#cartDetails").html();
 	if (activeState == 0) {
 		activeState = 1;
 	}
-	$("#cartDetails").html(msg);
+	jQuery("#cartDetails").html(msg);
 	showCart();
-	$("#cartDetails").css('left', leftPos + 'px');
-	$("#cartDetails").css('top', (topPos + 40) + 'px');
+	jQuery("#cartDetails").css('left', leftPos + 'px');
+	jQuery("#cartDetails").css('top', (topPos + 40) + 'px');
 	setTimeout(function () {
 		hideCart();
-		$("#cartDetails").html(cartMsg);
+		jQuery("#cartDetails").html(cartMsg);
 	}, 2000);
 }
 
 function SearchEDS() {
 	var searchTerm;
 
-	try { searchTerm = $('#transl1').val().replace(/\&/g, "%2526"); } catch (err) {
-		if (searchTerm == undefined) searchTerm = $('.transl1').val().replace(/\&/g, "%2526");
+	try { searchTerm = jQuery('#transl1').val().replace(/\&/g, "%2526"); } catch (err) {
+		if (searchTerm == undefined) searchTerm = jQuery('.transl1').val().replace(/\&/g, "%2526");
 	} // for bootstrap
 
 	if (knownItem == 'eds') { knownItem = ''; }
@@ -478,8 +524,8 @@ function SearchEDS() {
 
 function EDSGetRecord(recordURL, callingObjParent) {
 	recordURL = recordURL.replace(/\%26/g, "%2526");
-	$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=Search?' + recordURL, function (data) { EDSGoToRecord(data); });
-	$('.' + callingObjParent).html('<center><span><img src="/opac-tmpl/bootstrap/images/loading.gif" width="14"></span></center>');
+	jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=Search?' + recordURL, function (data) { EDSGoToRecord(data); });
+	jQuery('.' + callingObjParent).html('<center><span><img src="/opac-tmpl/bootstrap/images/loading.gif" width="14"></span></center>');
 }
 
 function EDSGoToRecord(data) {
@@ -499,9 +545,9 @@ function EDSBrowseResults(fetchURL) {
 	currentBrowsePage = currentBrowsePage.replace('pagenumber=', '');
 	browseNextPage = eval(currentBrowsePage) + 1;
 	browseNextPage = fetchURL.replace(/pagenumber\=\d/, 'pagenumber=' + browseNextPage);
-	$("li[title='More Results']").html('<center><span><img src="/opac-tmpl/bootstrap/images/loading.gif" width="14"></span></center>');
+	jQuery("li[title='More Results']").html('<center><span><img src="/opac-tmpl/bootstrap/images/loading.gif" width="14"></span></center>');
 
-	$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=Search?' + fetchURL, function (data) { EDSAppendToBrowse(data); });
+	jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=Search?' + fetchURL, function (data) { EDSAppendToBrowse(data); });
 }
 
 function EDSAppendToBrowse(data) {
@@ -510,71 +556,71 @@ function EDSAppendToBrowse(data) {
 	var searchResults = '';
 	for (var i = 0; i < data.SearchResult.Data.Records.length; i++) {
 		try {
-			searchResults += '<li title="Go to detail" class="highlight" ><a href="?q=Retrieve?an=' + data.SearchResult.Data.Records[i].Header.An.replace('\w+\.', '') + '|dbid=' + data.SearchResult.Data.Records[i].Header.DbId + '&resultid=' + data.SearchResult.Data.Records[i].ResultId + '"><span class="">' + data.SearchResult.Data.Records[i].ResultId + '. </span>' + $('<div/>').html(data.SearchResult.Data.Records[i].Items[0].Data).text() + '</a></li>';
+			searchResults += '<li title="Go to detail" class="highlight" ><a href="?q=Retrieve?an=' + data.SearchResult.Data.Records[i].Header.An.replace('\w+\.', '') + '|dbid=' + data.SearchResult.Data.Records[i].Header.DbId + '&resultid=' + data.SearchResult.Data.Records[i].ResultId + '"><span class="">' + data.SearchResult.Data.Records[i].ResultId + '. </span>' + jQuery('<div/>').html(data.SearchResult.Data.Records[i].Items[0].Data).text() + '</a></li>';
 			maxResultId = data.SearchResult.Data.Records[i].ResultId;
 		} catch (e) {
 			searchResults += '<li title="' + edsLang.go_to_detail + '" class="highlight" >' + data.SearchResult.Data.Records[i].ResultId + '. <span class="">' + edsLang.login_to_access + '</span></li>';
-			$('.FullTextLoader').css('display', 'none');
+			jQuery('.FullTextLoader').css('display', 'none');
 		}
 	}
 	if (maxResultId < totalHits) {
 		searchResults += '<li title="' + edsLang.more_details + '" class="highlight" ><a href="javascript:EDSBrowseResults(\'' + browseNextPage + '\');"><center>' + edsLang.view_more_results + '</center></a></li>';
 	}
-	$("li[title='More Results']").remove('li');
-	$(".pagination_list").css('max-height', $(window).height() - ($('.nav_results').offset().top + 100));
-	$(".pagination_list").css('overflow', 'auto');
-	$("#browseLoader").css('display', 'none');
-	$("#ul_pagination_list").append(searchResults);
-	$("#ul_pagination_list").css('padding-top', '0px');
+	jQuery("li[title='More Results']").remove('li');
+	jQuery(".pagination_list").css('max-height', jQuery(window).height() - (jQuery('.nav_results').offset().top + 100));
+	jQuery(".pagination_list").css('overflow', 'auto');
+	jQuery("#browseLoader").css('display', 'none');
+	jQuery("#ul_pagination_list").append(searchResults);
+	jQuery("#ul_pagination_list").css('padding-top', '0px');
 }
 
 function EDSSetDetailPageNavigator() {
-	$('#titleBread').text($('#titleBread').text() + $('.title').text());
-	if ($('.back_results a').attr('href').indexOf('q=Search?') > -1) {
-		$("#a_listResults").unbind('click');
-		$("#ul_pagination_list").append('<div align="center" id="browseLoader"><img title="' + edsLang.more_loading_msg + '" src="/opac-tmpl/bootstrap/images/loading.gif" width="14" ></div>');
-		$("#a_listResults").click(function (e) {
-			var navigation = $(".results-pagination");
+	jQuery('#titleBread').text(jQuery('#titleBread').text() + jQuery('.title').text());
+	if (jQuery('.back_results a').attr('href').indexOf('q=Search?') > -1) {
+		jQuery("#a_listResults").unbind('click');
+		jQuery("#ul_pagination_list").append('<div align="center" id="browseLoader"><img title="' + edsLang.more_loading_msg + '" src="/opac-tmpl/bootstrap/images/loading.gif" width="14" ></div>');
+		jQuery("#a_listResults").click(function (e) {
+			var navigation = jQuery(".results-pagination");
 			if (navigation.css("display") == 'none') {
 				navigation.show();
 			} else {
 				navigation.hide();
 			}
 		});
-		$("#close_pagination").click(function (e) {
-			var navigation = $(".results-pagination");
+		jQuery("#close_pagination").click(function (e) {
+			var navigation = jQuery(".results-pagination");
 			navigation.hide();
 		});
-		EDSBrowseResults($.cookie('ReturnToResults'));
-		if ($('.back_results a').attr('href').indexOf('opac-search.pl?q=Search?') > -1) {
-			$('.back_results a').attr('href', $('.back_results a').attr('href').replace('opac-search.pl?q=Search?', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl?q=Search?'));
+		EDSBrowseResults(Cookies.get('ReturnToResults'));
+		if (jQuery('.back_results a').attr('href').indexOf('opac-search.pl?q=Search?') > -1) {
+			jQuery('.back_results a').attr('href', jQuery('.back_results a').attr('href').replace('opac-search.pl?q=Search?', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl?q=Search?'));
 		}
 		var resultId = QueryString('resultid');
 		var previousResult = parseInt(resultId) - 1;
 		var nextResult = parseInt(resultId) + 1;
-		var simpleQuery = $.cookie('EDSSimpleQuery');
+		var simpleQuery = Cookies.get('EDSSimpleQuery');
 		if (previousResult > 0) {
-			$('.left_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + previousResult + '\',\'left_results\')" title="' + edsLang.previous_title + '">&laquo; ' + edsLang.previous + '</a>');
+			jQuery('.left_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + previousResult + '\',\'left_results\')" title="' + edsLang.previous_title + '">&laquo; ' + edsLang.previous + '</a>');
 		}
-		if (nextResult < 250 && nextResult < $.cookie('ResultTotal')) {
-			$('.right_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + nextResult + '\',\'right_results\')" title="' + edsLang.next_title + '">' + edsLang.next + ' &raquo;</a>');
+		if (nextResult < 250 && nextResult < Cookies.get('ResultTotal')) {
+			jQuery('.right_results').html('<a href="javascript:EDSGetRecord(\'' + simpleQuery + '|resultsperpage=1|pagenumber=' + nextResult + '\',\'right_results\')" title="' + edsLang.next_title + '">' + edsLang.next + ' &raquo;</a>');
 		}
 	}
-	$('.breadcrumb a:contains("Details for:")').text('Details for: ' + $('.title').text());
+	jQuery('.breadcrumb a:contains("Details for:")').text('Details for: ' + jQuery('.title').text());
 
 	if (QueryString('fulltext') == 'html') {
-		$('.html-customlink').each(function () {
-			if ($(this).text().trim() == "HTML Full Text") {
-				$('.FullTextLoader').css('display', 'block');
-				window.location.href = $(this).attr('href');
+		jQuery('.html-customlink').each(function () {
+			if (jQuery(this).text().trim() == "HTML Full Text") {
+				jQuery('.FullTextLoader').css('display', 'block');
+				window.location.href = jQuery(this).attr('href');
 				return false;
 			}
 		});
 	} else if (QueryString('fulltext') != '') {
-		$('.' + QueryString('fulltext')).each(function () {
-			//if($(this).text().trim()=="PDF Full Text"){
-			$('.FullTextLoader').css('display', 'block');
-			window.location.href = $(this).attr('href');
+		jQuery('.' + QueryString('fulltext')).each(function () {
+			//if(jQuery(this).text().trim()=="PDF Full Text"){
+			jQuery('.FullTextLoader').css('display', 'block');
+			window.location.href = jQuery(this).attr('href');
 			return false;
 			//}
 		});
@@ -583,15 +629,15 @@ function EDSSetDetailPageNavigator() {
 
 function MinFullTextLoader() {
 
-	if ($('.FullTextLoader').css('height') == "40px")
-		$('.FullTextLoader').css('height', '100%');
+	if (jQuery('.FullTextLoader').css('height') == "40px")
+		jQuery('.FullTextLoader').css('height', '100%');
 	else
-		$('.FullTextLoader').css('height', '40px');
+		jQuery('.FullTextLoader').css('height', '40px');
 }
 
 function LoginRequired() {
 	alert(edsLang.login_to_access);
-	$('.FullTextLoader').css('display', 'none');
+	jQuery('.FullTextLoader').css('display', 'none');
 }
 
 function QueryString(key) {
@@ -637,17 +683,17 @@ async function PrepareItems() {
 
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
-		$('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2011/opac-downloadcart.pl');
-		$('.print-large, .print').attr('onclick', ''); // .print for prog
-		$('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
-		$('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
-		$(".dataTables_empty").css('display', 'none');
+		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2011/opac-downloadcart.pl');
+		jQuery('.print-large, .print').attr('onclick', ''); // .print for prog
+		jQuery('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
+		jQuery('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
+		jQuery(".dataTables_empty").css('display', 'none');
 		await IterateEDSItems(recordId);
 		SetEDSCartField();
 	}
 
 	if ((EDSItems == 0)) {
-		$('#EDSBasketLoader').remove()
+		jQuery('#EDSBasketLoader').remove()
 	}
 
 
@@ -666,12 +712,12 @@ async function IterateEDSItems(recordId) {
 				recordId[i] = "Retrieve?an=" + recordId[i].replace(/\_dot\_/g, ".").replace("__", "|dbid=");
 				//get the data from eds through the "raw" api call
 				getRecord = new Promise(resolve => {
-					$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=' + recordId[i], function (data) {
+					jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl' + '?' + 'q=' + recordId[i], function (data) {
 						//use the data to GetEDSItems
 						AN = data.Record.Header.An.replace(/\./g, "_dot_");
 						let selector = AN + "__" + data.Record.Header.DbId;
 						if (verbose == 1) { BuildMoreDetails(data) } else { GetEDSItems(data); }
-						$(`[id="${selector}"]`).bind('change', function () { selRecord(this.value, this.checked) });
+						jQuery(`[id="${selector}"]`).bind('change', function () { selRecord(this.value, this.checked) });
 						resolve(true);
 					});
 				});
@@ -693,16 +739,16 @@ async function IterateEDSItems(recordId) {
 function GetEDSItems(data) {
 	AN = data.Record.Header.An.replace(/\./g, "_dot_");
 	try {
-		$('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + AN + '__' + data.Record.Header.DbId + '" name="' + AN + '__' + data.Record.Header.DbId + '" id="' + AN + '__' + data.Record.Header.DbId + '"></td><td><a href="#" onclick="opener.document.location=\'[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + $("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + $("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + edsLang.basket_item_location + '</td></tr>');
+		jQuery('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + AN + '__' + data.Record.Header.DbId + '" name="' + AN + '__' + data.Record.Header.DbId + '" id="' + AN + '__' + data.Record.Header.DbId + '"></td><td><a href="#" onclick="opener.document.location=\'[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + jQuery("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + jQuery("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + edsLang.basket_item_location + '</td></tr>');
 		EDSItems--;
-		if (EDSItems == 0) { $('#EDSBasketLoader').remove() }
+		if (EDSItems == 0) { jQuery('#EDSBasketLoader').remove() }
 
 		eds_sessionStorage.set(AN + '__' + data.Record.Header.DbId, data);
 
 	} catch (e) {
 		console.log(e);
 		EDSItems--;
-		if (EDSItems == 0) { $('#EDSBasketLoader').remove() }
+		if (EDSItems == 0) { jQuery('#EDSBasketLoader').remove() }
 	}
 
 	jQuery('.cb').click(function () {
@@ -766,8 +812,8 @@ function CheckEDSRecordsforAddToList() {
 function SetEDSCartField() {
 	//Use the EDS version of sendbasket
 
-	if ($('#sendbasketform')) {
-		$('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2011/opac-sendbasket.pl');
+	if (jQuery('#sendbasketform')) {
+		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2011/opac-sendbasket.pl');
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
@@ -790,11 +836,11 @@ function SetEDSCartField() {
 	}
 	//Add a hidden object with fieldDataObject
 	//if on SendCart, put in different place than if on the general cart screen
-	if ($('#sendbasketform')) {
-		$('.action').prepend('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
+	if (jQuery('#sendbasketform')) {
+		jQuery('.action').prepend('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
 	}
-	if ($('#download_cart')) {
-		$('#download_cart').append('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
+	if (jQuery('#download_cart')) {
+		jQuery('#download_cart').append('<input type="hidden" name="eds_data" value="' + encodeURIComponent(JSON.stringify(fieldDataObj)) + '">');
 	}
 
 }
@@ -845,7 +891,7 @@ function BuildMoreDetails(detailedRecord) {
 					'+ detailedRecord.Record.Items[itemCount].Label + '\
 					</th>\
 					<td>\
-					<p>'+ $('<div/>').html(detailedRecord.Record.Items[itemCount].Data).text() + '</p>\
+					<p>'+ jQuery('<div/>').html(detailedRecord.Record.Items[itemCount].Data).text() + '</p>\
 					</td>\
 				</tr>\
 				';
@@ -858,7 +904,7 @@ function BuildMoreDetails(detailedRecord) {
 		</table>\
 		';
 
-		$('#bookbag_form').append(moreDetailsData);
+		jQuery('#bookbag_form').append(moreDetailsData);
 
 	} catch (err) { }
 }
@@ -866,33 +912,33 @@ function BuildMoreDetails(detailedRecord) {
 
 //ADVANCED SEARCH START
 function AddSearchBlock(blockNo) {
-	var newBlock = $('#searchFields_' + blockNo).html();
+	var newBlock = jQuery('#searchFields_' + blockNo).html();
 	newBlock = newBlock.replace("(" + blockNo + ")", "(" + (blockNo + 1) + ")");
 	newBlock = newBlock.replace("(" + blockNo + ")", "(" + (blockNo + 1) + ")");
 	newBlock = newBlock.replace('style="display:none;"', "");
-	$('#searchFields_' + blockNo + ' .addRemoveLinks').css('display', 'none');
-	$("#searchBlock").append('<li id="searchFields_' + (blockNo + 1) + '">' + newBlock + '</li>');
+	jQuery('#searchFields_' + blockNo + ' .addRemoveLinks').css('display', 'none');
+	jQuery("#searchBlock").append('<li id="searchFields_' + (blockNo + 1) + '">' + newBlock + '</li>');
 	searchBlockCount++;
 }
 function RemoveSearchBlock(blockNo) {
-	$('#searchFields_' + blockNo).remove();
+	jQuery('#searchFields_' + blockNo).remove();
 	searchBlockCount--;
-	$('#searchFields_' + searchBlockCount + ' .addRemoveLinks').css('display', 'inline');
+	jQuery('#searchFields_' + searchBlockCount + ' .addRemoveLinks').css('display', 'inline');
 }
 
 function AdvSearchEDS() {
 	var advQuery = "";
 	for (sbCount = 1; sbCount <= searchBlockCount; sbCount++) {
-		var advBool = $("#searchFields_" + sbCount + " .advBool").val(); if (advBool == undefined) { advBool = "AND"; }
-		var advKi = $("#searchFields_" + sbCount + " .advFieldCode").val();
-		var advTerm = $("#searchFields_" + sbCount + " .form-control").val();
+		var advBool = jQuery("#searchFields_" + sbCount + " .advBool").val(); if (advBool == undefined) { advBool = "AND"; }
+		var advKi = jQuery("#searchFields_" + sbCount + " .advFieldCode").val();
+		var advTerm = jQuery("#searchFields_" + sbCount + " .form-control").val();
 		if (advTerm == undefined) { advTerm = ""; } else { advTerm = advTerm.replace(/\&/g, "%2526"); }
 
 		if (advTerm.length > 1)
 			advQuery += "query-" + sbCount + "=" + advBool + "," + advKi + ":{" + advTerm + "}|";
 	}
 
-	$("input.advSBOps").each(function (index, value) {
+	jQuery("input.advSBOps").each(function (index, value) {
 
 		if (jQuery(this).attr("type") == "checkbox" || jQuery(this).attr("type") == "radio") {
 			if (jQuery(this).is(":checked")) {
@@ -907,19 +953,19 @@ function AdvSearchEDS() {
 		}
 	});
 
-	$("select.advSBOps option:selected").each(function (index, value) {
-		advQuery += "action=" + $(this).val() + "|";
+	jQuery("select.advSBOps option:selected").each(function (index, value) {
+		advQuery += "action=" + jQuery(this).val() + "|";
 	});
 
 	//dateRange
-	var fromMonth = ($("#common_DT1").val() == "") ? "01" : $("#common_DT1").val();
-	var toMonth = ($("#common_DT1_ToMonth").val() == "") ? "12" : $("#common_DT1_ToMonth").val();
-	var fromYear = $("#common_DT1_FromYear").val();
-	var toYear = $("#common_DT1_ToYear").val();
+	var fromMonth = (jQuery("#common_DT1").val() == "") ? "01" : jQuery("#common_DT1").val();
+	var toMonth = (jQuery("#common_DT1_ToMonth").val() == "") ? "12" : jQuery("#common_DT1_ToMonth").val();
+	var fromYear = jQuery("#common_DT1_FromYear").val();
+	var toYear = jQuery("#common_DT1_ToYear").val();
 	if (fromYear != "YYYY" && toYear != "YYYY") {
 		if (isNaN(fromYear) || isNaN(toYear)) {
 			alert(edsLang.date_valid_format);
-			$("#common_DT1_FromYear").focus();
+			jQuery("#common_DT1_FromYear").focus();
 			return;
 		} else {
 			advQuery += "action=" + jQuery("#common_DT1_FromYear").attr("data-action").replace(":value", ":" + fromYear + "-" + fromMonth + "/" + toYear + "-" + toMonth);
@@ -1115,7 +1161,6 @@ function PublisherDateSlider() {
 		rangeSlider = jQuery("#range-published-date").data("ionRangeSlider");
 
 		jQuery("#range-published-date").on('change', function () {
-			//console.log(jQuery(this).val());
 			var currentValue = jQuery(this).val();
 			currentValue = currentValue.split(';');
 			jQuery("#published-date").val(currentValue[0] + '-01' + '/' + currentValue[1] + '-12');
@@ -1164,14 +1209,18 @@ function DateHandleKeyPress(e, searchBox) {
 }
 
 function EDSAutoComp() {
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running EDSAutoComp...");
+	}
 	// Check for expired credentials
 	var credsExpiry = eds_sessionStorage.get("autoComp_expiry");
 	if (credsExpiry && credsExpiry < Math.round(Date.now() / 1000)) {
 		eds_sessionStorage.remove('autoComp');
 		eds_sessionStorage.remove('autoComp_expiry');
 	}
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Finished setting creds expiration...");
+	}
 	var creds = eds_sessionStorage.get("autoComp");
 
 	var idx = "rawqueries";
@@ -1184,15 +1233,26 @@ function EDSAutoComp() {
 	}
 
 	if (!creds) {
-		$.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth', function (data) {
+		if (edsConfig.logerrors == "yes"){
+			console.log("Running creds false...");
+		}
+		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth', function (data) {
 			eds_sessionStorage.set('autoComp', data);
 			eds_sessionStorage.set('autoComp_expiry', Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
 			EDSAutoComp();
+			if (edsConfig.logerrors == "yes"){
+				console.log("Finished creds false...");
+			}
 		});
 	} else {
-		$('#translControl1').autocomplete({
+		if (edsConfig.logerrors == "yes"){
+			console.log("Running creds true...");
+			console.log("Running autocomplete...");
+		}
+
+		jQuery('#translControl1').autocomplete({
 			source: function (request, response) {
-				var promise = $.ajax(creds.Autocomplete.Url, {
+				var promise = jQuery.ajax(creds.Autocomplete.Url, {
 					data: {
 						token: creds.Autocomplete.Token,
 						term: request.term,
@@ -1220,17 +1280,20 @@ function EDSAutoComp() {
 			},
 			select: EDSautoSearch
 		});
+		if (edsConfig.logerrors == "yes"){
+			console.log("Finished autocomplete...");
+		}
 	}
 }
 
 function EDSautoSearch(event, ui) {
-	$.when($('#translControl1').val(ui.item.value)).done(function () {
-		$("#searchsubmit").click();
+	jQuery.when(jQuery('#translControl1').val(ui.item.value)).done(function () {
+		jQuery("#searchsubmit").click();
 	});
 }
-$('body').on('click', '#translControl1', function () {
+jQuery('body').on('click', '#translControl1', function () {
 	if (eds_sessionStorage.get('defaultsearch') == "eds") {
-		$("#translControl1").autocomplete("search");
+		jQuery("#translControl1").autocomplete("search");
 	}
 });
 

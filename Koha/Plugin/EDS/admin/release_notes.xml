@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>21.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2022/05/09</lastupdated>
+	<lastupdated>2022/05/10</lastupdated>
 	<releasenotes>
-		<release version="21.11.001" date="2022/05/09">
+		<release version="21.11.001" date="2022/05/10">
 			<note id="1" author="mabrahamson@ebsco.com">Addresses issue 116 importing PR 117 from PerplexedTheta.</note>
 		</release>
 	</releasenotes>
