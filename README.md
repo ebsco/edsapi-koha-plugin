@@ -7,6 +7,10 @@ edsapi-koha-plugin
 
 Refer to the release on the right to download the stable KPZ for your version needs.
 
+Release 21.05-Stable is valid only for 21.11
+
+Release 21.05-Stable is valid only for 21.05
+
 Release 20.11-Stable is valid only for 20.11 
 
 Release 20.05-Stable is valid only for 20.05
@@ -42,8 +46,8 @@ Click on Configure and complete the form.
 Contact support@ebsco.com for field values.
 
 Click Load settings from EBSCOAdmin. Wait for the page to refresh. You might have to click Update Info twice if it initiating connection takes time the first time.
-
-UPGRADE NOTE: When upgrading any version after 20.05002, be sure to go into configure and save the configuration even if values are already present so that templates will generate properly.
+**
+IMPORTANT UPGRADE NOTE: When upgrading any version after 20.05002, be sure to go into configure and save the configuration even if values are already present so that templates will generate properly.**
 
 Video Presentations
 ========================
