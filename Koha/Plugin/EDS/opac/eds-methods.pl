@@ -20,8 +20,8 @@ use strict;
 use warnings;
 use CGI qw ( -utf8 );
 use Encode qw(encode);
-use C4::Auth;    # get_template_and_user
-use C4::Output;
+use C4::Auth qw( get_template_and_user );
+use C4::Output qw( output_with_http_headers );
 use LWP;
 use IO::File;
 use JSON qw (from_json encode_json decode_json);
