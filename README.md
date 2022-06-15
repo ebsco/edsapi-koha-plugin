@@ -9,9 +9,7 @@ Refer to the release on the right to download the stable KPZ for your version ne
 
 ***IMPORTANT UPGRADE NOTE: When upgrading any version after 20.05002, be sure to go into configure and save the configuration even if values are already present so that templates will generate new javascript properly.***
 
-_Release 22.05 coming end of August._
-
-Release 21.11-Stable is valid only for 21.11.05+
+Release 21.11-Stable is valid only for 21.11.05+ and 22.05
 
 Release 21.05-Stable is valid only for 21.05
 
