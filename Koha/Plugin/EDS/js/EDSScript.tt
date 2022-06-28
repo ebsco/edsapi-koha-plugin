@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "21.11001";
+var versionEDSKoha = "21.11002";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -208,7 +208,7 @@ jQuery('body').on('click', '.diag-img', function (e) {
 jQuery.each(Cookies.get('bib_list').split("/"), function () {
 	if (this != "") {
 		var code = this.split("__")[0];
-		jQuery(".cart" + code).html(MSG_ITEM_IN_CART).addClass("incart");
+		jQuery(".cart" + code).html("In your cart").addClass("incart");
 		jQuery(".cartR" + code).show();
 	}
 });
@@ -239,8 +239,9 @@ function StartEDS(edsLang) {
 	jQuery(window).resize(function () { try { ApplyPlaceAdjustments(); } catch (err) { ApplyPlaceAdjustments(); } });
 	ApplyPlaceAdjustments();
 
-
-	PublisherDateSlider();
+	if (document.URL.indexOf('eds-search.pl') != -1) {
+		PublisherDateSlider();
+		}
 	if (edsConfig.logerrors == "yes"){
 		console.log("Checking cookies...");
 	}
@@ -683,7 +684,7 @@ async function PrepareItems() {
 
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
-		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2011/opac-downloadcart.pl');
+		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2111/opac-downloadcart.pl');
 		jQuery('.print-large, .print').attr('onclick', ''); // .print for prog
 		jQuery('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
 		jQuery('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
@@ -813,7 +814,7 @@ function SetEDSCartField() {
 	//Use the EDS version of sendbasket
 
 	if (jQuery('#sendbasketform')) {
-		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2011/opac-sendbasket.pl');
+		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2111/opac-sendbasket.pl');
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
@@ -852,7 +853,7 @@ function sendBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2011/opac-sendbasket.pl?" + strCookie;
+	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2111/opac-sendbasket.pl?" + strCookie;
 
 	var optWin = "scrollbars=yes,resizable=yes,height=600,width=900,top=50,left=100";
 	var win_form = open(loc, "win_form", optWin);
@@ -863,7 +864,7 @@ function downloadBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2011/opac-downloadcart.pl?" + strCookie;
+	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2111/opac-downloadcart.pl?" + strCookie;
 
 	open(loc, "win_form", 'scrollbars=no,resizable=no,height=300,width=450,top=50,left=100');
 }
@@ -1125,24 +1126,22 @@ function PublisherDateSlider() {
 		var pubToDate = '';
 
 
-		if (pubDateLimiter != '') {
+		if (pubDateLimiter != '' && pubDateLimiter != undefined) {
 			var dateValue = pubDateLimiter;
+			console.log("date value:",dateValue);
 			dateValue = dateValue.split('/');
 			pubFromDate = dateValue[0].substring(0, 4);
 			pubToDate = dateValue[1].substring(0, 4);
 			pubMinDate = pubMinDate.split('-')[0];
 			pubMaxDate = pubMaxDate.split('-')[0];
-			//pubMinDate = jQuery.edsDB.get('pubMinDate');
-			//pubMaxDate = jQuery.edsDB.get('pubMaxDate');
 		} else {
+			console.log("Using pubMinDate and pubMaxDate",pubMinDate,pubMaxDate);
 			pubFromDate = pubMinDate = pubMinDate.split('-')[0];
 			pubMaxDate = pubMaxDate.split('-')[0];
 
 			var maxRealDate = parseInt(EDSGetDateForLastUpdate().substring(0, 4)) + 1;
 			pubMaxDate = (parseInt(pubMaxDate) > maxRealDate) ? maxRealDate : pubMaxDate;
 			pubToDate = pubMaxDate;
-			//jQuery.edsDB.set('pubMinDate', pubMinDate.toString(), { TTL: edsSessionTimeout });
-			//jQuery.edsDB.set('pubMaxDate', pubMaxDate.toString(), { TTL: edsSessionTimeout });
 		}
 
 

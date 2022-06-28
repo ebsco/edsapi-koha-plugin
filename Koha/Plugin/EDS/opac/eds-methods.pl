@@ -269,11 +269,9 @@ sub PFISearch
 		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
 	}
 	$EDSQuery =~s/ /\+/g;
-	print STDERR "---==---" . $EDSQuery;
 	my $uri = 'https://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
-	print STDERR "---==---" . $uri;
 
 	my $response;
 	if($EDSQuery eq "info"){

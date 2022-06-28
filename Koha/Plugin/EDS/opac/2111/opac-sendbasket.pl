@@ -20,36 +20,35 @@
 use Modern::Perl;
 
 use CGI qw ( -utf8 );
-use Encode qw(encode);
+use Encode;
 use Carp qw( carp );
 use Try::Tiny qw( catch try );
 
 use C4::Biblio qw(
     GetMarcBiblio
     GetMarcSubjects
+    GetMarcAuthors
 );
 use C4::Items qw( GetItemsInfo );
 use C4::Auth qw( get_template_and_user );
 use C4::Output qw( output_html_with_http_headers );
-use C4::Members;
-use C4::Templates ();
+use C4::Templates;
 use Koha::Email;
 use Koha::Patrons;
 use Koha::Token;
 
 my $query = CGI->new;
-my $eds_data ="";
 my $PluginDir = C4::Context->config("pluginsdir");
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
-require $PluginDir.'/opac/eds-methods.pl';
-$eds_data = $query->param('eds_data'); #EDS Patch
+#require $PluginDir.'/opac/eds-methods.pl';
+do '../eds-methods.pl';
+my $eds_data = $query->param('eds_data'); #EDS Patch
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
         template_name   => "opac-sendbasketform.tt",
         query           => $query,
         type            => "opac",
-        authnotrequired => 0,
     }
 );
 
@@ -86,17 +85,20 @@ if ( $email_add ) {
     foreach my $biblionumber (@bibs) {
         $template2->param( biblionumber => $biblionumber );
 
-        my $dat              = GetBiblioData($biblionumber);
+        my $dat = "";
         my $record           = GetMarcBiblio({
             biblionumber => $biblionumber,
             embed_items  => 1,
             opac         => 1,
             borcat       => $borcat });
-        if($biblionumber =~m/\_\_/){
-            ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);
-            } #EDS Patch
+        if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         next unless $dat;
-
+        if ($dat eq ""){
+            my $biblio  = Koha::Biblios->find( $biblionumber ) or next;
+            $dat        = $biblio->unblessed;
+        
+        }
+        #my $marcauthorsarray = $biblio->get_marc_authors;
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
 
@@ -115,10 +117,9 @@ if ( $email_add ) {
         $dat->{ITEM_RESULTS}   = \@items;
 
         $iso2709 .= $record->as_usmarc();
-
         push( @results, $dat );
     }
-    
+
     my $resultsarray = \@results;
     
     $template2->param(

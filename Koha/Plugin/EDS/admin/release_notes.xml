@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>21.11.001</latestversion>
+	<latestversion>21.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2022/05/10</lastupdated>
+	<lastupdated>2022/06/28</lastupdated>
 	<releasenotes>
-		<release version="21.11.001" date="2022/05/10">
-			<note id="1" author="mabrahamson@ebsco.com">Addresses issue 116 importing PR 117 from PerplexedTheta.</note>
+		<release version="21.11.002" date="2022/06/28">
+			<note id="1" author="mabrahamson@ebsco.com">Includes updated templates for download cart and sendbasket.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
