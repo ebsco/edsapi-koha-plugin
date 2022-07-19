@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>21.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2022/06/28</lastupdated>
+	<lastupdated>2022/07/19</lastupdated>
 	<releasenotes>
-		<release version="21.11.002" date="2022/06/28">
+		<release version="21.11.002" date="2022/07/19">
 			<note id="1" author="mabrahamson@ebsco.com">Includes updated templates for download cart and sendbasket.</note>
 		</release>
 	</releasenotes>

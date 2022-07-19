@@ -92,12 +92,13 @@ if ( $email_add ) {
             opac         => 1,
             borcat       => $borcat });
         if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
-        next unless $dat;
+        
         if ($dat eq ""){
             my $biblio  = Koha::Biblios->find( $biblionumber ) or next;
             $dat        = $biblio->unblessed;
         
         }
+        next unless $dat;
         #my $marcauthorsarray = $biblio->get_marc_authors;
         my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
