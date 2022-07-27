@@ -93,7 +93,6 @@ $iprange = "[% iprange %]";
 $pluginhttppath = qq([% PLUGIN_HTTP_PATH %]);
 $edsinfo = Encode::encode('UTF-8',qq([% edsinfo %]));
 #$edsinfo =~ s/\\\\//g;
-print STDERR "IN METHOD, EDSINFO IS ".$edsinfo;
 $lastedsinfoupdate = "[% lastedsinfoupdate %]";
 #my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 #my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
@@ -127,12 +126,12 @@ my ( $template, $user, $cookie ) = get_template_and_user(
     }
 );
 #manage guest status.
-$SessionToken = $input->cookie('sessionToken');
+my $SessionToken = $input->cookie('sessionToken');
 # $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
 	$SessionToken=CreateSession();
 }
-$GuestTracker=CheckIPAuthentication();
+my $GuestTracker=CheckIPAuthentication();
 1;
 
 
@@ -304,12 +303,9 @@ sub PFISearch
 		$EDSQuery =~s/\{.*?\}/$encodedTerm/;
 	}
 	$EDSQuery =~s/ /\+/g;
-	print STDERR "---==---" . $EDSQuery;
 	my $uri = 'https://eds-api.ebscohost.com/edsapi/'.$apiType.'/'.$EDSQuery;
 	$uri=~s/\|/\&/g;
 	#	use Data::Dumper; die Dumper $uri;
-	print STDERR "---==---" . $uri;
-
 	my $response;
 	if($EDSQuery eq "info"){
 		$response =  CallREST('GET',$uri,'', CreateAuth(), CreateSession());
