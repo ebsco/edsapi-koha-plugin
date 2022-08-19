@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>21.11.002</latestversion>
+	<latestversion>21.11.003</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2022/07/19</lastupdated>
+	<lastupdated>2022/08/12</lastupdated>
 	<releasenotes>
-		<release version="21.11.002" date="2022/07/19">
-			<note id="1" author="mabrahamson@ebsco.com">Includes updated templates for download cart and sendbasket.</note>
+		<release version="21.11.003" date="2022/08/12">
+			<note id="1" author="mabrahamson@ebsco.com">Fixes issue with publication placard.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

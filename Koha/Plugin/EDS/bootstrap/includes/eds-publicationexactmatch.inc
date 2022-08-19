@@ -25,14 +25,14 @@ var ftLinks="";
 
 publicationExactMatchInc+='<h3><a target="_blank" href="[% publicationexactmatch.0.PublicationRecords.0.PLink %]">'+pubTitle+'</a></h3>';
 
-publicationExactMatchInc+='<form onsubmit="window.parent.SearchWithinPublication(jQuery(\'#search-within-publication\').val());return false;" class="form-search">\
+publicationExactMatchInc+='<form onsubmit="event.preventDefault();SearchWithinPublication(jQuery(\'#search-within-publication\').val());return false;" class="form-search">\
 		<div class="input-prepend input-append">\
 			<div class="btn-group">\
 				<button class="btn dropdown-toggle" data-toggle="dropdown">[% EDSLANG.eds_publicationexactmatch_INC_full_text_access %] <span class="caret"></span></button>\
 				'+ftLinks+'\
 			  </div>\
-		  <input type="text" class="input-xlarge" id="search-within-publication" placeholder="[% EDSLANG.eds_publicationexactmatch_INC_search_within %]">\
-		  <span class="add-on" style="cursor:pointer" onclick="window.parent.SearchWithinPublication(jQuery(\'#search-within-publication\').val());"><i class="icon-search"></i></span>\
+		  <input type="text" class="input-xlarge" id="search-within-publication" onkeypress="checkChar(event);" placeholder="[% EDSLANG.eds_publicationexactmatch_INC_search_within %]">\
+		  <button style="cursor:pointer" class="btn btn-sm btn-primary"  onclick="SearchWithinPublication(jQuery(\'#search-within-publication\').val());return false;" >Search</button>\
 		</div>\
 	</form>';
 
@@ -56,6 +56,18 @@ function SearchWithinPublication(searchinTerm){
   if (searchinTerm == ''){ searchinTerm = 'FT Y OR FT N'; }
   window.location.href='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,:{'+searchinTerm+'}|action=addfacetfilter('+encodeURIComponent('[% publicationexactmatch.0.PublicationRecords.0.Header.ResourceType %]:'+'[% publicationexactmatch.0.PublicationRecords.0.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull %]'.toLowerCase())+')&default=1';
 }
- 
+ function checkChar(e) 
+{ 
+        var charCode;
+        if(e && e.which)
+        {
+            charCode = e.which;
+        }
+		console.log(charCode);
+        if (charCode == 13) 
+        {
+           SearchWithinPublication(jQuery('#search-within-publication').val());
+        }
+ }
  </script>
 [% END %]
