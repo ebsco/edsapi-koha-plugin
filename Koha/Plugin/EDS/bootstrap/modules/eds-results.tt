@@ -274,7 +274,7 @@
 				[% #IMAGE END %]
 				[% ELSE %]
                     [%  metaPrefix = 'eds_metadata_' 
-                        itemName = ITEM.Label.replace(' ','_')
+                        itemName = ITEM.Label.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
                         metaKey = metaPrefix _ itemName
                         labelText = EDSLANG.$metaKey
                     %]
