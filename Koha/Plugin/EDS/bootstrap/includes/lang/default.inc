@@ -128,6 +128,18 @@
     eds_metadata_Entry_Dates                            = 'Entry Date(s)'
     eds_metadata_Update_Code                            = 'Update Code'
 
+    eds_facets_Source_Type                               = 'Source Type'
+    eds_facets_Language                                  = 'Language'
+    eds_facets_Lexile_Range                              = 'Lexile Range'
+    eds_facets_Publisher                                 = 'Publisher'
+    eds_facets_Publication                               = 'Publication'
+    eds_facets_Geography                                 = 'Geography'
+    eds_facets_Category                                  = 'Category'
+    eds_facets_Collection                                = 'Collection'
+    eds_facets_Publication_Year                          = 'Publication Year'
+    eds_facets_Deskriptoren                              = 'Deskriptoren'
+    eds_facets_Content_Provider                          = 'Content Provider'
+
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'default',

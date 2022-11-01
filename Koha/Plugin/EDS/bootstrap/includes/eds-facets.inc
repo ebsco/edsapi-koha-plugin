@@ -82,7 +82,15 @@
 		
       [% FOR facets IN facets_loop %]
         <li class="eds-facets">
-          <span class="eds-facet-label">[% facets.Label %]</span>
+            [%  metaPrefix = 'eds_facets_' 
+                facetName = facets.Label.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+                metaKey = metaPrefix _ facetName
+                labelText = EDSLANG.$metaKey
+            %]
+            [% IF labelText.empty %]
+                [% labelText = facets.Label %]
+            [% END %]
+          <span class="eds-facet-label">[% labelText %]</span>
           <div style="max-height:200px;overflow:auto;margin:3px;">
 			  <ul>
 				[% FOR FacetValues IN facets.AvailableFacetValues %]
