@@ -150,6 +150,14 @@
     eds_limiter_FT1                                     = 'Available in Library Collection'
     eds_limiter_FC                                      = 'Catalog Only'
     eds_limiter_DT1                                     = 'Published Date'
+
+    eds_resort_form_relevance                           = 'Relevance'
+    eds_resort_form_date                                = 'Date Newest'
+    eds_resort_form_date2                               = 'Date Oldest'
+    eds_resort_form_bool                                = 'Boolean/Phrase'
+    eds_resort_form_all                                 = 'Find all my search terms'
+    eds_resort_form_any                                 = 'Find any of my search terms'
+    eds_resort_form_smart                               = 'SmartText Searching'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'default',

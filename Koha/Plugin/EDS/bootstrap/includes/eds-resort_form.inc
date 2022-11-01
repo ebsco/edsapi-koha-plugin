@@ -60,10 +60,20 @@
 [% IF search_modes %]
     [% EDSLANG.eds_resort_form_INC_search_mode %]<select id="searchmode" name="searchmode" onChange="getSelectedText('#searchmode')">
         [% FOREACH mode IN search_modes %]
+
+		[%  searchModePrefix = 'eds_resort_form_' 
+            modeId = mode.Mode
+            searchModeMetaKey = searchModePrefix _ modeId
+            searchModeLabelText = EDSLANG.$searchModeMetaKey
+        %]
+        [% IF searchModeLabelText.empty %]
+        	[% searchModeLabelText = mode.Label %]
+        [% END %]
+
             [% IF current_mode == mode.Mode %]
-                <option name="[% mode.Mode %]" selected="selected" value="[% mode.AddAction %]">[% mode.Label %]</option>
+                <option name="[% mode.Mode %]" selected="selected" value="[% mode.AddAction %]">[% searchModeLabelText %]</option>
             [% ELSE %]
-                <option name="[% mode.Mode %]" value="[% mode.AddAction %]">[% mode.Label %]</option>
+                <option name="[% mode.Mode %]" value="[% mode.AddAction %]">[% searchModeLabelText %]</option>
             [% END %]
         [% END %]
     </select>
@@ -78,10 +88,20 @@
 </script>
 [% EDSLANG.eds_resort_form_INC_sort_by %]<select id="sortby" name="sortby" onChange="getSelectedText('#sortby')">
 	[% FOREACH ind IN sortable_indexes.sort %]
+
+		[%  sortByPrefix = 'eds_resort_form_' 
+            sortId = ind.Id
+            sortByMetaKey = sortByPrefix _ sortId
+            sortByLabelText = EDSLANG.$sortByMetaKey
+        %]
+        [% IF sortByLabelText.empty %]
+        	[% sortByLabelText = ind.Label %]
+        [% END %]
+
 		[% IF sort_by == ind.Id %]
-			<option name="[% ind.Id %]" selected="selected" value="[% ind.AddAction %]">[% ind.Label %]</option>
+			<option name="[% ind.Id %]" selected="selected" value="[% ind.AddAction %]">[% sortByLabelText %]</option>
 		[% ELSE %]
-			<option name="[% ind.Id %]" value="[% ind.AddAction %]">[% ind.Label %]</option>
+			<option name="[% ind.Id %]" value="[% ind.AddAction %]">[% sortByLabelText %]</option>
 		[% END %]
 	[% END %]
 </select>
