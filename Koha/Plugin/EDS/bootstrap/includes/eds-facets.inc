@@ -47,7 +47,7 @@
                         [% END %]
 					[% IF EDSLimit.Type =='select' %]
 						  <li>
-							<a href="[% EDSLimit.AddAction %]">[% limiterLabelText %] </a>
+							<a href="[% EDSLimit.AddAction %]">[% EDSLimit.CheckBox %] [% limiterLabelText %] </a>
 						  </li>
 					[% END %]
 				[% END %]
@@ -94,7 +94,7 @@
                             [% expanderLabelText = expander.Label %]
                         [% END %]
 					  <li>
-						<a href="[% expander.AddAction %]">[% expanderLabelText %]</a>
+						<a href="[% expander.AddAction %]">[% expander.CheckBox %] [% expanderLabelText %]</a>
 					  </li>
 					  </li>
 					[% END %]
