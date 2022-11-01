@@ -509,7 +509,17 @@
                                     </span>
                                 </div>
                             [% END %]
-                        [% ELSE %] <span class="results_summary"><span class="label">[% ITEM.Label %] : </span>[% ITEM.Data %]</span>
+                        [% ELSE %] 
+                            [%  metaPrefix = 'eds_metadata_' 
+                                itemName = ITEM.Label.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+                                metaKey = metaPrefix _ itemName
+                                labelText = EDSLANG.$metaKey
+                            %]
+                            [% IF labelText.empty %]
+                                [% labelText = ITEM.Label %]
+                            [% END %]
+                        
+                            <span class="results_summary"><span class="label">[% labelText %]: </span>[% ITEM.Data %]</span>
                         [% END %]
                     [% END %]
                 [% ELSE %]
