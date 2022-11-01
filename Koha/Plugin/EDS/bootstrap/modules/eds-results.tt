@@ -273,8 +273,16 @@
 				</div>
 				[% #IMAGE END %]
 				[% ELSE %]
+                    [%  metaPrefix = 'eds_metadata_' 
+                        itemName = ITEM.Label.replace(' ','_')
+                        metaKey = metaPrefix _ itemName
+                        labelText = EDSLANG.$metaKey
+                    %]
+                    [% IF labelText.empty %]
+                        [% labelText = ITEM.Label %]
+                    [% END %]
 					<div class="results_summary">
-						<span class="label">[% ITEM.Label %]: </span>[% ITEM.Data %]
+						<span class="label">[% labelText %]: </span>[% ITEM.Data %]
 					</div>
 				[% END %]
 			  [% END %]

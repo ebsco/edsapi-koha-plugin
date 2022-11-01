@@ -26,7 +26,7 @@
 	eds_detail_TT_details_for							= 'Details for:'
 	eds_detail_TT_normal_view							= 'Normal view:'
 	eds_detail_TT_login_msg								= 'Login to gain access to this result.'
-    eds_detail_TT_quickview_login                      = 'Login to see attached images'
+    eds_detail_TT_quickview_login                       = 'Login to see attached images'
 
     eds_detail_customlinks_INC_html_fulltext			= 'HTML Full Text'
     eds_detail_customlinks_INC_pdf_fulltext				= 'PDF Full Text'
@@ -94,6 +94,17 @@
     eds_resort_form_INC_view_detail						= 'Detailed'
     eds_resort_form_INC_search_mode						= 'Search mode:'
     eds_resort_form_INC_sort_by							= 'Sort by:'
+
+    eds_metadata_Authors                                = 'Authors'
+    eds_metadata_Source                                 = 'Source'
+    eds_metadata_Subject_Terms                          = 'Subject Terms'
+    eds_metadata_Geographic_Terms                       = 'Geographic Terms'
+    eds_metadata_Time                                   = 'Time'
+    eds_metadata_Availability                           = 'Availability'
+    eds_metadata_File_Description                       = 'File Description'
+    eds_metadata_Relation                               = 'Relation'
+    eds_metadata_Access_URL                             = 'Access URL'
+    eds_metadata_Publication_Information                = 'Publication Information'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'default',
