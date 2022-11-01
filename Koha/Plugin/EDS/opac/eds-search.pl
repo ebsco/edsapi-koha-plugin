@@ -494,7 +494,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 			#if($Limiter->{DefaultOn} eq 'n')
 			{
 				#warn "no limiters";
-				$Limiter->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');"> '.$Limiter->{Label};
+				$Limiter->{CheckBox} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');">';
 				$Limiter->{AddAction} =~s/value/y/;
 				$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Limiter->{AddAction};
 				$Limiter->{AddAction} =~s/\&/\%2526/g;
@@ -506,7 +506,7 @@ sub EDSProcessLimiters #e.g. AiLC, Cat only etc.
 						if($EDSRemoveLimiter->{Id} eq $Limiter->{Id}){
 							$Limiter->{AddAction} =~s/y/n/;
 							$Limiter->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveLimiter->{RemoveAction};
-							$Limiter->{Label} =~s/onchange/checked onchange/;
+							$Limiter->{CheckBox} =~s/onchange/checked onchange/;
 						}
 					}
 				} catch {
@@ -539,7 +539,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 	foreach my $Expander (@EDSExpanders)
 	{
 		#warn "no limiters";
-		$Expander->{Label} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" > '.$Expander->{Label};
+		$Expander->{CheckBox} = '<input type="checkbox" onchange="window.location.href=($(this).parent().attr(\'href\'));$(this).attr(\'disabled\',\'disabled\');" >';
 		#$Expander->{AddAction} =~s/value/y/;
 		$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$Expander->{AddAction};
 		$Expander->{AddAction} =~s/\&/\%2526/g;
@@ -551,7 +551,7 @@ sub EDSProcessExpanders #e.g. thesaurus, fulltext.
 					if($EDSRemoveExpander->{Id} eq $Expander->{Id}){
 						#$Expander->{AddAction} =~s/y/n/;
 						$Expander->{AddAction} = 'eds-search.pl?q=Search?'.$EDSSearchQueryWithOutPage.'|action='.$EDSRemoveExpander->{RemoveAction};
-						$Expander->{Label} =~s/onchange/checked onchange/;
+						$Expander->{CheckBox} =~s/onchange/checked onchange/;
 					}
 				}
 			} catch {
