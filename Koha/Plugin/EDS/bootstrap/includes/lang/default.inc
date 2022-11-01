@@ -139,7 +139,10 @@
     eds_facets_Publication_Year                          = 'Publication Year'
     eds_facets_Deskriptoren                              = 'Deskriptoren'
     eds_facets_Content_Provider                          = 'Content Provider'
-
+    
+    eds_expander_thesaurus                              = 'Apply related words'
+    eds_expander_fulltext                               = 'Also search within the full text of the articles'
+    eds_expander_relatedsubjects                        = 'Apply equivalent subjects'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'default',

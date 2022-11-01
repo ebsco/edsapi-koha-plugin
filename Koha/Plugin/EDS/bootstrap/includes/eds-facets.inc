@@ -71,7 +71,17 @@
 					<li><strong>[% EDSLANG.eds_facets_INC_expand_to %]</strong></li>
 					[% FOR expander IN expanders %]
 					  <li>
-						<a href="[% expander.AddAction %]">[% expander.Label %] </a>
+					    [%  expanderPrefix = 'eds_expander_' 
+                            expanderId = expander.Id
+                            expanderMetaKey = expanderPrefix _ expanderId
+                            expanderLabelText = EDSLANG.$expanderMetaKey
+                        %]
+                        [% IF expanderLabelText.empty %]
+                            [% expanderLabelText = expander.Label %]
+                        [% END %]
+					  <li>
+						<a href="[% expander.AddAction %]">[% expanderLabelText %]</a>
+					  </li>
 					  </li>
 					[% END %]
 				</ul>
