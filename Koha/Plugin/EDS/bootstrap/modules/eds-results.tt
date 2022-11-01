@@ -261,7 +261,7 @@
 				</div>
 				[% #IMAGE START %]
 				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:auto;margin-right:5px;margin-bottom:5px;padding:2px;">
-				[% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
+                [% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
 					<div align="center">
 						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" />
 					</div>
@@ -269,7 +269,15 @@
 					<div align="center" class="pt-icon pt-[% RECORD.Header.PubTypeId %]"></div>
 				[% END %]
 				<div style="clear:both;"></div>
-				<div align="center">[% RECORD.Header.PubType |replace(' ','<br />')  %]</div>
+                	[%  pubTypePrefix = 'eds_pubtypes_' 
+                        pubTypeId = RECORD.Header.PubTypeId
+                        pubTypeMetaKey = pubTypePrefix _ pubTypeId
+                        pubTypeLabelText = EDSLANG.$pubTypeMetaKey
+                    %]
+                    [% IF pubTypeLabelText.empty %]
+                        [% pubTypeLabelText = RECORD.Header.PubType %]
+                    [% END %]
+				<div align="center">[% pubTypeLabelText |replace(' ','<br />')  %]</div>
 				</div>
 				[% #IMAGE END %]
 				[% ELSE %]
