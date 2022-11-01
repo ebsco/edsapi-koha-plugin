@@ -189,6 +189,15 @@
     eds_pubtypes_Poem                                   = 'Poem'
     eds_pubtypes_ShortStory                             = 'Short Story'
     eds_pubtypes_play                                   = 'Play'
+
+    results_Select_all                                  = 'Select all'
+    results_clear_all                                   = 'Clear all'
+    results_Select_titles_to                            = 'Select titles to'
+    results_With_selected_titles                        = 'With selected titles'
+    results_add_to                                      = 'Add to...'
+    results_save                                        = 'Save'
+    results_cart                                        = 'Cart'
+    results_new_list                                    = 'New list'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'default',
