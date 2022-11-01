@@ -37,9 +37,17 @@
 			<ul>
 				<li><strong>[% EDSLANG.eds_facets_INC_limit_to %]</strong></li>
 				[% FOR EDSLimit IN limiters %]
+					[%  limiterPrefix = 'eds_limiter_' 
+                        limiterId = EDSLimit.Id
+                        limiterMetaKey = limiterPrefix _ limiterId
+                        limiterLabelText = EDSLANG.$limiterMetaKey
+                    %]
+                        [% IF limiterLabelText.empty %]
+                            [% limiterLabelText = EDSLimit.Label %]
+                        [% END %]
 					[% IF EDSLimit.Type =='select' %]
 						  <li>
-							<a href="[% EDSLimit.AddAction %]">[% EDSLimit.Label %] </a>
+							<a href="[% EDSLimit.AddAction %]">[% limiterLabelText %] </a>
 						  </li>
 					[% END %]
 				[% END %]
@@ -47,7 +55,13 @@
 			[% FOR EDSLimit IN limiters %][% IF EDSLimit.Type =='ymrange' %]
 				[% IF daterange %]
 				<ul>
-					<li><strong>[% EDSLimit.Label %]</strong> <br>
+					[%
+						limiterLabelText = EDSLANG.eds_limiter_DT1
+					%]
+						[% IF limiterLabelText.empty %]
+                            [% limiterLabelText = EDSLimit.Label %]
+                        [% END %]
+					<li><strong>[% limiterLabelText %]</strong> <br>
 
 							<div id="eds-dateholder" align="center">
                                 <div class="input-append">

@@ -143,6 +143,13 @@
     eds_expander_thesaurus                              = 'Apply related words'
     eds_expander_fulltext                               = 'Also search within the full text of the articles'
     eds_expander_relatedsubjects                        = 'Apply equivalent subjects'
+
+    eds_limiter_FT                                      = 'Full Text'
+    eds_limiter_FR                                      = 'References Available'
+    eds_limiter_RV                                      = 'Peer Reviewed'
+    eds_limiter_FT1                                     = 'Available in Library Collection'
+    eds_limiter_FC                                      = 'Catalog Only'
+    eds_limiter_DT1                                     = 'Published Date'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'default',
