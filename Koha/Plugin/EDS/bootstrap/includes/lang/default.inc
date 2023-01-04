@@ -127,6 +127,10 @@
     eds_metadata_Substance_Nomenclature                 = 'Substance Nomenclature'
     eds_metadata_Entry_Dates                            = 'Entry Date(s)'
     eds_metadata_Update_Code                            = 'Update Code'
+	eds_metadata_Resource_Type                          = 'Resource Type'
+	eds_metadata_Categories                             = 'Categories'
+	eds_metadata_Alternate_Title                        = 'Alternate Title'
+	eds_metadata_Subjects                               = 'Subjects'
 
     eds_facets_Source_Type                               = 'Source Type'
     eds_facets_Language                                  = 'Language'
@@ -139,6 +143,8 @@
     eds_facets_Publication_Year                          = 'Publication Year'
     eds_facets_Deskriptoren                              = 'Deskriptoren'
     eds_facets_Content_Provider                          = 'Content Provider'
+	eds_facets_Subject                                   = 'Subject'
+	eds_facets_Location                                  = 'Location'
     
     eds_expander_thesaurus                              = 'Apply related words'
     eds_expander_fulltext                               = 'Also search within the full text of the articles'
@@ -150,6 +156,11 @@
     eds_limiter_FT1                                     = 'Available in Library Collection'
     eds_limiter_FC                                      = 'Catalog Only'
     eds_limiter_DT1                                     = 'Published Date'
+	eds_limiter_SO                                      = 'Publication Name'
+	eds_limiter_AU                                      = 'Author'
+	eds_limiter_TI                                      = 'Title'
+	eds_limiter_LB                                      = 'Location'
+	eds_limiter_LA99                                    = 'Language'
 
     eds_resort_form_relevance                           = 'Relevance'
     eds_resort_form_date                                = 'Date Newest'
