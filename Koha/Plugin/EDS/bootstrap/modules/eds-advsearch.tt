@@ -15,10 +15,10 @@
         <nav aria-label="breadcrumb">
             <ul class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="/cgi-bin/koha/opac-main.pl">Home</a>
+                    <a href="/cgi-bin/koha/opac-main.pl">[% EDSLANG.eds_advsearch_TT_breadcrumb_home %]</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                    <a href="#">Advanced search</a>
+                    <a href="#">[% EDSLANG.eds_advsearch_TT_breadcrumb_advanced_search %]</a>
                 </li>
             </ul>
         </nav>
@@ -29,7 +29,7 @@
                     <!-- BOOLEAN SEARCH OPTIONS -->
                     <div id="booleansearch" class="maincontent">
                         <fieldset>
-                            <legend>Search for:</legend>
+                            <legend>[% EDSLANG.eds_advsearch_TT_search_label %]</legend>
                                 <div id="searchBlock" class="advanced-search-terms">
                                     
                                     <div id="searchFields_1" class="search-term-row"> 
@@ -108,7 +108,7 @@
                     <!-- SEARCH BUTTONS -->
                     <fieldset class="action">                    
                         <p>
-                            <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="Search">
+                            <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="[% EDSLANG.eds_advsearch_TT_btn_search %]">
                             <input class="btn btn-primary advSB" type="reset" value="[% EDSLANG.eds_advsearch_TT_btn_reset %]" /></div>       
                         </p>
                     </fieldset>
@@ -135,6 +135,10 @@
 			  	                            <li id="limiterItem">
 					                            <ul>
 						                            [% FOREACH mode IN search_modes %]
+                                                    [%
+                                                        itemId = 'advsearch_TT_searchtype_' _ mode.Mode
+                                                        labeltext = EDSLANG.$itemId
+                                                    %]
                                                     <li>	
                                                     [% IF mode.Mode == 'smart' %]
                                                         <label for="[% mode.Mode %]" >                                 
@@ -143,7 +147,7 @@
                                                             [% ELSE %]
                                                                 <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
                                                             [% END %]
-                                                            [% mode.Label %]<sub><a href="https://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
+                                                            [% labeltext %]<sub><a href="https://support.ebsco.com/help/?int=eds&lang=en&feature_id=SrcMode&TOC_ID=Always&SI=0&BU=0&GU=1&PS=0&ver=live&dbs=" target="_blank" title="[% EDSLANG.eds_advsearch_TT_search_help_title %]">[% EDSLANG.eds_advsearch_TT_search_help %]</a></sub>
                                                         </label>
                                                     [% ELSE %]
                                                         <label for="[% mode.Mode %]" >
@@ -152,7 +156,7 @@
                                                             [% ELSE %]
                                                                 <input class="advSBOps" name="searchMode" id="[% mode.Mode %]" type="radio" value="[% mode.AddAction %]">
                                                             [% END %]
-                                                            [% mode.Label %]
+                                                            [% labeltext %]
                                                         </label>
                                                     [% END %]
                                                 </li>
@@ -160,6 +164,10 @@
                                             </ul>
 					                </div>
                             [% FOREACH expander IN expanders %]
+                            [%
+                                itemId = 'advsearch_TT_expander_' _ expander.Id
+                                labeltext = EDSLANG.$itemId
+                            %]
                                 <li id="limiterItem">	
                                     <label for="[% expander.Id %]" class="advItemLabel" >
                                         [% IF expander.DefaultOn == 'y' %]
@@ -167,7 +175,7 @@
                                         [% ELSE %]
                                             <input class="advSBOps" name="[% expander.Id %]" id="[% expander.Id %]" type="checkbox" value="[% expander.AddAction %]">
                                         [% END %]
-                                        [% expander.Label %]
+                                        [% labeltext %]
                                     </label>
                                 </li>
 				            [% END %]	
@@ -192,22 +200,26 @@
                                     <fieldset>             
                                         <div id="modeExpanders">
 			  	                            <ul>
-                                            [% FOREACH advlimiter IN advlimiters %]										
+                                            [% FOREACH advlimiter IN advlimiters %]
+											[%
+												itemId = 'advsearch_TT_advlimiter_' _ advlimiter.Id
+												labeltext = EDSLANG.$itemId
+											%]
                                             <li  id="limiterItem">
                                                     [% IF advlimiter.Type =='select' %]
                                                         [% IF advlimiter.DefaultOn == 'y' %]
                                                             <label for="[% advlimiter.Id %]" class="advItemLabel" >
                                                             <input class="advSBOps" name="[% advlimiter.Id %]" checked="checked" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
-                                                            [% advlimiter.Label %]</label>
+                                                            [% labeltext %]</label>
                                                         [% ELSE %]
                                                             <label for="[% advlimiter.Id %]" class="advItemLabel" >
                                                                 <input class="advSBOps" name="[% advlimiter.Id %]" id="[% advlimiter.Id %]" type="checkbox" value="[% advlimiter.AddAction %]">
-                                                                [% advlimiter.Label %]
+                                                                [% labeltext %]
                                                             </label>
                                                         [% END %]
                                                     [% END %]
 							    [% IF advlimiter.Type =='ymrange' %]
-	                                <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+	                                <label for="[% advlimiter.Id %]" class="advItemLabel" >[% labeltext %]</label>
 																<select name="common_DT1" id="common_DT1" title="Date Published"  class="advSB">
 									<option selected="selected" value="">[% EDSLANG.eds_advsearch_TT_date_month %]</option>
 									<option value="01">[% EDSLANG.eds_advsearch_TT_date_month_jan %]</option>
@@ -243,11 +255,11 @@
 								[% EDSLANG.eds_advsearch_TT_date_year %] <input size="4" maxlength="4" title="" type="text" id="common_DT1_ToYear" placeholder="YYYY" data-action="[% advlimiter.AddAction %]"  class="advSB" > 
 							[% END %]
 							[% IF advlimiter.Type =='text' %]
-	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
-								<input class="form-control advSBOps" title="[% advlimiter.Label %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
+	                            <label for="[% advlimiter.Id %]" class="advItemLabel" >[% labeltext %]</label>
+								<input class="form-control advSBOps" title="[% labeltext %]" type="text" style="width:95%;text-align:left;" data-action="[% advlimiter.AddAction %]" >
 							[% END %]
 							[% IF advlimiter.Type =='multiselectvalue' %]
-								<label for="[% advlimiter.Id %]" class="advItemLabel" >[% advlimiter.Label %]</label>
+								<label for="[% advlimiter.Id %]" class="advItemLabel" >[% labeltext %]</label>
 								<select class="advSBOps" id="[% advlimiter.Id %]" size="4" multiple="multiple" style="width:95%;">
 									[% FOREACH limiterValue IN advlimiter.LimiterValues %]
 										<option value="[% limiterValue.AddAction %]">[% limiterValue.Value %]</option>
@@ -266,8 +278,8 @@
                 <!-- SEARCH BUTTONS -->
                 <fieldset class="action">
                     <p>
-                        <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="Search">
-                        <a href="[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl" class="btn btn-default new-search">New search</a>
+                        <input class="btn btn-primary advSB" type="submit" accesskey="s" name="do" title="Search" value="[% EDSLANG.eds_advsearch_TT_btn_search %]">
+                        <a href="[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl" class="btn btn-default new-search">[% EDSLANG.eds_advsearch_TT_btn_new_search %]</a>
                     </p>
                 </fieldset>
                 <!-- /SEARCH BUTTONS -->
