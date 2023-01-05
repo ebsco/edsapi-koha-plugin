@@ -1,57 +1,64 @@
 /*[% EDSLANG = {
-    home_breadcrumb    									= 'InÌcio'
-	eds_results_TT_no_results   						= 'N„o foram encontrados resultados!'
+    home_breadcrumb    									= 'In√≠cio'
+	eds_results_TT_no_results   						= 'N√£o foram encontrados resultados!'
 	eds_results_TT_results_returned_msg					= 'Resultados da sua pesquisa'
     eds_results_TT_results_msg							= 'resultados.'
     eds_results_TT_did_you_mean							= 'Quis dizer:'
-    eds_results_TT_title_attr							= 'Ver detalhes para este tÌtulo'
+    eds_results_TT_correction						    = 'Your search was corrected to:'
+    eds_results_TT_title_attr							= 'Ver detalhes para este t√≠tulo'
     eds_results_TT_links								= 'Links:'
     eds_results_TT_links_html							= 'Texto completo em HTML'
     eds_results_TT_links_pdf							= 'exto completo em PDF'
     eds_results_TT_links_ebook							= 'Texto completo em eBook'
-    eds_results_TT_actions								= 'AÁıes:'
+    eds_results_TT_links_other                          = 'Linked Full Text'
+    eds_results_TT_actions								= 'A√ß√µes:'
     eds_results_TT_place_reserve						= 'Reservar'
     eds_results_TT_save_to_list							= 'Guardar na lista'
     eds_results_TT_in_cart								= 'No seu carrinho'
     eds_results_TT_remove_cart							= '(remover)'
     eds_results_TT_add_cart								= 'Adicionar ao carrinho'
-	eds_results_TT_login_msg							= 'FaÁa login para ver este resultado.'
-    eds_results_TT_annosuggestions						= 'N„o encontrou o que procura?'
-    eds_results_TT_annosuggestions_makea				= 'FaÁa uma'
-    eds_results_TT_annosuggestions_purchase				= 'Sugest„o de compra'
-    
+	eds_results_TT_login_msg							= 'Fa√ßa login para ver este resultado.'
+    eds_results_TT_annosuggestions						= 'N√£o encontrou o que procura?'
+    eds_results_TT_annosuggestions_makea				= 'Fa√ßa uma'
+    eds_results_TT_annosuggestions_purchase				= 'Sugest√£o de compra'
+    eds_results_TT_quickview_login                      = 'Login to see attached images'
+	
 	eds_detail_TT_details_for							= 'Detalhes para:'
-	eds_detail_TT_normal_view							= 'VisualizaÁ„o normal:'
-	eds_detail_TT_login_msg								= 'FaÁa login para ter acesso a este resultado.'
-    
+	eds_detail_TT_normal_view							= 'Visualiza√ß√£o normal:'
+	eds_detail_TT_login_msg								= 'Fa√ßa login para ter acesso a este resultado.'
+    eds_detail_TT_quickview_login                       = 'Login to see attached images'
+	eds_detail_TT_no_items		                        = 'No physical items for this record'
+	
     eds_detail_customlinks_INC_html_fulltext			= 'Texto completo em HTML'
     eds_detail_customlinks_INC_pdf_fulltext				= 'Texto completo em PDF'
     eds_detail_customlinks_INC_ebook_fulltext			= 'Texto completo em eBook'
     eds_detail_customlinks_INC_view_in_eds				= 'Visualizar no EDS'
-    
+    eds_detail_customlinks_INC_other                    = 'Linked Full Text'
+
     eds_detail_sidebar_INC_print						= 'Imprimir'
     eds_detail_sidebar_INC_in_cart						= 'No seu carrinho'
     eds_detail_sidebar_INC_remove_cart					= '(remover)'
     eds_detail_sidebar_INC_add_cart						= 'Adicionar ao carrinho'
-        
-	eds_advsearch_TT_breadcrumb_home					= 'InÌcio'
-    eds_advsearch_TT_breadcrumb_advanced_search			= 'Pesquisa avanÁada'
+
+	eds_advsearch_TT_search_label                       = 'Search for:'
+	eds_advsearch_TT_breadcrumb_home					= 'In√≠cio'
+    eds_advsearch_TT_breadcrumb_advanced_search			= 'Pesquisa avan√ßada'
     eds_advsearch_TT_select_field						= 'Selecionar um campo (opcional)'
 	eds_advsearch_TT_bool_and							= 'AND'
 	eds_advsearch_TT_bool_or							= 'OR'
 	eds_advsearch_TT_bool_not							= 'NOT'
     eds_advsearch_TT_opt_add							= 'Adicionar'
     eds_advsearch_TT_opt_remove							= 'Remover'
-    eds_advsearch_TT_search_options						= 'OpÁıes de pesquisa'
-    eds_advsearch_TT_search_opt_heading					= 'OpÁıes de pesquisa e filtros'
+    eds_advsearch_TT_search_options						= 'Op√ß√µes de pesquisa'
+    eds_advsearch_TT_search_opt_heading					= 'Op√ß√µes de pesquisa e filtros'
     eds_advsearch_TT_search_opt_modes					= 'Modo de pesquisa'
-    eds_advsearch_TT_search_help_title					= 'Insira o texto - frase, par·grafo, ou p·ginas inteiras. Este modo apenas pesquisa nas bases dados da EBSCO.'
-    eds_advsearch_TT_search_help						= 'Sugest„o'
+    eds_advsearch_TT_search_help_title					= 'Insira o texto - frase, par√°grafo, ou p√°ginas inteiras. Este modo apenas pesquisa nas bases dados da EBSCO.'
+    eds_advsearch_TT_search_help						= 'Sugest√£o'
     eds_advsearch_TT_limit_legend						= 'Limitar resultados'
-	eds_advsearch_TT_date_month							= 'MÍs'
+	eds_advsearch_TT_date_month							= 'M√™s'
 	eds_advsearch_TT_date_month_jan						= 'Janeiro'
     eds_advsearch_TT_date_month_feb						= 'Fevereiro'
-    eds_advsearch_TT_date_month_mar						= 'MarÁo'
+    eds_advsearch_TT_date_month_mar						= 'Mar√ßo'
     eds_advsearch_TT_date_month_apr						= 'Abril'
     eds_advsearch_TT_date_month_may						= 'Maio'
     eds_advsearch_TT_date_month_jun						= 'Junho'
@@ -64,8 +71,25 @@
     eds_advsearch_TT_date_year							= 'Ano:'
     eds_advsearch_TT_btn_search							= 'Pesquisar'
     eds_advsearch_TT_btn_reset							= 'Limpar'
-    
-
+	eds_advsearch_TT_btn_new_search					    = 'New Search'
+    advsearch_TT_searchtype_bool                        = 'Boolean/Phrase'
+    advsearch_TT_searchtype_all                         = 'Find all my search terms'
+    advsearch_TT_searchtype_any                         = 'Find any of my search terms'
+    advsearch_TT_searchtype_smart                       = 'SmartText Searching'
+    advsearch_TT_expander_thesaurus                     = 'Apply related words'
+    advsearch_TT_expander_fulltext                      = 'Also search within the full text of the articles'
+    advsearch_TT_expander_relatedsubjects               = 'Apply equivalent subjects'
+	advsearch_TT_advlimiter_FT                          = 'Full Text'
+	advsearch_TT_advlimiter_RV                          = 'Peer Reviewed'
+	advsearch_TT_advlimiter_FR                          = 'References Available'
+	advsearch_TT_advlimiter_DT1                         = 'Published Date'
+	advsearch_TT_advlimiter_SO                          = 'Publication'
+	advsearch_TT_advlimiter_AU                          = 'Author'
+	advsearch_TT_advlimiter_TI                          = 'Title'
+	advsearch_TT_advlimiter_FT1                         = 'Available in Library Collection'
+	advsearch_TT_advlimiter_LA99                        = 'Language'
+	advsearch_TT_advlimiter_FC                          = 'Catalog Only'
+	advsearch_TT_advlimiter_LB                          = 'Location'
     
     eds_facets_INC_refine_search						= 'Refinar a pesquisa'
     eds_facets_INC_current_search						= 'Pesquisa atual'
@@ -75,20 +99,163 @@
     eds_facets_INC_expand_to							= 'Expandir para:'
     
     eds_page_numbers_INC_previous						= 'Anterior'
-    eds_page_numbers_INC_next 							= 'PrÛximo'
+    eds_page_numbers_INC_next 							= 'Pr√≥ximo'
     
     eds_publicationexactmatch_INC_full_text_access		= 'Acesso ao Texto completo'
-    eds_publicationexactmatch_INC_search_within			= 'Pesquisar em PublicaÁıes'
+    eds_publicationexactmatch_INC_search_within			= 'Pesquisar em Publica√ß√µes'
     
     eds_researchstarters_INC_more						= 'Mais.'
-    
-    eds_resort_form_INC_results_per_page				= 'Resultados por p·gina:'
+	
+    eds_resort_form_INC_results_per_page				= 'Resultados por p√°gina:'
     eds_resort_form_INC_view							= 'Visualizar:'
-    eds_resort_form_INC_view_title						= 'TÌtulo'
+    eds_resort_form_INC_view_title						= 'T√≠tulo'
     eds_resort_form_INC_view_brief						= 'Resumido'
     eds_resort_form_INC_view_detail						= 'Detalhe'
     eds_resort_form_INC_search_mode						= 'Modo pesquisa:'
     eds_resort_form_INC_sort_by							= 'Ordenar por:'
+
+    eds_metadata_Authors                                = 'Authors'
+    eds_metadata_Source                                 = 'Source'
+    eds_metadata_Subject_Terms                          = 'Subject Terms'
+    eds_metadata_Geographic_Terms                       = 'Geographic Terms'
+    eds_metadata_Time                                   = 'Time'
+    eds_metadata_Availability                           = 'Availability'
+    eds_metadata_File_Description                       = 'File Description'
+    eds_metadata_Relation                               = 'Relation'
+    eds_metadata_Access_URL                             = 'Access URL'
+    eds_metadata_Publication_Information                = 'Publication Information'
+    eds_metadata_Document_Type                          = 'Document Type'
+    eds_metadata_Author_Supplied_Keywords               = 'Author-Supplied Keywords'
+    eds_metadata_Language_of_Keywords                   = 'Language of Keywords'
+    eds_metadata_NAICS_Industry_Codes                   = 'NAICS/Industry Codes'
+    eds_metadata_Abstract_English                       = 'Abstract (English)'
+    eds_metadata_Abstract_German                        = 'Abstract (German)'
+    eds_metadata_Accession_Number                       = 'Accession Number'
+    eds_metadata_Publication_Type                       = 'Publication Type'
+    eds_metadata_Other_Authors                          = 'Other Authors'
+    eds_metadata_Online_Access                          = 'Online Access'
+    eds_metadata_MeSH_Terms                             = 'MeSH Terms'
+    eds_metadata_Journal_Info                           = 'Journal Info'
+    eds_metadata_Major_Subjects                         = 'Major Subjects'
+    eds_metadata_Minor_Subjects                         = 'Minor Subjects'
+    eds_metadata_Language                               = 'Language'
+    eds_metadata_Imprint_Names                          = 'Imprint Name(s)'
+    eds_metadata_Abstract                               = 'Abstract'
+    eds_metadata_References                             = 'References'
+    eds_metadata_Contributed_Indexing                   = 'Contributed Indexing'
+    eds_metadata_Substance_Nomenclature                 = 'Substance Nomenclature'
+    eds_metadata_Entry_Dates                            = 'Entry Date(s)'
+    eds_metadata_Update_Code                            = 'Update Code'
+	eds_metadata_Resource_Type                          = 'Resource Type'
+	eds_metadata_Categories                             = 'Categories'
+	eds_metadata_Alternate_Title                        = 'Alternate Title'
+	eds_metadata_Subjects                               = 'Subjects'
+    eds_metadata_Other_Titles                           = 'Other Titles'
+    eds_metadata_Publication_Date                       = 'Publication Date'
+    eds_metadata_Physical_Description                   = 'Physical Description'
+    eds_metadata_Performer_Note                         = 'Performer Note'
+    eds_metadata_Notes                          		= 'Notes'
+
+    eds_facets_Source_Type                              = 'Source Type'
+    eds_facets_Language                                 = 'Language'
+    eds_facets_Lexile_Range                             = 'Lexile Range'
+    eds_facets_Publisher                                = 'Publisher'
+    eds_facets_Publication                              = 'Publication'
+    eds_facets_Geography                                = 'Geography'
+    eds_facets_Category                                 = 'Category'
+    eds_facets_Collection                               = 'Collection'
+    eds_facets_Publication_Year                         = 'Publication Year'
+    eds_facets_Deskriptoren                             = 'Deskriptoren'
+    eds_facets_Content_Provider                         = 'Content Provider'
+	eds_facets_Subject                                  = 'Subject'
+	eds_facets_Location                                 = 'Location'
+    
+    eds_expander_thesaurus                              = 'Apply related words'
+    eds_expander_fulltext                               = 'Also search within the full text of the articles'
+    eds_expander_relatedsubjects                        = 'Apply equivalent subjects'
+
+    eds_limiter_FT                                      = 'Full Text'
+    eds_limiter_FR                                      = 'References Available'
+    eds_limiter_RV                                      = 'Peer Reviewed'
+    eds_limiter_FT1                                     = 'Available in Library Collection'
+    eds_limiter_FC                                      = 'Catalog Only'
+    eds_limiter_DT1                                     = 'Published Date'
+	eds_limiter_SO                                      = 'Publication Name'
+	eds_limiter_AU                                      = 'Author'
+	eds_limiter_TI                                      = 'Title'
+	eds_limiter_LB                                      = 'Location'
+	eds_limiter_LA99                                    = 'Language'
+	
+    eds_resort_form_relevance                           = 'Relevance'
+    eds_resort_form_date                                = 'Date Newest'
+    eds_resort_form_date2                               = 'Date Oldest'
+    eds_resort_form_bool                                = 'Boolean/Phrase'
+    eds_resort_form_all                                 = 'Find all my search terms'
+    eds_resort_form_any                                 = 'Find any of my search terms'
+    eds_resort_form_smart                               = 'SmartText Searching'
+
+    eds_pubtypes_serialPeriodical                       = 'Periodical'_PT 
+    eds_pubtypes_newspaperArticle                       = 'Newspaper'
+    eds_pubtypes_image                                  = 'Image'
+    eds_pubtypes_videoRecording                         = 'Video'
+    eds_pubtypes_score                                  = 'Music Score'
+    eds_pubtypes_audio                                  = 'Audio'
+    eds_pubtypes_map                                    = 'Map'
+    eds_pubtypes_book                                   = 'Book'
+    eds_pubtypes_kitObject                              = 'Kit/Object'
+    eds_pubtypes_academicJournal                        = 'Academic Journal'
+    eds_pubtypes_dissertation                           = 'Dissertation'
+    eds_pubtypes_literaryMaterial                       = 'Literatry Work'
+    eds_pubtypes_tableChart                             = 'Table or Chart'
+    eds_pubtypes_patent                                 = 'Patent'
+    eds_pubtypes_report                                 = 'Report'
+    eds_pubtypes_reference                              = 'Reference'_PT 
+    eds_pubtypes_governmentDocument                     = 'Government Document'
+    eds_pubtypes_editorialOpinion                       = 'Commentary, Editorial'
+    eds_pubtypes_transcript                             = 'Transcript'
+    eds_pubtypes_review                                 = 'Review'
+    eds_pubtypes_biography                              = 'Biography'
+    eds_pubtypes_electronicResource                     = 'eBook'
+    eds_pubtypes_featureArticle                         = 'Feature Article'
+    eds_pubtypes_series                                 = 'Periodical'
+    eds_pubtypes_ebook                                  = 'eBook'
+    eds_pubtypes_audiobook                              = 'Audio Book'
+    eds_pubtypes_conference                             = 'Conference Proceeding'
+    eds_pubtypes_Poem                                   = 'Poem'
+    eds_pubtypes_ShortStory                             = 'Short Story'
+    eds_pubtypes_play                                   = 'Play'
+	
+	eds_sourcetypes_Academic_Journals					= 'Academic Journals'
+	eds_sourcetypes_Magazines							= 'Magazines'
+	eds_sourcetypes_Trade_Publications					= 'Trade Publications'
+	eds_sourcetypes_News								= 'News'
+	eds_sourcetypes_Books								= 'Books'
+	eds_sourcetypes_Reviews								= 'Reviews'
+	eds_sourcetypes_Reports								= 'Reports'
+	eds_sourcetypes_Conference_Materials				= 'Conference Materials'
+	eds_sourcetypes_Dissertations_Theses				= 'Dissertations/Theses'
+	eds_sourcetypes_Biographies							= 'Biographies'
+	eds_sourcetypes_Primary_Source_Documents			= 'Primary Source Documents'
+	eds_sourcetypes_Music_Score							= 'Music Score'
+	eds_sourcetypes_Research_Starters					= 'Research Starters'
+	eds_sourcetypes_Electronic_Resources				= 'Electronic Resources'
+	eds_sourcetypes_Non_Print_Resources					= 'Non-Print Resources'
+	eds_sourcetypes_Audio								= 'Audio'
+	eds_sourcetypes_Videos								= 'Videos'
+	eds_sourcetypes_eBooks								= 'eBooks'
+	eds_sourcetypes_Maps								= 'Maps'
+	eds_sourcetypes_Dissertations						= 'Dissertations'
+	eds_sourcetypes_Music_Scores						= 'Music Scores'
+	eds_sourcetypes_Audiobooks							= 'Audiobooks'
+	
+    results_Select_all                                  = 'Select all'
+    results_clear_all                                   = 'Clear all'
+    results_Select_titles_to                            = 'Select titles to'
+    results_With_selected_titles                        = 'With selected titles'
+    results_add_to                                      = 'Add to...'
+    results_save                                        = 'Save'
+    results_cart                                        = 'Cart'
+    results_new_list                                    = 'New list'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'pt-PT',
@@ -97,24 +264,24 @@ var EDSLANG = {
 	koha_switch_text									: 'Alterar para Catalogo',
 	eds_select_text										: "Discovery",
 	koha_select_text                                    : 'Catalogo',
-	eds_select_info										: '<h3>Pesquisa EDS</h3>Selecione um termo e digite uma express„o de pesquisa',
-	koha_select_info									: '<h3>Pesquisa Koha</h3>Selecione um termo e digite uma express„o de pesquisa',
+	eds_select_info										: '<h3>Pesquisa EDS</h3>Selecione um termo e digite uma express√£o de pesquisa',
+	koha_select_info									: '<h3>Pesquisa Koha</h3>Selecione um termo e digite uma express√£o de pesquisa',
 	search_breadcrumb									: 'Resultados da pesquisa',
 	pfi_atoz_bar										: 'Browse by Journal Title:',
-	login_to_access										: 'FaÁa login para ver este resultado.',
+	login_to_access										: 'Fa√ßa login para ver este resultado.',
 	go_to_detail										: 'Ver detalhes',
 	more_details										: 'Mais resultados',
 	view_more_results									: 'Ver mais resultados',
 	more_loading_msg									: 'A carregar. Por favor aguarde...',
 	previous_title										: 'Ver anterior',
 	previous											: 'Anterior',
-	next_title											: 'Ver prÛximo',
-	next												: 'PrÛximo',
+	next_title											: 'Ver pr√≥ximo',
+	next												: 'Pr√≥ximo',
 	update_facets										: 'Atualizar',
 	basket_loading										: 'A carregar. Por favor aguarde...',
 	basket_item_location								: 'Discovery',
-	basket_deselect_hold								: 'Desmarcar tÌtulos do Discovery para fazer reserva.',
-	basket_deselect_list								: 'Desmarcar tÌtulos do Discovery para adicionar ‡ lista.',
-	date_valid_format									: 'Por favor, insira um ano v·lido no formato YYYY',
-	date_invalid										: 'Data inv·lida. Por favor, insira uma data v·lida no formato YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remover todos os caracteres e pressione Enter para remover o limitador de data.'						
+	basket_deselect_hold								: 'Desmarcar t√≠tulos do Discovery para fazer reserva.',
+	basket_deselect_list								: 'Desmarcar t√≠tulos do Discovery para adicionar √† lista.',
+	date_valid_format									: 'Por favor, insira um ano v√°lido no formato YYYY',
+	date_invalid										: 'Data inv√°lida. Por favor, insira uma data v√°lida no formato YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remover todos os caracteres e pressione Enter para remover o limitador de data.'						
 };
