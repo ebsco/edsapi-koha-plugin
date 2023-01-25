@@ -116,20 +116,27 @@
             [% END %]
           <span class="eds-facet-label">[% labelText %]</span>
           <div style="max-height:200px;overflow:auto;margin:3px;">
-			  <ul>
+			  <ul>				
 				[% FOR FacetValues IN facets.AvailableFacetValues %]
-				  [%  sourcetypePrefix = 'eds_sourcetypes_'
-					sourcetypeName = FacetValues.Value.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
-					sourcetypeMetaKey = sourcetypePrefix _ sourcetypeName
-					sourcetypeLabelText = EDSLANG.$sourcetypeMetaKey
-				  %]
-				  [% IF sourcetypeLabelText.empty %]
-					  [% sourcetypeLabelText = FacetValues.Value %]
-				  [% END %]
+				  [% IF facets.Label =='Source Type' %]
+					  [%  sourcetypePrefix = 'eds_sourcetypes_'
+						sourcetypeName = FacetValues.Value.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+						sourcetypeMetaKey = sourcetypePrefix _ sourcetypeName
+						sourcetypeLabelText = EDSLANG.$sourcetypeMetaKey
+					  %]
+					  [% IF sourcetypeLabelText.empty %]
+						  [% sourcetypeLabelText = FacetValues.Value %]
+					  [% END %]
+					  <li>
+						<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
+						<a href="[% FacetValues.AddAction %]">[% sourcetypeLabelText %]</a> ([% FacetValues.Count %])
+					  </li>
+				  [% ELSE %]
 				  <li>
                   	<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
-					<a href="[% FacetValues.AddAction %]">[% sourcetypeLabelText %]</a> ([% FacetValues.Count %])
+					<a href="[% FacetValues.AddAction %]">[% FacetValues.Value %]</a> ([% FacetValues.Count %])
 				  </li>
+				  [% END %]
 				[% END %]
 			  </ul>
 		  </div>
