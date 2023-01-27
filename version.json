@@ -1,10 +1,10 @@
 {
     "MajorVersion": "21.11",
-    "MinorVersion": "003",
+    "MinorVersion": "004",
     "ReleaseNotes": [
         {
-            "author": "mabrahamson@ebsco.com",
-            "note": "Fixes issue with publication placard."
+            "author": "cwolf@ebsco.com",
+            "note": "Adds additional support for translations."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
