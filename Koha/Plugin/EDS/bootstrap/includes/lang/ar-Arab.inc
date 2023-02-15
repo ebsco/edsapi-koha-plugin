@@ -194,7 +194,7 @@
     eds_resort_form_any                                 = 'البحث عن أي كلمات بحث خاصه بي'
     eds_resort_form_smart                               = 'SmartText بحث'
 
-    eds_pubtypes_serialPeriodical                       = 'دوريه'_AR 
+    eds_pubtypes_serialPeriodical                       = 'دوريه'
     eds_pubtypes_newspaperArticle                       = 'أخبار'
     eds_pubtypes_image                                  = 'صوره'
     eds_pubtypes_videoRecording                         = 'فيديو'
@@ -209,7 +209,7 @@
     eds_pubtypes_tableChart                             = 'جدول\رسم بياني'
     eds_pubtypes_patent                                 = 'براءة اختراع'
     eds_pubtypes_report                                 = 'تقرير'
-    eds_pubtypes_reference                              = 'مرجع'_AR 
+    eds_pubtypes_reference                              = 'مرجع' 
     eds_pubtypes_governmentDocument                     = 'مستند حكومي'
     eds_pubtypes_editorialOpinion                       = 'تعليق، رأي'
     eds_pubtypes_transcript                             = 'نص'
@@ -258,7 +258,7 @@
     results_new_list                                    = 'قائمة جديدة'
 }%]*/
 var EDSLANG = {
-	eds_koha_lang_id									: 'افتراضي',
+	eds_koha_lang_id									: 'ar-Arab',
 	eds_koha_language									: '[%lang%]',
 	eds_switch_text										: 'قم بالتبديل إلى اكتشاف',
 	koha_switch_text									: 'قم بالتبديل إلى الفهرس',
