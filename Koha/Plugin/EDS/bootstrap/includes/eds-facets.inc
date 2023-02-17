@@ -129,12 +129,12 @@
 					  [% END %]
 					  <li>
 						<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
-						<a href="[% FacetValues.AddAction %]">[% sourcetypeLabelText %]</a> ([% FacetValues.Count %])
+						<a href="[% FacetValues.AddAction %]">[% sourcetypeLabelText %]</a> <span dir="ltr">([% FacetValues.Count %])</span>
 					  </li>
 				  [% ELSE %]
 				  <li>
                   	<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
-					<a href="[% FacetValues.AddAction %]">[% FacetValues.Value %]</a> ([% FacetValues.Count %])
+					<a href="[% FacetValues.AddAction %]">[% FacetValues.Value %]</a> <span dir="ltr">([% FacetValues.Count %])</span>
 				  </li>
 				  [% END %]
 				[% END %]
