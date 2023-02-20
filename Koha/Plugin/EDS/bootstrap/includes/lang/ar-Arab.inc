@@ -18,7 +18,7 @@
     eds_results_TT_remove_cart							= '(حذف)'
     eds_results_TT_add_cart								= 'اضف إلى سلة التسوق'
 	eds_results_TT_login_msg							= 'تسجيل الدخول للوصول إلى النتائج'
-    eds_results_TT_annosuggestions						= 'لم يتم العثور على ما تبحث عنه?'
+    eds_results_TT_annosuggestions						= 'لم يتم العثور علي ما تبحث عنه؟'
     eds_results_TT_annosuggestions_makea				= 'انشئ'
     eds_results_TT_annosuggestions_purchase				= 'اقتراح شراء'
     eds_results_TT_quickview_login                      = 'تسجيل الدخول لتصفح الصور'
@@ -134,7 +134,7 @@
     eds_metadata_Publication_Type                       = 'نوع المنشور'
     eds_metadata_Other_Authors                          = 'مؤلفين آخرين'
     eds_metadata_Online_Access                          = 'الوصول المباشر'
-    eds_metadata_MeSH_Terms                             = 'MeSH مصطلحات'
+    eds_metadata_MeSH_Terms                             = 'MeSH'
     eds_metadata_Journal_Info                           = 'بيانات الدوريه'
     eds_metadata_Major_Subjects                         = 'موضوعات رئيسيه'
     eds_metadata_Minor_Subjects                         = 'موضوعات ثانويه'
@@ -158,7 +158,7 @@
 
     eds_facets_Source_Type                              = 'نوع المصدر'
     eds_facets_Language                                 = 'اللغه'
-    eds_facets_Lexile_Range                             = 'Lexile مؤشر'
+    eds_facets_Lexile_Range                             = 'Lexile'
     eds_facets_Publisher                                = 'الناشر'
     eds_facets_Publication                              = 'المنشورات'
     eds_facets_Geography                                = 'الموقع الجغرافي'
@@ -272,7 +272,7 @@ var EDSLANG = {
 	go_to_detail										: 'اذهب إلى التفاصيل',
 	more_details										: 'مزيد من النتائج',
 	view_more_results									: 'عرض مزيد من النتائج',
-	more_loading_msg									: 'تحميل. الرجاء الانتظار'
+	more_loading_msg									: 'تحميل. الرجاء الانتظار',
 	previous_title										: 'انظر السابق',
 	previous											: 'السابق',
 	next_title											: 'انظر التالية',
