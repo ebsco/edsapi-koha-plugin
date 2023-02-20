@@ -260,7 +260,7 @@
 					[% END %]
 				</div>
 				[% #IMAGE START %]
-				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:auto;margin-right:5px;margin-bottom:5px;padding:2px;">
+				<div class="edspubicon [% bidi %]">
                 [% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
 					<div align="center">
 						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" />

@@ -295,3 +295,20 @@ searchlink {
 	bottom:inherit!important;
 	margin-top:5px;
 }
+
+.edspubicon {
+	background-color:#FFF;
+	font-size:x-small;
+	border:1px solid #CCC;
+	width:auto;
+	margin-right:5px;
+	margin-bottom:5px;
+	padding:2px;
+	float:left;
+}
+
+.edspubicon.rtl{
+	float: right;
+	margin-right: 0px;
+	margin-left: 10px;
+}
