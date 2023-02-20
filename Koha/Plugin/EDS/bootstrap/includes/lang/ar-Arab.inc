@@ -6,7 +6,7 @@
     eds_results_TT_did_you_mean							= 'هل تعني:'
     eds_results_TT_correction						    = ':تم تعديل كلمة البحث لـ'
     eds_results_TT_title_attr							= 'عرض تفاصيل لهذا العنوان'
-    eds_results_TT_links								= 'الروابط'
+    eds_results_TT_links								= 'الروابط:'
     eds_results_TT_links_html							= 'HTML النص الكامل'
     eds_results_TT_links_pdf							= 'PDF النص الكامل'
     eds_results_TT_links_ebook							= 'eBook النص الكامل'

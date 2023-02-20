@@ -311,7 +311,7 @@
 			  [% #CustomLinks %]
 			  [% IF RECORD.CustomLinks OR RECORD.FullText.Links OR RECORD.FullText.CustomLinks OR RECORD.FullText.Text.Availability==1 %]
 				  <div class="results_summary actions links">
-						<span class="label">[% EDSLANG.eds_results_TT_links %] </span>
+						<span class="label">[% EDSLANG.eds_results_TT_links %]</span>
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Text.Availability %]
 
 								<a class="html-customlink" target="_blank" dir="ltr" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=html" title="[% CUSTOMLINK.MouseOverText %]">
