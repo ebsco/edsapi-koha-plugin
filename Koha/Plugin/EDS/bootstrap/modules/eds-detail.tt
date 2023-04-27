@@ -509,7 +509,17 @@
                                     </span>
                                 </div>
                             [% END %]
-                        [% ELSE %] <span class="results_summary"><span class="label">[% ITEM.Label %] : </span>[% ITEM.Data %]</span>
+                        [% ELSE %] 
+                            [%  metaPrefix = 'eds_metadata_' 
+                                itemName = ITEM.Label.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+                                metaKey = metaPrefix _ itemName
+                                labelText = EDSLANG.$metaKey
+                            %]
+                            [% IF labelText.empty %]
+                                [% labelText = ITEM.Label %]
+                            [% END %]
+                        
+                            <span class="results_summary"><span class="label">[% labelText %]: </span>[% ITEM.Data %]</span>
                         [% END %]
                     [% END %]
                 [% ELSE %]
@@ -672,7 +682,7 @@
                                     <div id="alternateholdings"><span class="holdings_label">Holdings:</span> [% ALTERNATEHOLDING.holding %]</div>
                                 [% END %]
                             [% ELSE %]
-                                <div id="noitems">No physical items for this record</div>
+                                <div id="noitems">[% EDSLANG.eds_detail_TT_no_items %]</div>
                             [% END %]
                         [% END # IF itemloop.size %]
                         [% PROCESS 'shelfbrowser.inc' %]

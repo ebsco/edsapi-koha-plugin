@@ -260,8 +260,8 @@
 					[% END %]
 				</div>
 				[% #IMAGE START %]
-				<div style="float:right;background-color:#FFF;font-size:x-small;border:1px solid #CCC;width:auto;margin-right:5px;margin-bottom:5px;padding:2px;">
-				[% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
+				<div class="edspubicon [% bidi %]">
+                [% IF ( RECORD.ImageInfo.0.Target ) # RECORD.imageurl%]
 					<div align="center">
 						<img src="[% RECORD.ImageInfo.0.Target %]" title="[% RECORD.description %]" alt="[% RECORD.description %]" />
 					</div>
@@ -269,12 +269,28 @@
 					<div align="center" class="pt-icon pt-[% RECORD.Header.PubTypeId %]"></div>
 				[% END %]
 				<div style="clear:both;"></div>
-				<div align="center">[% RECORD.Header.PubType |replace(' ','<br />')  %]</div>
+                	[%  pubTypePrefix = 'eds_pubtypes_' 
+                        pubTypeId = RECORD.Header.PubTypeId
+                        pubTypeMetaKey = pubTypePrefix _ pubTypeId
+                        pubTypeLabelText = EDSLANG.$pubTypeMetaKey
+                    %]
+                    [% IF pubTypeLabelText.empty %]
+                        [% pubTypeLabelText = RECORD.Header.PubType %]
+                    [% END %]
+				<div align="center">[% pubTypeLabelText |replace(' ','<br />')  %]</div>
 				</div>
 				[% #IMAGE END %]
 				[% ELSE %]
+                    [%  metaPrefix = 'eds_metadata_' 
+                        itemName = ITEM.Label.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+                        metaKey = metaPrefix _ itemName
+                        labelText = EDSLANG.$metaKey
+                    %]
+                    [% IF labelText.empty %]
+                        [% labelText = ITEM.Label %]
+                    [% END %]
 					<div class="results_summary">
-						<span class="label">[% ITEM.Label %]: </span>[% ITEM.Data %]
+						<span class="label">[% labelText %]: </span>[% ITEM.Data %]
 					</div>
 				[% END %]
 			  [% END %]
@@ -295,16 +311,16 @@
 			  [% #CustomLinks %]
 			  [% IF RECORD.CustomLinks OR RECORD.FullText.Links OR RECORD.FullText.CustomLinks OR RECORD.FullText.Text.Availability==1 %]
 				  <div class="results_summary actions links">
-						<span class="label">[% EDSLANG.eds_results_TT_links %] </span>
+						<span class="label">[% EDSLANG.eds_results_TT_links %]</span>
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Text.Availability %]
 
-								<a class="html-customlink" target="_blank" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=html" title="[% CUSTOMLINK.MouseOverText %]">
+								<a class="html-customlink" target="_blank" dir="ltr" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% ResultRecordId %]|dbid=[%RECORD.Header.DbId%]&fulltext=html" title="[% CUSTOMLINK.MouseOverText %]">
 									[% EDSLANG.eds_results_TT_links_html %]
 								</a>
 					  [% END %]
 					  [% FOREACH CUSTOMLINK IN RECORD.FullText.Links %]
 
-								<a class="[% CUSTOMLINK.Type %]" target="_blank" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
+								<a class="[% CUSTOMLINK.Type %]" target="_blank" dir="ltr" href="[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=[% RECORD.Header.An %]|dbid=[%RECORD.Header.DbId%]&fulltext=[% CUSTOMLINK.Type %]" title="[% CUSTOMLINK.MouseOverText %]" style="height: 16px; display: inline-block;">
 									[% IF CUSTOMLINK.Type == 'pdflink' %][% EDSLANG.eds_results_TT_links_pdf %]
 									[% ELSIF CUSTOMLINK.Type == 'ebook-pdf' %][% EDSLANG.eds_results_TT_links_ebook %]
 									[% ELSE %][% CUSTOMLINK.Type %][% END %]
@@ -551,10 +567,10 @@
             var checkedBoxes = $(".cb:checked");
             var controls = $("#selections-toolbar .links a, #selections-toolbar .links input, #selections-toolbar .links select, #selections-toolbar .links label, #selections-toolbar .links button");
             if ($(checkedBoxes).size()) {
-            $("#selections").html(_("With selected titles: "));
+            $("#selections").html(_("[%EDSLANG.results_With_selected_titles%]: "));
             $(controls).removeClass("disabled");
             } else {
-            $("#selections").html(_("Select titles to: "));
+            $("#selections").html(_("[%EDSLANG.results_Select_titles_to%]: "));
             $(controls).addClass("disabled");
             }
         }
@@ -608,14 +624,14 @@
 
             var param1 = "";
             [% IF ( ( Koha.Preference( 'opacbookbag' ) == 1 ) || ( Koha.Preference( 'virtualshelves' ) == 1 ) || loggedinusername ) %]
-                param1 += "<span id=\"selections\">"+_("Select titles to: ")+"</span>";
+                param1 += "<span id=\"selections\">"+_("[%EDSLANG.results_Select_titles_to%]: ")+"</span>";
             [% END %]
 
             [% IF Koha.Preference( 'opacbookbag' ) == 1 OR Koha.Preference('virtualshelves') %]
-                param1 += "<select class=\"disabled\" name=\"addto\" id=\"addto\"><option>"+_("Add to...")+"</option>";
+                param1 += "<select class=\"disabled\" name=\"addto\" id=\"addto\"><option>"+_("[%EDSLANG.results_add_to%]")+"</option>";
 
                 [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
-                    param1 += "<option value=\"addtocart\">"+_("Cart")+"<\/option>";
+                    param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.results_cart%]")+"<\/option>";
                 [% END %]
                 [% IF Koha.Preference('virtualshelves') %]
                     [% IF loggedinusername AND add_to_some_private_shelves.count %]
@@ -645,9 +661,9 @@
                     [% IF ( add_to_some_private_shelves and add_to_some_private_shelves.count > 10 ) or ( add_to_some_public_shelves and add_to_some_public_shelves.count > 10 ) %]
                         param1 += "<option value=\"morelists\">[ "+_("More lists")+" ]<\/option>";
                     [% END %]
-                    param1 +="<option value=\"newlist\">"+_("[ New list ]")+"<\/option>"
+                    param1 +="<option value=\"newlist\">"+_("[ [% EDSLANG.results_new_list %] ]")+"<\/option>"
                 [% END # /IF virtualshelves %]
-                param1 += "<\/select> <input type=\"submit\" class=\"btn btn-sm btn-primary\" value=\""+_("Save")+"\" />";
+                param1 += "<\/select> <input type=\"submit\" class=\"btn btn-sm btn-primary\" value=\""+_("[%EDSLANG.results_save%]")+"\" />";
             [% END # /IF opacbookbag || virtualshelves %]
 
             $('.resort').change(function() {
@@ -658,8 +674,8 @@
                 $('#bookbag_form').submit();
             });
 
-            $("span.clearall").html("<a id=\"CheckNone\" class=\"btn btn-link btn-sm \" href=\"#\">"+_("Clear all")+"<\/a>");
-            $("span.checkall").html("<a id=\"CheckAll\" class=\"btn btn-link btn-sm \" href=\"#\">"+_("Select all")+"<\/a>");
+            $("span.clearall").html("<a id=\"CheckNone\" class=\"btn btn-link btn-sm \" href=\"#\">"+_("[%EDSLANG.results_clear_all%]")+"<\/a>");
+            $("span.checkall").html("<a id=\"CheckAll\" class=\"btn btn-link btn-sm \" href=\"#\">"+_("[%EDSLANG.results_Select_all%]")+"<\/a>");
 
             [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
                 $("span.addto").html(param1);

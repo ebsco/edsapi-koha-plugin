@@ -37,9 +37,17 @@
 			<ul>
 				<li><strong>[% EDSLANG.eds_facets_INC_limit_to %]</strong></li>
 				[% FOR EDSLimit IN limiters %]
+					[%  limiterPrefix = 'eds_limiter_' 
+                        limiterId = EDSLimit.Id
+                        limiterMetaKey = limiterPrefix _ limiterId
+                        limiterLabelText = EDSLANG.$limiterMetaKey
+                    %]
+                        [% IF limiterLabelText.empty %]
+                            [% limiterLabelText = EDSLimit.Label %]
+                        [% END %]
 					[% IF EDSLimit.Type =='select' %]
 						  <li>
-							<a href="[% EDSLimit.AddAction %]">[% EDSLimit.Label %] </a>
+							<a href="[% EDSLimit.AddAction %]">[% EDSLimit.CheckBox %] [% limiterLabelText %] </a>
 						  </li>
 					[% END %]
 				[% END %]
@@ -47,7 +55,13 @@
 			[% FOR EDSLimit IN limiters %][% IF EDSLimit.Type =='ymrange' %]
 				[% IF daterange %]
 				<ul>
-					<li><strong>[% EDSLimit.Label %]</strong> <br>
+					[%
+						limiterLabelText = EDSLANG.eds_limiter_DT1
+					%]
+						[% IF limiterLabelText.empty %]
+                            [% limiterLabelText = EDSLimit.Label %]
+                        [% END %]
+					<li><strong>[% limiterLabelText %]</strong> <br>
 
 							<div id="eds-dateholder" align="center">
                                 <div class="input-append">
@@ -71,7 +85,17 @@
 					<li><strong>[% EDSLANG.eds_facets_INC_expand_to %]</strong></li>
 					[% FOR expander IN expanders %]
 					  <li>
-						<a href="[% expander.AddAction %]">[% expander.Label %] </a>
+					    [%  expanderPrefix = 'eds_expander_' 
+                            expanderId = expander.Id
+                            expanderMetaKey = expanderPrefix _ expanderId
+                            expanderLabelText = EDSLANG.$expanderMetaKey
+                        %]
+                        [% IF expanderLabelText.empty %]
+                            [% expanderLabelText = expander.Label %]
+                        [% END %]
+					  <li>
+						<a href="[% expander.AddAction %]">[% expander.CheckBox %] [% expanderLabelText %]</a>
+					  </li>
 					  </li>
 					[% END %]
 				</ul>
@@ -82,14 +106,37 @@
 		
       [% FOR facets IN facets_loop %]
         <li class="eds-facets">
-          <span class="eds-facet-label">[% facets.Label %]</span>
+            [%  metaPrefix = 'eds_facets_' 
+                facetName = facets.Label.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+                metaKey = metaPrefix _ facetName
+                labelText = EDSLANG.$metaKey
+            %]
+            [% IF labelText.empty %]
+                [% labelText = facets.Label %]
+            [% END %]
+          <span class="eds-facet-label">[% labelText %]</span>
           <div style="max-height:200px;overflow:auto;margin:3px;">
-			  <ul>
+			  <ul>				
 				[% FOR FacetValues IN facets.AvailableFacetValues %]
+				  [% IF facets.Label =='Source Type' %]
+					  [%  sourcetypePrefix = 'eds_sourcetypes_'
+						sourcetypeName = FacetValues.Value.replace(' ','_').replace('/','_').replace('-','_').replace('\(','').replace('\)','')
+						sourcetypeMetaKey = sourcetypePrefix _ sourcetypeName
+						sourcetypeLabelText = EDSLANG.$sourcetypeMetaKey
+					  %]
+					  [% IF sourcetypeLabelText.empty %]
+						  [% sourcetypeLabelText = FacetValues.Value %]
+					  [% END %]
+					  <li>
+						<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
+						<a href="[% FacetValues.AddAction %]">[% sourcetypeLabelText %]</a> <span dir="ltr">([% FacetValues.Count %])</span>
+					  </li>
+				  [% ELSE %]
 				  <li>
                   	<input type="checkbox" name="filter[]" value="" onChange="SetFacet(this);"> 
-					<a href="[% FacetValues.AddAction %]">[% FacetValues.Value %]</a> ([% FacetValues.Count %])
+					<a href="[% FacetValues.AddAction %]">[% FacetValues.Value %]</a> <span dir="ltr">([% FacetValues.Count %])</span>
 				  </li>
+				  [% END %]
 				[% END %]
 			  </ul>
 		  </div>

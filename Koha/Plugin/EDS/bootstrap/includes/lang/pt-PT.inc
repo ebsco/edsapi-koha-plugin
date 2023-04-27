@@ -1,57 +1,64 @@
 /*[% EDSLANG = {
-    home_breadcrumb    									= 'In�cio'
-	eds_results_TT_no_results   						= 'N�o foram encontrados resultados!'
+    home_breadcrumb    									= 'Início'
+	eds_results_TT_no_results   						= 'Não foram encontrados resultados!'
 	eds_results_TT_results_returned_msg					= 'Resultados da sua pesquisa'
     eds_results_TT_results_msg							= 'resultados.'
     eds_results_TT_did_you_mean							= 'Quis dizer:'
-    eds_results_TT_title_attr							= 'Ver detalhes para este t�tulo'
+    eds_results_TT_correction						    = 'A sua pesquisa foi corrigida para:'
+    eds_results_TT_title_attr							= 'Ver detalhes para este título'
     eds_results_TT_links								= 'Links:'
     eds_results_TT_links_html							= 'Texto completo em HTML'
-    eds_results_TT_links_pdf							= 'exto completo em PDF'
+    eds_results_TT_links_pdf							= 'Texto completo em PDF'
     eds_results_TT_links_ebook							= 'Texto completo em eBook'
-    eds_results_TT_actions								= 'A��es:'
+    eds_results_TT_links_other                          = 'Linked Full Text'
+    eds_results_TT_actions								= 'Ações:'
     eds_results_TT_place_reserve						= 'Reservar'
     eds_results_TT_save_to_list							= 'Guardar na lista'
     eds_results_TT_in_cart								= 'No seu carrinho'
     eds_results_TT_remove_cart							= '(remover)'
     eds_results_TT_add_cart								= 'Adicionar ao carrinho'
-	eds_results_TT_login_msg							= 'Fa�a login para ver este resultado.'
-    eds_results_TT_annosuggestions						= 'N�o encontrou o que procura?'
-    eds_results_TT_annosuggestions_makea				= 'Fa�a uma'
-    eds_results_TT_annosuggestions_purchase				= 'Sugest�o de compra'
-    
+	eds_results_TT_login_msg							= 'Faça login para ver este resultado.'
+    eds_results_TT_annosuggestions						= 'Não encontrou o que procura?'
+    eds_results_TT_annosuggestions_makea				= 'Faça uma'
+    eds_results_TT_annosuggestions_purchase				= 'Sugestão de compra'
+    eds_results_TT_quickview_login                      = 'Faça login para ver as imagens em anexo'
+	
 	eds_detail_TT_details_for							= 'Detalhes para:'
-	eds_detail_TT_normal_view							= 'Visualiza��o normal:'
-	eds_detail_TT_login_msg								= 'Fa�a login para ter acesso a este resultado.'
-    
+	eds_detail_TT_normal_view							= 'Visualização normal:'
+	eds_detail_TT_login_msg								= 'Faça login para ter acesso a este resultado.'
+    eds_detail_TT_quickview_login                       = 'Faça login para ver as imagens em anexo'
+	eds_detail_TT_no_items		                        = 'Nenhum item físico para este registo'
+	
     eds_detail_customlinks_INC_html_fulltext			= 'Texto completo em HTML'
     eds_detail_customlinks_INC_pdf_fulltext				= 'Texto completo em PDF'
     eds_detail_customlinks_INC_ebook_fulltext			= 'Texto completo em eBook'
     eds_detail_customlinks_INC_view_in_eds				= 'Visualizar no EDS'
-    
+    eds_detail_customlinks_INC_other                    = 'Texto Completo vinculado'
+
     eds_detail_sidebar_INC_print						= 'Imprimir'
     eds_detail_sidebar_INC_in_cart						= 'No seu carrinho'
     eds_detail_sidebar_INC_remove_cart					= '(remover)'
     eds_detail_sidebar_INC_add_cart						= 'Adicionar ao carrinho'
-        
-	eds_advsearch_TT_breadcrumb_home					= 'In�cio'
-    eds_advsearch_TT_breadcrumb_advanced_search			= 'Pesquisa avan�ada'
+
+	eds_advsearch_TT_search_label                       = 'Pesquisar por:'
+	eds_advsearch_TT_breadcrumb_home					= 'Início'
+    eds_advsearch_TT_breadcrumb_advanced_search			= 'Pesquisa avançada'
     eds_advsearch_TT_select_field						= 'Selecionar um campo (opcional)'
 	eds_advsearch_TT_bool_and							= 'AND'
 	eds_advsearch_TT_bool_or							= 'OR'
 	eds_advsearch_TT_bool_not							= 'NOT'
     eds_advsearch_TT_opt_add							= 'Adicionar'
     eds_advsearch_TT_opt_remove							= 'Remover'
-    eds_advsearch_TT_search_options						= 'Op��es de pesquisa'
-    eds_advsearch_TT_search_opt_heading					= 'Op��es de pesquisa e filtros'
+    eds_advsearch_TT_search_options						= 'Opções de pesquisa'
+    eds_advsearch_TT_search_opt_heading					= 'Opções de pesquisa e filtros'
     eds_advsearch_TT_search_opt_modes					= 'Modo de pesquisa'
-    eds_advsearch_TT_search_help_title					= 'Insira o texto - frase, par�grafo, ou p�ginas inteiras. Este modo apenas pesquisa nas bases dados da EBSCO.'
-    eds_advsearch_TT_search_help						= 'Sugest�o'
+    eds_advsearch_TT_search_help_title					= 'Insira o texto - frase, parágrafo, ou páginas inteiras. Este modo apenas pesquisa nas bases dados da EBSCO.'
+    eds_advsearch_TT_search_help						= 'Sugestão'
     eds_advsearch_TT_limit_legend						= 'Limitar resultados'
-	eds_advsearch_TT_date_month							= 'M�s'
+	eds_advsearch_TT_date_month							= 'Mês'
 	eds_advsearch_TT_date_month_jan						= 'Janeiro'
     eds_advsearch_TT_date_month_feb						= 'Fevereiro'
-    eds_advsearch_TT_date_month_mar						= 'Mar�o'
+    eds_advsearch_TT_date_month_mar						= 'Março'
     eds_advsearch_TT_date_month_apr						= 'Abril'
     eds_advsearch_TT_date_month_may						= 'Maio'
     eds_advsearch_TT_date_month_jun						= 'Junho'
@@ -64,8 +71,25 @@
     eds_advsearch_TT_date_year							= 'Ano:'
     eds_advsearch_TT_btn_search							= 'Pesquisar'
     eds_advsearch_TT_btn_reset							= 'Limpar'
-    
-
+	eds_advsearch_TT_btn_new_search					    = 'Nova pesquisa'
+    advsearch_TT_searchtype_bool                        = 'Booleano/Frase'
+    advsearch_TT_searchtype_all                         = 'Encontrar todos os meus termos de pesquisa'
+    advsearch_TT_searchtype_any                         = 'Encontre qualquer um dos meus termos de pesquisa'
+    advsearch_TT_searchtype_smart                       = 'Pesquisa de Texto Inteligente'
+    advsearch_TT_expander_thesaurus                     = 'Aplicar palavras relacionadas'
+    advsearch_TT_expander_fulltext                      = 'Pesquise também no texto completo dos artigos'
+    advsearch_TT_expander_relatedsubjects               = 'Aplicar assuntos equivalentes'
+	advsearch_TT_advlimiter_FT                          = 'Texto completo'
+	advsearch_TT_advlimiter_RV                          = 'Peer Reviewed'
+	advsearch_TT_advlimiter_FR                          = 'Referências Disponíveis'
+	advsearch_TT_advlimiter_DT1                         = 'Data de Publicação'
+	advsearch_TT_advlimiter_SO                          = 'Publicação'
+	advsearch_TT_advlimiter_AU                          = 'Autor'
+	advsearch_TT_advlimiter_TI                          = 'Título'
+	advsearch_TT_advlimiter_FT1                         = 'Disponível na coleção da biblioteca'
+	advsearch_TT_advlimiter_LA99                        = 'Idioma'
+	advsearch_TT_advlimiter_FC                          = 'Apenas Catálogo'
+	advsearch_TT_advlimiter_LB                          = 'Localização'
     
     eds_facets_INC_refine_search						= 'Refinar a pesquisa'
     eds_facets_INC_current_search						= 'Pesquisa atual'
@@ -75,20 +99,163 @@
     eds_facets_INC_expand_to							= 'Expandir para:'
     
     eds_page_numbers_INC_previous						= 'Anterior'
-    eds_page_numbers_INC_next 							= 'Pr�ximo'
+    eds_page_numbers_INC_next 							= 'Próximo'
     
     eds_publicationexactmatch_INC_full_text_access		= 'Acesso ao Texto completo'
-    eds_publicationexactmatch_INC_search_within			= 'Pesquisar em Publica��es'
+    eds_publicationexactmatch_INC_search_within			= 'Pesquisar em Publicações'
     
     eds_researchstarters_INC_more						= 'Mais.'
-    
-    eds_resort_form_INC_results_per_page				= 'Resultados por p�gina:'
+	
+    eds_resort_form_INC_results_per_page				= 'Resultados por página:'
     eds_resort_form_INC_view							= 'Visualizar:'
-    eds_resort_form_INC_view_title						= 'T�tulo'
+    eds_resort_form_INC_view_title						= 'Título'
     eds_resort_form_INC_view_brief						= 'Resumido'
     eds_resort_form_INC_view_detail						= 'Detalhe'
     eds_resort_form_INC_search_mode						= 'Modo pesquisa:'
     eds_resort_form_INC_sort_by							= 'Ordenar por:'
+
+    eds_metadata_Authors                                = 'Autores'
+    eds_metadata_Source                                 = 'Fonte'
+    eds_metadata_Subject_Terms                          = 'Termos do assunto'
+    eds_metadata_Geographic_Terms                       = 'Termos geográficos'
+    eds_metadata_Time                                   = 'Hora'
+    eds_metadata_Availability                           = 'Disponibilidade'
+    eds_metadata_File_Description                       = 'Descrição do ficheiro'
+    eds_metadata_Relation                               = 'Relação'
+    eds_metadata_Access_URL                             = 'URL de acesso'
+    eds_metadata_Publication_Information                = 'Informação da Revista'
+    eds_metadata_Document_Type                          = 'Tipo de documento'
+    eds_metadata_Author_Supplied_Keywords               = 'Palavras-chave fornecidas pelo autor'
+    eds_metadata_Language_of_Keywords                   = 'Idioma das palavras-chave'
+    eds_metadata_NAICS_Industry_Codes                   = 'NAICS/Códigos da Indústria'
+    eds_metadata_Abstract_English                       = 'Resumo (English)'
+    eds_metadata_Abstract_German                        = 'Resumo (Alemão)'
+    eds_metadata_Accession_Number                       = 'Número de acesso'
+    eds_metadata_Publication_Type                       = 'Tipo de Publicação'
+    eds_metadata_Other_Authors                          = 'Outros Autores'
+    eds_metadata_Online_Access                          = 'Acesso Online'
+    eds_metadata_MeSH_Terms                             = 'Termos MeSH'
+    eds_metadata_Journal_Info                           = 'Informações da Revista'
+    eds_metadata_Major_Subjects                         = 'Assuntos Principais'
+    eds_metadata_Minor_Subjects                         = 'Assuntos Menores'
+    eds_metadata_Language                               = 'Idioma'
+    eds_metadata_Imprint_Names                          = 'Nome(s) de impressão'
+    eds_metadata_Abstract                               = 'Resumo'
+    eds_metadata_References                             = 'Referências'
+    eds_metadata_Contributed_Indexing                   = 'Indexação Contribuida'
+    eds_metadata_Substance_Nomenclature                 = 'Nomenclatura de substâncias'
+    eds_metadata_Entry_Dates                            = 'Data(s) de entrada'
+    eds_metadata_Update_Code                            = 'Atualizar código'
+	eds_metadata_Resource_Type                          = 'Tipo de recurso'
+	eds_metadata_Categories                             = 'Categorias'
+	eds_metadata_Alternate_Title                        = 'Título alternativo'
+	eds_metadata_Subjects                               = 'Assuntos'
+    eds_metadata_Other_Titles                           = 'Outros títulos'
+    eds_metadata_Publication_Date                       = 'Data de publicação'
+    eds_metadata_Physical_Description                   = 'Descrição física'
+    eds_metadata_Performer_Note                         = 'Nota do Intérprete'
+    eds_metadata_Notes                          		= 'Notas'
+
+    eds_facets_Source_Type                              = 'Tipo de fonte'
+    eds_facets_Language                                 = 'Idioma'
+    eds_facets_Lexile_Range                             = 'Lexile Range'
+    eds_facets_Publisher                                = 'Editor'
+    eds_facets_Publication                              = 'Publicação'
+    eds_facets_Geography                                = 'Geografia'
+    eds_facets_Category                                 = 'Categoria'
+    eds_facets_Collection                               = 'Coleção'
+    eds_facets_Publication_Year                         = 'Ano da Publicação'
+    eds_facets_Deskriptoren                             = 'Descrição'
+    eds_facets_Content_Provider                         = 'Fornecedor de conteúdo'
+	eds_facets_Subject                                  = 'Assunto'
+	eds_facets_Location                                 = 'Localização'
+    
+    eds_expander_thesaurus                              = 'Aplicar palavras relacionadas'
+    eds_expander_fulltext                               = 'Pesquise também no texto completo dos artigos'
+    eds_expander_relatedsubjects                        = 'Aplicar assuntos equivalentes'
+
+    eds_limiter_FT                                      = 'Texto completo'
+    eds_limiter_FR                                      = 'Referências Disponíveis'
+    eds_limiter_RV                                      = 'Avaliado por pares (Peer Reviewed)'
+    eds_limiter_FT1                                     = 'Disponivél na coleção da biblioteca'
+    eds_limiter_FC                                      = 'Apenas Catálogo'
+    eds_limiter_DT1                                     = 'Data da Publicação'
+	eds_limiter_SO                                      = 'Nome da Publicação'
+	eds_limiter_AU                                      = 'Autor'
+	eds_limiter_TI                                      = 'Título'
+	eds_limiter_LB                                      = 'Localização'
+	eds_limiter_LA99                                    = 'Idioma'
+	
+    eds_resort_form_relevance                           = 'Relevância'
+    eds_resort_form_date                                = 'Data mais recente'
+    eds_resort_form_date2                               = 'Data mais antiga'
+    eds_resort_form_bool                                = 'Boolean/Phrase'
+    eds_resort_form_all                                 = 'Encontrar todos os meus termos de pesquisa'
+    eds_resort_form_any                                 = 'Encontre qualquer um dos meus termos de pesquisa'
+    eds_resort_form_smart                               = 'Pesquisa de Texto Inteligente'
+
+    eds_pubtypes_serialPeriodical                       = 'Periódico' 
+    eds_pubtypes_newspaperArticle                       = 'Jornal'
+    eds_pubtypes_image                                  = 'Imagem'
+    eds_pubtypes_videoRecording                         = 'Video'
+    eds_pubtypes_score                                  = 'Partitura'
+    eds_pubtypes_audio                                  = 'Audio'
+    eds_pubtypes_map                                    = 'Mapa'
+    eds_pubtypes_book                                   = 'Livro'
+    eds_pubtypes_kitObject                              = 'Conjunto/Objeto'
+    eds_pubtypes_academicJournal                        = 'Revista Académica'
+    eds_pubtypes_dissertation                           = 'Dissertação'
+    eds_pubtypes_literaryMaterial                       = 'Trabalho literário'
+    eds_pubtypes_tableChart                             = 'Tabela ou Gráfico'
+    eds_pubtypes_patent                                 = 'Patente'
+    eds_pubtypes_report                                 = 'Relatório'
+    eds_pubtypes_reference                              = 'Referência' 
+    eds_pubtypes_governmentDocument                     = 'Documento Governamental'
+    eds_pubtypes_editorialOpinion                       = 'Commentário Editorial'
+    eds_pubtypes_transcript                             = 'Transcrição'
+    eds_pubtypes_review                                 = 'Revisão'
+    eds_pubtypes_biography                              = 'Biografia'
+    eds_pubtypes_electronicResource                     = 'eBook'
+    eds_pubtypes_featureArticle                         = 'Artigo de destaque'
+    eds_pubtypes_series                                 = 'Periódico'
+    eds_pubtypes_ebook                                  = 'eBook'
+    eds_pubtypes_audiobook                              = 'Áudio-livro'
+    eds_pubtypes_conference                             = 'Anais da Conferência'
+    eds_pubtypes_Poem                                   = 'Poema'
+    eds_pubtypes_ShortStory                             = 'História curta'
+    eds_pubtypes_play                                   = 'Tocar'
+	
+	eds_sourcetypes_Academic_Journals					= 'Revistas Académicas'
+	eds_sourcetypes_Magazines							= 'Revistas'
+	eds_sourcetypes_Trade_Publications					= 'Trade Publications'
+	eds_sourcetypes_News								= 'Notícias'
+	eds_sourcetypes_Books								= 'Livros'
+	eds_sourcetypes_Reviews								= 'Revisões'
+	eds_sourcetypes_Reports								= 'Relatórios'
+	eds_sourcetypes_Conference_Materials				= 'Materiais de Conferência'
+	eds_sourcetypes_Dissertations_Theses				= 'Dissertações/Teses'
+	eds_sourcetypes_Biographies							= 'Biografias'
+	eds_sourcetypes_Primary_Source_Documents			= 'Documentos de origem primária'
+	eds_sourcetypes_Music_Score							= 'Partituras'
+	eds_sourcetypes_Research_Starters					= 'Research Starters'
+	eds_sourcetypes_Electronic_Resources				= 'Recursos Eletrónicos'
+	eds_sourcetypes_Non_Print_Resources					= 'Recursos não impressos'
+	eds_sourcetypes_Audio								= 'Audio'
+	eds_sourcetypes_Videos								= 'Videos'
+	eds_sourcetypes_eBooks								= 'eBooks'
+	eds_sourcetypes_Maps								= 'Mapas'
+	eds_sourcetypes_Dissertations						= 'Dissertações'
+	eds_sourcetypes_Music_Scores						= 'Partituras'
+	eds_sourcetypes_Audiobooks							= 'Audiolivros'
+	
+    results_Select_all                                  = 'Selecionar todos'
+    results_clear_all                                   = 'Limpar todos'
+    results_Select_titles_to                            = 'Selecione títulos para'
+    results_With_selected_titles                        = 'Com os títulos selecionados'
+    results_add_to                                      = 'Adicionar a...'
+    results_save                                        = 'Guardar'
+    results_cart                                        = 'Carrinho'
+    results_new_list                                    = 'Nova lista'
 }%]*/
 var EDSLANG = {
 	eds_koha_lang_id									: 'pt-PT',
@@ -97,24 +264,24 @@ var EDSLANG = {
 	koha_switch_text									: 'Alterar para Catalogo',
 	eds_select_text										: "Discovery",
 	koha_select_text                                    : 'Catalogo',
-	eds_select_info										: '<h3>Pesquisa EDS</h3>Selecione um termo e digite uma express�o de pesquisa',
-	koha_select_info									: '<h3>Pesquisa Koha</h3>Selecione um termo e digite uma express�o de pesquisa',
+	eds_select_info										: '<h3>Pesquisa EDS</h3>Selecione um termo e digite uma expressão de pesquisa',
+	koha_select_info									: '<h3>Pesquisa Koha</h3>Selecione um termo e digite uma expressão de pesquisa',
 	search_breadcrumb									: 'Resultados da pesquisa',
-	pfi_atoz_bar										: 'Browse by Journal Title:',
-	login_to_access										: 'Fa�a login para ver este resultado.',
+	pfi_atoz_bar										: 'Navegar pelo título da revista:',
+	login_to_access										: 'Faça login para ver este resultado.',
 	go_to_detail										: 'Ver detalhes',
 	more_details										: 'Mais resultados',
 	view_more_results									: 'Ver mais resultados',
 	more_loading_msg									: 'A carregar. Por favor aguarde...',
 	previous_title										: 'Ver anterior',
 	previous											: 'Anterior',
-	next_title											: 'Ver pr�ximo',
-	next												: 'Pr�ximo',
+	next_title											: 'Ver próximo',
+	next												: 'Próximo',
 	update_facets										: 'Atualizar',
 	basket_loading										: 'A carregar. Por favor aguarde...',
 	basket_item_location								: 'Discovery',
-	basket_deselect_hold								: 'Desmarcar t�tulos do Discovery para fazer reserva.',
-	basket_deselect_list								: 'Desmarcar t�tulos do Discovery para adicionar � lista.',
-	date_valid_format									: 'Por favor, insira um ano v�lido no formato YYYY',
-	date_invalid										: 'Data inv�lida. Por favor, insira uma data v�lida no formato YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remover todos os caracteres e pressione Enter para remover o limitador de data.'						
+	basket_deselect_hold								: 'Desmarcar títulos do Discovery para fazer reserva.',
+	basket_deselect_list								: 'Desmarcar títulos do Discovery para adicionar à lista.',
+	date_valid_format									: 'Por favor, insira um ano válido no formato YYYY',
+	date_invalid										: 'Data inválida. Por favor, insira uma data válida no formato YYYY-MM/YYYY-MM format.\n e.g. 1900-01/2000-12.\n Remover todos os caracteres e pressione Enter para remover o limitador de data.'						
 };
