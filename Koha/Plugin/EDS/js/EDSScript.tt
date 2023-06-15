@@ -650,6 +650,9 @@ function QueryString(key) {
 
 //BASKET START---------
 function InitCartWithEDS() {
+	if (edsConfig.logerrors == "yes"){
+		console.log("Cart initialized...");
+	}
 	jQuery('#addto').change(function () { CheckEDSRecordsforAddToList(); });
 	jQuery('.addto input:submit').click(function () { CheckEDSRecordsforAddToList(); });
 
@@ -664,14 +667,18 @@ function InitCartWithEDS() {
 }
 
 async function PrepareItems() {
-
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running PrepareItems()...");
+	}
 	//Get Bib numbers from the url
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
 
 	//Split bib list into array on /
 	var recordId = recordList.split("/");
-
+	if (edsConfig.logerrors == "yes"){
+		console.log(recordId);
+	}
 	//Iterate through all the record IDs
 	for (var edsItemCount = 0; edsItemCount < recordId.length - 1; edsItemCount++) {
 		//Check that it doesn't have the catalogue dbid
