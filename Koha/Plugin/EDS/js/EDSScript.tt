@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "21.11004";
+var versionEDSKoha = "22.11001";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -134,12 +134,22 @@ else { console.log('JS debug enabled') }// keep executing if there is an error.}
 /////  Language data setup  /////
 function getLanguage(code, callback) {
 	// Use cache 
+	if (edsConfig.logerrors == "yes"){
+		console.log("Running getLanguage()...");	
+	}
+	
 	var sessionLang = eds_sessionStorage.get('lang_' + code);
 	if (sessionLang) {
+		if (edsConfig.logerrors == "yes"){
+			console.log("sessionLang is already set...");	
+		}	
 		callback(sessionLang);
 		return;
 		// If custom language, and there's no language file for it
 	} else if (code != 'default' && eds_sessionStorage.get('nolang_' + code)) {
+		if (edsConfig.logerrors == "yes"){
+			console.log("sessionLang is not set...");	
+		}	
 		getLanguage('default', callback);
 		return;
 	}
@@ -147,7 +157,9 @@ function getLanguage(code, callback) {
 	// Fetch the language file
 	jQuery.ajax({ url: "[% PLUGIN_HTTP_PATH %]/bootstrap/includes/lang/" + code + ".inc", dataType: "script", cache: true })
 		.done(function (data) {
-
+			if (edsConfig.logerrors == "yes"){
+				console.log("Fetching language file...");	
+			}	
 			// Parse language file
 			var langData = {};
 			var lineData = data.split("var EDSLANG =")[1].split("\n");
@@ -159,12 +171,17 @@ function getLanguage(code, callback) {
 					langData[key] = val;
 				}
 			}
-
+			if (edsConfig.logerrors == "yes"){
+				console.log("langData: " + langData);	
+			}	
 			eds_sessionStorage.set('lang_' + code, langData);
 			callback(langData);
 
 			// No language file, try default
 		}).fail(function () {
+			if (edsConfig.logerrors == "yes"){
+				console.log("Failed to fetch language file...");	
+			}	
 			if (code == 'default') {
 				callback(null);
 			} else {
@@ -339,7 +356,13 @@ function ConfigData(data) {
 
 	if (data.defaultsearch != "off") {
 		var currentDefaultSearchValue = eds_sessionStorage.get('defaultsearch');
+		if (edsConfig.logerrors == "yes"){
+			console.log("currentDefaultSearchValue : " + currentDefaultSearchValue);
+		}
 		if (!currentDefaultSearchValue) {
+			if (edsConfig.logerrors == "yes"){
+				console.log("No currentDefaultSearchValue!");
+			}
 			eds_sessionStorage.set('defaultsearch', data.defaultsearch);
 		}
 		GoDiscovery();
@@ -443,6 +466,9 @@ function SetEDSOptions(data) {
 }
 
 function SetEDS(showInfo) {
+	if (edsConfig.logerrors == "yes"){
+		console.log("In SetEDS...");
+	}
 	jQuery('#searchform').submit(function () { return false; });
 	jQuery('#searchsubmit').click(SearchEDS);
 	jQuery('#masthead_search option').each(function () { jQuery(this).remove(); });
@@ -455,8 +481,10 @@ function SetEDS(showInfo) {
 	jQuery('#transl1').removeClass('placeholder');
 	//advSearch
 	if (document.URL.indexOf("[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl") != -1 && QueryString('q') == "") {
+		console.log('koha switchtext');
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
-	} else if (document.URL.indexOf("/cgi-bin/koha/opac-search.pl") != -1 && QueryString('q') == "") {
+	} else if (document.URL.indexOf("/cgi-bin/koha/opac-search.pl") != -1 && QueryString('q') == "") {RTCEncodedVideoFrame
+		console.log('eds switchtext');
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', edsSwitchText);
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
 	} else {
@@ -467,12 +495,13 @@ function SetEDS(showInfo) {
 		jQuery('#masthead_search option[value="JN"]').prop('selected', true);
 		knownItem = "JN";
 	}
-
-	EDSAutoComp();
+	if (edsConfig.autocomplete == "yes") {
+		EDSAutoComp();
+	}
 }
 
 function SetKoha(showInfo) {
-	jQuery('#searchform').unbind('submit');
+	jQuery('#searchform').unbind('submit');EDSAutoComp
 	jQuery('#searchsubmit').unbind('click');
 	jQuery('#masthead_search option').each(function () { jQuery(this).remove(); });
 	if (showInfo) { ShowInfo(kohaSelectInfo); }
@@ -493,6 +522,9 @@ function SetKoha(showInfo) {
 }
 
 function ShowInfo(msg) {
+	if (edsConfig.logerrors == "yes"){
+		console.log("In ShowInfo...");
+	}
 	var topPos = jQuery('#masthead_search').offset().top;
 	var leftPos = jQuery('#masthead_search').offset().left;
 	var cartMsg = jQuery("#cartDetails").html();
@@ -1243,7 +1275,7 @@ function EDSAutoComp() {
 			console.log("Running creds false...");
 		}
 		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth', function (data) {
-			eds_sessionStorage.set('autoComp', data);
+			eds_sessionStorage.set('autoComtranslControl1p', data);
 			eds_sessionStorage.set('autoComp_expiry', Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
 			EDSAutoComp();
 			if (edsConfig.logerrors == "yes"){
@@ -1255,9 +1287,9 @@ function EDSAutoComp() {
 			console.log("Running creds true...");
 			console.log("Running autocomplete...");
 		}
-
 		jQuery('#translControl1').autocomplete({
 			source: function (request, response) {
+					console.log("In function within .autocomplete()...");
 				var promise = jQuery.ajax(creds.Autocomplete.Url, {
 					data: {
 						token: creds.Autocomplete.Token,
@@ -1269,9 +1301,11 @@ function EDSAutoComp() {
 						}])
 					}
 				});
-
+					console.log("Data in promise: " + promise);
 				promise.done(function (data) {
+						console.log("promise completed...");
 					if (data.error) {
+							console.log("data.error : " + data.error);
 						eds_sessionStorage.remove('autoComp');
 						eds_sessionStorage.remove('autoComp_expiry');
 
@@ -1280,6 +1314,7 @@ function EDSAutoComp() {
 						var terms = data.terms.map(function (wrapper) {
 							return wrapper.term;
 						});
+							console.log("no data.error, terms : " + terms);
 						response(terms);
 					}
 				});

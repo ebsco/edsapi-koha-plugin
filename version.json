@@ -1,10 +1,10 @@
 {
-    "MajorVersion": "21.11",
-    "MinorVersion": "004",
+    "MajorVersion": "22.11",
+    "MinorVersion": "001",
     "ReleaseNotes": [
         {
-            "author": "cwolf@ebsco.com",
-            "note": "Adds additional support for translations."
+            "author": "mmohkamkar@ebsco.com",
+            "note": "Fixes issue with cart not displaying."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
