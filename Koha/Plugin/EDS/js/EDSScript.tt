@@ -481,7 +481,7 @@ function SetEDS(showInfo) {
 	jQuery('#transl1').removeClass('placeholder');
 	//advSearch
 	if (document.URL.indexOf("[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl") != -1 && QueryString('q') == "") {
-		console.log('koha switchtext');
+		//console.log('koha switchtext');
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
 	} else if (document.URL.indexOf("/cgi-bin/koha/opac-search.pl") != -1 && QueryString('q') == "") {RTCEncodedVideoFrame
 		console.log('eds switchtext');
@@ -1275,7 +1275,7 @@ function EDSAutoComp() {
 			console.log("Running creds false...");
 		}
 		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth', function (data) {
-			eds_sessionStorage.set('autoComtranslControl1p', data);
+			eds_sessionStorage.set('autoComp', data);
 			eds_sessionStorage.set('autoComp_expiry', Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
 			EDSAutoComp();
 			if (edsConfig.logerrors == "yes"){
@@ -1289,7 +1289,6 @@ function EDSAutoComp() {
 		}
 		jQuery('#translControl1').autocomplete({
 			source: function (request, response) {
-					console.log("In function within .autocomplete()...");
 				var promise = jQuery.ajax(creds.Autocomplete.Url, {
 					data: {
 						token: creds.Autocomplete.Token,
@@ -1301,11 +1300,8 @@ function EDSAutoComp() {
 						}])
 					}
 				});
-					console.log("Data in promise: " + promise);
 				promise.done(function (data) {
-						console.log("promise completed...");
 					if (data.error) {
-							console.log("data.error : " + data.error);
 						eds_sessionStorage.remove('autoComp');
 						eds_sessionStorage.remove('autoComp_expiry');
 
@@ -1314,7 +1310,6 @@ function EDSAutoComp() {
 						var terms = data.terms.map(function (wrapper) {
 							return wrapper.term;
 						});
-							console.log("no data.error, terms : " + terms);
 						response(terms);
 					}
 				});

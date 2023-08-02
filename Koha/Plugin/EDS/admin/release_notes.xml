@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>22.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2023/07/31</lastupdated>
+	<lastupdated>2023/08/02</lastupdated>
 	<releasenotes>
-		<release version="22.11.001" date="2023/07/31">
+		<release version="22.11.001" date="2023/08/02">
 			<note id="1" author="mmohkamkar@ebsco.com">Fixes issue with cart not displaying.</note>
 		</release>
 	</releasenotes>
