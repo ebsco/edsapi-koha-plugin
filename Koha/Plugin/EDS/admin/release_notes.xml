@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>21.11.004</latestversion>
+	<latestversion>22.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2023/04/04</lastupdated>
+	<lastupdated>2023/08/02</lastupdated>
 	<releasenotes>
-		<release version="21.11.004" date="2023/04/04">
-			<note id="1" author="cwolf@ebsco.com">Adds additional support for translations.</note>
+		<release version="22.11.001" date="2023/08/02">
+			<note id="1" author="mmohkamkar@ebsco.com">Fixes issue with cart not displaying.</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
