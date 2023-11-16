@@ -5,6 +5,8 @@ edsapi-koha-plugin
 
 edsapi-koha-plugin
 
+The EDS API Plugin for Koha is a project that enables EDS searching in the open source Koha ILS application found at https://koha-community.org/.  Development and testing are performed against the code published to the Koha community.  While EBSCO does attempt to address issues as they are reported, we can only test and support against the official Koha releases and cannot support modified Koha installs or modified versions of the plugin that have been forked elsewhere.  In addition, we cannot guarantee compatibility with other plugins. In order to best support our customers, we encourage pull requests and suggestions that are built against the standard release of Koha.
+
 Refer to the release on the right to download the stable KPZ for your version needs.
 
 ***IMPORTANT UPGRADE NOTE: When upgrading any version after 20.05002, be sure to go into configure and save the configuration even if values are already present so that templates will generate new javascript properly.***
