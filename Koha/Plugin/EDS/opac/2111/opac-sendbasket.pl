@@ -25,7 +25,6 @@ use Carp qw( carp );
 use Try::Tiny qw( catch try );
 
 use C4::Biblio qw(
-    GetMarcBiblio
     GetMarcSubjects
     GetMarcAuthors
 );
@@ -86,7 +85,6 @@ if ( $email_add ) {
         $template2->param( biblionumber => $biblionumber );
 
         my $dat = "";
-        my $record           = GetMarcBiblio({
             my $biblio_object = Koha::Biblios->find( $biblionumber );
             my $record = $biblio_object->metadata->record;
         if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
