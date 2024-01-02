@@ -34,7 +34,6 @@ use C4::Templates;
 use Koha::Email;
 use Koha::Patrons;
 use Koha::Token;
-use Koha::Biblio;
 use Koha::Biblios;
 
 my $query = CGI->new;
@@ -86,8 +85,9 @@ if ( $email_add ) {
         $template2->param( biblionumber => $biblionumber );
 
         my $dat = "";
-            my $biblio_object = Koha::Biblios->find( $biblionumber );
-            my $record = $biblio_object->metadata->record;
+        my $biblio_object = Koha::Biblios->find( $biblionumber );
+        my $record = $biblio_object->metadata->record;
+        
         if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         
         if ($dat eq ""){

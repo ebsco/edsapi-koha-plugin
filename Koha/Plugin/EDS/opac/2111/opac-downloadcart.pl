@@ -30,7 +30,6 @@ use C4::Ris qw( marc2ris );
 use Koha::CsvProfiles;
 use Koha::RecordProcessor;
 use Koha::Biblios;
-use Koha::Biblio;
 
 use utf8;
 my $query = CGI->new();
@@ -84,9 +83,9 @@ if ($bib_list && $format) {
         });
         foreach my $biblio (@bibs) {
 
-            my $biblio  = Koha::Biblios->find($biblionumber);
+            my $biblio_object  = Koha::Biblios->find($biblionumber);
             my $record = $biblio_object->metadata->record;
-
+            next unless $record;
 
                 my $dat = "";
             if($biblio =~m/\_\_/){
