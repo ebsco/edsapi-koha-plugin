@@ -26,7 +26,6 @@ use Try::Tiny qw( catch try );
 
 use C4::Biblio qw(
     GetMarcSubjects
-    GetMarcAuthors
 );
 use C4::Items qw( GetItemsInfo );
 use C4::Auth qw( get_template_and_user );
@@ -35,6 +34,9 @@ use C4::Templates;
 use Koha::Email;
 use Koha::Patrons;
 use Koha::Token;
+use Koha::Biblio qw(
+    get_authors_from_MARC
+);
 
 my $query = CGI->new;
 my $PluginDir = C4::Context->config("pluginsdir");
@@ -96,7 +98,7 @@ if ( $email_add ) {
         }
         next unless $dat;
         #my $marcauthorsarray = $biblio->get_marc_authors;
-        my $marcauthorsarray = GetMarcAuthors( $record, $marcflavour );
+        my $marcauthorsarray =     get_authors_from_MARC( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
 
         my @items = GetItemsInfo( $biblionumber );
