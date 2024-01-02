@@ -84,7 +84,7 @@ if ($bib_list && $format) {
         });
         foreach my $biblio (@bibs) {
 
-            my $biblio  = Koha::Biblios->find( $biblionumber ) or next;
+            my $biblio  = Koha::Biblios->find($biblionumber);
             my $record = $biblio_object->metadata->record;
 
 
