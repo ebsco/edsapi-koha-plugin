@@ -34,9 +34,8 @@ use C4::Templates;
 use Koha::Email;
 use Koha::Patrons;
 use Koha::Token;
-use Koha::Biblio qw(
-    get_authors_from_MARC
-);
+use Koha::Biblio;
+use Koha::Biblios;
 
 my $query = CGI->new;
 my $PluginDir = C4::Context->config("pluginsdir");
@@ -98,7 +97,7 @@ if ( $email_add ) {
         }
         next unless $dat;
         #my $marcauthorsarray = $biblio->get_marc_authors;
-        my $marcauthorsarray =     get_authors_from_MARC( $record, $marcflavour );
+        my $marcauthorsarray = Koha::Biblio->get_authors_from_MARC( $record, $marcflavour );
         my $marcsubjctsarray = GetMarcSubjects( $record, $marcflavour );
 
         my @items = GetItemsInfo( $biblionumber );
