@@ -83,8 +83,8 @@ if ($bib_list && $format) {
         });
         foreach my $biblio (@bibs) {
 
-            my $biblio_object  = Koha::Biblios->find($biblionumber);
-            my $record = $biblio_object->metadata->record;
+            my $biblio  = Koha::Biblios->find($biblionumber);
+            my $record = $biblio->metadata->record;
             next unless $record;
 
                 my $dat = "";
