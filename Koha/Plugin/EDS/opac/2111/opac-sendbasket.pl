@@ -87,10 +87,8 @@ if ( $email_add ) {
 
         my $dat = "";
         my $record           = GetMarcBiblio({
-            biblionumber => $biblionumber,
-            embed_items  => 1,
-            opac         => 1,
-            borcat       => $borcat });
+            my $biblio_object = Koha::Biblios->find( $biblionumber );
+            my $record = $biblio_object->metadata->record;
         if($biblionumber =~m/\_\_/){($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);} #EDS Patch
         
         if ($dat eq ""){
