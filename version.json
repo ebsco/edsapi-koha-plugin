@@ -1,10 +1,10 @@
 {
     "MajorVersion": "22.11",
-    "MinorVersion": "001",
+    "MinorVersion": "002",
     "ReleaseNotes": [
         {
-            "author": "mmohkamkar@ebsco.com",
-            "note": "Fixes issue with cart not displaying."
+            "author": "mabrahamson@ebsco.com",
+            "note": "Builds community PRs into installer."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
