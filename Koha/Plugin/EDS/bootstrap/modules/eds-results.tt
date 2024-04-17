@@ -21,7 +21,7 @@
 [% ELSE %]
     You did not specify any search criteria.
 [% END %]</title>
-[% INCLUDE 'doc-head-close.inc' %]
+
 [% IF ( searchdesc ) %]
     [% IF ( query_desc ) %]for '[% query_desc | html%]'[% END %][% IF ( limit_desc ) %]&nbsp;with limit(s):&nbsp;'[% limit_desc | html %]'[% END %]
 [% ELSE %]
