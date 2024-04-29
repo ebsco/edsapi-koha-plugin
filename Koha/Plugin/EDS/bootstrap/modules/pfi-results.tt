@@ -21,11 +21,6 @@
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
-[% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
-    [% BLOCK cssinclude %]
-        <link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />
-    [% END %]
-[% END %]
 
 <link rel="alternate" type="application/rss+xml" title="[% LibraryName |html %] Search RSS feed" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |uri %][% limit_cgi |uri %]&amp;count=[% countrss |uri %]&amp;sort_by=acqdate_dsc&amp;format=rss2" />
 </head>
@@ -409,7 +404,6 @@
         <script src="http://ltfl.librarything.com/forlibraries/widget.js?id=[% LibraryThingForLibrariesID %]&amp;systype=koha" type="text/javascript"></script>
     [% END %]
 [% END %]
-[% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.rating.js"></script>[% END %]
 [% IF ( OverDriveEnabled ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/js/overdrive.js"></script>[% END %]
 <script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>
 [% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-3.js"></script>
