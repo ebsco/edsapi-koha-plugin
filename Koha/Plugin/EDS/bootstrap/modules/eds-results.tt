@@ -63,7 +63,7 @@
                         <strong>[% EDSLANG.eds_results_TT_no_results %]</strong>
                         <p>
                             [% IF ( searchdesc ) %]
-                                No results found for that in [% LibraryName %] catalog. <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi | html | url %][% limit_cgi | html | url %]&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" border="0" class="rsssearchicon"/></a>
+                                No results found for that in [% LibraryName %] catalog. <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi | html | url %][% limit_cgi | html | url %]&amp;format=rss2" class="rsssearchlink"><i class="fa fa-rss rsssearchicon" aria-hidden="true" title="Subscribe to this search"></i></a>
                             [% ELSE %]
                                 You did not specify any search criteria.
                             [% END %]
@@ -104,7 +104,7 @@
                                 [% END %]
                             ).
                         [% END %]
-                        <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" class="rsssearchicon"/></a>
+                        <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><i class="fa fa-rss rsssearchicon" aria-hidden="true" title="Subscribe to this search"></i></a>
                     [% END # / IF total %]
                     </h2>
                 [% END # / IF searchdesc %]
