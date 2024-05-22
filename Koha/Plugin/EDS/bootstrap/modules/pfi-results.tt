@@ -406,7 +406,7 @@
 [% END %]
 [% IF ( OverDriveEnabled ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/js/overdrive.js"></script>[% END %]
 <script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>
-[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-3.js"></script>
+[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/lib/jquery/plugins/jquery.highlight-5.js"></script>
 [% END %]<script type="text/javascript">
 //<![CDATA[
 [% IF ( Koha.Preference( 'opacuserlogin' ) == 1 ) && ( Koha.Preference( 'RequestOnOpac' ) == 1 ) %]
