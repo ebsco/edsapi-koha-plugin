@@ -254,7 +254,7 @@
     results_save = 'Speichern'
     results_cart = 'Warenkorb'
     results_new_list = 'Neue Liste'
-}%]
+}%]*/
 var EDSLANG = {
     eds_koha_lang_id: 'de-DE',
     eds_koha_language: '[%lang%]',
