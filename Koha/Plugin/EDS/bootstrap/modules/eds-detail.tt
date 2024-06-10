@@ -32,9 +32,7 @@
 
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
-[% IF ( bidi ) %]
-  [% BLOCK cssinclude %]<link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/right-to-left.css" />[% END %]
-[% END %]
+
 </head>
 <body id="opac-detail" class="scrollto">
 [% INCLUDE 'masthead.inc' %]
