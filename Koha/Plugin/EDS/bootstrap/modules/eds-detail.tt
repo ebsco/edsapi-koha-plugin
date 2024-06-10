@@ -33,6 +33,9 @@
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
 
+[% BLOCK cssinclude %]
+[% END %]
+
 </head>
 <body id="opac-detail" class="scrollto">
 [% INCLUDE 'masthead.inc' %]
