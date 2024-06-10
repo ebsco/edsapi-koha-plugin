@@ -1330,7 +1330,7 @@
     [% END %]
 
      $(document).ready(function() {
-        $('#bibliodescriptions').tabs();
+
         $(".branch-info-tooltip-trigger").tooltip({
             position: { my: "left+15 center", at: "right center" },
             show: 50,
