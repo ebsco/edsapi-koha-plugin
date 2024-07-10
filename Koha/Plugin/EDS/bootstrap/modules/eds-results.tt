@@ -95,7 +95,7 @@
                [% END %]
 
                 [% IF ( searchdesc ) %]
-                    <h2 id="numresults">
+                    <h2 id="numresults" data-total="[% total |html %]">
                     [% IF ( total ) %]<strong>[% EDSLANG.eds_results_TT_results_returned_msg %] [% total |html %] [% EDSLANG.eds_results_TT_results_msg %]</strong>
                         [% IF ( related ) %]
                             (related searches:
