@@ -1497,7 +1497,7 @@
     // star-ratings code
     // -----------------------------------------------------
     // hide 'rate' button if javascript enabled
-
+    /*  //@todo:function $.rating does no more exists - needs to be rewritten 
     $('input[name="rate_button"]').remove();
 
     $(function () {
@@ -1537,7 +1537,7 @@
           };
         }
       });
-    });
+    });*/
     // -----------------------------------------------------
 [% END # / IF ( OpacStarRatings != 'disable' )%]
 
