@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "22.11002";
+var versionEDSKoha = "22.11003";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -853,7 +853,7 @@ function SetEDSCartField() {
 	//Use the EDS version of sendbasket
 
 	if (jQuery('#sendbasketform')) {
-		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2111/opac-sendbasket.pl');
+		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2311/opac-sendbasket.pl');
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
@@ -892,7 +892,7 @@ function sendBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2111/opac-sendbasket.pl?" + strCookie;
+	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2311/opac-sendbasket.pl?" + strCookie;
 
 	var optWin = "scrollbars=yes,resizable=yes,height=600,width=900,top=50,left=100";
 	var win_form = open(loc, "win_form", optWin);

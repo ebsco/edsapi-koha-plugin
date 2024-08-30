@@ -1,10 +1,10 @@
 {
     "MajorVersion": "22.11",
-    "MinorVersion": "002",
+    "MinorVersion": "003",
     "ReleaseNotes": [
         {
             "author": "mabrahamson@ebsco.com",
-            "note": "Builds community PRs into installer."
+            "note": "Modifications to the cart methods."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
