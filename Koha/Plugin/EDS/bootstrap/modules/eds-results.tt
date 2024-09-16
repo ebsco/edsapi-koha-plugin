@@ -880,11 +880,13 @@
                 if (e.keyCode == 13) { e.preventDefault(); }
             });
 
-            Sticky = $("#floating");
-            Sticky.hcSticky({
-                stickTo: ".searchresults",
-                stickyClass: "floating"
-            });
+            if (document.querySelector('.searchresults')){
+                Sticky = $("#floating");
+                Sticky.hcSticky({
+                 stickTo: ".searchresults",
+                 stickyClass: "floating"
+                });
+            }
 
         });
     </script>
