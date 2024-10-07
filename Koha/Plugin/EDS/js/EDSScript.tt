@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "22.11002";
+var versionEDSKoha = "22.11004";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -1095,9 +1095,8 @@ function UpdateFacet() {
 			str.push(e + "=" + multiFacet[e]);
 		}
 	}
-	window.location.href = document.URL.split("|")[0].replace("&default=1", "") + "|" + str.join("|");
+	window.location.assign(document.getElementById("searchTerm").parentElement.href.replace("&default=1", "").replace("action=removequery(1)","") + str.join("|"));
 }
-
 
 function SearchAgain() {
 	var resultsSelector = (jQuery('#noresultsfound').length) ? '#noresultsfound' : '#top-pages'; // top-pages for bootstrap
@@ -1111,7 +1110,7 @@ function SearchAgain() {
 	window.location.href = searchQueryString;
 }
 
-// Multile Facets END
+// Multiple Facets END
 
 //
 function PlacardTabs(placardTab) {
@@ -1332,4 +1331,3 @@ jQuery('body').on('click', '#translControl1', function () {
 		jQuery("#translControl1").autocomplete("search");
 	}
 });
-
