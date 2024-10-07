@@ -1,10 +1,10 @@
 {
     "MajorVersion": "22.11",
-    "MinorVersion": "002",
+    "MinorVersion": "004",
     "ReleaseNotes": [
         {
-            "author": "mabrahamson@ebsco.com",
-            "note": "Builds community PRs into installer."
+            "author": "omuzzy@ebsco.com",
+            "note": "fixes issues where facets drop upon new selection."
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
