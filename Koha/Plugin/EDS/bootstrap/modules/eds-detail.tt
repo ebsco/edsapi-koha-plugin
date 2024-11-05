@@ -32,12 +32,10 @@
 
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
-[% IF ( bidi ) %]
-  [% BLOCK cssinclude %]<link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/right-to-left.css" />[% END %]
+
+[% BLOCK cssinclude %]
 [% END %]
-[% IF ( OpacStarRatings != 'disable' ) %]
-    [% BLOCK cssinclude %]<link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />[% END %]
-[% END %]
+
 </head>
 <body id="opac-detail" class="scrollto">
 [% INCLUDE 'masthead.inc' %]
@@ -1285,9 +1283,8 @@
     </script>
     <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 [% END %]
-[% IF ( OpacStarRatings != 'disable' ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.rating.js"></script>[% END %]
 
-[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-3.js"></script>[% END %]
+[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/lib/jquery/plugins/jquery.highlight-5.js"></script>[% END %]
 
 <script type="text/javascript">
 //<![CDATA[
@@ -1333,7 +1330,7 @@
     [% END %]
 
      $(document).ready(function() {
-        $('#bibliodescriptions').tabs();
+
         $(".branch-info-tooltip-trigger").tooltip({
             position: { my: "left+15 center", at: "right center" },
             show: 50,
@@ -1500,7 +1497,7 @@
     // star-ratings code
     // -----------------------------------------------------
     // hide 'rate' button if javascript enabled
-
+    /*  //@todo:function $.rating does no more exists - needs to be rewritten 
     $('input[name="rate_button"]').remove();
 
     $(function () {
@@ -1540,7 +1537,7 @@
           };
         }
       });
-    });
+    });*/
     // -----------------------------------------------------
 [% END # / IF ( OpacStarRatings != 'disable' )%]
 
