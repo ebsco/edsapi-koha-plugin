@@ -1,10 +1,10 @@
 {
-    "MajorVersion": "22.11",
-    "MinorVersion": "004",
+    "MajorVersion": "23.11",
+    "MinorVersion": "001",
     "ReleaseNotes": [
         {
             "author": "omuzzy@ebsco.com",
-            "note": "fixes issues where facets drop upon new selection."
+            "note": "updated cart functionality"
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

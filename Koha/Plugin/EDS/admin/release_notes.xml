@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>22.11.004</latestversion>
+	<latestversion>23.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2024/11/21</lastupdated>
+	<lastupdated>2024/11/22</lastupdated>
 	<releasenotes>
-		<release version="22.11.004" date="2024/11/21">
-			<note id="1" author="omuzzy@ebsco.com">fixes issues where facets drop upon new selection.</note>
+		<release version="23.11.001" date="2024/11/22">
+			<note id="1" author="omuzzy@ebsco.com">updated cart functionality</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

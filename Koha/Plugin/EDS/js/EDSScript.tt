@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "22.11004";
+var versionEDSKoha = "23.11001";
 ///////////////////////////////////////
 
 if (document.title == "") {
