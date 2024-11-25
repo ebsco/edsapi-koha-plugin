@@ -31,6 +31,8 @@ use Koha::Biblios;
 #use Koha::Biblio;
 use Koha::CsvProfiles;
 use Koha::RecordProcessor;
+use warnings; #OM added 2024.11.22
+
 
 use utf8;
 my $query = CGI->new();
@@ -79,8 +81,10 @@ if ($bib_list && $format) {
             my $biblio = '';      
             my $record = '';  
                 if($biblionumber =~m/\_\_/){
+                warn ('$biblionumber matched on _: ',$biblionumber);
                 my $dat = '';
-                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);               
+                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat); 
+                warn ('matched on __ - $record: ',$record, '$dat: ', $dat);              
                 } else {
                     $biblio = Koha::Biblios->find($biblionumber);
                     $record = $biblio->metadata->record(
@@ -129,10 +133,9 @@ if ($bib_list && $format) {
     print $query->header(
                         -type => ($type) ? $type : 'application/octet-stream',
                         -'Content-Transfer-Encoding' => 'binary',
-                        -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format" #2024.11.22 OM - comment out for testing
-                        #-attachment => "cart.$format");
+                        -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format");
     print $output;
-
+    }
 } else { 
     $template->param(
         csv_profiles => Koha::CsvProfiles->search(
