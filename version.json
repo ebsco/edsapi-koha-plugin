@@ -4,7 +4,7 @@
     "ReleaseNotes": [
         {
             "author": "omuzzy@ebsco.com",
-            "note": "updated cart functionality"
+            "note": "fixes issue where EDS items cannot be downloaded from cart"
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"

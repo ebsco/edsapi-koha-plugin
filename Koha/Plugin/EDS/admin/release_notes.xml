@@ -6,7 +6,7 @@
 	<lastupdated>2024/11/25</lastupdated>
 	<releasenotes>
 		<release version="23.11.001" date="2024/11/25">
-			<note id="1" author="omuzzy@ebsco.com">updated cart functionality</note>
+			<note id="1" author="omuzzy@ebsco.com">fixes issue where EDS items cannot be downloaded from cart</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

@@ -28,11 +28,8 @@ use C4::Output qw( output_html_with_http_headers );
 use C4::Record;
 use C4::Ris qw( marc2ris );
 use Koha::Biblios;
-#use Koha::Biblio;
 use Koha::CsvProfiles;
 use Koha::RecordProcessor;
-use warnings; #OM added 2024.11.22
-
 
 use utf8;
 my $query = CGI->new();
@@ -71,7 +68,6 @@ if ($bib_list && $format) {
         }
 
         $output = marc2csv(\@bibs, $format);
-
         # Other formats
     } else {
         my $record_processor = Koha::RecordProcessor->new({
@@ -81,10 +77,8 @@ if ($bib_list && $format) {
             my $biblio = '';      
             my $record = '';  
                 if($biblionumber =~m/\_\_/){
-                warn ('$biblionumber matched on _: ',$biblionumber);
                 my $dat = '';
-                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat); 
-                warn ('matched on __ - $record: ',$record, '$dat: ', $dat);              
+                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);     #EDS patch   
                 } else {
                     $biblio = Koha::Biblios->find($biblionumber);
                     $record = $biblio->metadata->record(
@@ -93,7 +87,8 @@ if ($bib_list && $format) {
                     opac        => 1,
                     patron      => $patron, 
                     }
-                );        
+                );
+            }       
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({
                 interface => 'opac',
@@ -102,7 +97,7 @@ if ($bib_list && $format) {
             $record_processor->process($record);
 
             next unless $record;
-
+            
             if ($format eq 'iso2709') {
                 #NOTE: If we don't explicitly UTF-8 encode the output,
                 #the browser will guess the encoding, and it won't always choose UTF-8.
@@ -135,8 +130,7 @@ if ($bib_list && $format) {
                         -'Content-Transfer-Encoding' => 'binary',
                         -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format");
     print $output;
-    }
-} else { 
+    } else { 
     $template->param(
         csv_profiles => Koha::CsvProfiles->search(
             {
