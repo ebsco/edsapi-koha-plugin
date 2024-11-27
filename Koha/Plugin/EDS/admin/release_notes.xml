@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>23.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2024/11/25</lastupdated>
+	<lastupdated>2024/11/27</lastupdated>
 	<releasenotes>
-		<release version="23.11.001" date="2024/11/25">
+		<release version="23.11.001" date="2024/11/27">
 			<note id="1" author="omuzzy@ebsco.com">fixes issue where EDS items cannot be downloaded from cart</note>
 		</release>
 	</releasenotes>
