@@ -30,7 +30,6 @@ use Koha::Biblios;
 use Koha::Email;
 use Koha::Patrons;
 use Koha::Token;
-use warnings;
 
 my $query = CGI->new;
 
@@ -38,7 +37,6 @@ my $pluginsdir = C4::Context->config("pluginsdir");
 my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
 my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
-#require $PluginDir.'/opac/eds-methods.pl';
 
 do '../eds-methods.pl';
 my $eds_data = $query->param('eds_data'); #EDS Patch
@@ -58,7 +56,6 @@ my $bib_list  = $query->param('bib_list') || '';
 $bib_list =~s/\_dot\_/\./g;
 
 my $email_add = $query->param('email_add');
-my $dbh          = C4::Context->dbh; #2024.11.25 OM added from 2111 ver to resolve dbh execute error
 
 if ( $email_add ) {
     die "Wrong CSRF token"
@@ -72,7 +69,6 @@ if ( $email_add ) {
     my $comment = $query->param('comment');
 
     my @bibs = split( /\//, $bib_list );
-    #my @2bibs 
     my $iso2709;
     foreach my $biblionumber (@bibs) {
         my $biblio = '';
@@ -81,20 +77,16 @@ if ( $email_add ) {
             my $dat = '';
             ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);                    
             $iso2709 .= encode("UTF-8", $record->as_usmarc()) // q{};
-            #$iso2709 .= $record->as_usmarc();
         } #EDS Patch
         else {
         $biblio = Koha::Biblios->find($biblionumber) or next;
-        $iso2709 .= $biblio->metadata->record->as_usmarc();  
-        #push to 2bibs       
-    }
-warn('$iso2709 : ',$iso2709);
+        $iso2709 .= $biblio->metadata->record->as_usmarc();        
+        }
     }
     if ( !defined $iso2709 ) {
         $template->param( error => 'NO_BODY' );
     }
     else {
-        #my %loops = ( biblio => \@bibs, );
         my %loops = '';
 
         my %substitute = ( comment => $comment, );
