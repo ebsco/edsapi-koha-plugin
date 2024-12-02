@@ -87,7 +87,7 @@ if ( $email_add ) {
         $template->param( error => 'NO_BODY' );
     }
     else {
-        my %loops = '';
+        my %loops;
 
         my %substitute = ( comment => $comment, );
 
