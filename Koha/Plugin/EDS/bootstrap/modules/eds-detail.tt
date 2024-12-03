@@ -1287,7 +1287,7 @@
 [% END %]
 [% IF ( OpacStarRatings != 'disable' ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.rating.js"></script>[% END %]
 
-[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-3.js"></script>[% END %]
+[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-5.js"></script>[% END %]
 
 <script type="text/javascript">
 //<![CDATA[

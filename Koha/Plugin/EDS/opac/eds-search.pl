@@ -96,7 +96,7 @@ my $lang = C4::Languages::getlanguage($cgi);
 # decide which template to use
 my $template_name;
 my $template_type = 'basic';
-my @params = $cgi->param("limit");
+my @params = $cgi->multi_param("limit");
 my $search_desc = 1;
 my $adv_search = 0;
 
