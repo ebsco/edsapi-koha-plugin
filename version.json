@@ -4,7 +4,15 @@
     "ReleaseNotes": [
         {
             "author": "omuzzy@ebsco.com",
+            "note": "fixes issue where EDS items cannot be sent from cart"
+        },
+        {
+            "author": "omuzzy@ebsco.com",
             "note": "fixes issue where EDS items cannot be downloaded from cart"
+        },
+        {
+            "author": "omuzzy@ebsco.com",
+            "note": "fixes other minor 23.11 errors"
         }
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
