@@ -25,7 +25,7 @@ shaAdd = data["ShaAdd"]
 with open('Koha/Plugin/EDS.pm', 'r') as file :
     filedata = file.readlines()
 
-# find and repalce version
+# find and replace version
 for line in range(len(filedata)):
     templine = filedata[line].rstrip()
 
@@ -60,7 +60,7 @@ with open('Koha/Plugin/EDS/js/EDSScript.tt', 'r') as file :
 
 
 
-# find and repalce version
+# find and replace version
 for line in range(len(filedata)):
     templine = filedata[line].rstrip()
 
@@ -85,7 +85,7 @@ with open('Koha/Plugin/EDS/admin/release_notes.xml', 'r') as file :
 
 noted = False
 
-# find and repalce version
+# find and replace version
 for line in range(len(filedata)):
     templine = filedata[line].rstrip()
 
