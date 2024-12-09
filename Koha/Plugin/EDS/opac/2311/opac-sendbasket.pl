@@ -70,17 +70,33 @@ if ( $email_add ) {
 
     my @bibs = split( /\//, $bib_list );
     my $iso2709;
+    my $catbibs;
+    my $edscounter = 0;
     foreach my $biblionumber (@bibs) {
         my $biblio = '';
         my $record = '';
-         if($biblionumber =~m/\_\_/){
+        if($biblionumber =~m/\_\_/){
+            #if biblionumber matches on __, split into an and db
+            my ($biblio_an, $biblio_db)  = split(/__/, $biblionumber);
+            #add header if EDS items are sent in basket
+            if ($edscounter == 0){
+                $comment .= "\n\n________________________________";
+                $comment .= "\n\nEBSCO Discovery Service items are listed first, followed by your library catalog items.\n";
+            }
             my $dat = '';
             ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);                    
             $iso2709 .= encode("UTF-8", $record->as_usmarc()) // q{};
+            $edscounter++;
+            #EDS data added to comment
+            $comment .= "\n".$edscounter.". ".$record->title."\n";
+            $comment .= "Author(s): ".$record->author."\n";
+            #form URL with OPACBaseURL, plugin path for Koha eds-detail.pl, and add biblio_an, biblio_db to form link back to Koha catalog for EDS item
+            $comment .= "URL: ".C4::Context->preference('OPACBaseURL').'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an='.$biblio_an.'|dbid='.$biblio_db."\n";
         } #EDS Patch
         else {
-        $biblio = Koha::Biblios->find($biblionumber) or next;
-        $iso2709 .= $biblio->metadata->record->as_usmarc();        
+            $catbibs .= $biblionumber."|";
+            $biblio = Koha::Biblios->find($biblionumber) or next;
+            $iso2709 .= $biblio->metadata->record->as_usmarc();        
         }
     }
     if ( !defined $iso2709 ) {
@@ -88,7 +104,10 @@ if ( $email_add ) {
     }
     else {
         my %loops;
-
+        if ($catbibs){
+            my @catbibsloops = split( /\|/, $catbibs );
+            %loops = ( biblio => \@catbibsloops, );
+        } 
         my %substitute = ( comment => $comment, );
 
         my $letter = C4::Letters::GetPreparedLetter(
