@@ -1,6 +1,6 @@
 [% #USE Dumper %]
 [% #Dumper.dump(theme) %]
-
+[% USE Asset %]
 [% USE Koha %]
 [% SET TagsShowEnabled = ( ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsShowOnList ) %]
 [% SET TagsInputEnabled = ( ( Koha.Preference( 'opacuserlogin' ) == 1 ) && ( Koha.Preference( 'TagsEnabled' ) == 1 ) && TagsInputOnList ) %]
@@ -412,8 +412,10 @@
 [% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.rating.js"></script>[% END %]
 [% IF ( OverDriveEnabled ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/js/overdrive.js"></script>[% END %]
 <script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>
-[% IF ( OpacHighlightedWords ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.highlight-5.js"></script>
-[% END %]<script type="text/javascript">
+[% IF ( OpacHighlightedWords ) %]
+        [% Asset.js("lib/jquery/plugins/jquery.highlight-5.js") | $raw %]
+[% END %]
+<script type="text/javascript">
 //<![CDATA[
 [% IF ( Koha.Preference( 'opacuserlogin' ) == 1 ) && ( Koha.Preference( 'RequestOnOpac' ) == 1 ) %]
 function holdMultiple() {
