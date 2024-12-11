@@ -629,11 +629,9 @@ sub ProcessEDSCartItems
 
 		#URL
 		try{
-				my $EDSRecordURL = $record->{Record}->{PLink};
-				$recordXML .= '  <datafield tag="856" ind1="0" ind2="0">
+				my $EDSRecordURL = $record->{Record}->{PLink};				
+				$recordXML .= '  <datafield tag="856" ind1="4" ind2="0">
 									<subfield code="u" label="Accession Number">'.$EDSRecordURL.'</subfield>
-									<subfield code="y" label="Accession Number">'.$EDSRecordURL.'</subfield>
-									<subfield code="z" label="Accession Number">'.$EDSRecordURL.'</subfield>
 								  </datafield>
 								  ';
 		}catch{};
@@ -702,7 +700,7 @@ sub ProcessEDSCartItems
 
 		$recordJSON .= "}";
 		$recordXML .= '</record>';
-		$recordXML=~s/\&/and/g; # avoid error when converting to marc
+		$recordXML=~s/\&/\&amp;/g; # avoid error when converting to marc
 		$dat = from_json($recordJSON); # used instead of decode_json and encode('utf-8',$recordJSON) first.
 
 		$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
