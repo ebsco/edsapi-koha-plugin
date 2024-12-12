@@ -49,7 +49,7 @@ my $dbh   = C4::Context->dbh;
 our $apiType = 'rest';
 
 do './eds-methods.pl';
-if($input->param("api") eq 'pub'){
+if($input->param("api") && $input->param("api") eq 'pub'){
 	$apiType="publication";
 }
 our $EDSConfig = decode_json(EDSGetConfiguration());
@@ -96,7 +96,7 @@ if($input->param("q") eq 'getip'){
 		};
 	}else{
 		if(defined $input->param("q")){
-			$api_response = EDSSearch($input->param("q"),$GuestTracker);
+			$api_response = EDSSearch($input->multi_param("q"),$GuestTracker);
 		}else{ 
 			$api_response = '<html><head><link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" /><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script></head><body></body></html>';
 		}
