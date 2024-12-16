@@ -1,19 +1,11 @@
 {
     "MajorVersion": "23.11",
-    "MinorVersion": "001",
+    "MinorVersion": "002",
     "ReleaseNotes": [
         {
             "author": "omuzzy@ebsco.com",
-            "note": "fixes issue where EDS items cannot be sent from cart"
-        },
-        {
-            "author": "omuzzy@ebsco.com",
-            "note": "fixes issue where EDS items cannot be downloaded from cart"
-        },
-        {
-            "author": "omuzzy@ebsco.com",
-            "note": "fixes other minor 23.11 errors"
-        }
+            "note": "include multiple quality of life fixes, thanks to mskarupianski"
+        }       
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
 }

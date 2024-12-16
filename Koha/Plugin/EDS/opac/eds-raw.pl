@@ -49,7 +49,7 @@ my $dbh   = C4::Context->dbh;
 our $apiType = 'rest';
 
 do './eds-methods.pl';
-if($input->param("api") && $input->param("api") eq 'pub'){
+if (defined($input->param("api")) && ($input->param("api") eq 'pub')) {
 	$apiType="publication";
 }
 our $EDSConfig = decode_json(EDSGetConfiguration());
