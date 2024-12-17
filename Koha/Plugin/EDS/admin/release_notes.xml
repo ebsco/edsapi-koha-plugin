@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>23.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2024/12/13</lastupdated>
+	<lastupdated>2024/12/17</lastupdated>
 	<releasenotes>
-		<release version="23.11.002" date="2024/12/13">
+		<release version="23.11.002" date="2024/12/17">
 			<note id="1" author="omuzzy@ebsco.com">include multiple quality of life fixes, thanks to mskarupianski</note>
 		</release>
 	</releasenotes>
