@@ -238,6 +238,7 @@ if($cgi->param("q")){
 		instancepath	=>$EDSConfig->{instancepath},
 		edsautosuggest	=> EDSProcessAutoSuggestedTerms(),
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
+		PLUGIN_HTTP_PATH => $EDSConfig->{pluginhttppath},
 	);
 
 my $casAuthentication = C4::Context->preference('casAuthentication');

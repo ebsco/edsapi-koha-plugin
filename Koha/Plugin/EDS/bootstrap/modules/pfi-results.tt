@@ -408,7 +408,7 @@
     [% END %]
 [% END %]
 [% IF ( OverDriveEnabled ) %]<script type="text/javascript" src="[% interface %]/[% theme %]/js/overdrive.js"></script>[% END %]
-<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>
+<!--<script type="text/javascript" src="[% interface %]/[% theme %]/lib/jquery/plugins/jquery.checkboxes.min.js"></script>-->
 [% IF ( OpacHighlightedWords ) %]
         [% Asset.js("lib/jquery/plugins/jquery.highlight-5.js") | $raw %]
 [% END %]
