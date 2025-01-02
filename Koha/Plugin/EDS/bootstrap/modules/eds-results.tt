@@ -92,7 +92,7 @@
 
                 [% IF ( facets_loop && total ) %]<div class="col-lg-10 order-first order-md-first order-lg-2 maincontent">[% ELSE %]
                    <div class="col order-first order-md-first order-lg-2 maincontent"> 
-               [% END %]
+                [% END %]
 
                 [% IF ( searchdesc ) %]
                     <h2 id="numresults" data-total="[% total |html %]">
@@ -198,7 +198,7 @@
                                 </div> <!-- / #selections-toolbar -->
 							 <div  style="display:none;"><div id="placard-tabs"></div></div>
                                [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]
-							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]
+							   [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
 

@@ -104,7 +104,7 @@
                     [% IF ( edsautosuggest ) %]
                         [% EDSLANG.eds_results_TT_did_you_mean %] <a href="javascript:{}" id="eds-autosuggest">[% edsautosuggest %]</a>
 
-                    [% END # / IF koha_spsuggest%]
+                    [% END # / IF koha_spsuggest %]
                     
                     [% UNLESS ( total ) #Display refine even if there are not results. %]
                             <div class="row">
@@ -151,7 +151,7 @@
 
                                 <div id="pfi-selections-toolbar" class="toolbar"></div> <!-- / #selections-toolbar -->
 							 <div  style="display:none;"><div id="placard-tabs"></div></div>
-                               [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]	
+                                [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]
 							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
@@ -243,9 +243,9 @@
 				<div style="clear:both;"></div> 
 				<div class="input-prepend input-append">			
 					<input type="text" class="input-xlarge search-in-pub-field" placeholder="Search within Publication" data-action="[% RECORD.Header.ResourceType %]:[% RECORD.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull FILTER lower %]">		  
-					<span class="add-on search-in-pub-button" style="cursor:pointer" >
+					<button class="add-on search-in-pub-button btn btn-sm btn-primary" style="cursor:pointer">Search
 						<i class="icon-search"></i>
-					</span>		
+					</button>		
 				</div>
 			  [% END %]
 			  
