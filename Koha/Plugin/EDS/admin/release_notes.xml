@@ -7,6 +7,7 @@
 	<releasenotes>
 		<release version="23.11.002" date="2025/01/03">
 			<note id="1" author="omuzzy@ebsco.com">include multiple quality of life fixes, thanks to mskarupianski</note>
+			<note id="2" author="omuzzy@ebsco.com">fixes Search Within options on journal title search</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

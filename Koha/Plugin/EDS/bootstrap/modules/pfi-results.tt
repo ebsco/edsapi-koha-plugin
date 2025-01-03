@@ -240,14 +240,16 @@
 			  [% END %]	
 			  
 			  [% IF RECORD.Header.IsSearchable =="y" %]
-				<div style="clear:both;"></div> 
-				<div class="input-prepend input-append">			
-					<input type="text" class="input-xlarge search-in-pub-field" placeholder="Search within Publication" data-action="[% RECORD.Header.ResourceType %]:[% RECORD.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull FILTER lower %]">		  
-					<button class="add-on search-in-pub-button btn btn-sm btn-primary" style="cursor:pointer">Search
-						<i class="icon-search"></i>
-					</button>		
-				</div>
-			  [% END %]
+                [% IF RECORD.Header.ResourceType == "Journal" %]
+                    <div style="clear:both;"></div> 
+                    <div class="input-prepend input-append">			
+                        <input type="text" class="input-xlarge search-in-pub-field" placeholder="Search within Publication" data-action="[% RECORD.Header.ResourceType %]:[% RECORD.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull FILTER lower %]">		  
+                        <button class="add-on search-in-pub-button btn btn-sm btn-primary" style="cursor:pointer">Search
+                            <i class="icon-search"></i>
+                        </button>		
+                    </div>
+                [% END %]
+              [% END %]
 			  
 			  
 			  [% #CustomLinks %]

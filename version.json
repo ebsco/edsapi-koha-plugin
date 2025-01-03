@@ -5,7 +5,11 @@
         {
             "author": "omuzzy@ebsco.com",
             "note": "include multiple quality of life fixes, thanks to mskarupianski"
-        }       
+        },
+        {
+            "author": "omuzzy@ebsco.com",
+            "note": "fixes Search Within options on journal title search"
+        }         
     ],
     "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
 }
