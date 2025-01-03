@@ -205,7 +205,8 @@ function eds_img_resize(e) {
 	}
 }
 
-jQuery('body').on('click', '.search-in-pub-button', function () {
+jQuery('body').on('click', '.search-in-pub-button', function (event) {
+	event.preventDefault();
 	currentPubButton = this;
 	searchTerm = jQuery(currentPubButton).parent().find('.search-in-pub-field').val();
 	pubAction = jQuery(currentPubButton).parent().find('.search-in-pub-field').data('action');
@@ -337,7 +338,8 @@ function PFIAtoZBar() {
 }
 
 function SearchPublication(searchinTerm, pubAction) {
-	window.location.href = '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl?q=Search?query-1=AND,:{' + searchinTerm + '}|action=addfacetfilter(' + encodeURIComponent(pubAction) + ')&default=1';
+	var target = '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl?q=Search?query-1=AND,:{' + searchinTerm + '}|action=addfacetfilter(' + encodeURIComponent(pubAction) + ')&default=1';
+	window.location.href = target;
 }
 
 
