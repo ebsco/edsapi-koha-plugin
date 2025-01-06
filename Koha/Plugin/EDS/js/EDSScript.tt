@@ -213,6 +213,15 @@ jQuery('body').on('click', '.search-in-pub-button', function (event) {
 	SearchPublication(searchTerm, pubAction);
 });
 
+jQuery('body').on('keypress', '.search-in-pub-field', function (event) {
+	if (event.which == 13) {
+		event.preventDefault();
+		var searchTerm = jQuery(this).val();
+		var pubAction = jQuery(this).data('action');
+		SearchPublication(searchTerm, pubAction);
+	}
+});
+
 jQuery('body').on('click', '.diag-img', function (e) {
 	e.preventDefault();
 	jQuery("body").addClass("eds_noscroll");

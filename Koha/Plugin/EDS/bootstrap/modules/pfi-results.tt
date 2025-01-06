@@ -151,7 +151,6 @@
 
                                 <div id="pfi-selections-toolbar" class="toolbar"></div> <!-- / #selections-toolbar -->
 							 <div  style="display:none;"><div id="placard-tabs"></div></div>
-                                [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]
 							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]	  
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
