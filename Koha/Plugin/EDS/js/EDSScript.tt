@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "23.11001";
+var versionEDSKoha = "23.11002";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -205,11 +205,21 @@ function eds_img_resize(e) {
 	}
 }
 
-jQuery('body').on('click', '.search-in-pub-button', function () {
+jQuery('body').on('click', '.search-in-pub-button', function (event) {
+	event.preventDefault();
 	currentPubButton = this;
 	searchTerm = jQuery(currentPubButton).parent().find('.search-in-pub-field').val();
 	pubAction = jQuery(currentPubButton).parent().find('.search-in-pub-field').data('action');
 	SearchPublication(searchTerm, pubAction);
+});
+
+jQuery('body').on('keypress', '.search-in-pub-field', function (event) {
+	if (event.which == 13) {
+		event.preventDefault();
+		var searchTerm = jQuery(this).val();
+		var pubAction = jQuery(this).data('action');
+		SearchPublication(searchTerm, pubAction);
+	}
 });
 
 jQuery('body').on('click', '.diag-img', function (e) {
@@ -337,7 +347,8 @@ function PFIAtoZBar() {
 }
 
 function SearchPublication(searchinTerm, pubAction) {
-	window.location.href = '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl?q=Search?query-1=AND,:{' + searchinTerm + '}|action=addfacetfilter(' + encodeURIComponent(pubAction) + ')&default=1';
+	var target = '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl?q=Search?query-1=AND,:{' + searchinTerm + '}|action=addfacetfilter(' + encodeURIComponent(pubAction) + ')&default=1';
+	window.location.href = target;
 }
 
 

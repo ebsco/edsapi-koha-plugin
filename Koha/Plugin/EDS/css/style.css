@@ -273,7 +273,7 @@ searchlink {
 }
 .carousel-control.left, .carousel-control.right{ 
 	background-image: none !important; 
-	filter: progid:none !important; 
+	filter: progid none !important; 
 	color:#444!important;
 }
 
@@ -311,4 +311,8 @@ searchlink {
 	float: right;
 	margin-right: 0px;
 	margin-left: 10px;
+}
+
+div.results_summary.actions.links{
+	white-space: normal;
 }

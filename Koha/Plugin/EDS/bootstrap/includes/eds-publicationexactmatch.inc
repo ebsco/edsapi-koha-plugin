@@ -54,7 +54,9 @@ publicationExactMatchInc+='</div>';
 
 function SearchWithinPublication(searchinTerm){
   if (searchinTerm == ''){ searchinTerm = 'FT Y OR FT N'; }
-  window.location.href='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,:{'+searchinTerm+'}|action=addfacetfilter('+encodeURIComponent('[% publicationexactmatch.0.PublicationRecords.0.Header.ResourceType %]:'+'[% publicationexactmatch.0.PublicationRecords.0.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull %]'.toLowerCase())+')&default=1';
+  var title = '[% publicationexactmatch.0.PublicationRecords.0.RecordInfo.BibRecord.BibEntity.Titles.0.TitleFull %]';
+  title = title.replaceAll(":", "\\:");
+  window.location.href='/plugin/Koha/Plugin/EDS/opac/eds-search.pl?q=Search?query-1=AND,:{'+searchinTerm+'}|action=addfacetfilter('+encodeURIComponent('[% publicationexactmatch.0.PublicationRecords.0.Header.ResourceType %]:'+title.toLowerCase())+')&default=1';
 }
  function checkChar(e) 
 { 

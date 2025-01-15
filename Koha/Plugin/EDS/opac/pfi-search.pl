@@ -96,7 +96,7 @@ my $lang = C4::Languages::getlanguage($cgi);
 # decide which template to use
 my $template_name;
 my $template_type = 'basic';
-my @params = $cgi->param("limit");
+my @params = $cgi->multi_param("limit");
 my $search_desc = 1;
 my $adv_search = 0;
 
@@ -238,6 +238,7 @@ if($cgi->param("q")){
 		instancepath	=>$EDSConfig->{instancepath},
 		edsautosuggest	=> EDSProcessAutoSuggestedTerms(),
 		OPACResultsSidebar => C4::Context->preference('OPACResultsSidebar'),
+		PLUGIN_HTTP_PATH => $EDSConfig->{pluginhttppath},
 	);
 
 my $casAuthentication = C4::Context->preference('casAuthentication');

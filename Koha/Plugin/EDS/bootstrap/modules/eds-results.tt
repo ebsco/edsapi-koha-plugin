@@ -21,7 +21,7 @@
 [% ELSE %]
     You did not specify any search criteria.
 [% END %]</title>
-[% INCLUDE 'doc-head-close.inc' %]
+
 [% IF ( searchdesc ) %]
     [% IF ( query_desc ) %]for '[% query_desc | html%]'[% END %][% IF ( limit_desc ) %]&nbsp;with limit(s):&nbsp;'[% limit_desc | html %]'[% END %]
 [% ELSE %]
@@ -37,12 +37,7 @@
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
-[% IF ( OpacStarRatings == 'all' || Koha.Preference('Babeltheque') ) %]
-    [% BLOCK cssinclude %]
-        <link rel="stylesheet" type="text/css" href="[% interface %]/[% theme %]/css/jquery.rating.css" />
-    [% END %]
-[% END %]
-
+[% BLOCK cssinclude %][% END %]
 <link rel="alternate" type="application/rss+xml" title="[% LibraryName |html %] Search RSS feed" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |uri %][% limit_cgi |uri %]&amp;count=[% countrss |uri %]&amp;sort_by=acqdate_dsc&amp;format=rss2" />
 </head>
 
@@ -68,7 +63,7 @@
                         <strong>[% EDSLANG.eds_results_TT_no_results %]</strong>
                         <p>
                             [% IF ( searchdesc ) %]
-                                No results found for that in [% LibraryName %] catalog. <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi | html | url %][% limit_cgi | html | url %]&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" border="0" class="rsssearchicon"/></a>
+                                No results found for that in [% LibraryName %] catalog. <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi | html | url %][% limit_cgi | html | url %]&amp;format=rss2" class="rsssearchlink"><i class="fa fa-rss rsssearchicon" aria-hidden="true" title="Subscribe to this search"></i></a>
                             [% ELSE %]
                                 You did not specify any search criteria.
                             [% END %]
@@ -97,10 +92,10 @@
 
                 [% IF ( facets_loop && total ) %]<div class="col-lg-10 order-first order-md-first order-lg-2 maincontent">[% ELSE %]
                    <div class="col order-first order-md-first order-lg-2 maincontent"> 
-               [% END %]
+                [% END %]
 
                 [% IF ( searchdesc ) %]
-                    <h2 id="numresults">
+                    <h2 id="numresults" data-total="[% total |html %]">
                     [% IF ( total ) %]<strong>[% EDSLANG.eds_results_TT_results_returned_msg %] [% total |html %] [% EDSLANG.eds_results_TT_results_msg %]</strong>
                         [% IF ( related ) %]
                             (related searches:
@@ -109,7 +104,7 @@
                                 [% END %]
                             ).
                         [% END %]
-                        <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><img src="[% interface %]/[% theme %]/images/feed-icon-16x16.png" alt="Subscribe to this search" title="Subscribe to this search" class="rsssearchicon"/></a>
+                        <a style="display:none;" href="[% OPACBaseURL %]/cgi-bin/koha/opac-search.pl?[% query_cgi |html |url %][% limit_cgi |html | url %]&amp;count=[% countrss |html %]&amp;sort_by=acqdate_dsc&amp;format=rss2" class="rsssearchlink"><i class="fa fa-rss rsssearchicon" aria-hidden="true" title="Subscribe to this search"></i></a>
                     [% END # / IF total %]
                     </h2>
                 [% END # / IF searchdesc %]
@@ -203,7 +198,7 @@
                                 </div> <!-- / #selections-toolbar -->
 							 <div  style="display:none;"><div id="placard-tabs"></div></div>
                                [% INCLUDE "$plugin_dir/includes/eds-publicationexactmatch.inc" %]
-							    [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]
+							   [% INCLUDE "$plugin_dir/includes/eds-researchstarters.inc" %]
                                 <!-- TABLE RESULTS START -->
                                 <table class="table table-striped">
 
@@ -885,11 +880,13 @@
                 if (e.keyCode == 13) { e.preventDefault(); }
             });
 
-            Sticky = $("#floating");
-            Sticky.hcSticky({
-                stickTo: ".searchresults",
-                stickyClass: "floating"
-            });
+            if (document.querySelector('.searchresults')){
+                Sticky = $("#floating");
+                Sticky.hcSticky({
+                 stickTo: ".searchresults",
+                 stickyClass: "floating"
+                });
+            }
 
         });
     </script>

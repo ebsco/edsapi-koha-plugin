@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>23.11.001</latestversion>
+	<latestversion>23.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2024/12/11</lastupdated>
+	<lastupdated>2025/01/06</lastupdated>
 	<releasenotes>
-		<release version="23.11.001" date="2024/12/11">
-			<note id="1" author="omuzzy@ebsco.com">fixes issue where EDS items cannot be sent from cart</note>
-			<note id="2" author="omuzzy@ebsco.com">fixes issue where EDS items cannot be downloaded from cart</note>
-			<note id="3" author="omuzzy@ebsco.com">fixes other minor 23.11 errors</note>
+		<release version="23.11.002" date="2025/01/06">
+			<note id="1" author="omuzzy@ebsco.com">include multiple quality of life fixes, thanks to mskarupianski</note>
+			<note id="2" author="omuzzy@ebsco.com">fixes Search Within options on journal title search</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
