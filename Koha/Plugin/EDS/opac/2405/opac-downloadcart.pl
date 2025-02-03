@@ -33,7 +33,7 @@ use Koha::RecordProcessor;
 
 use utf8;
 my $query = CGI->new();
-
+do '../eds-methods.pl';
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
         template_name   => "opac-downloadcart.tt",
@@ -42,15 +42,16 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
         authnotrequired => ( C4::Context->preference("OpacPublic") ? 1 : 0 ),
     }
 );
-
+my $eds_data = "";
 my $bib_list = $query->param('bib_list');
+#convert _dot_ to . to properly search for items
+$bib_list =~s/\_dot\_/\./g;
 my $format  = $query->param('format');
 my $dbh     = C4::Context->dbh;
+$eds_data = $query->param('eds_data'); #EDS Patch
 
 if ($bib_list && $format) {
-
-    my $patron = Koha::Patrons->find($borrowernumber);
-
+    my $patron = Koha::Patrons->find($borrowernumber); 
     my @bibs = split( /\//, $bib_list );
 
     my $marcflavour = C4::Context->preference('marcflavour');
@@ -60,7 +61,6 @@ if ($bib_list && $format) {
 
     # CSV   
     if ($format =~ /^\d+$/) {
-
         my $csv_profile = Koha::CsvProfiles->find($format);
         if ( not $csv_profile or $csv_profile->staff_only ) {
             print $query->redirect('/cgi-bin/koha/errors/404.pl');
@@ -68,22 +68,27 @@ if ($bib_list && $format) {
         }
 
         $output = marc2csv(\@bibs, $format);
-
         # Other formats
     } else {
         my $record_processor = Koha::RecordProcessor->new({
             filters => 'ViewPolicy'
         });
         foreach my $biblionumber (@bibs) {
-
-            my $biblio = Koha::Biblios->find($biblionumber);
-            my $record = $biblio->metadata->record(
-                {
-                    embed_items => 1,
+            my $biblio = '';      
+            my $record = '';  
+                if($biblionumber =~m/\_\_/){
+                my $dat = '';
+                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);     #EDS patch   
+                } else {
+                    $biblio = Koha::Biblios->find($biblionumber);
+                    $record = $biblio->metadata->record(
+                    { 
+                    embed_items => 1,                     
                     opac        => 1,
-                    patron      => $patron,
-                }
-            );
+                    patron      => $patron, 
+                    }
+                );
+            }       
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({
                 interface => 'opac',
@@ -92,7 +97,7 @@ if ($bib_list && $format) {
             $record_processor->process($record);
 
             next unless $record;
-
+            
             if ($format eq 'iso2709') {
                 #NOTE: If we don't explicitly UTF-8 encode the output,
                 #the browser will guess the encoding, and it won't always choose UTF-8.
@@ -102,10 +107,10 @@ if ($bib_list && $format) {
                 $output .= marc2ris($record);
             }
             elsif ($format eq 'bibtex') {
-                $output .= marc2bibtex($record, $biblio);
+                $output .= marc2bibtex($record, $biblionumber);
             }
             elsif ( $format eq 'isbd' ) {
-                my $framework = GetFrameworkCode( $biblio );
+                my $framework = GetFrameworkCode( $biblionumber );
                 $output   .= GetISBDView({
                     'record'    => $record,
                     'template'  => 'opac',
@@ -121,13 +126,11 @@ if ($bib_list && $format) {
     $format = "csv" if ($format =~ m/^\d+$/);
 
     print $query->header(
-                               -type => ($type) ? $type : 'application/octet-stream',
-        -'Content-Transfer-Encoding' => 'binary',
-                         -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format"
-    );
+                        -type => ($type) ? $type : 'application/octet-stream',
+                        -'Content-Transfer-Encoding' => 'binary',
+                        -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format");
     print $output;
-
-} else { 
+    } else { 
     $template->param(
         csv_profiles => Koha::CsvProfiles->search(
             {
@@ -136,7 +139,7 @@ if ($bib_list && $format) {
                 staff_only => 0
             }
         ),
-        bib_list => $bib_list,
+        bib_list => $bib_list, 
     );
     output_html_with_http_headers $query, $cookie, $template->output;
 }
