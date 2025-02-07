@@ -736,6 +736,7 @@ async function PrepareItems() {
 	if (EDSItems > 0) {
 		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2405/opac-downloadcart.pl');
 		jQuery('#download_cart').prop('method', 'POST');
+		jQuery('#download-cart').hide();
 		jQuery('.print-large, .print').attr('onclick', ''); // .print for prog
 		jQuery('.print-large, .print').attr('href', 'javascript:window.print();location.reload();'); // .print for prog
 		jQuery('#itemst').append('<tr id="EDSBasketLoader"><td>&nbsp;</td><td nowrap="nowrap"><img src="/opac-tmpl/bootstrap/images/loading.gif" width="15"> ' + edsLang.basket_loading + '</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>');
@@ -746,9 +747,8 @@ async function PrepareItems() {
 
 	if ((EDSItems == 0)) {
 		jQuery('#EDSBasketLoader').remove()
+		jQuery('#download-cart').show();
 	}
-
-
 
 }
 async function IterateEDSItems(recordId) {
