@@ -37,6 +37,7 @@ my $dbh   = C4::Context->dbh;
 
 
 our ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode, $pluginhttppath)="";
+our $authTimeout = 0;
 
 our $PluginClass='Koha::Plugin::EDS';
 our $table='plugin_data';
@@ -172,15 +173,21 @@ sub CreateAuth
 	my $response =  CallREST('POST',$uri,$json, '', '');
 	#use Data::Dumper; die Dumper 'gtracker='.$GuestTracker.' cookie='.$input->cookie('guest');
 
-	$authtoken = decode_json( $response );
-	$authtoken = $authtoken->{AuthToken};
+	my $decodedResponse = decode_json( $response );
+	$authTimeout = time() + int($decodedResponse->{AuthTimeout});
+	$authtoken = $decodedResponse->{AuthToken};
 	$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $authtoken, $PluginClass, 'authtoken');
 	return $authtoken;
 }
 
 sub GetAuth
 {
-	return $authtoken;
+	if(time() > $authTimeout){
+		$authtoken = CreateAuth(); 
+		return $authtoken;
+	} else {
+		return $authtoken;
+	}
 }
 
 sub CreateSession

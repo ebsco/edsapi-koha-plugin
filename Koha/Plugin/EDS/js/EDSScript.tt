@@ -129,7 +129,7 @@ delCookie = function (name) {
 }
 
 if (QueryString('debug') != "1") { jQuery(window).error(function (e) { e.preventDefault(); }); }
-else { console.log('JS debug enabled') }// keep executing if there is an error.}
+else { console.log('JS debug enabled') }// keep executing if there is an error.
 
 /////  Language data setup  /////
 function getLanguage(code, callback) {
