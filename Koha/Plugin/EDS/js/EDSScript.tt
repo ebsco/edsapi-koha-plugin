@@ -870,7 +870,7 @@ function SetEDSCartField() {
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
 	recordList = QueryString("bib_list").toString();
-	//recordList = recordList.replace(/\_dot\_/g, ".");
+	recordList = recordList.replace(/\./g, "_dot_");
 	var recordId = recordList.split("/");
 
 	var fieldDataObj = { Records: [] };
