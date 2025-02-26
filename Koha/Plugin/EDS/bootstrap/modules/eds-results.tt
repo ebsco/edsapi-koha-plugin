@@ -628,6 +628,7 @@
                 [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
                     param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.results_cart%]")+"<\/option>";
                 [% END %]
+                /*
                 [% IF Koha.Preference('virtualshelves') %]
                     [% IF loggedinusername AND add_to_some_private_shelves.count %]
                         param1 += "<optgroup label=\""+_("Your lists:")+"\">";
@@ -659,6 +660,7 @@
                     param1 +="<option value=\"newlist\">"+_("[ [% EDSLANG.results_new_list %] ]")+"<\/option>"
                 [% END # /IF virtualshelves %]
                 param1 += "<\/select> <input type=\"submit\" class=\"btn btn-sm btn-primary\" value=\""+_("[%EDSLANG.results_save%]")+"\" />";
+                */
             [% END # /IF opacbookbag || virtualshelves %]
 
             $('.resort').change(function() {
@@ -700,7 +702,7 @@
             function cartList(){
                 addtoOption = $("#addto").find("option:selected");
                 addtoval = addtoOption.val();
-                if(addtoval == "addtolist"){
+                /* if(addtoval == "addtolist"){
                     var shelfnumber = addtoOption.attr("id").replace("s","");
                     if (vShelfAdd()) {
                         Dopop('/cgi-bin/koha/opac-addbybiblionumber.pl?selectedshelf='+shelfnumber+'&' + vShelfAdd());
@@ -722,7 +724,7 @@
                         alert(_("You must be logged in to create or add to lists"));
                     [% END %]
                     return false;
-                }
+                } */
                 if(addtoval == "addtocart" || $("#addto").attr("class") == "addtocart"){
                     addMultiple();
                     return false;
