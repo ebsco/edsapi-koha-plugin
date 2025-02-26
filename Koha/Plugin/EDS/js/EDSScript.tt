@@ -734,6 +734,7 @@ async function PrepareItems() {
 
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
+		jQuery('.send').hide();
 		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2405/opac-downloadcart.pl');
 		jQuery('#download_cart').prop('method', 'POST');
 		jQuery('#download-cart').hide();
@@ -746,6 +747,7 @@ async function PrepareItems() {
 	}
 
 	if ((EDSItems == 0)) {
+		jQuery('.send').show();
 		jQuery('#EDSBasketLoader').remove()
 		jQuery('#download-cart').show();
 	}
