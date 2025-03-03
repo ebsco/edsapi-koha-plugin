@@ -623,7 +623,7 @@
             [% END %]
 
             [% IF Koha.Preference( 'opacbookbag' ) == 1 OR Koha.Preference('virtualshelves') %]
-                param1 += "<select class=\"disabled\" name=\"addto\" id=\"addto\"><option>"+_("[%EDSLANG.results_add_to%]")+"</option>";
+                param1 += "<select class=\"disabled\" name=\"addto\" id=\"addto\">";
 
                 [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
                     param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.results_cart%]")+"<\/option>";
@@ -659,8 +659,8 @@
                     [% END %]
                     param1 +="<option value=\"newlist\">"+_("[ [% EDSLANG.results_new_list %] ]")+"<\/option>"
                 [% END # /IF virtualshelves %]
-                param1 += "<\/select> <input type=\"submit\" class=\"btn btn-sm btn-primary\" value=\""+_("[%EDSLANG.results_save%]")+"\" />";
                 */
+                param1 += "<\/select> <input type=\"submit\" class=\"btn btn-sm btn-primary\" value=\""+_("[%EDSLANG.results_save%]")+"\" />";
             [% END # /IF opacbookbag || virtualshelves %]
 
             $('.resort').change(function() {
