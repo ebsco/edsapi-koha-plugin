@@ -18,7 +18,7 @@
 use strict;
 use warnings;
 use CGI qw ( -utf8 );
-use Encode qw(encode);
+use Encode qw(encode decode);
 use C4::Auth;    # get_template_and_user
 use C4::Output;
 use LWP;
@@ -708,9 +708,9 @@ sub ProcessEDSCartItems
 		$recordJSON .= "}";
 		$recordXML .= '</record>';
 		$recordXML=~s/\&/\&amp;/g; # avoid error when converting to marc
+		$recordXML = decode("UTF-8", $recordXML);
 		$dat = from_json($recordJSON); # used instead of decode_json and encode('utf-8',$recordJSON) first.
-
-		$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
+		$record = eval { MARC::Record::new_from_xml( $recordXML, "UTF-8", "MARC21" ) };
 		return ($record,$dat);
 	}else{return ($record,$dat);}
 }
