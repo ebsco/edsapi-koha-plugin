@@ -792,7 +792,16 @@ async function IterateEDSItems(recordId) {
 
 function GetEDSItems(data) {
 	AN = data.Record.Header.An.replace(/\./g, "_dot_");
+	console.log('GetEDSItems: ', data);
 	try {
+		// Convert the string to a Uint8Array
+		let bytes = new Uint8Array(data.Record.Items[0].Data.split('').map(char => char.charCodeAt(0)));
+						
+		// Decode the bytes using TextDecoder
+		let decoder = new TextDecoder('utf-8');
+		data.Record.Items[0].Data = decoder.decode(bytes);
+						
+		console.log(data.Record.Items[0].Data);
 		jQuery('#itemst').append('<tr><td><input type="checkbox" class="cb" value="' + AN + '__' + data.Record.Header.DbId + '" name="' + AN + '__' + data.Record.Header.DbId + '" id="' + AN + '__' + data.Record.Header.DbId + '"></td><td><a href="#" onclick="opener.document.location=\'[% PLUGIN_HTTP_PATH %]/opac/eds-detail.pl?q=Retrieve?an=' + data.Record.Header.An + '|dbid=' + data.Record.Header.DbId + '\'">' + jQuery("<div/>").html(data.Record.Items[0].Data).text() + '</a></td><td>' + jQuery("<div/>").html(data.Record.Items[1].Data).text() + '</td><td>' + data.Record.RecordInfo.BibRecord.BibRelationships.IsPartOfRelationships[0].BibEntity.Dates[0].Y + '</td><td>' + edsLang.basket_item_location + '</td></tr>');
 		EDSItems--;
 		if (EDSItems == 0) { jQuery('#EDSBasketLoader').remove() }
