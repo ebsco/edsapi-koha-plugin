@@ -603,8 +603,10 @@ sub ProcessEDSCartItems
 		#Title
 		try{
 				my $EDSRecordTitle = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Titles}[0]->{TitleFull};
+				my $EDSRecordTitleXML = $EDSRecordTitle;
+				$EDSRecordTitle =~ s/"/\\"/g; # Escape double quotes
 				$recordXML .= '  <datafield tag="245" ind1="0" ind2="0">
-									<subfield code="a" label="Titles">'.$EDSRecordTitle.'</subfield>
+									<subfield code="a" label="Titles">'.$EDSRecordTitleXML.'</subfield>
 								  </datafield>
 								  ';
 				$recordJSON .= '"title":"'.$EDSRecordTitle.'",';
