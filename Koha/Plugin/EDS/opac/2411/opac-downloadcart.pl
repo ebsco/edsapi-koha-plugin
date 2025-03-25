@@ -33,7 +33,7 @@ use Koha::RecordProcessor;
 
 use utf8;
 my $query = CGI->new();
-
+do '../eds-methods.pl';
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
         template_name   => "opac-downloadcart.tt",
@@ -42,10 +42,13 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
         authnotrequired => ( C4::Context->preference("OpacPublic") ? 1 : 0 ),
     }
 );
-
+my $eds_data = "";
 my $bib_list = $query->param('bib_list');
+#convert _dot_ to . to properly search for items
+$bib_list =~s/\_dot\_/\./g;
 my $format  = $query->param('format');
 my $dbh     = C4::Context->dbh;
+$eds_data = $query->param('eds_data'); #EDS Patch
 
 if ($bib_list && $format) {
 
@@ -75,15 +78,21 @@ if ($bib_list && $format) {
             filters => 'ViewPolicy'
         });
         foreach my $biblionumber (@bibs) {
-
-            my $biblio = Koha::Biblios->find($biblionumber);
-            my $record = $biblio->metadata_record(
-                {
-                    embed_items => 1,
-                    interface   => 'opac',
-                    patron      => $patron,
-                }
-            );
+            my $biblio = '';      
+            my $record = '';  
+                if($biblionumber =~m/\_\_/){
+                my $dat = '';
+                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);     #EDS patch   
+                } else {
+                    $biblio = Koha::Biblios->find($biblionumber);
+                    $record = $biblio->metadata->record(
+                    { 
+                    embed_items => 1,                     
+                    opac        => 1,
+                    patron      => $patron, 
+                    }
+                );
+            }       
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({
                 interface => 'opac',
@@ -102,10 +111,10 @@ if ($bib_list && $format) {
                 $output .= marc2ris($record);
             }
             elsif ($format eq 'bibtex') {
-                $output .= marc2bibtex($record, $biblio->biblionumber);
+                $output .= marc2bibtex($record, $biblionumber);
             }
             elsif ( $format eq 'isbd' ) {
-                my $framework = GetFrameworkCode( $biblio );
+                my $framework = GetFrameworkCode( $biblionumber );
                 $output   .= GetISBDView({
                     'record'    => $record,
                     'template'  => 'opac',
@@ -121,10 +130,9 @@ if ($bib_list && $format) {
     $format = "csv" if ($format =~ m/^\d+$/);
 
     print $query->header(
-                               -type => ($type) ? $type : 'application/octet-stream',
-        -'Content-Transfer-Encoding' => 'binary',
-                         -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format"
-    );
+                        -type => ($type) ? $type : 'application/octet-stream',
+                        -'Content-Transfer-Encoding' => 'binary',
+                        -attachment => ($extension) ? "cart.$format.$extension" : "cart.$format");
     print $output;
 
 } else { 
