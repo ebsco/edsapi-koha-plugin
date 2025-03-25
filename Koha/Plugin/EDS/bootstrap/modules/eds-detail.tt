@@ -1045,7 +1045,7 @@
                 [% END # / IF Babeltheque %]
         </div> <!-- /.span8 -->
 
-        <div class="span3">
+        <div class="col-lg-3">
             <div id="ulactioncontainer">
 
                 [% IF ( OpacBrowseResults && busc ) %]
