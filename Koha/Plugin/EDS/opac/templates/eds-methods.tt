@@ -18,7 +18,7 @@
 use strict;
 use warnings;
 use CGI qw ( -utf8 );
-use Encode qw(encode);
+use Encode qw(encode decode);
 use C4::Auth;    # get_template_and_user
 use C4::Output;
 use LWP;
@@ -37,6 +37,7 @@ my $dbh   = C4::Context->dbh;
 
 
 our ( $edsusername, $edsprofileid, $edspassword, $edscustomerid, $defaultsearch, $cookieexpiry, $cataloguedbid, $catalogueanprefix, $authtoken, $logerrors, $iprange, $edsinfo, $lastedsinfoupdate, $defaultparams, $defaultEDSQuery, $SessionToken, $GuestTracker, $autocomplete, $autocomplete_mode, $pluginhttppath)="";
+our $authTimeout = 0;
 
 our $PluginClass='Koha::Plugin::EDS';
 our $table='plugin_data';
@@ -172,15 +173,21 @@ sub CreateAuth
 	my $response =  CallREST('POST',$uri,$json, '', '');
 	#use Data::Dumper; die Dumper 'gtracker='.$GuestTracker.' cookie='.$input->cookie('guest');
 
-	$authtoken = decode_json( $response );
-	$authtoken = $authtoken->{AuthToken};
+	my $decodedResponse = decode_json( $response );
+	$authTimeout = time() + int($decodedResponse->{AuthTimeout});
+	$authtoken = $decodedResponse->{AuthToken};
 	$dbh->do("UPDATE $table SET plugin_value = ? WHERE plugin_class= ? AND plugin_key= ? ", undef, $authtoken, $PluginClass, 'authtoken');
 	return $authtoken;
 }
 
 sub GetAuth
 {
-	return $authtoken;
+	if(time() > $authTimeout){
+		$authtoken = CreateAuth(); 
+		return $authtoken;
+	} else {
+		return $authtoken;
+	}
 }
 
 sub CreateSession
@@ -596,8 +603,10 @@ sub ProcessEDSCartItems
 		#Title
 		try{
 				my $EDSRecordTitle = $record->{Record}->{RecordInfo}->{BibRecord}->{BibEntity}->{Titles}[0]->{TitleFull};
+				my $EDSRecordTitleXML = $EDSRecordTitle;
+				$EDSRecordTitle =~ s/"/\\"/g; # Escape double quotes
 				$recordXML .= '  <datafield tag="245" ind1="0" ind2="0">
-									<subfield code="a" label="Titles">'.$EDSRecordTitle.'</subfield>
+									<subfield code="a" label="Titles">'.$EDSRecordTitleXML.'</subfield>
 								  </datafield>
 								  ';
 				$recordJSON .= '"title":"'.$EDSRecordTitle.'",';
@@ -701,9 +710,9 @@ sub ProcessEDSCartItems
 		$recordJSON .= "}";
 		$recordXML .= '</record>';
 		$recordXML=~s/\&/\&amp;/g; # avoid error when converting to marc
+		$recordXML = decode("UTF-8", $recordXML);
 		$dat = from_json($recordJSON); # used instead of decode_json and encode('utf-8',$recordJSON) first.
-
-		$record = eval { MARC::Record::new_from_xml( $recordXML, "utf8", C4::Context->preference('marcflavour') ) };
+		$record = eval { MARC::Record::new_from_xml( $recordXML, "UTF-8", "MARC21" ) };
 		return ($record,$dat);
 	}else{return ($record,$dat);}
 }
