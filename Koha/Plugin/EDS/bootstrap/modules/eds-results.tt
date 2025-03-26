@@ -625,7 +625,7 @@
                 param1 += "<select class=\"disabled\" name=\"addto\" id=\"addto\">";
 
                 [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
-                    param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.results_cart%]")+"<\/option>";
+                    param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.eds_results_TT_add_cart%]")+"<\/option>";
                 [% END %]
                 /*
                 [% IF Koha.Preference('virtualshelves') %]
