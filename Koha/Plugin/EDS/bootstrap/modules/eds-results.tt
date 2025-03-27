@@ -136,7 +136,7 @@
                             [% query_error %]
                         </div>
                     [% END %]
-                    <div id="floating">
+                    <div id="floating" class="sticky">
                         <div id="toolbar" class="toolbar row align-items-center">
                             <div id="top-pages" class="col">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
                      </div> <!-- / #selections-toolbar -->
@@ -880,15 +880,6 @@
             $("input.newtag").on('keydown', function(e){
                 if (e.keyCode == 13) { e.preventDefault(); }
             });
-
-            if (document.querySelector('.searchresults')){
-                Sticky = $("#floating");
-                Sticky.hcSticky({
-                 stickTo: ".searchresults",
-                 stickyClass: "floating"
-                });
-            }
-
         });
     </script>
 [% END %]
