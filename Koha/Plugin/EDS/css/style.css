@@ -317,7 +317,7 @@ div.results_summary.actions.links{
 	white-space: normal;
 }
 
-::placeholder {
+#published-date::placeholder {
 	font-style: normal;
 	text-align: center;
 }
