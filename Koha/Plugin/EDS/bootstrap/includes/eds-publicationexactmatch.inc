@@ -60,15 +60,15 @@ function SearchWithinPublication(searchinTerm){
 }
  function checkChar(e) 
 { 
-        var charCode;
+		var charCode;
         if(e && e.which)
         {
             charCode = e.which;
         }
-		console.log(charCode);
         if (charCode == 13) 
         {
-           SearchWithinPublication(jQuery('#search-within-publication').val());
+           e.preventDefault();
+		   SearchWithinPublication(jQuery('#search-within-publication').val());
         }
  }
  </script>

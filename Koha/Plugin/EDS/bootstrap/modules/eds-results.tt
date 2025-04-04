@@ -136,7 +136,7 @@
                             [% query_error %]
                         </div>
                     [% END %]
-                    <div id="floating">
+                    <div id="floating" class="sticky">
                         <div id="toolbar" class="toolbar row align-items-center">
                             <div id="top-pages" class="col">[% INCLUDE "$plugin_dir/includes/eds-page-numbers.inc" %]</div>
                      </div> <!-- / #selections-toolbar -->
@@ -476,7 +476,6 @@
     [% IF ( OverDriveEnabled ) %][% Asset.js("js/overdrive.js") | $raw %][% END %]
     [% IF ( RecordedBooksEnabled ) %][% Asset.js("js/recordedbooks.js") | $raw %][% END %]
     [% Asset.js("js/authtoresults.js") | $raw %]
-    [% Asset.js("lib/hc-sticky/hc-sticky.js") | $raw %]
     [% IF ( OpacHighlightedWords ) %]
         [% Asset.js("lib/jquery/plugins/jquery.highlight-5.js") | $raw %]
     [% END %]
@@ -626,7 +625,7 @@
                 param1 += "<select class=\"disabled\" name=\"addto\" id=\"addto\">";
 
                 [% IF Koha.Preference( 'opacbookbag' ) == 1 %]
-                    param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.results_cart%]")+"<\/option>";
+                    param1 += "<option value=\"addtocart\">"+_("[%EDSLANG.eds_results_TT_add_cart%]")+"<\/option>";
                 [% END %]
                 /*
                 [% IF Koha.Preference('virtualshelves') %]
@@ -881,15 +880,6 @@
             $("input.newtag").on('keydown', function(e){
                 if (e.keyCode == 13) { e.preventDefault(); }
             });
-
-            if (document.querySelector('.searchresults')){
-                Sticky = $("#floating");
-                Sticky.hcSticky({
-                 stickTo: ".searchresults",
-                 stickyClass: "floating"
-                });
-            }
-
         });
     </script>
 [% END %]

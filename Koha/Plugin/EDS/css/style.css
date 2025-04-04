@@ -316,3 +316,8 @@ searchlink {
 div.results_summary.actions.links{
 	white-space: normal;
 }
+
+#published-date::placeholder {
+	font-style: normal;
+	text-align: center;
+}

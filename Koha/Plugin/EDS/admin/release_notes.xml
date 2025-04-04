@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>24.05.001</latestversion>
+	<latestversion>24.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/03/24</lastupdated>
+	<lastupdated>2025/04/03</lastupdated>
 	<releasenotes>
-		<release version="24.05.001" date="2025/03/24">
-			<note id="1" author="omuzzy@ebsco.com">Upgrading EDS API Koha plugin to support Koha 24.05</note>
+		<release version="24.11.001" date="2025/04/03">
+			<note id="1" author="omuzzy@ebsco.com">Upgrading EDS API Koha plugin to support Koha 24.11</note>
 		</release>
 	</releasenotes>
 </kohaplugin>
