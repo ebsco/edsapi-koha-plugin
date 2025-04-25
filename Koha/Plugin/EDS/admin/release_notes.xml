@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>24.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/04/04</lastupdated>
+	<lastupdated>2025/04/25</lastupdated>
 	<releasenotes>
-		<release version="24.11.002" date="2025/04/04">
+		<release version="24.11.002" date="2025/04/25">
 			<note id="1" author="omuzzy@ebsco.com">minor fixes for Koha 24.11</note>
 		</release>
 	</releasenotes>
