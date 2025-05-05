@@ -5,6 +5,10 @@
     {
       "author": "omuzzy@ebsco.com",
       "note": "minor fixes for Koha 24.11"
+    },
+    {
+      "author": "omuzzy@ebsco.com",
+      "note": "fix for EDS Autocomplete functionality"
     }
   ],
   "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
