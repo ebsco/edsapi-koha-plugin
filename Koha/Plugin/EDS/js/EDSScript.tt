@@ -1355,6 +1355,15 @@ async function EDSAutoComp() {
         return;
     }
 
+    //debounce function to limit API calls
+	function debounce(func, delay) {
+		let timer;
+		return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
     try {
         const creds = await fetchCredentials();
         if (edsConfig.logerrors == "yes") {
@@ -1373,8 +1382,7 @@ async function EDSAutoComp() {
 		jQuery('#searchform').attr('autocomplete', 'off');
 
         // Add event listener for term input
-        jQuery("#translControl1").on("input", async function (input, terms) {
-			
+        jQuery("#translControl1").on("input", debounce(async function (input, terms) {
 			input = this;
 			var dropDownDiv, termDiv, i, val = this.value;		
 			
@@ -1497,8 +1505,7 @@ async function EDSAutoComp() {
 			document.addEventListener("click", function (e) {
 			closeAllLists(e.target);
 			});
-		});
-	
+		}, 500)); // 500ms debounce delay	
 		//execute a function for keydown/keyup/enter events
 		input.addEventListener("keydown", function(e) {
 			var x = document.getElementById(this.id + "autocomplete-list");
