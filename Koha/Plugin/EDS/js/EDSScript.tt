@@ -1294,6 +1294,9 @@ function DateHandleKeyPress(e, searchBox) {
 	}
 }
 
+//retry count added for fetchCredentials/EDSAutoComp
+var retryCount = 0;
+
 //function to fetch credentials before running EDSAutoComp
 async function fetchCredentials() {
     try {
@@ -1316,12 +1319,13 @@ async function fetchCredentials() {
             if (!response.ok) {
                 throw new Error(`Failed to fetch credentials: ${response.statusText}`);
             }
-            const creds = await response.json();
+            creds = await response.json();
             eds_sessionStorage.set("autoComp", creds);
             eds_sessionStorage.set(
                 "autoComp_expiry",
                 Math.round(Date.now() / 1000) + parseInt(creds.AuthTimeout) - 30
             );
+			retryCount = 0; // Reset retry count on successful fetch
             return creds; // Return the new credentials
         } else {
             return creds; // Return existing credentials
@@ -1365,9 +1369,9 @@ async function EDSAutoComp() {
     }
 
     try {
-        const creds = await fetchCredentials();
+        creds = await fetchCredentials();
         if (edsConfig.logerrors == "yes") {
-            console.log("Fetched credentials...");
+            console.log("Fetching credentials...");
         }
 
         const idx = edsConfig.autocomplete_mode !== "normal" ? "holdings" : "rawqueries";
@@ -1433,8 +1437,26 @@ async function EDSAutoComp() {
                     if (edsConfig.logerrors == "yes") {
                         console.log("Error in autocomplete response:", data.error);
                     }
-                    eds_sessionStorage.remove("autoComp");
-                    eds_sessionStorage.remove("autoComp_expiry");
+					if (data.error && retryCount < 2) {
+						retryCount++;
+						if (edsConfig.logerrors == "yes") {
+							console.log("Removing autoComp and autoComp_expiry due to data.error...");
+							console.log("Retrying fetchCredentials...");
+                        }
+                        eds_sessionStorage.remove("autoComp");
+                        eds_sessionStorage.remove("autoComp_expiry");
+						creds = await fetchCredentials(); // Fetch new credentials
+						//retrigger the autocomplete input event
+						if (edsConfig.logerrors == "yes") {
+							console.log("Retrying autocomplete request...");
+						}
+						jQuery("#translControl1").trigger("input");
+						return;
+					} else {
+						eds_sessionStorage.remove("autoComp");
+						eds_sessionStorage.remove("autoComp_expiry");
+						throw new Error("Failed to reauthorize credentials.");
+					}
                 } else {
 					//terms returned from API
 					terms = data.terms.map((wrapper) => wrapper.term);

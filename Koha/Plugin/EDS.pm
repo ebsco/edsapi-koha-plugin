@@ -34,7 +34,7 @@ our $MAJOR_VERSION = "24.11";
 our $SUB_VERSION = "002";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
 our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2025-05-07';
+our $DATE_UPDATE = '2025-05-12';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -151,7 +151,6 @@ sub configure {
 						authtoken 			=> $cgi->param('authtoken'),
 						lastedsinfoupdate	=> $cgi->param('lastedsinfoupdate'),
 						edsinfo 			=> $cgi->param('edsinfo'),
-						$self->store_data
 					}
 				);
 
