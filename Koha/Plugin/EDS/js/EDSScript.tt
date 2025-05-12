@@ -64,7 +64,7 @@ var eds_sessionStorage = {
 		return retData;
 	},
 	remove: function (key) {
-		sessionStorage.removeItem(key);
+		sessionStorage.removeItem("edsPlugin_" + key);
 	},
 	flush: function () {
 		for (var key in sessionStorage) {
