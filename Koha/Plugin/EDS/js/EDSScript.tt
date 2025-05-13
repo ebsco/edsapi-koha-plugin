@@ -1294,8 +1294,17 @@ function DateHandleKeyPress(e, searchBox) {
 	}
 }
 
-//retry count added for fetchCredentials/EDSAutoComp
-var retryCount = 0;
+//retry counter added for fetchCredentials/EDSAutoComp
+// Update retryCount in sessionStorage whenever it changes
+function updateRetryCount(value) {
+    let retryCount = value;
+    eds_sessionStorage.set("retryCount", retryCount);
+}
+
+if (!(eds_sessionStorage.get("retryCount"))) {
+	updateRetryCount(0); // Initialize retryCount if not already set
+} 
+
 
 //function to fetch credentials before running EDSAutoComp
 async function fetchCredentials() {
@@ -1325,7 +1334,7 @@ async function fetchCredentials() {
                 "autoComp_expiry",
                 Math.round(Date.now() / 1000) + parseInt(creds.AuthTimeout) - 30
             );
-			retryCount = 0; // Reset retry count on successful fetch
+			updateRetryCount(0); // Reset retry count on successful fetch
             return creds; // Return the new credentials
         } else {
             return creds; // Return existing credentials
@@ -1437,8 +1446,8 @@ async function EDSAutoComp() {
                     if (edsConfig.logerrors == "yes") {
                         console.log("Error in autocomplete response:", data.error);
                     }
-					if (data.error && retryCount < 2) {
-						retryCount++;
+					if (data.error && (eds_sessionStorage.get("retryCount") < 2)) {
+						updateRetryCount((eds_sessionStorage.get("retryCount")) + 1); // Increment retry count
 						if (edsConfig.logerrors == "yes") {
 							console.log("Removing autoComp and autoComp_expiry due to data.error...");
 							console.log("Retrying fetchCredentials...");
@@ -1451,6 +1460,9 @@ async function EDSAutoComp() {
 							console.log("Retrying autocomplete request...");
 						}
 						jQuery("#translControl1").trigger("input");
+						if (edsConfig.logerrors == "yes") {
+							console.log("Autocomplete retriggered after refetching credentials...");
+						}
 						return;
 					} else {
 						eds_sessionStorage.remove("autoComp");
