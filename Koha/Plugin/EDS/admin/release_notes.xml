@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>24.11.001</latestversion>
+	<latestversion>24.11.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/04/03</lastupdated>
+	<lastupdated>2025/05/13</lastupdated>
 	<releasenotes>
-		<release version="24.11.001" date="2025/04/03">
-			<note id="1" author="omuzzy@ebsco.com">Upgrading EDS API Koha plugin to support Koha 24.11</note>
+		<release version="24.11.002" date="2025/05/13">
+			<note id="1" author="omuzzy@ebsco.com">minor fixes for Koha 24.11</note>
+			<note id="2" author="omuzzy@ebsco.com">fix for EDS Autocomplete functionality</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

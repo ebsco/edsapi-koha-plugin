@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "24.11001";
+var versionEDSKoha = "24.11002";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -64,7 +64,7 @@ var eds_sessionStorage = {
 		return retData;
 	},
 	remove: function (key) {
-		sessionStorage.removeItem(key);
+		sessionStorage.removeItem("edsPlugin_" + key);
 	},
 	flush: function () {
 		for (var key in sessionStorage) {
@@ -295,6 +295,7 @@ function StartEDS(edsLang) {
 		console.log("finished ConfigData...");
 	}
 	//jQuery("#masthead_search").attr("disabled","disabled");
+	//if .back_results link, run EDSSetDetailPageNavigator
 	if (typeof jQuery('.back_results a').attr('href') != 'undefined') { EDSSetDetailPageNavigator(); }
 
 	if (edsConfig.logerrors == "yes"){
@@ -320,14 +321,6 @@ function StartEDS(edsLang) {
 		jQuery('#translControl1').val(autoSuggestText);
 		jQuery('#searchsubmit').trigger('click');
 	});
-
-	if (edsConfig.logerrors == "yes"){
-		console.log("running autocomplete...");
-	}
-	if (edsConfig.autocomplete == "yes") {
-		EDSAutoComp();
-	}
-
 }
 
 function PFIAtoZBar() {
@@ -376,7 +369,21 @@ function ConfigData(data) {
 			}
 			eds_sessionStorage.set('defaultsearch', data.defaultsearch);
 		}
+		if (edsConfig.logerrors == "yes") {
+			console.log("running GoDiscovery from ConfigData...");
+		}
 		GoDiscovery();
+	}
+}
+
+//function to hardcode EDS options
+function HardcodedEDSOptions(data) {
+	edsOptions = '';
+	edsOptions += '<option value="">' + kohaSwitchText + '</option><option selected="selected" value="eds">' + edsSelectText + '</option>';
+	for (var i = 0; i < data.length; i++) {
+		var selectedItem = "";
+		if (edsSelectedKnownItem == data[i].FieldCode) { selectedItem = 'selected="selected"' }
+		edsOptions += '<option ' + selectedItem + ' value="' + data[i].FieldCode + '">--- ' + data[i].FieldCode + ': ' + data[i].Label + '</option>';
 	}
 }
 
@@ -422,7 +429,9 @@ function GoDiscovery() {
 		if (edsConfig.logerrors == "yes"){
 			console.log("Running SetEDSOptions on false...");
 		}
-		SetEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));// Hardcoded to improve initial loading time. Uses cached values from the server the seconds time.
+		// Hardcoded to improve initial loading time. Uses cached values from the server the second time.
+		HardcodedEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));
+		jQuery('#masthead_search').empty().append(edsOptions); //appends hardcoded values to masthead_search
 		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=knownitems', function (data) { StoreEDSOptions(data); });
 	}
 
@@ -430,7 +439,7 @@ function GoDiscovery() {
 		console.log("Final sessionStorage check...");
 	}
 	if (eds_sessionStorage.get('defaultsearch') == 'eds') {
-		SetEDS(0);
+		return;
 	}
 	if (edsConfig.logerrors == "yes"){
 		console.log("Finished GoDiscovery...");
@@ -438,9 +447,10 @@ function GoDiscovery() {
 
 }
 
+// store the EDS label/fieldcode pairs in sessionStorage
 function StoreEDSOptions(data) {
 	if (!eds_sessionStorage.get('edsKnownItems')) {
-		eds_sessionStorage.set('edsKnownItems', data)
+		eds_sessionStorage.set('edsKnownItems', data);
 		SetEDSOptions(data);
 	}
 }
@@ -459,12 +469,12 @@ function SetEDSOptions(data) {
 	}
 	if (eds_sessionStorage.get('defaultsearch') == "eds") {
 		if (edsConfig.logerrors == "yes"){
-			console.log("Trying SetEDS...");
+			console.log("Trying SetEDS from SetEDSOptions...");
 		}
 		SetEDS(0);
 	} else if (eds_sessionStorage.get('defaultsearch') == "koha") { 
 		if (edsConfig.logerrors == "yes"){
-			console.log("Trying SetKoha...");
+			console.log("Trying SetKoha from SetEDSOptions...");
 		}
 		SetKoha(0); }
 
@@ -483,6 +493,7 @@ function SetEDS(showInfo) {
 	jQuery('#searchform').submit(function () { return false; });
 	jQuery('#searchsubmit').click(SearchEDS);
 	jQuery('#masthead_search option').each(function () { jQuery(this).remove(); });
+	//showInfo will be 0 or 1 - 0 will not show the message, 1 will show message
 	if (showInfo) { ShowInfo(edsSelectInfo); }
 	jQuery('#masthead_search').append(edsOptions);
 	eds_sessionStorage.set('defaultsearch', 'eds');
@@ -507,12 +518,15 @@ function SetEDS(showInfo) {
 		knownItem = "JN";
 	}
 	if (edsConfig.autocomplete == "yes") {
-		EDSAutoComp();
+		if (edsConfig.logerrors == "yes") {
+		console.log("Running EDSAutoComp from SetEDS...");
+		}
+	EDSAutoComp();
 	}
 }
 
 function SetKoha(showInfo) {
-	jQuery('#searchform').unbind('submit');EDSAutoComp
+	jQuery('#searchform').unbind('submit');
 	jQuery('#searchsubmit').unbind('click');
 	jQuery('#masthead_search option').each(function () { jQuery(this).remove(); });
 	if (showInfo) { ShowInfo(kohaSelectInfo); }
@@ -529,9 +543,11 @@ function SetKoha(showInfo) {
 	} else {
 		jQuery('a[href="[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl"]').attr('href', '/cgi-bin/koha/opac-search.pl');
 	}
-	jQuery('#translControl1').autocomplete("destroy");
+	//prevents calling autocomplete on Koha search
+	jQuery('#translControl1').off("input");
 }
 
+//shows message at Catalogue/Discovery toggle
 function ShowInfo(msg) {
 	if (edsConfig.logerrors == "yes"){
 		console.log("In ShowInfo...");
@@ -618,6 +634,7 @@ function EDSAppendToBrowse(data) {
 	jQuery("#ul_pagination_list").css('padding-top', '0px');
 }
 
+//TODO investigate if this is working and if still needed
 function EDSSetDetailPageNavigator() {
 	jQuery('#titleBread').text(jQuery('#titleBread').text() + jQuery('.title').text());
 	if (jQuery('.back_results a').attr('href').indexOf('q=Search?') > -1) {
@@ -1277,89 +1294,307 @@ function DateHandleKeyPress(e, searchBox) {
 	}
 }
 
-function EDSAutoComp() {
-	if (edsConfig.logerrors == "yes"){
-		console.log("Running EDSAutoComp...");
-	}
-	// Check for expired credentials
-	var credsExpiry = eds_sessionStorage.get("autoComp_expiry");
-	if (credsExpiry && credsExpiry < Math.round(Date.now() / 1000)) {
-		eds_sessionStorage.remove('autoComp');
-		eds_sessionStorage.remove('autoComp_expiry');
-	}
-	if (edsConfig.logerrors == "yes"){
-		console.log("Finished setting creds expiration...");
-	}
-	var creds = eds_sessionStorage.get("autoComp");
+//retry counter added for fetchCredentials/EDSAutoComp
+// Update retryCount in sessionStorage whenever it changes
+function updateRetryCount(value) {
+    let retryCount = value;
+    eds_sessionStorage.set("retryCount", retryCount);
+}
 
-	var idx = "rawqueries";
-	if (edsConfig.autocomplete_mode != "normal") {
-		idx = "holdings";
-	}
+if (!(eds_sessionStorage.get("retryCount"))) {
+	updateRetryCount(0); // Initialize retryCount if not already set
+} 
 
-	if (eds_sessionStorage.get('defaultsearch') != "eds") {
+
+//function to fetch credentials before running EDSAutoComp
+async function fetchCredentials() {
+    try {
+        // Check for expired credentials
+        const credsExpiry = eds_sessionStorage.get("autoComp_expiry");
+        if (credsExpiry && credsExpiry < Math.round(Date.now() / 1000)) {
+            eds_sessionStorage.remove("autoComp");
+            eds_sessionStorage.remove("autoComp_expiry");
+            if (edsConfig.logerrors == "yes") {
+                console.log("Credentials expired, removed from session storage.");
+            }
+        }
+        // Fetch credentials if not available
+        let creds = eds_sessionStorage.get("autoComp");
+        if (!creds) {
+            if (edsConfig.logerrors == "yes") {
+                console.log("Fetching new credentials...");
+            }
+            const response = await fetch('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth');
+            if (!response.ok) {
+                throw new Error(`Failed to fetch credentials: ${response.statusText}`);
+            }
+            creds = await response.json();
+            eds_sessionStorage.set("autoComp", creds);
+            eds_sessionStorage.set(
+                "autoComp_expiry",
+                Math.round(Date.now() / 1000) + parseInt(creds.AuthTimeout) - 30
+            );
+			updateRetryCount(0); // Reset retry count on successful fetch
+            return creds; // Return the new credentials
+        } else {
+            return creds; // Return existing credentials
+        }
+    } catch (error) {
+        if (edsConfig.logerrors == "yes") {
+            console.error("Error fetching credentials:", error);
+        }
+        throw error;
+    }
+}
+
+async function EDSAutoComp() {
+	//don't run if autocomplete is disabled
+	if (edsConfig.autocomplete == "no") {
+		if (edsConfig.logerrors == "yes") {
+			console.log("EDS Autocomplete is disabled in configuration.");
+		}
 		return;
 	}
 
-	if (!creds) {
-		if (edsConfig.logerrors == "yes"){
-			console.log("Running creds false...");
-		}
-		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth', function (data) {
-			eds_sessionStorage.set('autoComp', data);
-			eds_sessionStorage.set('autoComp_expiry', Math.round(Date.now() / 1000) + parseInt(data.AuthTimeout) - 30);
-			EDSAutoComp();
-			if (edsConfig.logerrors == "yes"){
-				console.log("Finished creds false...");
-			}
-		});
-	} else {
-		if (edsConfig.logerrors == "yes"){
-			console.log("Running creds true...");
-			console.log("Running autocomplete...");
-		}
-		jQuery('#translControl1').autocomplete({
-			source: function (request, response) {
-				var promise = jQuery.ajax(creds.Autocomplete.Url, {
-					data: {
-						token: creds.Autocomplete.Token,
-						term: request.term,
-						idx: idx,
-						filters: JSON.stringify([{
-							name: 'custid',
-							values: [creds.Autocomplete.CustId]
-						}])
-					}
-				});
-				promise.done(function (data) {
-					if (data.error) {
-						eds_sessionStorage.remove('autoComp');
-						eds_sessionStorage.remove('autoComp_expiry');
+    if (edsConfig.logerrors == "yes") {
+        console.log("Running EDSAutoComp...");
+    }
 
-						EDSAutoComp();
+    // Ensure default search is "eds"
+    if (eds_sessionStorage.get("defaultsearch") !== "eds") {
+        if (edsConfig.logerrors == "yes") {
+            console.log("Default search is not 'eds'. Exiting EDSAutoComp.");
+        }
+        return;
+    }
+
+    //debounce function to limit API calls
+	function debounce(func, delay) {
+		let timer;
+		return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    try {
+        creds = await fetchCredentials();
+        if (edsConfig.logerrors == "yes") {
+            console.log("Fetching credentials...");
+        }
+
+        const idx = edsConfig.autocomplete_mode !== "normal" ? "holdings" : "rawqueries";
+		
+		//declare currentFocus variable here so can be accessed outside of .on("input") function
+		var currentFocus;
+		
+		//setting var input to allow keydown/keyup event listeners outside of .on("input") function
+		var input = document.getElementById("translControl1");
+	
+		//setting attribute for autocomplete searchform
+		jQuery('#searchform').attr('autocomplete', 'off');
+
+        // Add event listener for term input
+        jQuery("#translControl1").on("input", debounce(async function (input, terms) {
+			input = this;
+			var dropDownDiv, termDiv, i, val = this.value;		
+			
+			//setting more attributes for autocomplete
+			jQuery("#translControl1").attr('class', 'autocomplete');
+			jQuery("#translControl1").addClass("transl1 form-control");
+
+			//setting css for div class
+			jQuery(".col order-4 order-sm-3").attr('class', 'autocomplete');
+			jQuery(".col order-4 order-sm-3").css('position', 'relative');
+			jQuery(".col order-4 order-sm-3").css('display', 'inline-block');
+
+			closeAllLists();
+
+			//create div for autocomplete drop down
+			dropDownDiv = document.createElement("DIV");
+			//setting div attributes for autocomplete items
+			dropDownDiv.setAttribute("id", this.id + "autocomplete-list");
+			dropDownDiv.setAttribute("class", "autocomplete-items");
+			this.parentNode.appendChild(dropDownDiv);
+			
+			if (!val) {return false;}
+			currentFocus = -1;
+
+			//call to autocomplete API upon input
+            try {
+				const autoUrl = new URL(creds.Autocomplete.Url);
+				const urlParams = {
+					token: creds.Autocomplete.Token,
+					term: jQuery("#translControl1").val(),
+					idx: idx,
+					filters: JSON.stringify([
+						{
+							name: "custid",
+							values: [creds.Autocomplete.CustId],
+						},
+					]),
+				};
+				autoUrl.search = new URLSearchParams(urlParams).toString();
+                const response = await fetch(autoUrl);
+
+				//error handling for response
+                if (!response.ok) {
+                    throw new Error(`Autocomplete request failed: ${response.statusText}`);
+                }
+                const data = await response.json();
+                if (data.error) {
+                    if (edsConfig.logerrors == "yes") {
+                        console.log("Error in autocomplete response:", data.error);
+                    }
+					if (data.error && (eds_sessionStorage.get("retryCount") < 2)) {
+						updateRetryCount((eds_sessionStorage.get("retryCount")) + 1); // Increment retry count
+						if (edsConfig.logerrors == "yes") {
+							console.log("Removing autoComp and autoComp_expiry due to data.error...");
+							console.log("Retrying fetchCredentials...");
+                        }
+                        eds_sessionStorage.remove("autoComp");
+                        eds_sessionStorage.remove("autoComp_expiry");
+						creds = await fetchCredentials(); // Fetch new credentials
+						//retrigger the autocomplete input event
+						if (edsConfig.logerrors == "yes") {
+							console.log("Retrying autocomplete request...");
+						}
+						jQuery("#translControl1").trigger("input");
+						if (edsConfig.logerrors == "yes") {
+							console.log("Autocomplete retriggered after refetching credentials...");
+						}
+						return;
 					} else {
-						var terms = data.terms.map(function (wrapper) {
-							return wrapper.term;
-						});
-						response(terms);
+						eds_sessionStorage.remove("autoComp");
+						eds_sessionStorage.remove("autoComp_expiry");
+						throw new Error("Failed to reauthorize credentials.");
 					}
-				});
-			},
-			select: EDSautoSearch
-		});
-		if (edsConfig.logerrors == "yes"){
-			console.log("Finished autocomplete...");
-		}
-	}
-}
+                } else {
+					//terms returned from API
+					terms = data.terms.map((wrapper) => wrapper.term);
+					if (terms.length == 0) {
+						if (edsConfig.logerrors == "yes") {
+							console.log("No autocomplete terms found.");
+						}
+						jQuery(dropDownDiv).hide();
+						jQuery(termDiv).hide();
+					} else {
+						//setting css for autocomplete and autocomplete-items
+						dropDownDiv.style.position = "absolute";
+						dropDownDiv.style.backgroundColor = "#fff";
+						dropDownDiv.style.border = "1px solid #d4d4d4";
+						dropDownDiv.style.zIndex = "1000";
+						dropDownDiv.style.padding = "10px";
 
-function EDSautoSearch(event, ui) {
-	jQuery.when(jQuery('#translControl1').val(ui.item.value)).done(function () {
-		jQuery("#searchsubmit").click();
-	});
+						//set css for hover over autocomplete-items
+						jQuery(document).on("mouseenter", ".autocomplete-items div", function () {
+							jQuery(this).css({
+								"background-color": "LightGray", 
+								"color": "#000" 
+							});
+						});
+
+						//clear css for hover out of autocomplete-items
+						jQuery(document).on("mouseleave", ".autocomplete-items div", function () {
+							jQuery(this).css({
+								"background-color": "", 
+								"color": "" 
+							});
+						});
+											
+						for (i = 0; i < terms.length; i++) {
+							//create div for each autocomplete term
+							termDiv = document.createElement("DIV");	
+							termDiv.innerHTML += "<strong>" + terms[i].substr(0, val.length) + "</strong>";
+							termDiv.innerHTML += terms[i].substr(val.length);
+							termDiv.innerHTML += "<input type='hidden' value='" + terms[i] + "'>";
+							dropDownDiv.appendChild(termDiv);
+							
+							//event listener for click/search in autocomplete
+							termDiv.addEventListener("click", function (e) {
+								jQuery("#translControl1").val(this.getElementsByTagName("input")[0].value);
+								closeAllLists();
+								jQuery("#searchsubmit").click();
+							});
+						}
+					}
+				}
+			} catch (error) {
+			if (edsConfig.logerrors == "yes") {
+				console.error("Error during autocomplete fetch call:", error);
+				}
+			}
+
+			//closeAllLists function to close all autocomplete lists
+			function closeAllLists(elmnt) {
+			//close all autocomplete lists in the document, except the one passed as an argument
+				var x = document.getElementsByClassName("autocomplete-items");
+				for (var i = 0; i < x.length; i++) {
+					if (elmnt != x[i] && elmnt != input) {
+					x[i].parentNode.removeChild(x[i]);
+					}
+				}	
+			}
+			//close lists when clicking outside of the autocomplete
+			document.addEventListener("click", function (e) {
+			closeAllLists(e.target);
+			});
+		}, 500)); // 500ms debounce delay	
+		//execute a function for keydown/keyup/enter events
+		input.addEventListener("keydown", function(e) {
+			var x = document.getElementById(this.id + "autocomplete-list");
+			if (x) x = x.getElementsByTagName("div");
+			if (e.keyCode == 40) {
+				//if down arrow key is pressed, increase the currentFocus variable and don't move cursor position
+				e.preventDefault();
+				currentFocus++;
+				//make the current item more visible
+				addActive(x);
+			} else if (e.keyCode == 38) {
+				//if up arrow key is pressed, decrease the currentFocus variable and don't move cursor position
+				e.preventDefault();
+				currentFocus--;
+				//make the current item more visible
+				addActive(x);
+			} else if (e.keyCode == 13) {
+				if (currentFocus > -1) {
+					//if currentFocus is greater than -1, simulate a click on the "active" item
+					if (x) x[currentFocus].click();
+				}
+			} 
+
+			//addActive and removeActive functions to add and remove the "active" class
+			function addActive(x) {
+			//classify an item as "active":
+				if (!x) return false;
+				//remove active class from all items
+				removeActive(x);
+				if (currentFocus >= x.length) currentFocus = 0;
+				if (currentFocus < 0) currentFocus = (x.length - 1);
+				//add class "autocomplete-active" to the current item
+				x[currentFocus].classList.add("autocomplete-active");
+				//add css for autocomplete-active 
+				jQuery(x[currentFocus]).css({
+					'background-color': 'LightGray',
+					'color': '#000',
+					'font-weight': 'bold'
+				});
+			}
+			function removeActive(x) {
+			//remove the "active" class from all autocomplete items
+				for (var i = 0; i < x.length; i++) {
+					x[i].classList.remove("autocomplete-active");
+					jQuery(x[i]).css({
+						'background-color': '',
+						'color': '',
+						'font-weight': ''
+					});
+				}
+			}
+		});		
+    } catch (error) {
+        if (edsConfig.logerrors == "yes") {
+            console.error("Failed to initialize EDSAutoComp due to credential error:", error);
+        }
+    }
 }
-jQuery('body').on('click', '#translControl1', function () {
-	if (eds_sessionStorage.get('defaultsearch') == "eds") {
-		jQuery("#translControl1").autocomplete("search");
-	}
-});
