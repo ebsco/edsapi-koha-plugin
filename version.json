@@ -1,14 +1,10 @@
 {
-  "MajorVersion": "24.11",
-  "MinorVersion": "002",
+  "MajorVersion": "25.05",
+  "MinorVersion": "001",
   "ReleaseNotes": [
     {
       "author": "omuzzy@ebsco.com",
-      "note": "minor fixes for Koha 24.11"
-    },
-    {
-      "author": "omuzzy@ebsco.com",
-      "note": "fix for EDS Autocomplete functionality"
+      "note": "Updating EDS API Koha plugin to support Koha 25.05"
     }
   ],
   "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
