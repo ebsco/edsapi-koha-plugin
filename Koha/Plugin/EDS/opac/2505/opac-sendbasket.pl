@@ -126,7 +126,7 @@ if ( $op eq "cud-send" && $email_add && $user_email ) {
         my $attachment = {
             filename => 'basket.iso2709',
             type     => 'application/octet-stream',
-            content  => Encode::encode( "UTF-8", $iso2709 ),
+            content  => $iso2709,
         };
 
         my $message_id = C4::Letters::EnqueueLetter(
