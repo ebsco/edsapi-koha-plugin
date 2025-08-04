@@ -33,8 +33,8 @@ use Koha::RecordProcessor;
 
 use utf8;
 my $query = CGI->new();
-
-my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
+do '../eds-methods.pl';
+my ( $template, $borrowernumber, $cookie ) = get_template_and_user (
     {
         template_name   => "opac-downloadcart.tt",
         query           => $query,
@@ -42,10 +42,13 @@ my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
         authnotrequired => ( C4::Context->preference("OpacPublic") ? 1 : 0 ),
     }
 );
-
+my $eds_data = "";
 my $bib_list = $query->param('bib_list');
-my $format   = $query->param('format');
-my $dbh      = C4::Context->dbh;
+#convert _dot_ to . to properly search for items
+$bib_list =~s/\_dot\_/\./g;
+my $format  = $query->param('format');
+my $dbh     = C4::Context->dbh;
+$eds_data = $query->param('eds_data'); #EDS Patch
 
 if ( $bib_list && $format ) {
 
@@ -73,22 +76,26 @@ if ( $bib_list && $format ) {
     } else {
         my $record_processor = Koha::RecordProcessor->new( { filters => 'ViewPolicy' } );
         foreach my $biblionumber (@bibs) {
-
-            my $biblio = Koha::Biblios->find($biblionumber);
-            my $record = $biblio->metadata_record(
-                {
-                    embed_items => 1,
-                    interface   => 'opac',
-                    patron      => $patron,
-                }
-            );
-            my $framework = &GetFrameworkCode($biblio);
-            $record_processor->options(
-                {
-                    interface     => 'opac',
-                    frameworkcode => $framework
-                }
-            );
+            my $biblio = '';      
+            my $record = '';  
+                if($biblionumber =~m/\_\_/){
+                my $dat = '';
+                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);     #EDS patch   
+                } else {
+                    $biblio = Koha::Biblios->find($biblionumber);
+                    $record = $biblio->metadata->record(
+                    { 
+                    embed_items => 1,                     
+                    opac        => 1,
+                    patron      => $patron, 
+                    }
+                );
+            }       
+            my $framework = &GetFrameworkCode( $biblio );
+            $record_processor->options({
+                interface => 'opac',
+                frameworkcode => $framework
+            });
             $record_processor->process($record);
 
             next unless $record;
@@ -101,9 +108,11 @@ if ( $bib_list && $format ) {
             } elsif ( $format eq 'ris' ) {
                 $output .= marc2ris($record);
             } elsif ( $format eq 'bibtex' ) {
-                $output .= marc2bibtex( $record, $biblio->biblionumber );
+                $output .= marc2bibtex( $record, $biblionumber ); 
+                # biblio or biblionumber?
             } elsif ( $format eq 'isbd' ) {
-                my $framework = GetFrameworkCode($biblio);
+                my $framework = GetFrameworkCode($biblio); 
+                # biblio or biblionumber?
                 $output .= GetISBDView(
                     {
                         'record'    => $record,

@@ -29,8 +29,17 @@ use C4::Templates;
 use Koha::Biblios;
 use Koha::Email;
 use Koha::Patrons;
+use Koha::Token;
 
 my $query = CGI->new;
+
+my $pluginsdir = C4::Context->config("pluginsdir");
+my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
+my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
+$PluginDir = $PluginDir.'/Koha/Plugin/EDS';
+
+do '../eds-methods.pl';
+my $eds_data = $query->param('eds_data'); #EDS Patch
 
 my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
     {
@@ -44,24 +53,62 @@ my $user_email = $patron ? $patron->notice_email_address : undef;
 
 my $op        = $query->param('op')       || q{};
 my $bib_list  = $query->param('bib_list') || '';
+#convert _dot_ to . to properly search for items
+$bib_list =~s/\_dot\_/\./g;
+
 my $email_add = $query->param('email_add');
 
 if ( $op eq "cud-send" && $email_add && $user_email ) {
+    die "Wrong CSRF token"
+      unless Koha::Token->new->check_csrf(
+        {
+            session_id => scalar $query->cookie('CGISESSID'),
+            token      => scalar $query->param('csrf_token'),
+        }
+      );
+
     my $comment = $query->param('comment');
 
     my @bibs = split( /\//, $bib_list );
     my $iso2709;
-    foreach my $bib (@bibs) {
-        $bib = int($bib);
-        my $biblio = Koha::Biblios->find($bib) or next;
-        $iso2709 .= $biblio->metadata_record( { interface => 'opac' } )->as_usmarc();
+    my $catbibs;
+    my $edscounter = 0;
+    foreach my $biblionumber (@bibs) {
+        my $biblio = '';
+        my $record = '';
+        if($biblionumber =~m/\_\_/){
+            #if biblionumber matches on __, split into an and db
+            my ($biblio_an, $biblio_db)  = split(/__/, $biblionumber);
+            #add header if EDS items are sent in basket
+            if ($edscounter == 0){
+                $comment .= "\n\n________________________________";
+                $comment .= "\n\nEBSCO Discovery Service items are listed first, followed by your library catalog items.\n";
+            }
+            my $dat = '';
+            ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);                    
+            $iso2709 .= $record->as_usmarc() // q{};
+            $edscounter++;
+            #EDS data added to comment
+            $comment .= "\n".$edscounter.". ".$record->title."\n";
+            $comment .= "Author(s): ".$record->author."\n";
+            #form URL with OPACBaseURL, plugin path for Koha eds-detail.pl, and add biblio_an, biblio_db to form link back to Koha catalog for EDS item
+            $comment .= "URL: ".C4::Context->preference('OPACBaseURL').'/plugin/Koha/Plugin/EDS/opac/eds-detail.pl?q=Retrieve?an='.$biblio_an.'|dbid='.$biblio_db."\n";
+        } #EDS Patch
+        else {
+            $catbibs .= $biblionumber."|";
+            $biblio = Koha::Biblios->find($biblionumber) or next;
+            $iso2709 .= $biblio->metadata->record->as_usmarc();        
+        }
     }
-
     if ( !defined $iso2709 ) {
         $template->param( error => 'NO_BODY' );
-    } else {
-        my %loops = ( biblio => \@bibs, );
-
+    }
+    else {
+        my %loops;
+        if ($catbibs){
+            my @catbibsloops = split( /\|/, $catbibs );
+            %loops = ( biblio => \@catbibsloops, );
+        } 
         my %substitute = ( comment => $comment, );
 
         my $letter = C4::Letters::GetPreparedLetter(
@@ -112,6 +159,8 @@ if ( $op eq "cud-send" && $email_add && $user_email ) {
         url            => "/cgi-bin/koha/opac-sendbasket.pl",
         suggestion     => C4::Context->preference("suggestion"),
         virtualshelves => C4::Context->preference("virtualshelves"),
+        csrf_token =>
+          Koha::Token->new->generate_csrf( { session_id => $new_session_id, } ),
     );
     output_html_with_http_headers $query, $cookie, $template->output, undef,
         { force_no_caching => 1 };
