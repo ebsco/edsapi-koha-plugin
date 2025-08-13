@@ -33,8 +33,8 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 our $MAJOR_VERSION = "25.05";
 our $SUB_VERSION = "001";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/2505.json";
-our $DATE_UPDATE = '2025-08-08';
+our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
+our $DATE_UPDATE = '2025-08-13';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
