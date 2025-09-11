@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>25.05.001</latestversion>
+	<latestversion>25.05.002</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/08/13</lastupdated>
+	<lastupdated>2025/09/11</lastupdated>
 	<releasenotes>
-		<release version="25.05.001" date="2025/08/13">
-			<note id="1" author="omuzzy@ebsco.com">Updating EDS API Koha plugin to support Koha 25.05</note>
+		<release version="25.05.002" date="2025/09/11">
+			<note id="1" author="omuzzy@ebsco.com">Update for set_remote_address for IP authentication</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

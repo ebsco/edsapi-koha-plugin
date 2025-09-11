@@ -20,6 +20,7 @@ use warnings;
 use CGI qw ( -utf8 );
 use Encode qw(encode decode);
 use C4::Auth;    # get_template_and_user
+use C4::Context;
 use C4::Output;
 use LWP;
 use IO::File;
@@ -513,6 +514,8 @@ sub EDSDefaultQueryBuilder
 
 sub CheckIPAuthentication
 {
+    C4::Context->set_remote_address; # Koha will set REMOTE_ADDR to the correct remote address, unrolling trusted proxies and honoring HTTP_X_FORWARDED_FOR
+
 	my $GuestForIP = 'y';
 	if($edsusername eq "-"){#Guest= no automatically if IP// Keep to support IP restricted sites.
 		$GuestTracker='n';
@@ -526,7 +529,7 @@ sub CheckIPAuthentication
 	if($GuestTracker ne "n"){ # User has not logged in or authtoken is not IP. Do a local IP check.
 		if(length($iprange) > 4){ # Check local IP range if specified.
 			my @allowedIPs = split /,/, $iprange;
-			my $localIP = Net::IP->new($ENV{'HTTP_X_FORWARDED_FOR'} || $ENV{'REMOTE_ADDR'});
+			my $localIP = Net::IP->new($ENV{'REMOTE_ADDR'});
 			foreach my $allowedIP (@allowedIPs){
 				my $currentRange = Net::IP->new($allowedIP);
 				if ($currentRange){
@@ -551,7 +554,8 @@ sub CheckIPAuthentication
 
 sub GetLocalIP
 {
-	return $ENV{'HTTP_X_FORWARDED_FOR'} || $ENV{'REMOTE_ADDR'};
+    C4::Context->set_remote_address;
+	return $ENV{'REMOTE_ADDR'};
 }
 
 sub CartSendLinks
