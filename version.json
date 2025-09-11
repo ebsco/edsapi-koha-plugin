@@ -1,10 +1,10 @@
 {
   "MajorVersion": "25.05",
-  "MinorVersion": "001",
+  "MinorVersion": "002",
   "ReleaseNotes": [
     {
       "author": "omuzzy@ebsco.com",
-      "note": "Updating EDS API Koha plugin to support Koha 25.05"
+      "note": "Update for set_remote_address for IP authentication"
     }
   ],
   "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
