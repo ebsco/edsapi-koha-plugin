@@ -1,14 +1,10 @@
 {
   "MajorVersion": "24.11",
-  "MinorVersion": "002",
+  "MinorVersion": "003",
   "ReleaseNotes": [
     {
       "author": "omuzzy@ebsco.com",
-      "note": "minor fixes for Koha 24.11"
-    },
-    {
-      "author": "omuzzy@ebsco.com",
-      "note": "fix for EDS Autocomplete functionality"
+      "note": "Update for set_remote_address for IP authentication supporting Koha 24.11"
     }
   ],
   "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
