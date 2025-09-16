@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>25.05.002</latestversion>
+	<latestversion>25.05.003</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/09/11</lastupdated>
+	<lastupdated>2025/09/16</lastupdated>
 	<releasenotes>
-		<release version="25.05.002" date="2025/09/11">
-			<note id="1" author="omuzzy@ebsco.com">Update for set_remote_address for IP authentication</note>
+		<release version="25.05.003" date="2025/09/16">
+			<note id="1" author="omuzzy@ebsco.com">fix for downloadcart/sendbasket line endings</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

@@ -1,10 +1,10 @@
 {
   "MajorVersion": "25.05",
-  "MinorVersion": "002",
+  "MinorVersion": "003",
   "ReleaseNotes": [
     {
       "author": "omuzzy@ebsco.com",
-      "note": "Update for set_remote_address for IP authentication"
+      "note": "fix for downloadcart/sendbasket line endings"
     }
   ],
   "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
