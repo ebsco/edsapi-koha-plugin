@@ -60,7 +60,7 @@
   </tr>
       <tr  style="display:none;">
         <td width="5%" title="This is the version installed by a Koha administrator" style="cursor:help" align="left" valign="middle" nowrap scope="col"><strong>Live Update Version</strong></td>
-        <td width="5%" align="center" valign="middle" nowrap scope="col">[%  installedversion %]</th>
+        <td width="5%" align="center" valign="middle" nowrap scope="col"></th>
       </tr>
       <tr style="display:none;">
         <td colspan="2" align="center" valign="middle" nowrap scope="col"><input id="update-button" type="button" value="Update to selected version" onclick="UpdatePlugin();"></td>
