@@ -1,11 +1,10 @@
 {
   "MajorVersion": "25.05",
-  "MinorVersion": "003",
+  "MinorVersion": "004",
   "ReleaseNotes": [
     {
       "author": "omuzzy@ebsco.com",
-      "note": "fix for downloadcart/sendbasket line endings"
+      "note": "Update to remove ShaAdd file and associated references"
     }
-  ],
-  "ShaAdd": "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json"
+  ]
 }

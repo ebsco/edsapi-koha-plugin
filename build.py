@@ -17,7 +17,6 @@ with open('version.json') as f:
 majorVersion = data["MajorVersion"]
 minorVersion = data["MinorVersion"]
 releaseNotes = data["ReleaseNotes"]
-shaAdd = data["ShaAdd"]
 
 ##############################
 
@@ -36,10 +35,6 @@ for line in range(len(filedata)):
     # Set sub version
     if ("our $SUB_VERSION" in templine):
         filedata[line] = 'our $SUB_VERSION = "' + minorVersion + '";\n'
-
-    # Set sha address
-    if ("our $SHA_ADD" in templine):
-        filedata[line] = 'our $SHA_ADD = "' + shaAdd + '";\n'
 
     # Set date
     if ("our $DATE_UPDATE" in templine):

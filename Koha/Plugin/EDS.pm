@@ -31,10 +31,9 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "25.05";
-our $SUB_VERSION = "003";
+our $SUB_VERSION = "004";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $SHA_ADD = "https://widgets.ebscohost.com/prod/api/koha/sha/1711.json";
-our $DATE_UPDATE = '2025-09-16';
+our $DATE_UPDATE = '2025-09-18';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -331,45 +330,21 @@ sub SetupTool {
 
 	}
 
-
-	## Pull SHA data for version info.
-	my $shaData = '';
-	try{
-		$mech->get($SHA_ADD);
-		$shaData= $mech->content();
-		$shaData=decode_json($shaData);
-	}catch{
-		$shaData=decode_json('{"edsplugin": {"version": [{"number": "3.2201","sha": "9a10c2acfca0a4c7e13d74dd9dca4ff117b28a0e"}]}}');
-	};
-	$mech->get('https://cdn.jsdelivr.net/gh/ebsco/edsapi-koha-plugin@'.$shaData->{edsplugin}->{version}[0]->{sha}.'/Koha/Plugin/EDS/admin/release_notes.xml');
+	$mech->get('https://raw.githubusercontent.com/ebsco/edsapi-koha-plugin/master/Koha/Plugin/EDS/admin/release_notes.xml');
 	my $xmlReleaseNotes = $mech->content();
-	#use Data::Dumper; die Dumper $xmlReleaseNotes;
-
-	my $currentVersion ="<select id='liveupdate-version'>";
-
-	my @pluginVersions = @{$shaData->{edsplugin}->{version}};
-
-	foreach my $pluginVersion (@pluginVersions){
-			my $selectedVersion="";
-			if($self->retrieve_data('installedversion') eq $pluginVersion->{number}){
-				$selectedVersion=" selected='selected'";
-			}
-			$currentVersion .="<option value='".$pluginVersion->{sha}."'".$selectedVersion.">";
-			$currentVersion .=$pluginVersion->{number};
-			$currentVersion .="</option>";
+	
+	# Extract <latestversion> value using regex
+	my $latestversion = '';
+	if ($xmlReleaseNotes =~ /<latestversion>(.*?)<\/latestversion>/s) {
+    $latestversion = $1;
 	}
-
-
-	$currentVersion .="</select>";
-
 
     my $template = $self->get_template({ file => 'admin/setuptool.tt' });
 	        $template->param(
 			edsusername 		=> $self->retrieve_data('edsusername'),
 			edspassword 		=> $self->retrieve_data('edspassword'),
 			pluginversion		=> $VERSION,
-			installedversion	=> $currentVersion,
-			latestversion		=>$shaData->{edsplugin}->{version}[0]->{number},
+			latestversion		=>$latestversion,
 			releasenotes		=>$xmlReleaseNotes,
 			updatelog			=>$updateLog,
 			readwritestatus		=>$readWriteStatus,
