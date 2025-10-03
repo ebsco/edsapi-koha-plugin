@@ -17,6 +17,9 @@ use MIME::Base64 qw( encode_base64 decode_base64 );
 use Template;
 use Template::Constants qw( :debug );
 use Template::Filters;
+use warnings;
+use strict;
+
 Template::Filters->use_html_entities;
 my $mech = WWW::Mechanize->new(ssl_opts => {
     SSL_verify_mode => IO::Socket::SSL::SSL_VERIFY_NONE,
@@ -31,9 +34,9 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
 our $MAJOR_VERSION = "25.05";
-our $SUB_VERSION = "004";
+our $SUB_VERSION = "005";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $DATE_UPDATE = '2025-09-18';
+our $DATE_UPDATE = '2025-10-03';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -356,4 +359,22 @@ sub SetupTool {
     print $cgi->header();
     print $template->output();
 }
+
+sub api_namespace {
+my ($self) = $_;
+
+return 'EDS';
+}
+
+sub api_routes {
+my ($self) = @_;
+
+my $spec_str = $self->mbf_read('openapi.json');
+
+my $spec = decode_json($spec_str);
+
+return $spec;
+
+}
+
 1;

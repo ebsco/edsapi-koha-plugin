@@ -1,0 +1,28 @@
+{
+
+    "/opac/eds-raw.pl": {
+        "get": {
+            "x-mojo-to": "EDS::EDSController#get_info",
+            "operationId": "GetEDSInfo",
+            "tags": ["eds"],
+            "parameters": [
+                {
+                    "name": "q",
+                    "in": "query",
+                    "description": "description",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "produces": ["text/html"],
+            "responses": {
+                "200": {
+                    "description": "200 response"
+                },
+                "404": {
+                    "description": "404 response"
+                }
+            }
+        }
+    }
+}
