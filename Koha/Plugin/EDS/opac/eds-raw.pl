@@ -85,15 +85,9 @@ if($input->param("q") eq 'getip'){
 }else{
 	# Send Known Items
 	if($input->param("q") eq 'knownitems'){
-		my $EDSInfo;
-		try{
-			$EDSInfo =  decode_json(EDSGetInfo(0));
-			$api_response = encode_json($EDSInfo->{AvailableSearchCriteria}->{AvailableSearchFields});
-		}catch{
-			EDSSearch('info');
-			$EDSInfo =  decode_json(EDSGetInfo(1));
-			$api_response = encode_json($EDSInfo->{AvailableSearchCriteria}->{AvailableSearchFields});
-		};
+		do 'Koha/Plugin/EDS/opac/eds-methods.pl';
+		$api_response = EDSSearchFields();
+		return $api_response;
 	}else{
 		if(defined $input->param("q")){
 			$api_response = EDSSearch($input->multi_param("q"),$GuestTracker);

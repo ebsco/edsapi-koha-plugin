@@ -1,26 +1,73 @@
 {
-
     "/opac/eds-raw.pl": {
         "get": {
-            "x-mojo-to": "EDS::EDSController#get_info",
-            "operationId": "GetEDSInfo",
+            "x-mojo-to": "EDS::EDSController#eds_raw",
+            "operationId": "edsRaw",
             "tags": ["eds"],
             "parameters": [
                 {
                     "name": "q",
                     "in": "query",
-                    "description": "description",
+                    "description": "eds-raw queries",
                     "required": true,
-                    "type": "string"
+                    "type": "string",
+                    "enum": ["info", "knownitems", "getip"]
                 }
             ],
             "produces": ["text/html"],
             "responses": {
                 "200": {
                     "description": "200 response"
+                }
+            }
+        }
+    }, 
+     "/opac/eds-ac.pl": {
+        "post": {
+            "x-mojo-to": "EDS::EDSController#eds_ac",
+            "operationId": "edsAc",
+            "tags": ["eds"],
+            "parameters": [
+                {
+                    "name": "type",
+                    "in": "query",
+                    "required": true,
+                    "type": "string",
+                    "enum": ["auth"],
+                    "description": "Type of request"
                 },
-                "404": {
-                    "description": "404 response"
+                {
+                    "name": "body",
+                    "in": "body",
+                    "description": "JSON object containing request information",
+                    "required": true,
+                    "schema": {
+                        "type": "object", 
+                        "properties": {
+                            "UserId": {
+                                "description": "User ID", 
+                                "type": "string"
+                            },
+                            "Password": {
+                                "description": "Password", 
+                                "type": "string"
+                            },
+                            "Options": {
+                                "description": "Options for Autocomplete",
+                                "type": "string"
+                            },
+                            "InterfaceId": {
+                                "description": "Interface ID", 
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            ],
+            "produces": ["application/json"],
+            "responses": {
+                "200": {
+                    "description": "200 response"
                 }
             }
         }

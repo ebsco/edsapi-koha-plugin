@@ -286,6 +286,18 @@ sub EDSGetConfiguration
 	return $JSONConfig;
 }
 
+# moved this functionality from eds-ac.pl
+sub EDSAuthForAutocomplete {
+	my ($EDSConfig) = @_;
+	my $ua = LWP::UserAgent->new;
+	$ua->agent("Koha-EDS-Autocomplete/0.1");
+    my $req = HTTP::Request->new(POST => 'https://eds-api.ebscohost.com/authservice/rest/uidauth');
+    $req->content_type('application/json');
+    $req->content('{"UserId":"'.$EDSConfig->{'edsusername'}.'","Password":"'.$EDSConfig->{'edspassword'}.'","Options":["autocomplete"],"InterfaceId":"'.$EDSConfig->{'edsprofileid'}.'"}');
+    my $res = $ua->request($req);
+    return $res->is_success ? $res->content : $res->status_line;
+}
+
 
 sub PFISearch
 {
@@ -390,6 +402,21 @@ sub EDSSearch
 	}else{
 		return $response;
 	}
+}
+
+# moved this functionality from eds-raw.pl
+sub EDSSearchFields {
+    my $api_response;
+    eval {
+        my $EDSInfo = decode_json(EDSGetInfo(0));
+        $api_response = encode_json($EDSInfo->{AvailableSearchCriteria}->{AvailableSearchFields});
+    };
+    if (!$api_response) {
+        EDSSearch('info');
+        my $EDSInfo = decode_json(EDSGetInfo(1));
+        $api_response = encode_json($EDSInfo->{AvailableSearchCriteria}->{AvailableSearchFields});
+    }
+    return $api_response;
 }
 
 sub EDSProcessItem
@@ -552,11 +579,6 @@ sub CheckIPAuthentication
 	}
 }
 
-sub GetLocalIP
-{
-    C4::Context->set_remote_address;
-	return $ENV{'REMOTE_ADDR'};
-}
 
 sub CartSendLinks
 {

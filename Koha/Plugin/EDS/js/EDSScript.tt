@@ -155,7 +155,7 @@ function getLanguage(code, callback) {
 	}
 
 	// Fetch the language file
-	jQuery.ajax({ url: "[% PLUGIN_HTTP_PATH %]/bootstrap/includes/lang/" + code + ".inc", dataType: "script", cache: true })
+	jQuery.ajax({ url: "/api/v1/contrib/EDS/static/bootstrap/includes/lang/" + code + ".inc", dataType: "script", cache: true })
 		.done(function (data) {
 			if (edsConfig.logerrors == "yes"){
 				console.log("Fetching language file...");	
@@ -387,7 +387,23 @@ function HardcodedEDSOptions(data) {
 	}
 }
 
-function GoDiscovery() {
+async function getKnownItems() {
+	try {
+		const response = await fetch('/api/v1/contrib/EDS/opac/eds-raw.pl?q=knownitems');
+		if (!response.ok) {
+			throw new Error("API response error in getKnownItems");
+		}
+		
+		const data = await response.json();
+		return data;
+
+	} catch (error) {
+		console.error("Error fetching known items: ", error);
+		return null;
+	}
+}
+
+async function GoDiscovery() {
 	if (edsConfig.logerrors == "yes"){
 		console.log("Running GoDiscovery...");
 	}
@@ -432,19 +448,21 @@ function GoDiscovery() {
 		// Hardcoded to improve initial loading time. Uses cached values from the server the second time.
 		HardcodedEDSOptions(JSON.parse('[{"FieldCode":"AU","Label":"Author"},{"FieldCode":"TI","Label":"Title"}]'));
 		jQuery('#masthead_search').empty().append(edsOptions); //appends hardcoded values to masthead_search
-		jQuery.getJSON('[% PLUGIN_HTTP_PATH %]/opac/eds-raw.pl?q=knownitems', function (data) { StoreEDSOptions(data); });
-	}
+		const data = await getKnownItems();
+        if (data) {
+            StoreEDSOptions(data);
+		}
 
-	if (edsConfig.logerrors == "yes"){
-		console.log("Final sessionStorage check...");
+		if (edsConfig.logerrors == "yes"){
+			console.log("Final sessionStorage check...");
+		}
+		if (eds_sessionStorage.get('defaultsearch') == 'eds') {
+			return;
+		}
+		if (edsConfig.logerrors == "yes"){
+			console.log("Finished GoDiscovery...");
+		}
 	}
-	if (eds_sessionStorage.get('defaultsearch') == 'eds') {
-		return;
-	}
-	if (edsConfig.logerrors == "yes"){
-		console.log("Finished GoDiscovery...");
-	}
-
 }
 
 // store the EDS label/fieldcode pairs in sessionStorage
@@ -456,11 +474,22 @@ function StoreEDSOptions(data) {
 }
 
 function SetEDSOptions(data) {
+	// parse 'data' if a string ()
+	  if (typeof data === "string") {
+        try {
+            data = JSON.parse(data);
+        } catch (e) {
+            console.error("Failed to parse known items data:", e);
+            return;
+        }
+	  }
 	edsOptions = '';
 	edsOptions += '<option value="">' + kohaSwitchText + '</option><option selected="selected" value="eds">' + edsSelectText + '</option>';
 	for (var i = 0; i < data.length; i++) {
 		var selectedItem = "";
-		if (edsSelectedKnownItem == data[i].FieldCode) { selectedItem = 'selected="selected"' }
+		if (edsSelectedKnownItem == data[i].FieldCode) { 
+			selectedItem = 'selected="selected"' 
+		}
 		edsOptions += '<option ' + selectedItem + ' value="' + data[i].FieldCode + '">--- ' + data[i].FieldCode + ': ' + data[i].Label + '</option>';
 	}
 
@@ -1324,11 +1353,20 @@ async function fetchCredentials() {
             if (edsConfig.logerrors == "yes") {
                 console.log("Fetching new credentials...");
             }
-            const response = await fetch('[% PLUGIN_HTTP_PATH %]/opac/eds-ac.pl?type=auth');
+        		const response = await fetch('/api/v1/contrib/EDS/opac/eds-ac.pl?type=auth', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' }, 
+				body: JSON.stringify({type: "auth"})
+			});
             if (!response.ok) {
                 throw new Error(`Failed to fetch credentials: ${response.statusText}`);
             }
             creds = await response.json();
+			// check if creds is JSON string and parse if necessary
+			const credsCheck = (typeof creds === 'string');
+			if (credsCheck == true) {
+				creds = JSON.parse(creds);
+			}
             eds_sessionStorage.set("autoComp", creds);
             eds_sessionStorage.set(
                 "autoComp_expiry",

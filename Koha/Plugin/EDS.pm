@@ -36,7 +36,7 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 our $MAJOR_VERSION = "25.05";
 our $SUB_VERSION = "005";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $DATE_UPDATE = '2025-10-03';
+our $DATE_UPDATE = '2025-10-16';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -246,11 +246,11 @@ sub opac_js {
     my ( $self ) = @_;
     my $default_search = $self->retrieve_data('defaultsearch');
 
-    return q|
+	return q|
     <script>
     var defaultSearch="| . $default_search . q|";
     </script>
-    <script src="|. $self->get_plugin_http_path() . q|/js/EDSScript.js">
+    <script src="/api/v1/contrib/EDS/static/js/EDSScript.js">
     </script>
     |;
 }
@@ -376,5 +376,14 @@ my $spec = decode_json($spec_str);
 return $spec;
 
 }
+
+sub static_routes {
+    my ( $self, $args ) = @_;
+
+    my $spec_str = $self->mbf_read('staticapi.json');
+    my $spec     = decode_json($spec_str);
+
+    return $spec;
+ }
 
 1;

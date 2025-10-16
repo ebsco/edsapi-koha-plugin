@@ -1,0 +1,106 @@
+{
+    "/js/EDSScript.js": {
+        "get": {
+            "x-mojo-to": "Static#get",
+            "tags": [
+            "pluginStatic"
+            ],
+            "responses": {
+                "200": {
+                    "description": "File found",
+                    "schema": {
+                    "type": "file"
+                    }
+                },
+                "400": {
+                    "description": "Bad request",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                            "description": "An explanation for the error",
+                            "type": "string"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "File not found",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                            "description": "An explanation for the error",
+                            "type": "string"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error",
+                    "schema": {
+                    "type": "object",
+                    "properties": {
+                            "error": {
+                            "description": "An explanation for the error",
+                            "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/bootstrap/includes/lang/{lang}.inc": {
+        "get": {
+            "x-mojo-to": "Static#get",
+            "tags": [
+            "pluginStatic"
+            ],
+            "responses": {
+                "200": {
+                    "description": "File found",
+                    "schema": {
+                    "type": "file"
+                    }
+                },
+                "400": {
+                    "description": "Bad request",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                            "description": "An explanation for the error",
+                            "type": "string"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "File not found",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                            "description": "An explanation for the error",
+                            "type": "string"
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Internal server error",
+                    "schema": {
+                    "type": "object",
+                    "properties": {
+                            "error": {
+                            "description": "An explanation for the error",
+                            "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }        
+}    
