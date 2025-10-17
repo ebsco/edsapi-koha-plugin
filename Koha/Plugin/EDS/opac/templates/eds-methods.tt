@@ -30,7 +30,6 @@ use HTML::Entities;
 use feature qw(switch);
 use Try::Tiny;
 use Net::IP;
-#use MIME::Base64;
 
 our $apiType = 'rest';
 my $input = new CGI;
@@ -43,44 +42,6 @@ our $authTimeout = 0;
 our $PluginClass='Koha::Plugin::EDS';
 our $table='plugin_data';
 
-#Replacing with fixed variables
-    #my $sql = "SELECT plugin_key, plugin_value FROM plugin_data WHERE plugin_class = ? ";
-    #my $sth = $dbh->prepare($sql);
-    #$sth->execute( $PluginClass );
-#$sth->execute();
-#while ( my $r = $sth->fetchrow_hashref() ) {
-#    if(my $plugin_key = $r->{plugin_key}){
-		#if ($plugin_key eq 'edsusername') {$edsusername=$r->{plugin_value};}
-		#if ($plugin_key eq 'edsprofileid') {$edsprofileid=$r->{plugin_value};}
-		#if ($plugin_key eq 'edspassword') {$edspassword=$r->{plugin_value};}
-		#if ($plugin_key eq 'edscustomerid') {$edscustomerid=$r->{plugin_value};}
-		#if ($plugin_key eq 'defaultsearch') {$defaultsearch=$r->{plugin_value};}
-		#if ($plugin_key eq 'cookieexpiry') {$cookieexpiry=$r->{plugin_value};}
-		#if ($plugin_key eq 'cataloguedbid') {$cataloguedbid=$r->{plugin_value};}
-		#if ($plugin_key eq 'catalogueanprefix') {$catalogueanprefix=$r->{plugin_value};}
-		#if ($plugin_key eq 'logerrors') {$logerrors=$r->{plugin_value};}
-		#if ($plugin_key eq 'iprange') {$iprange=$r->{plugin_value};}
-		#if ($plugin_key eq 'authtoken') {$authtoken=$r->{plugin_value};}
-		#if ($plugin_key eq 'autocomplete') {$autocomplete=$r->{plugin_value};}
-		#if ($plugin_key eq 'autocomplete_mode') {$autocomplete_mode=$r->{plugin_value};}
-		#if ($plugin_key eq 'defaultparams') {$defaultparams=$r->{plugin_value};}
-		#if ($plugin_key eq 'edsinfo') {
-		#	$edsinfo=$r->{plugin_value};
-		#	$edsinfo = Encode::encode('UTF-8', $edsinfo);
-		#	}
-#		if ($plugin_key eq 'lastedsinfoupdate') {
-#			$lastedsinfoupdate=$r->{plugin_value};
-#			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-#			my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
-#			my $dateString = $mday.'/'.$months[$mon].'/'.(1900+$year);
-#			if($dateString ne $lastedsinfoupdate){ 
-#				# update info daily
-#				my $getInfo = EDSSearch('info');
-#			}
-#		}
-#	}
-#}
-#END Code being replaced
 $edsusername = qq([% edsusername %]);
 $edsprofileid = "[% edsprofileid %]";
 $edspassword = qq([% edspassword %]);
@@ -94,20 +55,11 @@ $logerrors = "[% logerrors %]";
 $iprange = "[% iprange %]";
 $pluginhttppath = qq([% PLUGIN_HTTP_PATH %]);
 $edsinfo = Encode::encode('UTF-8',qq([% edsinfo %]));
-#$edsinfo =~ s/\\\\//g;
 $lastedsinfoupdate = "[% lastedsinfoupdate %]";
-#my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-#my @months = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
-#my $dateString = $mday.'/'.$months[$mon].'/'.(1900+$year);
-#if($dateString ne $lastedsinfoupdate){ 
-	# update info daily
-#	my $getInfo = EDSSearch('info');
-#}
 $defaultparams = "[% defaultparams %]";
 $defaultEDSQuery = "[% defaultedsquery %]";
 $autocomplete = "[% autocomplete %]";
 $autocomplete_mode = "[% autocompletemode %]";
-
 
 die "The EDS plugin appears to be unconfigured.\n" unless $edsprofileid;
 
@@ -129,7 +81,6 @@ my ( $template, $user, $cookie ) = get_template_and_user(
 );
 #manage guest status.
 my $SessionToken = $input->cookie('sessionToken');
-# $GuestTracker = $input->cookie('guest');
 if($SessionToken eq ""){
 	$SessionToken=CreateSession();
 }
@@ -146,7 +97,6 @@ sub CallREST
 	$req->header( 'Accept-Encoding' => 'gzip, deflate' );
 	$req->header( 'x-authenticationToken' => $auth );
 	$req->header( 'x-sessionToken' => $sess );
-	#if($body != ''){$req->content( $body );}
 	$req->content( $body );
 	my $lwp = LWP::UserAgent->new;
 	my $response = $lwp->request( $req );
@@ -163,7 +113,6 @@ sub CreateAuth
 		'Org'	=>	'KohaEDS'
 	);
 	my $json = encode_json \%jsondata;
-	#my $json = encode_json '{"UserId":"'.$edsusername.'","Password":"'.$edspassword.'","Org":"KohaEDS"}';
 
 	if($edsusername eq "-"){
 		$uri = 'https://eds-api.ebscohost.com/authservice/rest/ipauth';
@@ -201,8 +150,6 @@ sub CreateSession
 	}
 	my $response =  CallREST('POST',$uri,$json, $authtoken, '');
 
-	#$GuestTracker = CheckIPAuthentication();
-
 	#ask for SessionToken from EDSAPI
 	$uri = 'https://eds-api.ebscohost.com/edsapi/rest/createsession';
 	$json = '{"Profile":"'.$edsprofileid.'","Guest":"'.$GuestTracker.'","Org":"koha-'.$edscustomerid.'"}';
@@ -223,8 +170,6 @@ sub CreateSession
 		$SessionToken = decode_json( $response )
 	}
 		$SessionToken = $SessionToken->{SessionToken};
-		#if($GuestTracker eq 'n'){
-		#$GuestTracker='set';}
 
 	return $SessionToken;
 }
@@ -235,29 +180,10 @@ sub GetSession
 	if($input->cookie('guest') eq ''){
 		return $SessionToken;
 	}elsif($GuestTracker ne $input->cookie('guest')){
-		# if(CheckIPAuthentication() ne 'n'){
-		# 	return CreateSession();
-		# }else{
-		# 	return $SessionToken;
-		# }
 		return CreateSession();
 	}else{
 		return $SessionToken;
 	}
-
-
-
-
-#	if($GuestTracker eq 'n'){
-#		return CreateSession();
-#	}else{
-#		if($GuestTracker eq 'y' and ($input->cookie('guest') eq 'set') ){
-#			return CreateSession();
-#		}else{
-#			return $SessionToken;
-#		}
-#	}
-
 }
 
 sub EDSGetConfiguration
@@ -278,11 +204,6 @@ sub EDSGetConfiguration
 		'pluginhttppath'	=>	$pluginhttppath,
 	);
 	my $JSONConfig = encode_json \%ConfigArray;
-	#my $JSONConfig = encode_json '{"defaultsearch":"'.$defaultsearch.'","logerrors":"'.$logerrors.'","iprange":"'.$iprange.'","cookieexpiry":"'.$cookieexpiry.'","cataloguedbid":"'.$cataloguedbid.'","catalogueanprefix":"'.$catalogueanprefix.'","defaultparams":"'.$defaultparams.'","autocomplete": "'.$autocomplete.'", "autocomplete_mode": "'.$autocomplete_mode.'", "edsusername":"'.$edsusername.'", "edsprofileid":"'.$edsprofileid.'", "edspassword":"'.$edspassword.'"}';
-	#my $JSONConfig = "Test String";
-    # when('edsusername') {$edsusername=$r->{plugin_value};}
-    # when('edsprofileid') {$edsprofileid=$r->{plugin_value};}
-    # when('edspassword') {$edspassword=$r->{plugin_value};}
 	return $JSONConfig;
 }
 
@@ -422,7 +343,6 @@ sub EDSSearchFields {
 sub EDSProcessItem
 {
 	my ($Item,$MakeLinks) = @_;
-		#$Item->{Data}= decode_entities($Item->{Data}); # decoding manually. Using this displays the ? diamond.
 		$Item->{Data} =~s/&lt;/</g;
 		$Item->{Data} =~s/&gt;/>/g;
 		$Item->{Data} =~s/&quot;/"/g; #"
@@ -478,7 +398,6 @@ sub EDSDefaultQueryBuilder
 	if (exists $EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}) {
 		my @AutoSuggests = @{$EDSInfoData->{AvailableSearchCriteria}->{AvailableDidYouMeanOptions}};
 		foreach my $AutoSuggest (@AutoSuggests){
-			# $input->param("default")
 			if ($AutoSuggest->{Id} eq "AutoCorrect" && $input->param("nocorrect") eq 1){
 				$defaultEDSQuery = lc $defaultEDSQuery.'|autocorrect=n';
 				$input->delete("nocorrect");

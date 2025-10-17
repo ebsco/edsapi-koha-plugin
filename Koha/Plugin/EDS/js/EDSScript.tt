@@ -294,7 +294,7 @@ function StartEDS(edsLang) {
 	if (edsConfig.logerrors == "yes"){
 		console.log("finished ConfigData...");
 	}
-	//jQuery("#masthead_search").attr("disabled","disabled");
+
 	//if .back_results link, run EDSSetDetailPageNavigator
 	if (typeof jQuery('.back_results a').attr('href') != 'undefined') { EDSSetDetailPageNavigator(); }
 
@@ -535,7 +535,7 @@ function SetEDS(showInfo) {
 		//console.log('koha switchtext');
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', kohaSwitchText);
 	} else if (document.URL.indexOf("/cgi-bin/koha/opac-search.pl") != -1 && QueryString('q') == "") {RTCEncodedVideoFrame
-		console.log('eds switchtext');
+		//console.log('eds switchtext');
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('title', edsSwitchText);
 		jQuery('a[href="/cgi-bin/koha/opac-search.pl"]').attr('href', '[% PLUGIN_HTTP_PATH %]/opac/eds-search.pl');
 	} else {
@@ -708,11 +708,9 @@ function EDSSetDetailPageNavigator() {
 		});
 	} else if (QueryString('fulltext') != '') {
 		jQuery('.' + QueryString('fulltext')).each(function () {
-			//if(jQuery(this).text().trim()=="PDF Full Text"){
 			jQuery('.FullTextLoader').css('display', 'block');
 			window.location.href = jQuery(this).attr('href');
 			return false;
-			//}
 		});
 	}
 }
@@ -916,13 +914,10 @@ function CheckEDSRecordsforAddToList() {
 	});
 
 	if (containsEDS == true) {
-		//jQuery(newin).on('load', function () {
-		//alert(newin.location.pathname);
 		if (newin.location.pathname !== undefined) {
 			alert(edsLang.basket_deselect_list);
 			newin.close();
 		}
-		//});
 	}
 }
 
@@ -1314,7 +1309,6 @@ function DateHandleKeyPress(e, searchBox) {
 			window.location.href = dateAction;
 		} else {
 			var regex = /^\d{4}-(0[1-9]|1[012])\/\d{4}-(0[1-9]|1[012])$/;
-			// '/\d{4}-\d[1-12]\/\d{4}-\d[1-12]/; - old'
 			if (regex.test(searchBox.value)) {
 				dateAction = dateAction.replace('DT1:value', 'DT1:' + searchBox.value);
 				window.location.href = dateAction;

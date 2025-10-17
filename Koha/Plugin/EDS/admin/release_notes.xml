@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>25.05.005</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/10/16</lastupdated>
+	<lastupdated>2025/10/17</lastupdated>
 	<releasenotes>
-		<release version="25.05.005" date="2025/10/16">
+		<release version="25.05.005" date="2025/10/17">
 			<note id="1" author="omuzzy@ebsco.com">Initial commit to implement Koha REST API routing</note>
 		</release>
 	</releasenotes>

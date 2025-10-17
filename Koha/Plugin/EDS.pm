@@ -36,7 +36,7 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 our $MAJOR_VERSION = "25.05";
 our $SUB_VERSION = "005";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $DATE_UPDATE = '2025-10-16';
+our $DATE_UPDATE = '2025-10-17';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
@@ -182,13 +182,7 @@ sub update_EDSScript_js {
 		edsinfo 			=> quotemeta($self->retrieve_data('edsinfo')),
 		PLUGIN_HTTP_PATH 	=> $self->get_plugin_http_path(),
 	};
-    #my $pluginsdir = C4::Context->config('pluginsdir');
-    #my @pluginsdir = ref($pluginsdir) eq 'ARRAY' ? @$pluginsdir : $pluginsdir;
-    #my @plugindirs;
-    #foreach my $plugindir ( @pluginsdir ){
-    #        $plugindir .= "/Koha/Plugin/EDS/js";
-    #        push @plugindirs, $plugindir
-    #}
+
     my $template = Template->new({
 		INCLUDE_PATH 		=> $PluginDir,
 		OUTPUT_PATH 		=> $PluginDir,
@@ -211,18 +205,13 @@ sub install() {
 #		PRIMARY KEY (`edsid`)) ENGINE = INNODB;
 #    " );
 
-
-
 	#my $enableEDS = C4::Context->dbh->do("INSERT INTO `systempreferences` (`variable`, `value`, `explanation`, `type`) VALUES ('EDSEnabled', '1', 'If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', 'YesNo') ON DUPLICATE KEY UPDATE `variable`='EDSEnabled', `value`=1, `explanation`='If ON, enables searching with EDS - Plugin required.For assistance; email EBSCO support at support\@ebscohost.com', `type`='YesNo'");
-
 
 	#my $enableEDSUpdate = C4::Context->dbh->do("UPDATE `systempreferences` SET `value`='1' WHERE `variable`='EDSEnabled'");
 
 	my $pluginSQL = C4::Context->dbh->do("INSERT INTO `plugin_data` (`plugin_class`, `plugin_key`, `plugin_value`) VALUES ('Koha::Plugin::EDS', 'installedversion', '".$VERSION."')");
 	#use Data::Dumper; die Dumper $pluginSQL;
 }
-
-
 
 
 sub uninstall() {
@@ -239,7 +228,6 @@ sub uninstall() {
 #Update the JS file to include the correct variables without needing to call SQL
 sub update_search {
 	my ( $self, $default_search) = @_;
-
 }
 
 sub opac_js {
