@@ -15,7 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Koha; if not, see <http://www.gnu.org/licenses>.
+# along with Koha; if not, see <https://www.gnu.org/licenses>.
 
 use Modern::Perl;
 
@@ -79,18 +79,18 @@ if ( $bib_list && $format ) {
             my $biblio = '';      
             my $record = '';  
                 if($biblionumber =~m/\_\_/){
-                my $dat = '';
-                ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);     #EDS patch   
+                    my $dat = '';
+                    ($record,$dat)= ProcessEDSCartItems($biblionumber,$eds_data,$record,$dat);     #EDS patch   
                 } else {
                     $biblio = Koha::Biblios->find($biblionumber);
-                    $record = $biblio->metadata->record(
-                    { 
-                    embed_items => 1,                     
-                    opac        => 1,
-                    patron      => $patron, 
-                    }
-                );
-            }       
+                    $record = $biblio->metadata_record(
+                        { 
+                            embed_items => 1,                     
+                            interface   => 'opac',
+                            patron      => $patron, 
+                        }
+                    );
+                }       
             my $framework = &GetFrameworkCode( $biblio );
             $record_processor->options({
                 interface => 'opac',
@@ -109,10 +109,8 @@ if ( $bib_list && $format ) {
                 $output .= marc2ris($record);
             } elsif ( $format eq 'bibtex' ) {
                 $output .= marc2bibtex( $record, $biblionumber ); 
-                # biblio or biblionumber?
             } elsif ( $format eq 'isbd' ) {
                 my $framework = GetFrameworkCode($biblio); 
-                # biblio or biblionumber?
                 $output .= GetISBDView(
                     {
                         'record'    => $record,
