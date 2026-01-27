@@ -15,7 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Koha; if not, see <http://www.gnu.org/licenses>.
+# along with Koha; if not, see <https://www.gnu.org/licenses>.
 
 use Modern::Perl;
 
@@ -96,14 +96,13 @@ if ( $op eq "cud-send" && $email_add && $user_email ) {
         } #EDS Patch
         else {
             $catbibs .= $biblionumber."|";
-            $biblio = Koha::Biblios->find($biblionumber) or next;
-            $iso2709 .= $biblio->metadata->record->as_usmarc();        
+            $biblio = Koha::Biblios->find($biblionumber) or next; 
+            $iso2709 .= $biblio->metadata_record( { interface => 'opac' } )->as_usmarc();    
         }
     }
     if ( !defined $iso2709 ) {
         $template->param( error => 'NO_BODY' );
-    }
-    else {
+    } else {
         my %loops;
         if ($catbibs){
             my @catbibsloops = split( /\|/, $catbibs );
