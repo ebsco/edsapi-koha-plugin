@@ -1,10 +1,10 @@
 {
-  "MajorVersion": "25.05",
-  "MinorVersion": "004",
+  "MajorVersion": "25.11",
+  "MinorVersion": "001",
   "ReleaseNotes": [
     {
       "author": "omuzzy@ebsco.com",
-      "note": "Update to remove ShaAdd file and associated references"
+      "note": "Updating EDS API Koha plugin to support Koha 25.11"
     }
   ]
 }

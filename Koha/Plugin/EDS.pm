@@ -30,10 +30,10 @@ my ($PluginDir) = grep { -f $_ . "/Koha/Plugin/EDS.pm" } @pluginsdir;
 $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 
 ################# DO NOT TOUCH - CONTROLLED BY build.py
-our $MAJOR_VERSION = "25.05";
-our $SUB_VERSION = "004";
+our $MAJOR_VERSION = "25.11";
+our $SUB_VERSION = "001";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $DATE_UPDATE = '2025-09-18';
+our $DATE_UPDATE = '2026-01-27';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional
