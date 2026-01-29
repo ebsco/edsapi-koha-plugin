@@ -33,7 +33,7 @@ $PluginDir = $PluginDir.'/Koha/Plugin/EDS';
 our $MAJOR_VERSION = "25.11";
 our $SUB_VERSION = "001";
 our $VERSION = $MAJOR_VERSION . "" . $SUB_VERSION;
-our $DATE_UPDATE = '2026-01-27';
+our $DATE_UPDATE = '2026-01-29';
 ######################################################
 
 ## Here is our metadata, some keys are required, some are optional

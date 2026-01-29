@@ -3,9 +3,9 @@
 <kohaplugin>
 	<latestversion>25.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2026/01/27</lastupdated>
+	<lastupdated>2026/01/29</lastupdated>
 	<releasenotes>
-		<release version="25.11.001" date="2026/01/27">
+		<release version="25.11.001" date="2026/01/29">
 			<note id="1" author="omuzzy@ebsco.com">Updating EDS API Koha plugin to support Koha 25.11</note>
 		</release>
 	</releasenotes>
