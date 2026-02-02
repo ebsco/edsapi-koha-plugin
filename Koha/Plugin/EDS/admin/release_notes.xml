@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DO NOT TOUCH THIS FILE - controlled by build.py -->
 <kohaplugin>
-	<latestversion>25.05.004</latestversion>
+	<latestversion>25.11.001</latestversion>
 	<download>https://github.com/ebsco/edsapi-koha-plugin</download>
-	<lastupdated>2025/09/18</lastupdated>
+	<lastupdated>2026/01/29</lastupdated>
 	<releasenotes>
-		<release version="25.05.004" date="2025/09/18">
-			<note id="1" author="omuzzy@ebsco.com">Update to remove ShaAdd file and associated references</note>
+		<release version="25.11.001" date="2026/01/29">
+			<note id="1" author="omuzzy@ebsco.com">Updating EDS API Koha plugin to support Koha 25.11</note>
 		</release>
 	</releasenotes>
 </kohaplugin>

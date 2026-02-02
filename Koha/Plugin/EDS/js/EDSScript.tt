@@ -41,7 +41,7 @@ edsConfig.pluginhttppath = "[% PLUGIN_HTTP_PATH %]";
 var searchBlockCount = 3;
 
 // DO NOT TOUCH - controlled by build.py
-var versionEDSKoha = "25.05004";
+var versionEDSKoha = "25.11001";
 ///////////////////////////////////////
 
 if (document.title == "") {
@@ -752,7 +752,7 @@ async function PrepareItems() {
 	//If we have any EDS items, we need to add the loader
 	if (EDSItems > 0) {
 		jQuery('.send').hide();
-		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2505/opac-downloadcart.pl');
+		jQuery('#download_cart').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2511/opac-downloadcart.pl');
 		jQuery('#download_cart').prop('method', 'POST');
 		jQuery('#download-cart').hide();
 		jQuery('.print-large, .print').attr('onclick', ''); // .print for prog
@@ -902,7 +902,7 @@ function SetEDSCartField() {
 	//Use the EDS version of sendbasket
 
 	if (jQuery('#sendbasketform')) {
-		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2505/opac-sendbasket.pl');
+		jQuery('#sendbasketform').prop('action', '[% PLUGIN_HTTP_PATH %]/opac/2511/opac-sendbasket.pl');
 	}
 	//GET record list from URL and split into array on /
 	var recordList = document.URL;
@@ -941,7 +941,7 @@ function sendBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2505/opac-sendbasket.pl?" + strCookie;
+	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2511/opac-sendbasket.pl?" + strCookie;
 
 	var optWin = "scrollbars=yes,resizable=yes,height=600,width=900,top=50,left=100";
 	var win_form = open(loc, "win_form", optWin);
@@ -952,7 +952,7 @@ function downloadBasket() { // override function in basket.js
 	var valCookie = readCookie(nameCookie);
 	var strCookie = nameCookie + "=" + valCookie;
 
-	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2505/opac-downloadcart.pl?" + strCookie;
+	var loc = "[% PLUGIN_HTTP_PATH %]/opac/2511/opac-downloadcart.pl?" + strCookie;
 
 	open(loc, "win_form", 'scrollbars=no,resizable=no,height=300,width=450,top=50,left=100');
 }
