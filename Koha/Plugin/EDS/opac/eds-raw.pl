@@ -30,6 +30,9 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
+# Turn away requests that no OPAC page sends, before Koha is loaded
+BEGIN { do './gate.pl'; }
+
 use strict;
 use warnings;
 use CGI qw ( -utf8 );

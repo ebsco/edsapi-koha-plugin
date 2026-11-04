@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 
+# Turn away requests that no OPAC page sends, before Koha is loaded
+BEGIN { do './gate.pl'; }
+
 use strict;
 use warnings;
 use LWP::Simple;
