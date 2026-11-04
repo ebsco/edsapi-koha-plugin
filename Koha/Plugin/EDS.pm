@@ -243,9 +243,24 @@ sub opac_js {
     my ( $self ) = @_;
     my $default_search = $self->retrieve_data('defaultsearch');
 
+    # Inline the search field list so a new browser session doesn't have to fetch it from the eds-raw.pl CGI
+    my $search_fields = q{};
+    try {
+        my $fields = JSON->new->decode( $self->retrieve_data('edsinfo') )->{AvailableSearchCriteria}->{AvailableSearchFields};
+        if ( ref $fields eq 'ARRAY' && @{$fields} ) {
+            my $json = JSON->new->encode($fields);
+            $json =~ s/</\\u003c/g;    # a label must not be able to close the script tag
+            $search_fields = "var edsSearchFields = $json;";
+        }
+    }
+    catch {
+        # edsinfo can be missing, 'Update Required' or an EBSCO error body; the OPAC page must still render
+    };
+
     return q|
     <script>
     var defaultSearch="| . $default_search . q|";
+    | . $search_fields . q|
     </script>
     <script src="|. $self->get_plugin_http_path() . q|/js/EDSScript.js">
     </script>

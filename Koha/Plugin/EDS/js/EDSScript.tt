@@ -425,6 +425,12 @@ function GoDiscovery() {
 			console.log("Running SetEDSOptions on true...");
 		}
 		SetEDSOptions(eds_sessionStorage.get('edsKnownItems'));
+	} else if (typeof edsSearchFields !== 'undefined' && edsSearchFields.length) {
+		if (edsConfig.logerrors == "yes"){
+			console.log("Running SetEDSOptions from inline edsSearchFields...");
+		}
+		// The plugin's opac_js hook inlined the search fields, so eds-raw.pl isn't needed
+		StoreEDSOptions(edsSearchFields);
 	} else {
 		if (edsConfig.logerrors == "yes"){
 			console.log("Running SetEDSOptions on false...");
