@@ -78,11 +78,6 @@ var eds_sessionStorage = {
 	}
 }
 
-jQuery.ajax({ 	
-	url: "[% PLUGIN_HTTP_PATH %]/js/custom/custom.js", 
-	dataType: "script", 
-	cache: true });
-
 if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && (Cookies.get("guest") == 'n')) {
 	jQuery("#ulactioncontainer ul:contains(cart)").append('\
 	<li>\

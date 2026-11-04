@@ -286,6 +286,15 @@ sub opac_js {
         # No usable language file; EDSScript.js fetches one as before
     };
 
+    # Inline the Customisation Manager code so a page view doesn't fetch js/custom/custom.js
+    my $custom_js = q{};
+    if ( open my $fh, '<:encoding(UTF-8)', "$PluginDir/js/custom/custom.js" ) {
+        $custom_js = do { local $/; <$fh> };
+        close $fh;
+        $custom_js =~ s{</script}{<\\/script}gi;    # the code must not be able to close the script tag
+        $custom_js = "<script>\n$custom_js\n</script>" if $custom_js =~ /\S/;
+    }
+
     return q|
     <script>
     var defaultSearch="| . $default_search . q|";
@@ -294,6 +303,7 @@ sub opac_js {
     </script>
     <script src="|. $self->get_plugin_http_path() . q|/js/EDSScript.js">
     </script>
+    | . $custom_js . q|
     |;
 }
 
