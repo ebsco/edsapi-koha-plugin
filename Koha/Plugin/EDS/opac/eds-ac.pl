@@ -11,7 +11,7 @@ do './eds-methods.pl';
 print "Content-type: text/html\n\n";
 
 my $q = CGI->new;
-my $ua = LWP::UserAgent->new;
+my $ua = LWP::UserAgent->new( timeout => 30 );
 my $type = $q->param('type');
 our $EDSConfig = decode_json(EDSGetConfiguration());
 
