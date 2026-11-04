@@ -1,0 +1,12 @@
+{
+  "Record": {
+    "ResultId": 1,
+    "Header": { "DbId": "tdb", "DbLabel": "Test Database", "An": "1001", "PubType": "Book", "PubTypeId": "book" },
+    "PLink": "https://search.ebscohost.com/login.aspx?direct=true&db=tdb&AN=1001",
+    "FullText": { "Text": { "Availability": "0" } },
+    "Items": [
+      { "Name": "Title", "Label": "Title", "Group": "Ti", "Data": "A history of testing" },
+      { "Name": "Author", "Label": "Authors", "Group": "Au", "Data": "&lt;searchLink fieldCode=&quot;AR&quot; term=&quot;%22Tester%2C+Ada%22&quot;&gt;Tester, Ada&lt;/searchLink&gt;" }
+    ]
+  }
+}
