@@ -7,6 +7,7 @@ use Encode qw(encode);
 use URI::Escape;
 use C4::Members;
 use C4::Auth;
+use C4::Languages qw( getlanguage );
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 use JSON qw/decode_json encode_json/;
@@ -257,10 +258,39 @@ sub opac_js {
         # edsinfo can be missing, 'Update Required' or an EBSCO error body; the OPAC page must still render
     };
 
+    # Inline the language strings so a page view doesn't fetch bootstrap/includes/lang/<lang>.inc
+    my $language_strings = q{};
+    try {
+        my $lang_file = "$PluginDir/bootstrap/includes/lang/" . getlanguage() . ".inc";
+        $lang_file = "$PluginDir/bootstrap/includes/lang/default.inc" unless -f $lang_file;
+        open my $fh, '<:encoding(UTF-8)', $lang_file or die "$lang_file: $!";
+        my $content = do { local $/; <$fh> };
+        close $fh;
+        my ($lang_js) = $content =~ /var EDSLANG =(.*)/s or die "no EDSLANG in $lang_file";
+
+        # The same line by line parse getLanguage() does in EDSScript.tt, except a value keeps any colon it contains
+        my %strings;
+        for my $line ( split /\n/, $lang_js ) {
+            next unless $line =~ /:/;
+            my ( $key, $value ) = split /:/, $line, 2;
+            $key =~ s/\s//g;
+            $value =~ s/['"],?//g;
+            $value =~ s/^\s+|\s+$//g;
+            $strings{$key} = $value;
+        }
+        my $json = JSON->new->encode( \%strings );
+        $json =~ s/</\\u003c/g;
+        $language_strings = "var edsLang = $json;";
+    }
+    catch {
+        # No usable language file; EDSScript.js fetches one as before
+    };
+
     return q|
     <script>
     var defaultSearch="| . $default_search . q|";
     | . $search_fields . q|
+    | . $language_strings . q|
     </script>
     <script src="|. $self->get_plugin_http_path() . q|/js/EDSScript.js">
     </script>

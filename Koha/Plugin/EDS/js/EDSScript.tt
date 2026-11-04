@@ -138,6 +138,12 @@ function getLanguage(code, callback) {
 		console.log("Running getLanguage()...");	
 	}
 	
+	// Strings inlined by opac_js, nothing to fetch
+	if (typeof edsLang == "object" && edsLang) {
+		callback(edsLang);
+		return;
+	}
+
 	var sessionLang = eds_sessionStorage.get('lang_' + code);
 	if (sessionLang) {
 		if (edsConfig.logerrors == "yes"){
