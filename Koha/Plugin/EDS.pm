@@ -7,6 +7,7 @@ use Encode qw(encode);
 use URI::Escape;
 use C4::Members;
 use C4::Auth;
+use C4::Languages qw( getlanguage );
 use Cwd            qw( abs_path );
 use File::Basename qw( dirname );
 use JSON qw/decode_json encode_json/;
@@ -243,12 +244,66 @@ sub opac_js {
     my ( $self ) = @_;
     my $default_search = $self->retrieve_data('defaultsearch');
 
+    # Inline the search field list so a new browser session doesn't have to fetch it from the eds-raw.pl CGI
+    my $search_fields = q{};
+    try {
+        my $fields = JSON->new->decode( $self->retrieve_data('edsinfo') )->{AvailableSearchCriteria}->{AvailableSearchFields};
+        if ( ref $fields eq 'ARRAY' && @{$fields} ) {
+            my $json = JSON->new->encode($fields);
+            $json =~ s/</\\u003c/g;    # a label must not be able to close the script tag
+            $search_fields = "var edsSearchFields = $json;";
+        }
+    }
+    catch {
+        # edsinfo can be missing, 'Update Required' or an EBSCO error body; the OPAC page must still render
+    };
+
+    # Inline the language strings so a page view doesn't fetch bootstrap/includes/lang/<lang>.inc
+    my $language_strings = q{};
+    try {
+        my $lang_file = "$PluginDir/bootstrap/includes/lang/" . getlanguage() . ".inc";
+        $lang_file = "$PluginDir/bootstrap/includes/lang/default.inc" unless -f $lang_file;
+        open my $fh, '<:encoding(UTF-8)', $lang_file or die "$lang_file: $!";
+        my $content = do { local $/; <$fh> };
+        close $fh;
+        my ($lang_js) = $content =~ /var EDSLANG =(.*)/s or die "no EDSLANG in $lang_file";
+
+        # The same line by line parse getLanguage() does in EDSScript.tt, except a value keeps any colon it contains
+        my %strings;
+        for my $line ( split /\n/, $lang_js ) {
+            next unless $line =~ /:/;
+            my ( $key, $value ) = split /:/, $line, 2;
+            $key =~ s/\s//g;
+            $value =~ s/['"],?//g;
+            $value =~ s/^\s+|\s+$//g;
+            $strings{$key} = $value;
+        }
+        my $json = JSON->new->encode( \%strings );
+        $json =~ s/</\\u003c/g;
+        $language_strings = "var edsLang = $json;";
+    }
+    catch {
+        # No usable language file; EDSScript.js fetches one as before
+    };
+
+    # Inline the Customisation Manager code so a page view doesn't fetch js/custom/custom.js
+    my $custom_js = q{};
+    if ( open my $fh, '<:encoding(UTF-8)', "$PluginDir/js/custom/custom.js" ) {
+        $custom_js = do { local $/; <$fh> };
+        close $fh;
+        $custom_js =~ s{</script}{<\\/script}gi;    # the code must not be able to close the script tag
+        $custom_js = "<script>\n$custom_js\n</script>" if $custom_js =~ /\S/;
+    }
+
     return q|
     <script>
     var defaultSearch="| . $default_search . q|";
+    | . $search_fields . q|
+    | . $language_strings . q|
     </script>
     <script src="|. $self->get_plugin_http_path() . q|/js/EDSScript.js">
     </script>
+    | . $custom_js . q|
     |;
 }
 

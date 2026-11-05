@@ -148,7 +148,7 @@ sub CallREST
 	$req->header( 'x-sessionToken' => $sess );
 	#if($body != ''){$req->content( $body );}
 	$req->content( $body );
-	my $lwp = LWP::UserAgent->new;
+	my $lwp = LWP::UserAgent->new( timeout => 30 );
 	my $response = $lwp->request( $req );
 	return $response->decoded_content(charset => 'none');
 }

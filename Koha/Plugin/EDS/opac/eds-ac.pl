@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 
+# Turn away requests that no OPAC page sends, before Koha is loaded
+BEGIN { do './gate.pl'; }
+
 use strict;
 use warnings;
 use LWP::Simple;
@@ -11,7 +14,7 @@ do './eds-methods.pl';
 print "Content-type: text/html\n\n";
 
 my $q = CGI->new;
-my $ua = LWP::UserAgent->new;
+my $ua = LWP::UserAgent->new( timeout => 30 );
 my $type = $q->param('type');
 our $EDSConfig = decode_json(EDSGetConfiguration());
 

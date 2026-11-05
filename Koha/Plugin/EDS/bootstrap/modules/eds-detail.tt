@@ -31,6 +31,7 @@
 [% CATCH %][% PROCESS "$plugin_dir/includes/lang/default.inc" %][% END %]
 </script>
 
+<meta name="robots" content="noindex, nofollow" />
 [% INCLUDE 'doc-head-close.inc' %]
 <link rel="stylesheet" type="text/css" href="../css/style.css" />
 [% BLOCK cssinclude %][% END %]

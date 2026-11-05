@@ -78,11 +78,6 @@ var eds_sessionStorage = {
 	}
 }
 
-jQuery.ajax({ 	
-	url: "[% PLUGIN_HTTP_PATH %]/js/custom/custom.js", 
-	dataType: "script", 
-	cache: true });
-
 if ((document.location.pathname.indexOf("eds-detail.pl")) > -1 && (Cookies.get("guest") == 'n')) {
 	jQuery("#ulactioncontainer ul:contains(cart)").append('\
 	<li>\
@@ -138,6 +133,12 @@ function getLanguage(code, callback) {
 		console.log("Running getLanguage()...");	
 	}
 	
+	// Strings inlined by opac_js, nothing to fetch
+	if (typeof edsLang == "object" && edsLang) {
+		callback(edsLang);
+		return;
+	}
+
 	var sessionLang = eds_sessionStorage.get('lang_' + code);
 	if (sessionLang) {
 		if (edsConfig.logerrors == "yes"){
@@ -425,6 +426,12 @@ function GoDiscovery() {
 			console.log("Running SetEDSOptions on true...");
 		}
 		SetEDSOptions(eds_sessionStorage.get('edsKnownItems'));
+	} else if (typeof edsSearchFields !== 'undefined' && edsSearchFields.length) {
+		if (edsConfig.logerrors == "yes"){
+			console.log("Running SetEDSOptions from inline edsSearchFields...");
+		}
+		// The plugin's opac_js hook inlined the search fields, so eds-raw.pl isn't needed
+		StoreEDSOptions(edsSearchFields);
 	} else {
 		if (edsConfig.logerrors == "yes"){
 			console.log("Running SetEDSOptions on false...");
@@ -1347,6 +1354,16 @@ async function fetchCredentials() {
     }
 }
 
+// One credential fetch per page view, started by the first search input rather than on page load.
+// The promise is kept after a failure so suggestions stay off for this page view, as today.
+var edsAutoCompCreds = null;
+function getAutoCompCredentials() {
+    if (!edsAutoCompCreds) {
+        edsAutoCompCreds = fetchCredentials();
+    }
+    return edsAutoCompCreds;
+}
+
 async function EDSAutoComp() {
 	//don't run if autocomplete is disabled
 	if (edsConfig.autocomplete == "no") {
@@ -1378,11 +1395,6 @@ async function EDSAutoComp() {
     }
 
     try {
-        creds = await fetchCredentials();
-        if (edsConfig.logerrors == "yes") {
-            console.log("Fetching credentials...");
-        }
-
         const idx = edsConfig.autocomplete_mode !== "normal" ? "holdings" : "rawqueries";
 		
 		//declare currentFocus variable here so can be accessed outside of .on("input") function
@@ -1422,6 +1434,7 @@ async function EDSAutoComp() {
 
 			//call to autocomplete API upon input
             try {
+				creds = await getAutoCompCredentials();
 				const autoUrl = new URL(creds.Autocomplete.Url);
 				const urlParams = {
 					token: creds.Autocomplete.Token,
@@ -1454,7 +1467,8 @@ async function EDSAutoComp() {
                         }
                         eds_sessionStorage.remove("autoComp");
                         eds_sessionStorage.remove("autoComp_expiry");
-						creds = await fetchCredentials(); // Fetch new credentials
+						edsAutoCompCreds = null;
+						creds = await getAutoCompCredentials(); // Fetch new credentials
 						//retrigger the autocomplete input event
 						if (edsConfig.logerrors == "yes") {
 							console.log("Retrying autocomplete request...");

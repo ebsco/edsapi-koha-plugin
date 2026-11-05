@@ -33,6 +33,7 @@
 [% CATCH %][% PROCESS "$plugin_dir/includes/lang/default.inc" %][% END %]
 </script>
 
+<meta name="robots" content="noindex, nofollow" />
 [% INCLUDE 'doc-head-close.inc' %]
 [% IF query.0.Query.FieldCode %]<script>var edsKnownItem='[% query.0.Query.FieldCode %]';</script>[% END %]
 <script> //var edsRaw=JSON.parse(decodeURIComponent('[% #edsRaw %]'));</script>

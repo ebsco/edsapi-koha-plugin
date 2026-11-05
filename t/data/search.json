@@ -1,0 +1,51 @@
+{
+  "SearchRequestGet": {
+    "QueryString": "query-1=AND,history&sort=relevance&includefacets=y&searchmode=all&autosuggest=y&autocorrect=n&view=brief&resultsperpage=20&pagenumber=1&highlight=y&includeimagequickview=n",
+    "SearchCriteriaWithActions": {
+      "QueriesWithAction": [
+        { "Query": { "BooleanOperator": "AND", "Term": "history" }, "RemoveAction": "removequery(1)" }
+      ],
+      "ExpandersWithAction": [
+        { "Id": "fulltext", "RemoveAction": "removeexpander(fulltext)" }
+      ]
+    }
+  },
+  "SearchResult": {
+    "Statistics": { "TotalHits": 2, "TotalSearchTime": 12, "Databases": [ { "Id": "tdb", "Label": "Test Database", "Status": "0", "Hits": 2 } ] },
+    "Data": {
+      "RecordFormat": "EP Display",
+      "Records": [
+        {
+          "ResultId": 1,
+          "Header": { "DbId": "tdb", "DbLabel": "Test Database", "An": "1001", "RelevancyScore": "10", "PubType": "Book", "PubTypeId": "book" },
+          "PLink": "https://search.ebscohost.com/login.aspx?direct=true&db=tdb&AN=1001",
+          "FullText": { "Text": { "Availability": "0" } },
+          "Items": [
+            { "Name": "Title", "Label": "Title", "Group": "Ti", "Data": "A &lt;highlight&gt;history&lt;/highlight&gt; of testing" },
+            { "Name": "Author", "Label": "Authors", "Group": "Au", "Data": "Tester, Ada" }
+          ]
+        },
+        {
+          "ResultId": 2,
+          "Header": { "DbId": "tdb", "DbLabel": "Test Database", "An": "1002", "RelevancyScore": "9", "PubType": "Academic Journal", "PubTypeId": "academicJournal" },
+          "PLink": "https://search.ebscohost.com/login.aspx?direct=true&db=tdb&AN=1002",
+          "FullText": { "Text": { "Availability": "0" } },
+          "Items": [
+            { "Name": "Title", "Label": "Title", "Group": "Ti", "Data": "Second record about &lt;highlight&gt;history&lt;/highlight&gt;" }
+          ]
+        }
+      ]
+    },
+    "AvailableFacets": [
+      {
+        "Id": "SourceType",
+        "Label": "Source Type",
+        "AvailableFacetValues": [
+          { "Value": "Books", "Count": 1, "AddAction": "addfacetfilter(SourceType:Books)" },
+          { "Value": "Academic Journals", "Count": 1, "AddAction": "addfacetfilter(SourceType:Academic Journals)" }
+        ]
+      }
+    ],
+    "AvailableCriteria": { "DateRange": { "MinDate": "1990-01", "MaxDate": "2026-12" } }
+  }
+}

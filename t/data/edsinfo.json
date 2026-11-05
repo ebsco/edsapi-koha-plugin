@@ -1,0 +1,145 @@
+{
+  "AvailableSearchCriteria": {
+    "AvailableSorts": [
+      {
+        "Id": "date",
+        "Label": "Date Newest",
+        "AddAction": "setsort(date)"
+      },
+      {
+        "Id": "date2",
+        "Label": "Date Oldest",
+        "AddAction": "setsort(date2)"
+      },
+      {
+        "Id": "relevance",
+        "Label": "Relevance",
+        "AddAction": "setsort(relevance)"
+      }
+    ],
+    "AvailableSearchFields": [
+      {
+        "FieldCode": "TX",
+        "Label": "All Text"
+      },
+      {
+        "FieldCode": "AU",
+        "Label": "Author"
+      },
+      {
+        "FieldCode": "TI",
+        "Label": "Title"
+      },
+      {
+        "FieldCode": "SU",
+        "Label": "Subject Terms"
+      },
+      {
+        "FieldCode": "ZZ",
+        "Label": "Titre <é>"
+      }
+    ],
+    "AvailableExpanders": [
+      {
+        "Id": "thesaurus",
+        "Label": "Apply related words",
+        "AddAction": "addexpander(thesaurus)",
+        "DefaultOn": "n"
+      },
+      {
+        "Id": "fulltext",
+        "Label": "Also search within the full text of the articles",
+        "AddAction": "addexpander(fulltext)",
+        "DefaultOn": "y"
+      },
+      {
+        "Id": "relatedsubjects",
+        "Label": "Apply equivalent subjects",
+        "AddAction": "addexpander(relatedsubjects)",
+        "DefaultOn": "y"
+      }
+    ],
+    "AvailableLimiters": [
+      {
+        "Id": "FT",
+        "Label": "Full Text",
+        "Type": "select",
+        "AddAction": "addlimiter(FT:value)",
+        "DefaultOn": "n",
+        "Order": "1"
+      },
+      {
+        "Id": "FR",
+        "Label": "References Available",
+        "Type": "select",
+        "AddAction": "addlimiter(FR:value)",
+        "DefaultOn": "n",
+        "Order": "2"
+      }
+    ],
+    "AvailableSearchModes": [
+      {
+        "Mode": "bool",
+        "Label": "Boolean/Phrase",
+        "DefaultOn": "n",
+        "AddAction": "setsearchmode(bool)"
+      },
+      {
+        "Mode": "all",
+        "Label": "Find all my search terms",
+        "DefaultOn": "y",
+        "AddAction": "setsearchmode(all)"
+      },
+      {
+        "Mode": "any",
+        "Label": "Find any of my search terms",
+        "DefaultOn": "n",
+        "AddAction": "setsearchmode(any)"
+      },
+      {
+        "Mode": "smart",
+        "Label": "SmartText Searching",
+        "DefaultOn": "n",
+        "AddAction": "setsearchmode(smart)"
+      }
+    ],
+    "AvailableRelatedContent": [
+      {
+        "Type": "emp",
+        "Label": "Exact Match Publication",
+        "DefaultOn": "y",
+        "AddAction": "includerelatedcontent(emp)"
+      },
+      {
+        "Type": "rs",
+        "Label": "Research Starters",
+        "DefaultOn": "n",
+        "AddAction": "includerelatedcontent(rs)"
+      }
+    ],
+    "AvailableDidYouMeanOptions": [
+      {
+        "Id": "AutoSuggest",
+        "Label": "Did You Mean",
+        "DefaultOn": "y"
+      },
+      {
+        "Id": "AutoCorrect",
+        "Label": "Auto Correct",
+        "DefaultOn": "n"
+      }
+    ]
+  },
+  "ViewResultSettings": {
+    "ResultsPerPage": "20",
+    "ResultListView": "brief",
+    "IncludeImageQuickView": {
+      "Id": "ImageQuickViewResults",
+      "Label": "Image Quick View Results",
+      "DefaultOn": "n"
+    }
+  },
+  "ApiSettings": {
+    "MaxRecordJumpAhead": "250"
+  }
+}
